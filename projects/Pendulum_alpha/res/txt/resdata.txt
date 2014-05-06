@@ -1,0 +1,30 @@
+//＿リソースファイル管理データ
+//＿#タグ{}の間に記述
+//＿管理名＿＿パスの順に入力
+
+//＿画像＿管理名(img_でスタート)＿パス＿透過色(16進ARGB)
+#IMG
+{
+	img_bird		res/gra/enemy/bird/bird.png		0xff000000
+	img_player		res/gra/player.png				0xff00ff00
+	img_birdShot	res/gra/birdShot.png			0xff000000
+	img_explosion	res/gra/effect/explosion.png	0xff000000
+	img_number		res/gra/ui/number.png			0xff000000
+	img_chain		res/gra/ui/chain.png			0xff000000
+}
+
+//＿BGM＿管理名(bgm_でスタート)＿パス
+#BGM
+{
+	
+}
+
+//＿SE＿管理名(se_でスタート)＿パス
+#SE
+{
+}
+
+//＿フォント＿管理名(font_でスタート)＿フォント名＿サイズ
+#FONT
+{
+}

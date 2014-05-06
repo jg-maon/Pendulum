@@ -1,0 +1,292 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ライブラリ">
+      <UniqueIdentifier>{1c6f96f6-6b5d-47ae-a6ef-e5de326db232}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ライブラリ\3D">
+      <UniqueIdentifier>{66a09c86-c078-4784-874b-4ed63537c578}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ライブラリ\gplib">
+      <UniqueIdentifier>{c94118fe-8ac4-4381-8b36-06dd9b24ba1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Common">
+      <UniqueIdentifier>{fb98d731-c9d0-4774-9558-a0b7e72247f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Easing">
+      <UniqueIdentifier>{9e3db74d-94ae-4b37-b228-217fcc813886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameManager">
+      <UniqueIdentifier>{3baa7cf4-052a-4de0-accc-dbadb4367875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameOver">
+      <UniqueIdentifier>{c0e7dfd1-6bde-43a0-9b47-1b99d652ee43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Obj">
+      <UniqueIdentifier>{c82f6ad0-e58f-4c88-b325-99f3bc36082b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\CharBase">
+      <UniqueIdentifier>{22994bfb-79b5-461d-bb0c-387ac62b6a02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sequence">
+      <UniqueIdentifier>{e1e14c98-fe55-43a1-b90d-73f0fc95400a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sequence\Base">
+      <UniqueIdentifier>{5a63a163-2f0b-4344-9161-50efc82ecde2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sequence\Main">
+      <UniqueIdentifier>{21f65e23-1b97-42c1-9f24-3a7f6368150e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sequence\Title">
+      <UniqueIdentifier>{67348fdf-d842-43cf-b0ca-0abbbaae0de2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sequence\End">
+      <UniqueIdentifier>{91cff953-3e86-42e7-b8cc-b44f315e2e86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sequence\StageSelect">
+      <UniqueIdentifier>{b5a5164d-a37e-4f94-988f-68b7a06fe97c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Setting">
+      <UniqueIdentifier>{e0d0b60a-a13d-458c-8bf8-539c13b6f5e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame">
+      <UniqueIdentifier>{86805a41-f175-4dcf-b399-b0d96fbf435d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Fade">
+      <UniqueIdentifier>{b051ef08-ae11-4a2e-a40b-a268bf29204c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\color.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\Console.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\define.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\DrawObj.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_anime_mesh.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_base_mesh.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_camera.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_font.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_graphics3d.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_mesh.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_piece_texture.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_texture.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx3dmeshmanager.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\graphics.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\Line.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\math.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\MeasureTime.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\media_manager.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\mesh_manager.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\Polygon.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\Task.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\TaskManager.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\texture_manager.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\Triangle.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\vec3.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\gplib.h">
+      <Filter>ライブラリ\gplib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\define.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\myMath.hpp">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common.h">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\easing.h">
+      <Filter>ソース ファイル\Easing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gameManager.h">
+      <Filter>ソース ファイル\GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gameover.h">
+      <Filter>ソース ファイル\GameOver</Filter>
+    </ClInclude>
+    <ClInclude Include="src\obj.h">
+      <Filter>ソース ファイル\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="src\charBase.h">
+      <Filter>ソース ファイル\CharBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneBase.h">
+      <Filter>ソース ファイル\Sequence\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneEnd.h">
+      <Filter>ソース ファイル\Sequence\End</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneMain.h">
+      <Filter>ソース ファイル\Sequence\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneStageSelect.h">
+      <Filter>ソース ファイル\Sequence\StageSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneTitle.h">
+      <Filter>ソース ファイル\Sequence\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="src\setting.h">
+      <Filter>ソース ファイル\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fade.h">
+      <Filter>ソース ファイル\Fade</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_anime_mesh.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_base_mesh.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_camera.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_font.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_graphics3d.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_mesh.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_piece_texture.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_texture.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx3dmeshmanager.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\media_manager.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\mesh_manager.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\texture_manager.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\gplib.cpp">
+      <Filter>ライブラリ\gplib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\easing.cpp">
+      <Filter>ソース ファイル\Easing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameManager.cpp">
+      <Filter>ソース ファイル\GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameover.cpp">
+      <Filter>ソース ファイル\GameOver</Filter>
+    </ClCompile>
+    <ClCompile Include="src\obj.cpp">
+      <Filter>ソース ファイル\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="src\charBase.cpp">
+      <Filter>ソース ファイル\CharBase</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneBase.cpp">
+      <Filter>ソース ファイル\Sequence\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneEnd.cpp">
+      <Filter>ソース ファイル\Sequence\End</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneMain.cpp">
+      <Filter>ソース ファイル\Sequence\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneStageSelect.cpp">
+      <Filter>ソース ファイル\Sequence\StageSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneTitle.cpp">
+      <Filter>ソース ファイル\Sequence\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="src\setting.cpp">
+      <Filter>ソース ファイル\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fade.cpp">
+      <Filter>ソース ファイル\Fade</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\txt\resdata.txt">
+      <Filter>リソース ファイル</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

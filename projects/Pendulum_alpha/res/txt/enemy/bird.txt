@@ -1,0 +1,35 @@
+読み込み画像	パス			透過色(16進数ARGB)
+#Img		res/gra/bird.png	0xff000000
+		画像管理名
+		img_bird
+
+画像サイズ	幅	高さ	※整数のみ
+#Size		128	128
+
+当たり判定	{}内に収めること	※値は実数可
+#Collision
+{
+円	pos(画像の中心)からの相対座標X	相対座標Y	半径(halfWidth,halfHeightで自動計算)
+Circle	0	0	halfWidth
+
+ポリゴン	頂点数	相対座標X1 相対座標Y1	X2 Y2……
+//Polygon	4	-1	   -1		-1 1	1 1	1 -1	
+
+四角(そのうちPolygonに吸収)	左	上	右	下座標
+Rect	-halfWidth	-halfHeight	halfWidth	halfHeight
+}
+
+
+
+攻撃	攻撃方法{攻撃方法別値}
+#Attack NWayShot
+{
+ショット画像管理名、透過色(16進数ARGB)	res/gra/birdShot.png	0xff000000	
+ショット画像幅	64
+ショット画像高	64
+ショット当たり判定
+{
+Circle	0	0	halfWidth
+}
+
+}
