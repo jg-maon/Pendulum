@@ -1,8 +1,8 @@
 #ifndef DEF_SCENEBASE_H
 #define DEF_SCENEBASE_H
 
-#ifndef DEF_STAGE_H
-#include "stage.h"
+#ifndef DEF_STAGEMNG_H
+#include "stageMng.h"
 #endif
 
 #ifndef DEF_GAMEMANAGER_H
@@ -16,7 +16,7 @@ public:
 	class ShareResource
 	{
 	public:
-		CStage* stage;
+		CStageMng* stage;
 		ShareResource(){}
 		~ShareResource()
 		{
@@ -28,7 +28,7 @@ public:
 		}
 		void Create()
 		{
-			stage = new CStage();
+			stage = new CStageMng();
 		}
 		void Destroy()
 		{

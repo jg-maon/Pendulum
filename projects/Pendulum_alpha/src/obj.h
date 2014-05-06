@@ -85,7 +85,7 @@ public:
 class IObject : public Base
 {
 protected:
-	CharBase obj_;
+	charabase::CharBase obj_;
 protected:
 	/*
 		@brief	objが画面内か判断
@@ -106,7 +106,7 @@ protected:
 		@retval		true		EOF
 		@retval		false		EOFでない
 	*/
-	template<class T>	bool LoadValue(std::ifstream& f, const CharBase& obj, T& value);
+	template<class T>	bool LoadValue(std::ifstream& f, const charabase::CharBase& obj, T& value);
 public:
 	IObject(const std::string& name);
 	virtual ~IObject() = 0;
@@ -114,10 +114,21 @@ public:
 	virtual void draw() = 0;
 	virtual void kill();
 	virtual void hit(const ObjPtr& rival);
-	const CharBase& obj() const;
+	const charabase::CharBase& obj() const;
 };
-template<class T>
-bool IObject::LoadValue(std::ifstream& f, const CharBase& obj, T& value)
+
+/*
+@brief		ファイルから数値を格納
+halfWidth、halfHeight対応
+@attension	ifstreamのcurrentPositionに注意
+@param		[in/out]	f		入力ファイル
+@param		[in]		obj		半分のサイズ用
+@param		[out]		value	結果格納用
+@return		EOFか
+@retval		true		EOF
+@retval		false		EOFでない
+*/
+template<class T>	bool IObject::LoadValue(std::ifstream& f, const charabase::CharBase& obj, T& value)
 {
 	std::string buf;
 	bool minus = false;	// マイナス
@@ -130,11 +141,11 @@ bool IObject::LoadValue(std::ifstream& f, const CharBase& obj, T& value)
 	// 値を格納
 	if(buf == "halfWidth")
 	{
-		value = static_cast<T>(obj.halfWidth());
+		value = static_cast<T>(obj.HalfWidth());
 	}
 	else if(buf == "halfHeight")
 	{
-		value = static_cast<T>(obj.halfHeight());
+		value = static_cast<T>(obj.HalfHeight());
 	}
 	else
 	{

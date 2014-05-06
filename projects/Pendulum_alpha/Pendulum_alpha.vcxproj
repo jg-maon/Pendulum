@@ -128,6 +128,7 @@
     <ClInclude Include="src\sceneStageSelect.h" />
     <ClInclude Include="src\sceneTitle.h" />
     <ClInclude Include="src\setting.h" />
+    <ClInclude Include="src\stageMng.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx3dmeshmanager.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="src\sceneStageSelect.cpp" />
     <ClCompile Include="src\sceneTitle.cpp" />
     <ClCompile Include="src\setting.cpp" />
+    <ClCompile Include="src\stageMng.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\txt\resdata.txt" />

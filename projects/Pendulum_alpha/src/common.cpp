@@ -89,14 +89,14 @@ inline std::ostream& orgset(std::ostream& ost)
 
 // —LŒø”š•t‚«•‚“®¬”“_‚ğ•¶š—ñ‚Æ‚µ‚Äæ“¾‚·‚é
 template<typename T_>
-inline string getFloatString(T_ f, int val = 8, int w = 8)
+inline string getFloatString(T_ f, int val, int w)
 {
 	std::ostringstream ss;
 	ss << std::right << std::setw(w) << std::fixval(val) << f;
 	return ss.str();
 }
 template<typename T_>
-inline string getFloatString(T_ f, int val = 8, int w = 8, char fill = '0')
+inline string getFloatString(T_ f, int val, int w, char fill)
 {
 	std::ostringstream ss;
 	ss << std::right << std::setfill(fill) << std::setw(w) << std::fixval(val) << f;

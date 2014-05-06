@@ -88,7 +88,7 @@ void IObject::hit(const ObjPtr& rival)
 {
 }
 
-const CharBase& IObject::obj() const
+const charabase::CharBase& IObject::obj() const
 {
 	return obj_;
 }

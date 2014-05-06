@@ -63,6 +63,9 @@
     <Filter Include="ソース ファイル\Fade">
       <UniqueIdentifier>{b051ef08-ae11-4a2e-a40b-a268bf29204c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\InGame\StageMng">
+      <UniqueIdentifier>{80c71b0b-4ccb-4f05-84db-e77e733b1e9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -197,6 +200,9 @@
     <ClInclude Include="src\fade.h">
       <Filter>ソース ファイル\Fade</Filter>
     </ClInclude>
+    <ClInclude Include="src\stageMng.h">
+      <Filter>ソース ファイル\InGame\StageMng</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -282,6 +288,9 @@
     </ClCompile>
     <ClCompile Include="src\fade.cpp">
       <Filter>ソース ファイル\Fade</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stageMng.cpp">
+      <Filter>ソース ファイル\InGame\StageMng</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

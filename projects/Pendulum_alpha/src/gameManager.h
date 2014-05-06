@@ -2,10 +2,10 @@
 #define DEF_GAMEMANAGER_H
 
 //ƒ‰ƒCƒuƒ‰ƒŠ
-using namespace gplib;
 #ifndef DEF_DEFINE_H
 #include "define.h"
 #endif
+using namespace gplib;
 
 #ifndef DEF_OBJ_H
 #include "obj.h"
