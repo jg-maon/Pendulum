@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ライブラリ">
+      <UniqueIdentifier>{37a20803-4ccc-4539-af07-d6ffa7f3973b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ライブラリ\3D">
+      <UniqueIdentifier>{fdbfc6f0-61d4-4a83-a1fd-0a4f78dea981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ライブラリ\gplib">
+      <UniqueIdentifier>{f9d66a6c-2cbd-4c03-8dd6-985863771964}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\color.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\Console.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\define.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\DrawObj.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_anime_mesh.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_base_mesh.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_camera.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_font.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_graphics3d.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_mesh.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_piece_texture.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx_texture.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\dx3dmeshmanager.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\graphics.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\Line.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\math.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\MeasureTime.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\media_manager.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\mesh_manager.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\Polygon.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\Task.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\TaskManager.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\dx_media\texture_manager.h">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\Triangle.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\ci_ext\vec3.hpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\gplib.h">
+      <Filter>ライブラリ\gplib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_anime_mesh.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_base_mesh.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_camera.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_font.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_graphics3d.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_mesh.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_piece_texture.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx_texture.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\dx3dmeshmanager.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\media_manager.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\mesh_manager.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\dx_media\texture_manager.cpp">
+      <Filter>ライブラリ\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\lib\gplib.cpp">
+      <Filter>ライブラリ\gplib</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
