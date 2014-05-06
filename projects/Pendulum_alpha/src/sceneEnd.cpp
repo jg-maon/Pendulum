@@ -1,5 +1,5 @@
 #include "sceneEnd.h"
-#include "lib\gplib.h"
+#include "define.h"
 
 #include "sceneTitle.h"
 
@@ -19,7 +19,7 @@ CSceneEnd::~CSceneEnd()
 IScene* CSceneEnd::step()
 {
 	// 何かアクションを起こしてシーンが切り替わるとき
-	if(CheckPush(KEY_BTN0))
+	if(input::CheckPush(input::KEY_BTN0))
 	{
 		return new CSceneTitle();
 	}
@@ -30,7 +30,7 @@ IScene* CSceneEnd::step()
 // 描画
 void CSceneEnd::draw()
 {
-	Draw_FontText(100,200,0.5f,"エンド画面",-1,0);
+	font::Draw_FontText(100,200,0.5f,"エンド画面",-1,0);
 }
 
 #pragma endregion

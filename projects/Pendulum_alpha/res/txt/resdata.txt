@@ -16,15 +16,24 @@
 //＿BGM＿管理名(bgm_でスタート)＿パス
 #BGM
 {
-	
+	bgm_title		res/snd/bgm/uzumaki.mp3
+	bgm_stageSelect	res/snd/bgm/uzumaki.mp3
+	bgm_main		res/snd/bgm/uzumaki.mp3
+	bgm_result		res/snd/bgm/uzumaki.mp3
 }
 
 //＿SE＿管理名(se_でスタート)＿パス
 #SE
 {
+	se_explode		res/snd/se/explode.wav
 }
 
-//＿フォント＿管理名(font_でスタート)＿フォント名＿サイズ
+//＿フォント＿管理名(font_でスタート)＿フォント名(全角スペースは'＿'を使う)＿サイズ
 #FONT
 {
+	font_MSGOSICK30	MS＿ゴシック		30
+	font_POP30		HG創英角ﾎﾟｯﾌﾟ体	30
+	font_POP25		HG創英角ﾎﾟｯﾌﾟ体	25
+	font_POP12		HG創英角ﾎﾟｯﾌﾟ体	12
+	font_MSG15		MS＿ゴシック		30
 }

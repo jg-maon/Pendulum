@@ -5,6 +5,10 @@
 #include "stage.h"
 #endif
 
+#ifndef DEF_GAMEMANAGER_H
+#include "gameManager.h"
+#endif
+
 #include <memory>
 class IScene
 {

@@ -1,5 +1,5 @@
 #include "sceneStageSelect.h"
-#include "lib\gplib.h"
+#include "define.h"
 
 #include "sceneMain.h"
 #include "Fade.h"
@@ -54,7 +54,7 @@ IScene* CSceneStageSelect::step()
 	else
 	{
 		// 何かアクションを起こしてシーンが切り替わるとき
-		if(CheckPush(KEY_BTN0))
+		if(input::CheckPush(input::KEY_BTN0))
 		{
 			state_ = State::OUTING;
 			if(!CFade::IsFadeOuting())
@@ -72,7 +72,7 @@ IScene* CSceneStageSelect::step()
 // 描画
 void CSceneStageSelect::draw()
 {
-	Draw_FontTextNC(100,200,0.5f,"ステージセレクト画面",-1,0);
+	font::Draw_FontTextNC(100,200,0.5f,"ステージセレクト画面",-1,0);
 }
 
 

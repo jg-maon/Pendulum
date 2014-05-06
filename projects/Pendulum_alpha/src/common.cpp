@@ -5,6 +5,20 @@
 
 namespace common
 {
+//  •¶Žš—ñ‚ð’uŠ·‚·‚é
+std::string StrReplace(const std::string& str, const std::string& search, const std::string& replace)
+{
+	std::string ret = str;
+	std::string::size_type  pos(str.find(search));
+
+	while (pos != std::string::npos)
+	{
+		ret.replace(pos, search.length(), replace);
+		pos = ret.find(search, pos + replace.length());
+	}
+
+	return ret;
+}
 
 bool FindChunk(std::ifstream& f, const std::string& find)
 {

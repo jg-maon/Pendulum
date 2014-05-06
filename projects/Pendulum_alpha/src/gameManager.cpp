@@ -209,5 +209,9 @@ void CGameManager::winRect(mymath::Recti* newRect)
 }
 
 
+extern CGameManager* gm;
 
-
+void InsertObject(const ObjPtr& obj)
+{
+	gm->AddObject(obj);
+}

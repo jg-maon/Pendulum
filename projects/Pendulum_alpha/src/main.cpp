@@ -5,23 +5,39 @@
 //**************************************************************************************//
 #include	"define.h"
 
-using namespace std;
-using namespace gplib;
-
-
+#ifndef DEF_OBJ_H
 #include	"obj.h"
+#endif
+
+#ifndef DEF_GAMEMANAGER_H
 #include	"GameManager.h"
-#include	"charbase.h"
+#endif
+
+#ifndef DEF_CHARBASE_H
+#include	"charBase.h"
+#endif
+
+#ifndef DEF_GAMEOVER_H
 #include	"gameover.h"
+#endif
+
+#ifndef DEF_COMMON_H
 #include	"common.h"
+#endif
+#ifndef DEF_SETTING_H
 #include	"setting.h"
+#endif
+
+#ifndef DEF_SCENETITLE_H
 #include	"sceneTitle.h"
+#endif
+
+#ifndef DEF_FADE_H
 #include	"fade.h"
+#endif
 
 #include	<memory>
 
-
-std::unique_ptr<IScene> scene_;
 
 //3Dカメラ
 Dx_Camera *dxCamera = nullptr;
@@ -32,6 +48,10 @@ DX3DMESHMANAGER *meshManage = nullptr;
 
 //ゲーム管理
 CGameManager *gm = nullptr;
+
+// シーン
+std::unique_ptr<IScene> scene_;
+
 
 //**************************************************************************************//
 //ライブラリ側で必要な変数　

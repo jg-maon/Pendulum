@@ -1,7 +1,9 @@
 #ifndef DEF_COMMON_H
 #define DEF_COMMON_H
 
+#ifndef DEF_DEFINE_H
 #include "define.h"
+#endif
 
 
 #include <vector>
@@ -10,6 +12,8 @@
 
 namespace common
 {
+// 文字列の置換
+std::string StrReplace(const std::string& str, const std::string& search, const std::string& replace);
 
 // ラベルまでファイルストリームを進める
 bool FindChunk(std::ifstream& f, const std::string& find);

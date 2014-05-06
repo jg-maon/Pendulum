@@ -182,6 +182,7 @@ void LoadFont(ifstream& f)
 		ResData data;
 		int size;
 		f >> data >> size;
+		data.path = common::StrReplace(data.path, "ÅQ", "");
 		font::Draw_CreateFont(i, size, data.path.c_str());
 		fontTable_.insert(std::unordered_map<std::string, int>::value_type(data.resname, i));
 		i++;

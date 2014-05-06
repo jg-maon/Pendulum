@@ -1,13 +1,12 @@
 #ifndef DEF_FADE_H
 #define DEF_FADE_H
 
-#include	"lib/GpLib.h"
 
 class CFade
 {
-	static u_char r_;			// フェード色
-	static u_char g_;			// フェード色
-	static u_char b_;			// フェード色
+	static unsigned char r_;			// フェード色
+	static unsigned char g_;			// フェード色
+	static unsigned char b_;			// フェード色
 	static float a_;			// alpha値
 	static bool fadeInOn_;		// フェードイン中
 	static bool fadeOutOn_;	// フェードアウト中
@@ -20,7 +19,7 @@ public:
 		@param	[in]	b	青
 		@return	なし
 	*/
-	static void ChangeColor(u_char r, u_char g, u_char b);
+	static void ChangeColor(unsigned char r, unsigned char g, unsigned char b);
 
 	/*
 		@brief	フェードイン開始

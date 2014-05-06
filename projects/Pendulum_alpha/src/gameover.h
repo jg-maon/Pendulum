@@ -1,4 +1,5 @@
 #pragma once
+#define DEF_GAMEOVER_H
 
 namespace gameover
 {

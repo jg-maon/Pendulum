@@ -124,6 +124,7 @@ public:
 
 };
 
+extern void InsertObject(const ObjPtr& obj);
 
 
 #endif

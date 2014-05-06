@@ -1,18 +1,17 @@
 #include "Fade.h"
-#include "lib/GpLib.h"
 
 #include "define.h"
 
-u_char CFade::r_ = 0;
-u_char CFade::g_ = 0;
-u_char CFade::b_ = 0;
+unsigned char CFade::r_ = 0;
+unsigned char CFade::g_ = 0;
+unsigned char CFade::b_ = 0;
 float CFade::a_ = 0.f;
 bool CFade::fadeInOn_;
 bool CFade::fadeOutOn_;
 
 #pragma region CFade methods
 
-void CFade::ChangeColor(u_char r, u_char g, u_char b)
+void CFade::ChangeColor(unsigned char r, unsigned char g, unsigned char b)
 {
 	r_ = r;
 	g_ = g;
@@ -60,8 +59,8 @@ bool CFade::FadeOut(float speed)
 void CFade::draw()
 {
 	//フェードインアウト描画	
-	Draw_BoxNC( 
-		0, 0, WINW, WINH, 0.0f, 
+	graph::Draw_BoxNC( 
+		0, 0, system::WINW, system::WINH, 0.0f, 
 		ARGB(static_cast<int>(a_),r_,g_,b_),
 		ARGB(static_cast<int>(a_),r_,g_,b_),
 		0, true);

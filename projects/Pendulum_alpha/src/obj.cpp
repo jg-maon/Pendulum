@@ -1,7 +1,7 @@
 #include "define.h"
 #include "obj.h"
 
-GameManager* Base::gm_ = nullptr;
+CGameManager* Base::gm_ = nullptr;
 
 
 #pragma region Base methods
