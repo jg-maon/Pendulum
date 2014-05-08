@@ -4,7 +4,7 @@
 #endif
 
 #if defined(D_POLY_TEST) | defined(D_CIRCLE_TEST)
-	std::vector<Vec3f> vertexes;
+	std::vector<mymath::Vec3f> vertexes;
 	#ifdef D_POLY_TEST
 	mymath::Linef line(0.f,0.f,0.5f, 500.f,1000.f,0.5f);
 	#endif
@@ -242,7 +242,7 @@ void CCollision::step()
 	if(CheckPush(KEY_MOUSE_LBTN))
 	{
 		POINT mouse = GetCursorPosition();
-		Vec3f p((float)mouse.x,(float)mouse.y,0.f);
+		mymath::Vec3f p((float)mouse.x,(float)mouse.y,0.f);
 		vertexes.push_back(p);
 	}
 	if(CheckPush(KEY_MOUSE_RBTN))
@@ -280,7 +280,7 @@ void CCollision::draw()
 		for(auto& act : actPolys)
 		{
 			CActionPolygon* ap = (CActionPolygon*)act.get();
-			std::vector<Vec3f> points;
+			std::vector<mymath::Vec3f> points;
 			if(ap->Contains(points, line))
 			{
 				for(auto& point : points)
@@ -315,7 +315,7 @@ void CCollision::draw()
 			}
 		}
 		// 終点とマウスを結ぶ
-		Vec3f sta = vertexes.back();
+		mymath::Vec3f sta = vertexes.back();
 		POINT mouse = GetCursorPosition();
 		Draw_Line(	int(sta.x),
 					int(sta.y),
@@ -332,11 +332,11 @@ void CCollision::draw()
 	if(!actCircles.empty())
 	{
 		POINT mouse = GetCursorPosition();
-		Vec3f p((float)mouse.x,(float)mouse.y);
+		mymath::Vec3f p((float)mouse.x,(float)mouse.y);
 		for(auto& act : actCircles)
 		{
 			CActionCircle* ap = (CActionCircle*)act.get();
-			Vec3f point;
+			mymath::Vec3f point;
 			if(ap->Contains(point, p))
 			{
 				Draw_BoxCenter(int(point.x), int(point.y),
@@ -352,7 +352,7 @@ void CCollision::draw()
 		{
 			for(auto& mousePoly : mousePolys)
 			{
-				std::vector<Vec3f> vers = ((CActionPolygon*)mousePoly.get())->vertexes;
+				std::vector<mymath::Vec3f> vers = ((CActionPolygon*)mousePoly.get())->vertexes;
 				if(vers.size() >= 2)
 				for(size_t sta = 0; sta < vers.size(); ++sta)
 				{
@@ -360,9 +360,9 @@ void CCollision::draw()
 					for(auto& act : actCircles)
 					{
 						CActionCircle* ap = (CActionCircle*)act.get();
-						std::vector<Vec3f> points;
+						std::vector<mymath::Vec3f> points;
 						//if(ap->Contains(points, vers[sta], vers[end]))
-						Vec3f point;
+						mymath::Vec3f point;
 						if(ap->Contains(point, vers[sta], vers[end]))
 						{
 							//for(auto& point : points)

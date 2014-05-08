@@ -41,8 +41,8 @@ void Anim::stop()
 
 #pragma region CharBase methods
 
-CharBase::CharBase(const Vec3f& _pos,		// 座標
-	const Vec3f& _add,						// 移動量
+CharBase::CharBase(const mymath::Vec3f& _pos,		// 座標
+	const mymath::Vec3f& _add,						// 移動量
 	const std::string& name,				// 画像
 	int w, int h,							// 画像サイズ
 	float sx, float sy,						// 拡大率
@@ -83,9 +83,9 @@ CharBase::CharBase(float x, float y, float z,		// 座標
 	alpha = r = g = b = 255.f;
 }
 
-inline Vec3f CharBase::GetSize() const
+inline mymath::Vec3f CharBase::GetSize() const
 {
-	return Vec3f(size.x*scale.x, size.y*scale.y, size.z*scale.z);
+	return mymath::Vec3f(size.x*scale.x, size.y*scale.y, size.z*scale.z);
 }
 
 inline float CharBase::HalfWidth() const
@@ -97,7 +97,7 @@ inline float CharBase::HalfHeight() const
 {
 	return size.y*scale.y / 2.0f;
 }
-inline Vec3f CharBase::HalfSize() const
+inline mymath::Vec3f CharBase::HalfSize() const
 {
 	return GetSize() / 2.0f;
 }
@@ -190,7 +190,7 @@ void CharBase::drawNC(MODE mode) const
 
 void CharBase::Move(bool b3D)
 {
-	Vec3f v(add * system::FrameTime);
+	mymath::Vec3f v(add * system::FrameTime);
 	if(b3D)
 	{
 		pos += v;

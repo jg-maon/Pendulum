@@ -381,5 +381,11 @@
     <Text Include="res\txt\resdata.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
+    <Text Include="res\txt\enemy\enemyTable01.txt">
+      <Filter>リソース ファイル</Filter>
+    </Text>
+    <Text Include="res\txt\enemy\bird.txt">
+      <Filter>リソース ファイル</Filter>
+    </Text>
   </ItemGroup>
 </Project>

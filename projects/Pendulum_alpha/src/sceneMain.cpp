@@ -18,7 +18,7 @@ extern CGameManager* gm;
 // コンストラクタ
 CSceneMain::CSceneMain()
 {
-	InsertObject(ObjPtr(new CCollision())));
+	InsertObject(ObjPtr(new CCollision()));
 	CFade::StartFadeIn();
 	bgm::DShow_Play("bgm_main");
 }
@@ -37,17 +37,7 @@ IScene* CSceneMain::step()
 			state_ = State::MAIN;
 		}
 		break;
-	case State::MAIN:/*
-		for(auto& obj : objs)
-		{
-			obj->step();
-		}*/
-		gm->step();
-
-		//MargeObjects();
-	
-		shareRes_->Update();
-
+	case State::MAIN:
 		// 何かアクションを起こしてシーンが切り替わるとき
 		if(input::CheckPush(input::KEY_BTN0))
 		{
@@ -75,13 +65,6 @@ IScene* CSceneMain::step()
 void CSceneMain::draw()
 {
 	//Draw_FontText(100,200,0.5f,"メイン画面",-1,0);
-	// IObject描画
-	shareRes_->Draw();
-	gm->draw();
-	/*for(auto& obj : objs)
-	{
-		obj->draw();
-	}*/
 }
 
 

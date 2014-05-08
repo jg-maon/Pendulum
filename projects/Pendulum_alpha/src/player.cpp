@@ -24,6 +24,10 @@
 #include "setting.h"
 #endif
 
+#ifndef DEF_STAGEMNG_H
+#include "stageMng.h"
+#endif
+
 const float CPlayer::GRAVITY_ACC = 25.f;	// 最大重力速度
 const float CPlayer::MAX_G = 100.f;			// 重力加速度
 const float CPlayer::TENSION = 1500.f;		// フックの張力(初速)
@@ -38,9 +42,8 @@ const int CPlayer::MAX_CHAIN = 999;		// 最高Chain数
 
 #pragma region CPlayer methods
 
-CPlayer::CPlayer(const CStage& stage, const mymath::Vec3f& pos):
+CPlayer::CPlayer(const mymath::Vec3f& pos):
 	ICharacter("Player")
-	,stage_(stage)
 //	,isHanging(isHanging_)
 	,isAttacking(isAttacking_)
 	,power(power_)
@@ -48,9 +51,8 @@ CPlayer::CPlayer(const CStage& stage, const mymath::Vec3f& pos):
 	obj_.pos = pos;
 	init();
 }
-CPlayer::CPlayer(const CStage& stage, float x, float y, float z):
+CPlayer::CPlayer(float x, float y, float z):
 	ICharacter("Player")
-	,stage_(stage)
 //	,isHanging(isHanging_)
 	,isAttacking(isAttacking_)
 	,power(power_)
@@ -67,20 +69,20 @@ CPlayer::~CPlayer()
 
 void CPlayer::init()
 {
-	obj_.velocity = 0.f;
-	obj_.img = playerIMG;
-	obj_.src(128,128);
+	obj_.add = 0.f;
+	obj_.resname = "img_player";
+	obj_.size(128,128);
 	prePos_ = obj_.pos;
 	isHanging_ = false;
 	tensionAcc_ = 0.f;
 	gravity_ = 0.f;
 	gravityF_ = false;
 	hangAcc_ = 0.f;
-	attackRange_ = CharPtr(new CharBase(
+	attackRange_ = charabase::CharPtr(new charabase::CharBase(
 			obj_.pos,
 			mymath::Vec3f(),
-			96,96,
-			circleIMG));
+			"img_circle",
+			96,96));
 	attackRange_->pos.z -= 0.1f;
 	attackRange_->g = 0.f;
 	attackRange_->b = 0.f;
@@ -90,12 +92,12 @@ void CPlayer::init()
 	chainState_ = ChainState::HIDE;
 	chainTime_ = 0.f;
 	chainAnimTime_ = 0.f;
-	chainStaPos_(WINW-300.f, 30.f, 0.1f);
-	chainMsg_ = CharPtr(new CharBase(
+	chainStaPos_(system::WINW-300.f, 30.f, 0.1f);
+	chainMsg_ = charabase::CharPtr(new charabase::CharBase(
 			chainStaPos_,
 			mymath::Vec3f(),
-			151,55,
-			chainIMG));
+			"img_chain",
+			151,55));
 	chainMsg_->alpha = 0.f;
 	numberAnimTime_ = 0.f;
 	
@@ -119,9 +121,11 @@ void CPlayer::init()
 	{
 		mymath::Vec3f& pos = obj_.pos;
 		mymath::Vec3f cameraPos;
-		cameraPos.x = clamp(pos.x, (stage_.rect.left + WINW)/2.f, stage_.rect.right);
-		cameraPos.y = clamp(pos.y, (stage_.rect.top  + WINH)/2.f, stage_.rect.bottom);
-		SetLookAt(cameraPos.x, cameraPos.y);
+		//const auto& sm = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
+		const auto& sm = CStageMng::GetPtr();
+		cameraPos.x = clamp(pos.x, (sm->rect.left + system::WINW)/2.f, sm->rect.right);
+		cameraPos.y = clamp(pos.y, (sm->rect.top  + system::WINH)/2.f, sm->rect.bottom);
+		camera::SetLookAt(cameraPos.x, cameraPos.y);
 	}
 }
 
@@ -142,18 +146,20 @@ mymath::Circlef atk_range(0.f,0.f,0.5f,300.f);
 
 void CPlayer::key()
 {
-	POINT pt = GetCursorPosition();
+	using namespace input;
+	POINT pt = camera::GetCursorPosition();
 	mymath::Vec3f mouse(float(pt.x),float(pt.y),obj_.pos.z);
 	if(CheckPush(KEY_MOUSE_RBTN))
 	{
-#ifndef Da_MOVE_TEST
+#ifndef D_MOVE_TEST
 	#ifdef D_ACT_TEST
 		hangPoint_ = mouse;
 		gravityF_ = true;
 		tensionAcc_ = TENSION;
 		isHanging_ = true;
 	#else
-		for(const auto& act : stage_.actionPoints)
+		const auto& sm = CStageMng::GetPtr();
+		for(const auto& act : sm->actionPoints)
 		{
 			mymath::Vec3f tmp;
 			if(act->Contains(tmp,obj_.pos, mouse))
@@ -209,7 +215,7 @@ void CPlayer::key()
 	{
 		obj_.pos.x = 0.f;
 		obj_.pos.y = 0.f;
-		obj_.velocity = 0.f;
+		obj_.add = 0.f;
 	}
 #endif
 	
@@ -218,7 +224,7 @@ void CPlayer::key()
 		(CheckPush(KEY_UP))		|| (CheckPush(KEY_DOWN)) )
 	{
 		gravityF = false;	
-		obj_.velocity = 0.f;
+		obj_.add = 0.f;
 	}
 #endif
 
@@ -251,17 +257,17 @@ std::deque<POINT> logs;
 void CPlayer::move()
 {
 	mymath::Vec3f& pos = obj_.pos;
-	mymath::Vec3f& velocity = obj_.velocity;
-	if(PYTHA(velocity.x,velocity.y) < POW2(0.5f))
+	mymath::Vec3f& velocity = obj_.add;
+	if(mymath::PYTHA(velocity.x,velocity.y) < mymath::POW2(0.5f))
 	{
-		obj_.velocity = 0.f;
+		velocity = 0.f;
 	}
 	else
 	{
 #ifndef D_MOVE_TEST
 		obj_.Move();
 #endif
-		obj_.velocity *= DOWNSP;
+		velocity *= DOWNSP;
 	}
 #ifdef D_LOG_TEST
 	POINT p = { (LONG)obj_.pos.x,
@@ -283,7 +289,7 @@ void CPlayer::move()
 	// 重力
 	if(gravityF_)
 	{
-		obj_.dir = MotionType::FALL;
+		obj_.src.y = MotionType::FALL;
 		gravity_ += GRAVITY_ACC;
 		if(gravity_ >= MAX_G)
 		{
@@ -295,45 +301,44 @@ void CPlayer::move()
 	if(isHanging_)
 	{
 		// ぶら下がり中
-		obj_.dir = MotionType::HANG;
-		mymath::Vec3f dist = hangPoint_ - obj_.pos;	// pos -> hang
+		obj_.src.y = MotionType::HANG;
+		mymath::Vec3f dist = hangPoint_ - pos;	// pos -> hang
 			
 		const float min_radius = 150.f;	// 最小距離(振り子の半径)
 
 		float angle = std::atan2f(dist.y,dist.x);
 		mymath::Vec3f tensionForce = mymath::Vec3f::Rotate(angle) * tensionAcc_;
-		obj_.velocity += tensionForce;
+		velocity += tensionForce;
 		tensionAcc_ *= DOWN_TENSION;
 #ifdef _DEBUG
-		if(PYTHA(velocity.x,velocity.y) > PYTHA(vel_log.x,vel_log.y))
-			vel_log = obj_.velocity;
+		if(mymath::PYTHA(velocity.x,velocity.y) > mymath::PYTHA(vel_log.x,vel_log.y))
+			vel_log = velocity;
 #endif
 		{/*
 			hangAcc_ *= 0.98f;
 			if(hangAcc_ < 1.f)
 			{
-				hangAcc_ = 0.f;
-				obj_.velocity = 0.f;
+			hangAcc_ = 0.f;
+			obj_.velocity = 0.f;
 			}*/
 			hangAcc_ += GRAVITY_ACC;
-			if(hangAcc_ > MAX_G)
+			if (hangAcc_ > MAX_G)
 			{
 				hangAcc_ = MAX_G;
 			}
 
-			if(dist.x*dist.x + dist.y*dist.y > min_radius*min_radius)
+			if (mymath::PYTHA(dist.x, dist.y) > mymath::POW2(min_radius))
 			{
-					
 				// 一フレーム次の位置(重力分)
-				mymath::Vec3f nextPos(pos.x,pos.y+hangAcc_,pos.z);
-				mymath::Vec3f intersection = mymath::Circlef(hangPoint_,min_radius).IntersectionPoint2Nearest(nextPos,hangPoint_);
-					
+				mymath::Vec3f nextPos(pos.x, pos.y + hangAcc_, pos.z);
+				mymath::Vec3f intersection = mymath::Circlef(hangPoint_, min_radius).IntersectionPoint2Nearest(nextPos, hangPoint_);
+
 				// 鉛直方向に伸ばした静止点
-				mymath::Vec3f stopPos(hangPoint_.x, hangPoint_.y+min_radius, hangPoint_.z);
+				mymath::Vec3f stopPos(hangPoint_.x, hangPoint_.y + min_radius, hangPoint_.z);
 				mymath::Vec3f isVec = stopPos - intersection;
 				mymath::Vec3f psVec = stopPos - pos;
-				if(PYTHA(isVec.x,isVec.y) < POW2(2.f) 
-					&& PYTHA(psVec.x,psVec.y) < POW2(2.f) )
+				if (mymath::PYTHA(isVec.x, isVec.y) < mymath::POW2(2.f)
+					&& mymath::PYTHA(psVec.x, psVec.y) < mymath::POW2(2.f))
 				{
 					// 距離が極めて近ければ静止
 					velocity = stopPos - pos;
@@ -371,10 +376,12 @@ void CPlayer::move()
 		velocity.y = MAX_VY;
 	}
 	// ステージ座標制限
-	pos.x = clamp(pos.x,	stage_.rect.left,	stage_.rect.right);
-	pos.y = clamp(pos.y,	stage_.rect.top,	stage_.rect.bottom);
-
-	attackRange_->pos = attackRange_->pos.TmpReplace(mymath::Vec3f::X|mymath::Vec3f::Y, obj_.pos);
+	{
+		const auto& sm = CStageMng::GetPtr();
+		pos.x = clamp(pos.x, sm->rect.left, sm->rect.right);
+		pos.y = clamp(pos.y, sm->rect.top,	sm->rect.bottom);
+	}
+	attackRange_->pos = attackRange_->pos.TmpReplace(mymath::Vec3f::X|mymath::Vec3f::Y, pos);
 }
 
 
@@ -382,7 +389,7 @@ void CPlayer::move()
 void CPlayer::step()
 {
 	mymath::Vec3f& pos = obj_.pos;
-	mymath::Vec3f& velocity = obj_.velocity;
+	mymath::Vec3f& velocity = obj_.add;
 	ICharacter::step();
 	key();
 
@@ -404,7 +411,7 @@ void CPlayer::step()
 			chainMsg_->alpha = Easing::Linear(chainAnimTime_, 0.f, 255.f, appearTime);
 			chainMsg_->pos.x = Easing::QuadOut(chainAnimTime_, chainStaPos_.x, 30.f, appearTime);
 			
-			if((chainAnimTime_ += FrameTime) >= appearTime)
+			if((chainAnimTime_ += system::FrameTime) >= appearTime)
 			{
 				// 出現完了
 				chainState_ = ChainState::SHOW;
@@ -412,7 +419,7 @@ void CPlayer::step()
 			// 残り時間は出現中も減少していくためbreakは書かない
 		case ChainState::SHOW:
 			// Chain時間は処理落ちなどに影響されて、一定のゲーム内秒数で終わる
-			if((chainTime_ -= ONEFRAME_TIME) <= disappearTime)
+			if((chainTime_ -= system::ONEFRAME_TIME) <= disappearTime)
 			{
 				// 消失開始
 				chainState_ = ChainState::DISAPPEARING;
@@ -420,7 +427,7 @@ void CPlayer::step()
 			}
 			numberPos_.x = chainMsg_->pos.x;
 			numberPos_.y = Easing::BackOut(numberAnimTime_, chainStaPos_.y+20.f, -20.f, 0.2f);
-			numberAnimTime_ += FrameTime;
+			numberAnimTime_ += system::FrameTime;
 			
 			if(chainState_ == ChainState::APPEARING) break;
 			// SHOWのみの処理
@@ -431,7 +438,7 @@ void CPlayer::step()
 		case ChainState::DISAPPEARING:
 			chainMsg_->alpha = Easing::Linear(chainAnimTime_, 255.f, -255.f, disappearTime);
 			chainMsg_->pos.x = Easing::QuadOut(chainAnimTime_, chainStaPos_.x+appearMoveX, 10.f, disappearTime);
-			if((chainAnimTime_ += FrameTime) >= disappearTime)
+			if((chainAnimTime_ += system::FrameTime) >= disappearTime)
 			{
 				// 消失完了
 				chainState_ = ChainState::HIDE;
@@ -469,9 +476,10 @@ void CPlayer::step()
 	// カメラ移動
 	{
 		mymath::Vec3f cameraPos;
-		cameraPos.x = clamp(pos.x, (stage_.rect.left + WINW)/2.f, stage_.rect.right);
-		cameraPos.y = clamp(pos.y, (stage_.rect.top  + WINH)/2.f, stage_.rect.bottom);
-		SetLookAt(cameraPos.x, cameraPos.y);
+		const auto& sm = CStageMng::GetPtr();
+		cameraPos.x = clamp(pos.x, (sm->rect.left + system::WINW)/2.f, sm->rect.right);
+		cameraPos.y = clamp(pos.y, (sm->rect.top  + system::WINH)/2.f, sm->rect.bottom);
+		camera::SetLookAt(cameraPos.x, cameraPos.y);
 	}
 }
 
@@ -494,13 +502,14 @@ void CPlayer::draw()
 	circle_.draw(color);
 #endif
 	const mymath::Rectf& colrect = *std::dynamic_pointer_cast<mymath::Rectf>(GetCollisionAreas()[0]);
-	Draw_Box(	(int)colrect.left,	(int)colrect.top,
-				(int)colrect.right,	(int)colrect.bottom,
-				pos.z-0.1f,
-				0xff00ff00,ARGB(255,255,255,255),1,true);
+	graph::Draw_Box(
+		(int)colrect.left, (int)colrect.top,
+		(int)colrect.right, (int)colrect.bottom,
+		pos.z - 0.1f,
+		0xff00ff00, ARGB(255, 255, 255, 255), 1, true);
 	
 #ifdef _DEBUG
-	mymath::Recti rc = obj_.getRect();
+	mymath::Recti rc = obj_.GetRect();
 
 	//rc.offset((int)obj_.pos.x, (int)obj_.pos.y);
 	std::stringstream ss;
@@ -509,16 +518,22 @@ void CPlayer::draw()
 		<< "," 
 		<< std::setw(4) << (int)pos.y
 		<< ")";
-	Draw_FontText(rc.right,rc.top,0.f,ss.str(),0xffff0000,MSG15);
+	font::Draw_FontText(
+		rc.right, rc.top, 0.f,
+		ss.str(), 0xffff0000,
+		setting::GetFontID("font_MSG15"));
 
 	ss.str(emply_string);
-	const mymath::Vec3f& velocity = obj_.velocity;
-	ss << "velocity(" 
+	const mymath::Vec3f& velocity = obj_.add;
+	ss << "add(" 
 		<< std::setw(4) << (int)velocity.x
 		<< "," 
 		<< std::setw(4) << (int)velocity.y
 		<< ")";
-	Draw_FontText(rc.right,rc.top+Draw_GetCharHeight(MSG15)*1,0.f,ss.str(),0xffff0000,MSG15);
+	font::Draw_FontText(
+		rc.right, rc.top + font::Draw_GetCharHeight(setting::GetFontID("font_MSG15")) * 1, 0.f,
+		ss.str(), 0xffff0000,
+		setting::GetFontID("font_MSG15"));
 	
 	ss.str(emply_string);
 	mymath::Vec3f dist = hangPoint_ - pos;
@@ -529,13 +544,18 @@ void CPlayer::draw()
 		<< "," 
 		<< std::setw(4) << (int)tensionForce.y
 		<< ")";
-	Draw_FontText(rc.right,rc.top+Draw_GetCharHeight(MSG15)*2,0.f,ss.str(),0xffff0000,MSG15);
+	font::Draw_FontText(
+		rc.right, rc.top + font::Draw_GetCharHeight(setting::GetFontID("font_MSG15")) * 2, 0.f,
+		ss.str(), 0xffff0000,
+		setting::GetFontID("font_MSG15"));
 	
 	ss.str(emply_string);
 	ss << "tensionAcc_:" 
 		<< std::setw(4) << (int)tensionAcc_;
-		
-	Draw_FontText(rc.right,rc.top+Draw_GetCharHeight(MSG15)*3,0.f,ss.str(),0xffff0000,MSG15);
+	font::Draw_FontText(
+		rc.right, rc.top + font::Draw_GetCharHeight(setting::GetFontID("font_MSG15")) * 3, 0.f,
+		ss.str(), 0xffff0000,
+		setting::GetFontID("font_MSG15"));
 	
 	ss.str(emply_string);
 	ss << "vel_log(" 
@@ -543,17 +563,23 @@ void CPlayer::draw()
 		<< "," 
 		<< std::setw(4) << (int)vel_log.y
 		<< ")";
-	Draw_FontText(rc.right,rc.top+Draw_GetCharHeight(MSG15)*4,0.f,ss.str(),0xffff0000,MSG15);
+	font::Draw_FontText(
+		rc.right, rc.top + font::Draw_GetCharHeight(setting::GetFontID("font_MSG15")) * 4, 0.f,
+		ss.str(), 0xffff0000,
+		setting::GetFontID("font_MSG15"));
 	
 	
-	mymath::Recti arc = attackRange_->getRect();
+	mymath::Recti arc = attackRange_->GetRect();
 	ss.str(emply_string);
 	ss <<	"ARGB(" << std::setw(3) << (int)attackRange_->alpha
 		<<	","		<< std::setw(3) << (int)attackRange_->r
 		<<	","		<< std::setw(3) << (int)attackRange_->g
 		<<	","		<< std::setw(3) << (int)attackRange_->b
 		<<	")";
-	Draw_FontText(arc.left, arc.bottom,0.f,ss.str(),-1,MSG15);
+	Draw_FontText(
+		arc.left, arc.bottom,0.f,
+		ss.str(),-1,
+		setting::GetFontID("font_MSG15"));
 
 #endif
 
@@ -561,18 +587,19 @@ void CPlayer::draw()
 	//attackRange_->draw();
 	if(isHanging_)
 	{
-		Draw_Line(	static_cast<int>(pos.x),
-					static_cast<int>(pos.y),
-					static_cast<int>(hangPoint_.x),
-					static_cast<int>(hangPoint_.y),
-					pos.z-0.1f,
-					0x7fffffff,2);
+		graph::Draw_Line(
+			static_cast<int>(pos.x),
+			static_cast<int>(pos.y),
+			static_cast<int>(hangPoint_.x),
+			static_cast<int>(hangPoint_.y),
+			pos.z - 0.1f,
+			0x7fffffff, 2);
 	}
 
 	if(chainState_ != ChainState::HIDE)
 	{
 		// Chain中
-		chainMsg_->drawNC(CharBase::MODE::LeftTop);
+		chainMsg_->drawNC(charabase::CharBase::MODE::LeftTop);
 		// Chain数を画像パターンに
 		int digit = (chainCnt_/100==0)? ((chainCnt_/10==0)? 1: 2 ) : 3;
 		int work = chainCnt_;	// chain数を桁ごとに区切る
@@ -581,12 +608,13 @@ void CPlayer::draw()
 		for(int i=1; i <= digit; ++i)
 		{
 			// 下位桁から順に描画(Chain文字の左から減らしていく)
-			Draw_GraphicsNC(numberPos_.x - i*width,
-							numberPos_.y-10.f,
-							numberPos_.z,
-							numberIMG,
-							(work%10) * width, 0,
-							width, height);
+			graph::Draw_GraphicsNC(
+				numberPos_.x - i*width,
+				numberPos_.y - 10.f,
+				numberPos_.z,
+				"img_number",
+				(work % 10) * width, 0,
+				width, height);
 			work /= 10;
 		}
 	}
@@ -597,7 +625,7 @@ void CPlayer::draw()
 
 void CPlayer::hit(const ObjPtr& rival)
 {
-	if(rival->findName("ActionPolygon"))
+	if(rival->FindName("ActionPolygon"))
 	{
 		// めり込み補正,通過補正
 		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);
@@ -610,10 +638,10 @@ void CPlayer::hit(const ObjPtr& rival)
 		gravityF_ = false;
 		//isHanging_ = false;
 	}
-	else if(rival->findName("Atk_"))
+	else if(rival->FindName("Atk_"))
 	{
 		// 敵からの攻撃
-		health_ -= static_cast<IAttack*>(rival.get())->GetForce();
+		health_ -= std::dynamic_pointer_cast<IAttack>(rival)->GetForce();
 		if(health_ <= 0)
 		{
 			health_ = 0;
@@ -627,7 +655,8 @@ void CPlayer::hit(const ObjPtr& rival)
 
 ObjPtr CPlayer::GetPtr()
 {
-	auto& pl = GetObjects("Player");
+	extern CGameManager *gm;
+	auto& pl = gm->GetObjects("Player");
 	if(pl.empty()) return nullptr;
 	return pl[0];
 }
@@ -652,7 +681,7 @@ void CPlayer::ApplyAttack(const mymath::Vec3f& pos)
 	//obj_.velocity += (pos - obj_.pos) / FrameTime / 3.f;
 	
 	obj_.pos = pos;
-	obj_.dir = MotionType::ATTACK;
+	obj_.src.y = MotionType::ATTACK;
 	//obj_.velocity *= 0.5f;
 	
 	//---------------------------------

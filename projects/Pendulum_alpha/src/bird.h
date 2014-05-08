@@ -32,9 +32,7 @@ private:
 
 	float elapsedTime_;				// 経過時間
 	float nextActTime_;				// 次に行動を起こす時間
-
-	const mymath::Vec3f* pPlPos_;			// プレイヤー座標
-	
+		
 	const mymath::Vec3f startPos_;			// 初期座標(追跡後元に戻る場所)
 
 private:
@@ -73,13 +71,6 @@ private:
 
 
 
-	/*
-		@brief	プレイヤー座標を取得
-		@return 取得成功したか
-		@retval	true	取得成功
-		@retval	false	失敗(nullptrが格納されている)
-	*/
-	bool SetPlayerPos();
 
 	/*
 		@brief	行動タイプの決定

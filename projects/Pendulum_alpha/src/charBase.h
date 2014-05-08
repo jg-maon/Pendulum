@@ -1,7 +1,7 @@
 #ifndef DEF_CHARBASE_H
 #define DEF_CHARBASE_H
 
-//#define DEF_CHARBASE_EXT
+#define DEF_CHARBASE_EXT
 
 #ifndef DEF_MYMATH_HPP
 #include "MyMath.hpp"
@@ -158,7 +158,6 @@ public:
 
 
 };
-#define DEF_CHARBASE_EXT
 #ifdef DEF_CHARBASE_EXT
 
 #include <wtypes.h>	//  RECT—p
@@ -187,8 +186,8 @@ extern void StopAnim(Anim& anim);
 
 #endif
 
-}	// namespace charabase
 typedef std::shared_ptr<charabase::CharBase> CharPtr;
+}	// namespace charabase
 
 
 #endif

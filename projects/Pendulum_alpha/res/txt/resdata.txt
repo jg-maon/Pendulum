@@ -11,6 +11,8 @@
 	img_explosion	res/gra/effect/explosion.png	0xff000000
 	img_number		res/gra/ui/number.png			0xff000000
 	img_chain		res/gra/ui/chain.png			0xff000000
+	img_circle		res/gra/circle_x96.png			0xff000000
+	img_stage01		res/gra/stages/stage01/bg.jpg	0xff000000
 }
 
 //＿BGM＿管理名(bgm_でスタート)＿パス

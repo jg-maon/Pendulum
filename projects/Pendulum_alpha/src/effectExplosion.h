@@ -22,7 +22,7 @@ public:
 		@param	[in]	pos		中心座標
 		@param	[in]	scale	拡大率(デフォルト：1.0f倍)
 	*/
-	CEffectExplosion(const Vec3f& pos, float scale = 1.f);
+	CEffectExplosion(const mymath::Vec3f& pos, float scale = 1.f);
 	
 	void step() override;
 	void draw() override;

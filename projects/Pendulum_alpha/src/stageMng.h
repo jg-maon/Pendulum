@@ -83,6 +83,8 @@ public:
 		@return	‚È‚µ
 	*/
 	void LoadStage(const std::string& stageName);
+
+	static const std::shared_ptr<CStageMng> GetPtr();
 };
 
 #endif

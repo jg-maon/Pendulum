@@ -13,8 +13,8 @@
 #include "actionPoint.h"
 #endif
 
-#ifndef DEF_STAGE_H
-#include "stage.h"
+#ifndef DEF_CHARBASE_H
+#include "charBase.h"
 #endif
 
 
@@ -49,7 +49,7 @@ private:
 	bool isHanging_;			// ぶら下がっているか
 	mymath::Vec3f hangPoint_;			// ぶら下がっている支点
 		
-	CharPtr attackRange_;		// 攻撃範囲
+	charabase::CharPtr attackRange_;		// 攻撃範囲
 	bool isAttacking_;			// 攻撃中か
 
 	enum class ChainState				// Chain文字画像表示状態
@@ -61,7 +61,7 @@ private:
 	}chainState_;
 	
 	//--------------------------------------------------
-	CharPtr chainMsg_;			// Chain文字画像
+	charabase::CharPtr chainMsg_;			// Chain文字画像
 	mymath::Vec3f numberPos_;			// Chain数字座標
 	float numberAnimTime_;		// Chain数字アニメーション用カウント1
 	mymath::Vec3f chainStaPos_;			// Chain文字初期位置
@@ -100,14 +100,14 @@ public:
 		@param	[in]	stage	ステージ情報
 		@param	[in]	pos		初期座標
 	*/
-	CPlayer(const CStage& stage, const mymath::Vec3f& pos);
+	CPlayer(const mymath::Vec3f& pos);
 	/*
 		@param	[in]	stage	ステージ情報
 		@param	[in]	x		初期座標
 		@param	[in]	y		初期座標
 		@param	[in]	z		初期座標
 	*/
-	CPlayer(const CStage& stage, float x, float y, float z = 0.5f);
+	CPlayer(float x, float y, float z = 0.5f);
 
 	~CPlayer();
 

@@ -18,7 +18,7 @@ class CShot : public IAttack
 {
 private:
 	int cnt_;
-	Vec3f	acceleration_;	// 加速度
+	mymath::Vec3f	acceleration_;	// 加速度
 
 private:
 	void init()
@@ -30,7 +30,7 @@ public:
 		@brief	初期化
 		@param	[in]	shot			弾の情報
 	*/
-	CShot(const CharBase& shot):
+	CShot(const charabase::CharBase& shot):
 		IAttack("Atk_Shot")
 	{
 		obj_ = shot;
@@ -40,7 +40,7 @@ public:
 		@param	[in]	shot			弾の情報
 		@param	[in]	acceleration	加速度
 	*/
-	CShot(const CShot& shot, const Vec3f& acceleration):
+	CShot(const CShot& shot, const mymath::Vec3f& acceleration):
 		IAttack("Atk_Shot")
 		,cnt_(0)
 		,acceleration_(acceleration)
@@ -50,7 +50,7 @@ public:
 	virtual void step() override
 	{
 		obj_.Move();
-		obj_.velocity += acceleration_;
+		obj_.add += acceleration_;
 		if(++cnt_ > 1200)
 		{
 			kill();
@@ -62,7 +62,7 @@ public:
 	}
 	virtual void hit(const ObjPtr& rival) override
 	{
-		if(rival->findName("Player"))
+		if(rival->FindName("Player"))
 		{
 			kill();
 		}
@@ -97,7 +97,7 @@ public:
 		@param	[in]	centerFlag	弾を左右にふるか(デフォルト:true)
 		@return	なし
 	*/
-	void CreateAttack(const Vec3f& pos, int n, float angle, float interval, float speed, float acc, bool centerFlag = true);
+	void CreateAttack(const mymath::Vec3f& pos, int n, float angle, float interval, float speed, float acc, bool centerFlag = true);
 	
 
 };

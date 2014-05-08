@@ -53,7 +53,7 @@ bool CStageMng::LoadPlayer(ifstream& f)
 			f >> label;
 			p = static_cast<float>(std::atof(label.c_str()));
 		}
-		InsertObject(ObjPtr(new CPlayer(*this, pos[0], pos[1])));
+		InsertObject(ObjPtr(new CPlayer(pos[0], pos[1])));
 	}
 
 	return f.eof();
@@ -65,19 +65,19 @@ bool CStageMng::LoadEnemies(ifstream& f)
 	{
 		std::string label;
 		f >> label;
-		auto& ems = GetObjects("EnemyMng");
+		auto& ems = gm()->GetObjects("EnemyMng");
 		ObjPtr em;
 		if(ems.empty())
 		{
 			// EnemyMngがない場合、新規に追加する
 			em = ObjPtr(new CEnemyMng());
-			InsertObject(em);
+			gm()->AddObject(em);
 		}
 		else
 		{
 			em = ems[0];
 		}
-		static_cast<CEnemyMng*>(em.get())->LoadEnemiesInfo(label);
+		std::dynamic_pointer_cast<CEnemyMng>(em)->LoadEnemiesInfo(label);
 	}
 	return f.eof();
 }
@@ -153,7 +153,7 @@ void CStageMng::step()
 	// 多重スクロールとか
 
 #ifdef _DEBUG
-	if(CheckPush(KEY_F1))
+	if(input::CheckPush(input::KEY_F1))
 	{
 		std::stringstream file;
 		file << "res/txt/stage/" << stageName_ << ".txt";
@@ -172,8 +172,9 @@ void CStageMng::draw()
 {
 	for(auto& ap : actionPoints_)
 		ap->draw();
-	Draw_Graphics(0,0,1.f,
-		backgroundIMG_,0,0,1280,800,0,0,
+	graph::Draw_Graphics(
+		0,0,1.f,
+		"img_stage01",0,0,1280,800,0,0,
 		(rect.right-rect.left)/1280.f,
 		(rect.bottom-rect.top)/800.f);
 }
@@ -186,7 +187,7 @@ void CStageMng::LoadStage(const std::string& stageName)
 	if(f.fail())return;
 	stageName_ = stageName;
 	
-	ClearObjects();
+	gm()->ClearObjects();
 
 	if(LoadSize(f))
 	{
@@ -215,4 +216,12 @@ void CStageMng::LoadStage(const std::string& stageName)
 	}
 
 	
+}
+
+
+const std::shared_ptr<CStageMng> CStageMng::GetPtr()
+{
+	extern CGameManager *gm;
+	const auto& sm = gm->GetObj(typeid(CStageMng));
+	return std::dynamic_pointer_cast<CStageMng>(sm);;
 }

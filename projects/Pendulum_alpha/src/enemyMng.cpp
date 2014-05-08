@@ -1,6 +1,7 @@
 
 #include "enemyMng.h"
 #include "define.h"
+#include "common.h"
 #include <algorithm>
 #include <functional>
 #include <fstream>
@@ -41,7 +42,8 @@ void CEnemyMng::draw()
 
 ObjPtr CEnemyMng::GetPtr()
 {
-	auto& em = GetObjects("EnemyMng");
+	extern CGameManager* gm;
+	auto& em = gm->GetObjects("EnemyMng");
 	if(em.empty()) return nullptr;
 	return em[0];
 }
@@ -57,7 +59,7 @@ void CEnemyMng::LoadEnemiesInfo(const std::string& fileName)
 	temp_.clear();
 
 	// ’¹
-	if(FindChunk(f, "#Bird"))
+	if(common::FindChunk(f, "#Bird"))
 	{
 		std::string label;
 		f >> label;
@@ -82,7 +84,7 @@ void CEnemyMng::LoadEnemiesInfo(const std::string& fileName)
 	}
 
 	// •Ê“G
-	if(FindChunk(f, "#enemyName"))
+	if(common::FindChunk(f, "#enemyName"))
 	{
 		std::string label;
 		f >> label;

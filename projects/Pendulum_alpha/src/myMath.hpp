@@ -8,6 +8,8 @@
 
 namespace mymath
 {
+	const float PI = 3.14159265358979323846f;
+	const double PI_D = 3.14159265358979323846;
 /*
 #ifndef PI
 #define PI   3.14159265358979323846f
@@ -1386,7 +1388,7 @@ typedef Rect<float>	Rectf;
 #pragma region Circle
 
 #ifdef USE_CIRCLE_EXT
-#include "lib\gplib.h"
+#include "../../../lib/gplib.h"
 #endif
 /*
 	@brief	‰~

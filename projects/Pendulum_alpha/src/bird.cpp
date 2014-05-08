@@ -2,13 +2,13 @@
 //#define USE_CIRCLE_EXT
 #endif
 
-#include  "define.h"
+#include "define.h"
 #include "bird.h"
 #include "nWayShot.h"
 #include "setting.h"
 
 //#include "player.h"
-#include "lib\gplib.h"
+#include "common.h"
 
 #include "actionPoint.h"
 
@@ -54,36 +54,27 @@ CBird::~CBird()
 
 void CBird::init()
 {
+	using common::FindChunk;
 	std::ifstream f("res/txt/enemy/bird.txt");
 	std::string buf;
 	if(FindChunk(f, "#Img"))
 	{
-		std::string img_path;
-		f >> img_path;
-		D3DCOLOR transparent;
-		f >> std::hex >> transparent;
-		obj_.img = Draw_LoadObject(img_path,transparent);
+		f >> obj_.resname;
 	}
 	if(FindChunk(f, "#Size"))
 	{
-		//int w,h;
-		f.setf(std::ios::hex, std::ios::basefield);
-		//f >> std::dec >> w >> h;
-		LoadValue(f, obj_, obj_.src.x);
-		LoadValue(f, obj_, obj_.src.y);
-		//obj_.src(w,h);
+		LoadValue(f, obj_, obj_.size.x);
+		LoadValue(f, obj_, obj_.size.y);
 	}
 	if(FindChunk(f, "#Collision")) 
 		LoadCollisions(f);
 	if(FindChunk(f,"#Attack"))
 		LoadAttack(f);
 	//obj_.img = birdIMG;
-	pPlPos_ = nullptr;
 	elapsedTime_ = 0.f;
 	nextActTime_ = 0.f;
 	state_ = State::WAIT;
 	//obj_.alpha = 200.f;
-	SetPlayerPos();
 
 
 }
@@ -95,9 +86,10 @@ void CBird::WaitStep()
 
 void CBird::ChaseStep()
 {
-	mymath::Vec3f dist = *pPlPos_ - obj_.pos;
-	float angle = std::atan2f(dist.y,dist.x);
-	obj_.velocity = mymath::Vec3f::Rotate(angle) * MOVE_SPEED;
+	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
+	const mymath::Vec3f dist = plPos - obj_.pos;
+	float angle = std::atan2f(dist.y, dist.x);
+	obj_.add = mymath::Vec3f::Rotate(angle) * MOVE_SPEED;
 	obj_.Move();
 }
 
@@ -105,10 +97,10 @@ void CBird::ReturnStep()
 {
 	mymath::Vec3f dist = startPos_ - obj_.pos;
 	
-	if(PYTHA(dist.x,dist.y) > POW2(RETURN_RANGE))
+	if(mymath::PYTHA(dist.x,dist.y) > mymath::POW2(RETURN_RANGE))
 	{
 		float angle = std::atan2f(dist.y,dist.x);
-		obj_.velocity = mymath::Vec3f::Rotate(angle) * MOVE_SPEED;
+		obj_.add = mymath::Vec3f::Rotate(angle) * MOVE_SPEED;
 	}
 	else
 	{
@@ -132,7 +124,7 @@ void CBird::AttackStep()
 void CBird::DestroyStep()
 {
 	// 0.5秒
-	obj_.alpha -= 255.f / 0.5f * FrameTime;
+	obj_.alpha -= 255.f / 0.5f * system::FrameTime;
 	if(obj_.alpha < 0.f)
 	{
 		obj_.alpha = 0.f;
@@ -142,50 +134,29 @@ void CBird::DestroyStep()
 	return;
 }
 
-bool CBird::SetPlayerPos()
-{
-	if(pPlPos_ != nullptr) return true;
-	auto& player = GetObjects("Player");
-	if(!player.empty())
-	{
-		IObject* pl = static_cast<IObject*>(player[0].get());
-		pPlPos_ = &pl->obj().pos;
-		return true;
-	}
-	else
-	{
-		pPlPos_ = nullptr;
-		return false;
-	}
-}
-
 void CBird::DecideState()
 {
-	if(state_ == State::DESTROY)
+	if (state_ == State::DESTROY)
 	{
 		// 死亡中 復活は許されない
 		return;
 	}
-	if(pPlPos_ == nullptr)
-	{
-		if(!SetPlayerPos()) return;
-	}
-
+	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
 	// プレイヤーとの距離ベクトル e -> p
-	mymath::Vec3f Vdist = *pPlPos_ - obj_.pos;
-	const float plyDist = PYTHA(Vdist.x,Vdist.y);
+	mymath::Vec3f Vdist = plPos - obj_.pos;
+	const float plyDist = mymath::PYTHA(Vdist.x, Vdist.y);
 	// 初期位置からのベクトル start -> now
 	Vdist = obj_.pos - startPos_;
-	const float staDist = PYTHA(Vdist.x,Vdist.y);
-	if(plyDist < POW2(ATTACK_RANGE) || state_ == State::ATTACK)
+	const float staDist = mymath::PYTHA(Vdist.x, Vdist.y);
+	if (plyDist < mymath::POW2(ATTACK_RANGE) || state_ == State::ATTACK)
 	{
 		// 攻撃範囲内 or 攻撃中
 		state_ = State::ATTACK;
 	}
-	else if(plyDist < POW2(SEARCH_RANGE))
+	else if (plyDist < mymath::POW2(SEARCH_RANGE))
 	{
 		// 攻撃範囲外 索敵範囲内
-		if(staDist < POW2(CHASE_RANGE))
+		if (staDist < mymath::POW2(CHASE_RANGE))
 		{
 			// 追跡可能範囲内
 			state_ = State::CHASE;
@@ -196,7 +167,7 @@ void CBird::DecideState()
 			state_ = State::ATTACK;
 		}
 	}
-	else if(staDist > POW2(RETURN_RANGE))
+	else if (staDist > mymath::POW2(RETURN_RANGE))
 	{
 		// 索敵範囲外
 		state_ = State::RETURN;
@@ -206,23 +177,18 @@ void CBird::DecideState()
 		// 保険(各行動の最後にはWAITに戻してるはず)
 		state_ = State::WAIT;
 	}
-
 }
 
 void CBird::CreateAttack()
 {
-	if(pPlPos_ == nullptr)
-	{
-		if(!SetPlayerPos()) return;
-	}
 	const mymath::Vec3f& mypos = obj_.pos;
-	const mymath::Vec3f& plpos = *pPlPos_;
+	const mymath::Vec3f& plpos = gm()->GetPlayerPos();
 	const mymath::Vec3f vec = plpos - mypos;
-	float angle = Calc_RadToDegree(std::atan2f(-vec.y,vec.x));
+	float angle = math::Calc_RadToDegree(std::atan2f(-vec.y, vec.x));
 	const float INTERVAL = 20.f;	// 横間隔
 	const float SP = 70.f;			// 初速度
 	const float ACC = 5.f;			// 加速度
-	static_cast<CNWayShot*>(attack_.get())->CreateAttack(
+	std::dynamic_pointer_cast<CNWayShot>(attack_)->CreateAttack(
 				mypos,
 				5,
 				angle,INTERVAL,
@@ -232,7 +198,7 @@ void CBird::CreateAttack()
 void CBird::step()
 {
 	ICharacter::step();
-	elapsedTime_ += FrameTime;
+	elapsedTime_ += system::FrameTime;
 	
 	DecideState();
 	
@@ -240,14 +206,12 @@ void CBird::step()
 		attack_->step();
 
 	// プレイヤーを向く
-	float angle = DegreeOfPoints2(
-					obj_.pos.x, obj_.pos.y,
-					pPlPos_->x, pPlPos_->y);
-	/*if(90.f <= angle && angle <= 270.f)
-	{
-
-	}*/
-	obj_.angle = angle;
+	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
+	
+	if (obj_.pos.x < plPos.x)
+		obj_.scale.x = 1.f;
+	else
+		obj_.scale.x = -1.f;
 	
 	(this->*StateStep_[static_cast<int>(state_)])();
 
@@ -257,8 +221,8 @@ void CBird::draw()
 {
 	if(attack_ != nullptr)
 		attack_->draw();
-	mymath::Rectf rect = GetScreenRect();
-	if(rect.Contains(obj_.getRect()))
+	mymath::Rectf rect = camera::GetScreenRect();
+	if(rect.Contains(obj_.GetRect()))
 	{
 		obj_.draw();
 	}
@@ -267,7 +231,7 @@ void CBird::draw()
 
 void CBird::hit(const ObjPtr& rival)
 {
-	if(rival->findName("ActionPolygon"))
+	if(rival->FindName("ActionPolygon"))
 	{
 		// めり込み補正,通過補正
 		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);

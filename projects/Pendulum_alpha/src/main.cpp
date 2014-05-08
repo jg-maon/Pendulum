@@ -74,7 +74,7 @@ namespace gplib{
 
 void SceneStep()
 {
-	IScene::UpdateShareResource();
+	gm->step();
 	IScene *next(scene_->step());
 	if (next != scene_.get())
 	{
@@ -84,6 +84,7 @@ void SceneStep()
 
 void SceneDisp()
 {
+	gm->draw();
 	scene_->draw();
 	CFade::draw();
 	debug::DFPS();
@@ -120,14 +121,11 @@ void InitGame()
 
 	// シーン初期化
 	scene_.reset(new CSceneTitle());
-	IScene::CreateShareResource();
 
 }
 
 void TerminateGame()
 {
-	// シーンリソース破棄
-	IScene::DestroyShareResource();
 
 	SAFE_DELETE(meshManage);
 	//カメラの破棄

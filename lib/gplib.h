@@ -420,7 +420,7 @@
 		  SIZE Draw_GetImageSize2(const std::string& resname);
 		  unsigned int Draw_GetImageWidth(const std::string& resname);
 		  unsigned int Draw_GetImageHeight(const std::string& resname);
-
+		  
 	  }
 	  namespace font{
 		  //フォント関連	
@@ -432,6 +432,10 @@
 		  void Draw_TextXYNC(int x, int y, const std::string& msg, D3DCOLOR Textcolor, int fontID = 0);
 		  void Draw_CreateFont(int Num, int size, LPCTSTR	fontname);
 		  void Draw_CreateFontItalic(int Num, int size, LPCTSTR	fontname);
+		  
+		  unsigned int Draw_GetStringWidth(const std::string& msg, int fontID);
+		  unsigned int Draw_GetCharWidth(int fontID);
+		  unsigned int Draw_GetCharHeight(int fontID);
 	  }
 	  namespace input{
 		  WHEEL GetWheelRoll();

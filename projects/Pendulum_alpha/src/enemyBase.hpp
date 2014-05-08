@@ -82,18 +82,14 @@ public:
 			if(buf != "{") return f.eof();
 			else
 			{
-				CharBase shot_info;
+				charabase::CharBase shot_info;
 				f >> buf;	// Imgƒ‰ƒxƒ‹“Ç‚Ý”ò‚Î‚µ
-				std::string img_path;
-				f >> img_path;
-				D3DCOLOR transparent;
-				f >> std::hex >> transparent;
-				shot_info.img = Draw_LoadObject(img_path,transparent);
+				f >> shot_info.resname;
 
 				f >> buf;	// Widthƒ‰ƒxƒ‹“Ç‚Ý”ò‚Î‚µ
-				LoadValue(f, obj_, shot_info.src.x);
+				LoadValue(f, obj_, shot_info.size.x);
 				f >> buf;	// Heightƒ‰ƒxƒ‹“Ç‚Ý”ò‚Î‚µ
-				LoadValue(f, obj_, shot_info.src.y);
+				LoadValue(f, obj_, shot_info.size.y);
 
 				CShot shot(shot_info);
 				shot.LoadCollisions(f);

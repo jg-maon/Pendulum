@@ -1,7 +1,7 @@
-読み込み画像	パス			透過色(16進数ARGB)
-#Img		res/gra/bird.png	0xff000000
-		画像管理名
-		img_bird
+読み込み画像	画像管理名
+#Img		img_bird
+		
+		
 
 画像サイズ	幅	高さ	※整数のみ
 #Size		128	128
@@ -24,7 +24,7 @@ Rect	-halfWidth	-halfHeight	halfWidth	halfHeight
 攻撃	攻撃方法{攻撃方法別値}
 #Attack NWayShot
 {
-ショット画像管理名、透過色(16進数ARGB)	res/gra/birdShot.png	0xff000000	
+ショット画像管理名	img_birdShot
 ショット画像幅	64
 ショット画像高	64
 ショット当たり判定

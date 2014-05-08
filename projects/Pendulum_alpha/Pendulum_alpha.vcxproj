@@ -179,6 +179,8 @@
     <ClCompile Include="src\stageMng.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="res\txt\enemy\bird.txt" />
+    <Text Include="res\txt\enemy\enemyTable01.txt" />
     <Text Include="res\txt\resdata.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1600,6 +1600,35 @@ void font::Draw_CreateFontItalic(int Num, int size, LPCTSTR	fontname)
 }
 
 
+//--------------------------------------------------------------------------------------------
+//文字列描画時のサイズ取得
+//--------------------------------------------------------------------------------------------
+unsigned int font::Draw_GetStringWidth(const std::string& msg, int fontID)
+{
+	if (pFontData[fontID] == NULL)	return 0;
+	//表示テキストサイズ計算
+	TEXTMETRIC  TextMetric;
+	pFontData[fontID]->GetTextMetrics(&TextMetric);
+	return  (TextMetric.tmMaxCharWidth * msg.length());
+}
+unsigned int font::Draw_GetCharWidth(int fontID)
+{
+	if (pFontData[fontID] == NULL)	return 0;
+	//表示テキストサイズ計算
+	TEXTMETRIC  TextMetric;
+	pFontData[fontID]->GetTextMetrics(&TextMetric);
+	return TextMetric.tmMaxCharWidth;
+}
+unsigned int font::Draw_GetCharHeight(int fontID)
+{
+	if (pFontData[fontID] == NULL)	return 0;
+	//表示テキストサイズ計算
+	TEXTMETRIC  TextMetric;
+	pFontData[fontID]->GetTextMetrics(&TextMetric);
+	return TextMetric.tmHeight;
+}
+
+
 //---------------------------------------------------------------------------------------
 //フォントテーブル初期化　内部使用
 //---------------------------------------------------------------------------------------

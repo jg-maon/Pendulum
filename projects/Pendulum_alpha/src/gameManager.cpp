@@ -163,6 +163,21 @@ std::vector<ObjPtr> CGameManager::GetObjects(const std::string& taskName, const 
 	}
 	return ret;
 }
+
+void CGameManager::ClearObjects()
+{
+	// Œ»Ý“o˜^’†
+	for (auto& obj : objs_)
+		obj->kill();
+
+	// ’Ç‰Á—\’è
+	for (auto& obj : addObjs_)
+		obj->kill();
+}
+
+
+
+
 void CGameManager::setClear(bool clear)
 {
 	clear_ = clear; 
@@ -206,6 +221,18 @@ void CGameManager::winRect(const mymath::Recti& newRect)
 void CGameManager::winRect(mymath::Recti* newRect)
 {
 	winRect_ = newRect;
+}
+
+mymath::Vec3f CGameManager::GetPlayerPos() const
+{
+	mymath::Vec3f v = { -1, -1, -1 };
+	for (const auto& s : objs_){
+		if (s->FindName("Player")){
+			v = std::dynamic_pointer_cast<IObject>(s)->obj().pos;
+			return v;
+		}
+	}
+	return v;
 }
 
 

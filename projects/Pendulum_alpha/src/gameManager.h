@@ -84,20 +84,28 @@ public:
 
 	/*
 		@brief	与えられた名前を含むオブジェクトを取得
-		GetObjects("Collision");
+				GetObjects("Collision");
 		@param	[in] taskName	探すオブジェクト名
 		@return	オブジェクト群
 	*/
 	std::vector<ObjPtr> GetObjects(const std::string& taskName);
 	/*
 		@brief	与えられた名前を含むオブジェクトを取得
-		GetObjects("Player,Enemy", ",");
+				GetObjects("Player,Enemy", ",");
 		@param	[in] taskName	探すオブジェクト名
 		@param	[in] delim		区切り文字
 		@return	オブジェクト群
 	*/
 	std::vector<ObjPtr> GetObjects(const std::string& taskName, const char delim);
 	
+	/*
+		@brief	オブジェクトの全消去
+		@return	なし
+	*/
+	void ClearObjects();
+
+
+
 	void setClear(bool clear);
 	bool getClear() const;
 	void StartClear();
@@ -121,6 +129,11 @@ public:
 	*/
 	void winRect(mymath::Recti* newRect);
 
+	/*
+		@brief	プレイヤー座標の取得
+		@return	プレイヤーオブジェクトの座標
+	*/
+	mymath::Vec3f GetPlayerPos() const;
 
 };
 
