@@ -1,8 +1,8 @@
 #ifndef DEF_SCENESTAGESELECT_H
 #define DEF_SCENESTAGESELECT_H
 
-#ifndef DEF_SCENEBASE_H
-#include "sceneBase.h"
+#ifndef DEF_SCENEBASE_HPP
+#include "sceneBase.hpp"
 #endif
 
 class CSceneStageSelect : public IScene

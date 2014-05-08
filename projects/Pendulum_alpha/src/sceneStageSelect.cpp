@@ -4,6 +4,10 @@
 #include "sceneMain.h"
 #include "Fade.h"
 
+#include "stageMng.h"
+
+extern CGameManager* gm;
+
 //======================================
 // CSceneStageSelect methods
 #pragma region CSceneStageSelect methods
@@ -11,6 +15,7 @@
 CSceneStageSelect::CSceneStageSelect()
 {
 	state_ = State::MAIN;
+	InsertObject(ObjPtr(new CStageMng()));
 }
 CSceneStageSelect::~CSceneStageSelect()
 {
@@ -36,7 +41,11 @@ IScene* CSceneStageSelect::step()
 	{
 		if(CFade::FadeOut(255.f/20.f))
 		{
-			shareRes_->stage->LoadStage("stage01");
+			const auto& sm = gm->GetObjects("SceneMng");
+			if (!sm.empty())
+			{
+				std::dynamic_pointer_cast<CStageMng>(sm[0])->LoadStage("stage01");
+			}
 			return new CSceneMain();
 		}
 		/*

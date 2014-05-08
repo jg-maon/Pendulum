@@ -5,8 +5,8 @@
 #include "setting.h"
 #include "common.h"
 
-//#include "player.h"
-//#include "enemyMng.h"
+#include "player.h"
+#include "enemyMng.h"
 
 #include <sstream>
 #include <fstream>
@@ -15,7 +15,8 @@ using std::ifstream;
 using common::FindChunk;
 
 CStageMng::CStageMng():
-	actionPoints(actionPoints_)
+	Base("StageMng")
+	,actionPoints(actionPoints_)
 	,rect(stageRect_)
 {
 }
@@ -38,7 +39,6 @@ bool CStageMng::LoadSize(std::ifstream& f)
 	{
 		f >> stageRect_.bottom;
 	}
-
 	return f.eof();
 }
 
@@ -121,10 +121,10 @@ bool CStageMng::LoadActionPolygons(ifstream& f)
 			f >> label;
 			if(label == "}")break;
 			int num = std::atoi(label.c_str());
-			std::vector<Vec3f> info(num);
+			std::vector<mymath::Vec3f> info(num);
 			for(int i=0; i<num; ++i)
 			{
-				Vec3f pos;
+				mymath::Vec3f pos;
 				f >> label;
 				if(label == "}" || f.eof()) return f.eof();
 				pos.x = static_cast<float>(std::atof(label.c_str()));

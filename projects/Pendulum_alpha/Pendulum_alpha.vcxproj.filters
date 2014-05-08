@@ -63,8 +63,41 @@
     <Filter Include="ソース ファイル\Fade">
       <UniqueIdentifier>{b051ef08-ae11-4a2e-a40b-a268bf29204c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\InGame\StageMng">
+    <Filter Include="ソース ファイル\InGame\ActionPoint">
+      <UniqueIdentifier>{0828a8f3-81c5-4249-b4ac-aa07c169e100}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Collision">
+      <UniqueIdentifier>{93625c41-6aae-4e8e-9043-05158a204d30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Effect">
+      <UniqueIdentifier>{0c79f46c-1eaf-479f-b7cc-f5daa02113f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Effect\Explosion">
+      <UniqueIdentifier>{a4beec20-eed7-4e68-a5b0-c744d7ac7309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager">
       <UniqueIdentifier>{80c71b0b-4ccb-4f05-84db-e77e733b1e9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack">
+      <UniqueIdentifier>{32ce056c-6b80-4214-871c-ac6575028b80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack\nWayShot">
+      <UniqueIdentifier>{b49907de-4957-46f9-8509-10dc60d5f3c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character">
+      <UniqueIdentifier>{08c13dd7-b9c6-4bd1-a8f8-eda6da995c55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy">
+      <UniqueIdentifier>{84112db1-6049-469c-be92-5a3a570634a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy\Bird">
+      <UniqueIdentifier>{39befac3-3d92-42d7-a405-3144b3dd2b69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy\Manager">
+      <UniqueIdentifier>{88f51fda-4f46-4ad4-9303-d8625977957e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Player">
+      <UniqueIdentifier>{6a2ddff4-9777-4ba1-87e1-e3918057123f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -179,9 +212,6 @@
     <ClInclude Include="src\charBase.h">
       <Filter>ソース ファイル\CharBase</Filter>
     </ClInclude>
-    <ClInclude Include="src\sceneBase.h">
-      <Filter>ソース ファイル\Sequence\Base</Filter>
-    </ClInclude>
     <ClInclude Include="src\sceneEnd.h">
       <Filter>ソース ファイル\Sequence\End</Filter>
     </ClInclude>
@@ -201,7 +231,43 @@
       <Filter>ソース ファイル\Fade</Filter>
     </ClInclude>
     <ClInclude Include="src\stageMng.h">
-      <Filter>ソース ファイル\InGame\StageMng</Filter>
+      <Filter>ソース ファイル\InGame\StageManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actionPoint.h">
+      <Filter>ソース ファイル\InGame\ActionPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\charaObjBase.hpp">
+      <Filter>ソース ファイル\InGame\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="src\collision.h">
+      <Filter>ソース ファイル\InGame\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effectBase.hpp">
+      <Filter>ソース ファイル\InGame\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effectExplosion.h">
+      <Filter>ソース ファイル\InGame\Effect\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="src\enemyBase.hpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bird.h">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Bird</Filter>
+    </ClInclude>
+    <ClInclude Include="src\enemyMng.h">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nWayShot.h">
+      <Filter>ソース ファイル\InGame\Attack\nWayShot</Filter>
+    </ClInclude>
+    <ClInclude Include="src\attackBase.hpp">
+      <Filter>ソース ファイル\InGame\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="src\player.h">
+      <Filter>ソース ファイル\InGame\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneBase.hpp">
+      <Filter>ソース ファイル\Sequence\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -268,9 +334,6 @@
     <ClCompile Include="src\charBase.cpp">
       <Filter>ソース ファイル\CharBase</Filter>
     </ClCompile>
-    <ClCompile Include="src\sceneBase.cpp">
-      <Filter>ソース ファイル\Sequence\Base</Filter>
-    </ClCompile>
     <ClCompile Include="src\sceneEnd.cpp">
       <Filter>ソース ファイル\Sequence\End</Filter>
     </ClCompile>
@@ -290,7 +353,28 @@
       <Filter>ソース ファイル\Fade</Filter>
     </ClCompile>
     <ClCompile Include="src\stageMng.cpp">
-      <Filter>ソース ファイル\InGame\StageMng</Filter>
+      <Filter>ソース ファイル\InGame\StageManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actionPoint.cpp">
+      <Filter>ソース ファイル\InGame\ActionPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="src\collision.cpp">
+      <Filter>ソース ファイル\InGame\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="src\effectExplosion.cpp">
+      <Filter>ソース ファイル\InGame\Effect\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bird.cpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Bird</Filter>
+    </ClCompile>
+    <ClCompile Include="src\enemyMng.cpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nWayShot.cpp">
+      <Filter>ソース ファイル\InGame\Attack\nWayShot</Filter>
+    </ClCompile>
+    <ClCompile Include="src\player.cpp">
+      <Filter>ソース ファイル\InGame\Character\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -102,22 +102,22 @@ inline Vec3f CharBase::HalfSize() const
 	return GetSize() / 2.0f;
 }
 
-Rectf CharBase::GetRect(MODE mode) const
+mymath::Rectf CharBase::GetRect(MODE mode) const
 {
 	if (mode == MODE::Center)
 	{
-		Rectf ret(	pos - HalfSize(),
+		mymath::Rectf ret(	pos - HalfSize(),
 					pos + HalfSize());
 		return ret;
 	}
 	else if (mode == MODE::LeftTop)
 	{
-		Rectf ret(pos, pos + GetSize());
+		mymath::Rectf ret(pos, pos + GetSize());
 		return ret;
 	}
 	else
 	{
-		return Rectf();
+		return mymath::Rectf();
 	}
 }
 

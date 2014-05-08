@@ -1,8 +1,8 @@
 #include "sceneMain.h"
 #include "define.h"
 
-//#include "Collision.h"		// Collision検出用
-//#include "enemyMng.h"
+#include "Collision.h"		// Collision検出用
+#include "enemyMng.h"
 #include "setting.h"
 
 #include "Fade.h"
@@ -18,8 +18,7 @@ extern CGameManager* gm;
 // コンストラクタ
 CSceneMain::CSceneMain()
 {
-	//InsertObject(ObjPtr(new CCollision(*(shareRes_->stage))));
-	//InsertObject(ObjPtr(new CEnemyMng()));
+	InsertObject(ObjPtr(new CCollision())));
 	CFade::StartFadeIn();
 	bgm::DShow_Play("bgm_main");
 }
@@ -76,7 +75,7 @@ IScene* CSceneMain::step()
 void CSceneMain::draw()
 {
 	//Draw_FontText(100,200,0.5f,"メイン画面",-1,0);
-	// ObjectBase描画
+	// IObject描画
 	shareRes_->Draw();
 	gm->draw();
 	/*for(auto& obj : objs)

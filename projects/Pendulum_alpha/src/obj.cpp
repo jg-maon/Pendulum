@@ -135,11 +135,11 @@ bool IColObject::LoadCollisions(std::ifstream& f)
 	{
 		if(buf == "Circle")
 		{
-			Circlef c;
+			mymath::Circlef c;
 			if(LoadValue(f, obj_, c.center.x))return true;
 			if(LoadValue(f, obj_, c.center.y))return true;
 			if(LoadValue(f, obj_, c.radius))return true;
-			collisions_.push_back(ShapefPtr(new Circlef(c)));
+			collisions_.push_back(mymath::ShapefPtr(new mymath::Circlef(c)));
 		}
 		else if(buf == "Polygon")
 		{
@@ -151,16 +151,16 @@ bool IColObject::LoadCollisions(std::ifstream& f)
 				//if(LoadValue(f, obj_, p.points[i].x))return true;
 				//if(LoadValue(f, obj_, p.points[i].y))return true;
 			}
-			//collisions_.push_back(ShapefPtr(new Polygonf(p))));
+			//collisions_.push_back(mymath::ShapefPtr(new Polygonf(p))));
 		}
 		else if(buf == "Rect")
 		{
-			Rectf r;
+			mymath::Rectf r;
 			if(LoadValue(f, obj_, r.left))return true;
 			if(LoadValue(f, obj_, r.top))return true;
 			if(LoadValue(f, obj_, r.right))return true;
 			if(LoadValue(f, obj_, r.bottom))return true;
-			collisions_.push_back(ShapefPtr(new Rectf(r)));
+			collisions_.push_back(mymath::ShapefPtr(new mymath::Rectf(r)));
 		}
 		f >> buf;
 	}

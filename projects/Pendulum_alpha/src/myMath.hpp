@@ -8,32 +8,33 @@
 
 namespace mymath
 {
-
+/*
 #ifndef PI
 #define PI   3.14159265358979323846f
 #endif
 #ifndef PI_D
 #define PI_D 3.14159265358979323846
 #endif
+*/
 
 
 
 
 // 2乗
-#define POW2(x)		( (x)*(x) )
+//#define POW2(x)		( (x)*(x) )
 // ピタゴラスの定理のルートなし
-#define PYTHA(x,y)	( POW2((x)) + POW2((y)) )
+//#define PYTHA(x,y)	( POW2((x)) + POW2((y)) )
 
 // 2乗
-//template <typename T> inline T Pow2(const T& x)
-//{
-//	return x * x; 
-//}
+template <typename T> inline T POW2(const T& x)
+{
+	return x * x; 
+}
 // ピタゴラスの定理のルートなし
-//template <typename T1, typename T2>	inline T1 Pytha(const T1& x, const T2& y)
-//{ 
-//	return (x * x) + (y * y); 
-//}
+template <typename T1, typename T2>	inline T1 PYTHA(const T1& x, const T2& y)
+{ 
+	return (x * x) + (y * y); 
+}
 
 // 四捨五入
 template<typename T> inline T	round(T a)

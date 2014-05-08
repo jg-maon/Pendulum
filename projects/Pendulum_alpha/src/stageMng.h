@@ -1,6 +1,10 @@
 #ifndef DEF_STAGEMNG_H
 #define DEF_STAGEMNG_H
 
+#ifndef DEF_OBJ_H
+#include "obj.h"
+#endif
+
 #ifndef DEF_ACTIONPOINT_H
 #include "actionPoint.h"
 #endif
@@ -9,7 +13,8 @@
 #include "MyMath.hpp"
 #endif
 
-class CStageMng
+
+class CStageMng : public Base
 {
 private:
 	mymath::Recti stageRect_;			// ステージの大きさ
@@ -69,8 +74,8 @@ private:
 
 public:
 	CStageMng();
-	void step();
-	void draw();
+	virtual void step() override;
+	virtual void draw() override;
 
 	/*
 		@brief	ステージのロード

@@ -1,8 +1,8 @@
 #ifndef DEF_SCENETITLE_H
 #define DEF_SCENETITLE_H
 
-#ifndef DEF_SCENEBASE_H
-#include "sceneBase.h"
+#ifndef DEF_SCENEBASE_HPP
+#include "sceneBase.hpp"
 #endif
 
 class CSceneTitle : public IScene
