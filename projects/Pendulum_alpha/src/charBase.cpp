@@ -83,21 +83,21 @@ CharBase::CharBase(float x, float y, float z,		// ç¿ïW
 	alpha = r = g = b = 255.f;
 }
 
-inline mymath::Vec3f CharBase::GetSize() const
+mymath::Vec3f CharBase::GetSize() const
 {
 	return mymath::Vec3f(size.x*scale.x, size.y*scale.y, size.z*scale.z);
 }
 
-inline float CharBase::HalfWidth() const
+float CharBase::HalfWidth() const
 {
 	return size.x*scale.x / 2.0f;
 }
 
-inline float CharBase::HalfHeight() const
+float CharBase::HalfHeight() const
 {
 	return size.y*scale.y / 2.0f;
 }
-inline mymath::Vec3f CharBase::HalfSize() const
+mymath::Vec3f CharBase::HalfSize() const
 {
 	return GetSize() / 2.0f;
 }

@@ -6,6 +6,10 @@
 
 #include <wtypes.h>	//  RECT—p
 
+#ifdef USE_CIRCLE_EXT
+#include "../../../lib/gplib.h"
+#endif
+
 namespace mymath
 {
 	const float PI = 3.14159265358979323846f;
@@ -1387,9 +1391,6 @@ typedef Rect<float>	Rectf;
 //=================================================================================================
 #pragma region Circle
 
-#ifdef USE_CIRCLE_EXT
-#include "../../../lib/gplib.h"
-#endif
 /*
 	@brief	‰~
 		Vec3<T1> center
@@ -2028,7 +2029,7 @@ public:
 			float ra2 = static_cast<float>(i+1)	* 2.0f * PI / 360.0f;
 			POINT sta = { LONG(std::cosf(rad) * radius + center.x), LONG(-std::sinf(rad) * radius + center.y) };
 			POINT end = { LONG(std::cosf(ra2) * radius + center.x), LONG(-std::sinf(ra2) * radius + center.y) };
-			Draw_Line(	(int)sta.x,
+			graph::Draw_Line(	(int)sta.x,
 						(int)sta.y,
 						(int)end.x,
 						(int)end.y,
@@ -2045,7 +2046,7 @@ public:
 			float ra2 = static_cast<float>(i+1)	* 2.0f * PI / 360.0f;
 			POINT sta = { LONG(std::cosf(rad) * radius + center_x), LONG(-std::sinf(rad) * radius + center_y) };
 			POINT end = { LONG(std::cosf(ra2) * radius + center_x), LONG(-std::sinf(ra2) * radius + center_y) };
-			Draw_Line(	(int)sta.x,
+			graph::Draw_Line(	(int)sta.x,
 						(int)sta.y,
 						(int)end.x,
 						(int)end.y,

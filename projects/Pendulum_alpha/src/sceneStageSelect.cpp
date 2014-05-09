@@ -41,10 +41,16 @@ IScene* CSceneStageSelect::step()
 	{
 		if(CFade::FadeOut(255.f/20.f))
 		{
-			const auto& sm = gm->GetObjects("SceneMng");
+			const auto& sm = gm->GetObjects("StageMng");
 			if (!sm.empty())
 			{
 				std::dynamic_pointer_cast<CStageMng>(sm[0])->LoadStage("stage01");
+			}
+			else
+			{
+				ObjPtr stage(new CStageMng());
+				InsertObject(stage);
+				std::dynamic_pointer_cast<CStageMng>(stage)->LoadStage("stage01");
 			}
 			return new CSceneMain();
 		}

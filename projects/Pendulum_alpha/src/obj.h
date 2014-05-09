@@ -203,9 +203,9 @@ public:
 	/*
 		@brief	当たり判定領域の代入
 		@param	[in]	collisions	新しい当たり判定領域
-		@return	新しい当たり判定領域を適用した当たり判定領域(Getーー)
+		@return	なし
 	*/
-	Collisions SetCollisionAreas(const Collisions& collisions);
+	void SetCollisionAreas(const Collisions& collisions);
 };
 
 

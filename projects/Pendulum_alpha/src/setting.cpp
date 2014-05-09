@@ -14,11 +14,7 @@ struct ResData
 {
 	std::string resname;
 	std::string path;
-	friend ifstream& operator >> (ifstream& f, ResData& data)
-	{
-		f >> data.resname >> data.path;
-		return f;
-	}
+	
 };
 
 // フォント用
@@ -92,7 +88,9 @@ void LoadImg(ifstream& f)
 		if (buf == "}") return;
 		ResData data;
 		D3DCOLOR transparent;
-		f >> data >> std::hex >> transparent;
+		data.resname = buf;
+		f >> data.path >> std::hex >> transparent;
+
 		graph::Draw_LoadObject(data.resname, data.path, transparent);
 	}
 }
@@ -122,7 +120,8 @@ void LoadBGM(ifstream& f)
 		f >> buf;
 		if (buf == "}") return;
 		ResData data;
-		f >> data;
+		data.resname = buf;
+		f >> data.path;
 		bgm::DShow_LoadFile(data.resname, data.path);
 	}
 }
@@ -148,7 +147,8 @@ void LoadSE(ifstream& f)
 		f >> buf;
 		if (buf == "}") return;
 		ResData data;
-		f >> data;
+		data.resname = buf;
+		f >> data.path;
 		se::DSound_LoadFile(data.resname, data.path);
 	}
 }
@@ -181,7 +181,8 @@ void LoadFont(ifstream& f)
 		if (buf == "}") return;
 		ResData data;
 		int size;
-		f >> data >> size;
+		data.resname = buf;
+		f >> data.path >> std::dec >> size;
 		data.path = common::StrReplace(data.path, "＿", "");
 		font::Draw_CreateFont(i, size, data.path.c_str());
 		fontTable_.insert(std::unordered_map<std::string, int>::value_type(data.resname, i));

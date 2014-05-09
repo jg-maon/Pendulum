@@ -56,8 +56,9 @@ CCollision::CCollision() :
 void CCollision::step()
 {
 	auto& player = CPlayer::GetPtr();
-	auto& enemies = (std::static_pointer_cast<CEnemyMng>(
-						CEnemyMng::GetPtr()))->GetEnemies();
+	
+	const auto& em = CEnemyMng::GetPtr();
+	
 	auto& atk_shots = gm()->GetObjects("Atk_Shot");
 	const auto& sm = *std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
 	//-----------------------------------------------------
@@ -92,48 +93,52 @@ void CCollision::step()
 								static_cast<float>(m.y));
 			//-----------------------------------------
 			// UŒ‚ vs “G
-			for(auto& enemy : enemies)
+			if (em != nullptr)
 			{
-				const mymath::Vec3f& enpos = enemy->obj().pos;
-				mouse.z = enpos.z;
-				auto& enemyCollisions = enemy->GetCollisionAreas();
-				// “–‚½‚è”»’è
-				for(auto& col : enemyCollisions)
+				auto& enemies = std::dynamic_pointer_cast<CEnemyMng>(em)->GetEnemies();
+				for (auto& enemy : enemies)
 				{
-					// “–‚½‚è”»’è“à‚Ì‚İ
-					if(!(col->Contains(mouse))) continue;
-					mymath::Linef line(plpos, col->IntersectionPoint2Nearest(plpos,mouse));
-					// “G‚Æ‚Ì’¼ü‹——£‚ÉActionPolygon‚ª‚È‚¢ê‡‚Ì‚İUŒ‚—LŒø
-					bool atkFlag = true;
-					for(auto& actp : sm.actionPoints)
+					const mymath::Vec3f& enpos = enemy->obj().pos;
+					mouse.z = enpos.z;
+					auto& enemyCollisions = enemy->GetCollisionAreas();
+					// “–‚½‚è”»’è
+					for (auto& col : enemyCollisions)
 					{
-						// ActioinPolygonˆÈŠO”rœ
-						if(!actp->FindName("ActionPolygon"))continue;
-						// ActionPolygon‚ÆŒğ·
-						if(actp->Contains(mymath::Vec3f(),line))
+						// “–‚½‚è”»’è“à‚Ì‚İ
+						if (!(col->Contains(mouse))) continue;
+						mymath::Linef line(plpos, col->IntersectionPoint2Nearest(plpos, mouse));
+						// “G‚Æ‚Ì’¼ü‹——£‚ÉActionPolygon‚ª‚È‚¢ê‡‚Ì‚İUŒ‚—LŒø
+						bool atkFlag = true;
+						for (auto& actp : sm.actionPoints)
 						{
-							atkFlag = false;
-							break;
+							// ActioinPolygonˆÈŠO”rœ
+							if (!actp->FindName("ActionPolygon"))continue;
+							// ActionPolygon‚ÆŒğ·
+							if (actp->Contains(mymath::Vec3f(), line))
+							{
+								atkFlag = false;
+								break;
+							}
 						}
-					}
-					//-----------------------------------------
-					// UŒ‚ˆ—
-					if(atkFlag)
-					{
-						// ƒ_ƒ[ƒW
-						pl->ApplyAttack(enemy->obj().pos);
-						if(enemy->ApplyDamage(pl->power))
+						//-----------------------------------------
+						// UŒ‚ˆ—
+						if (atkFlag)
 						{
-							//-----------------------------------------
-							// “Gkill
-							pl->KilledEnemy();
-						
-							// ”šUƒGƒtƒFƒNƒg
-							for(int i=0; i<3; ++i)
-								InsertObject(ObjPtr(new CEffectExplosion(enemy->obj().pos)));
-							// SE
-							//DSound_SetFrequency(SE::EXPLODE, 1000);
-							se::DSound_Play("img_explosion");
+							// ƒ_ƒ[ƒW
+							pl->ApplyAttack(enemy->obj().pos);
+							if (enemy->ApplyDamage(pl->power))
+							{
+								//-----------------------------------------
+								// “Gkill
+								pl->KilledEnemy();
+
+								// ”šUƒGƒtƒFƒNƒg
+								for (int i = 0; i < 3; ++i)
+									InsertObject(ObjPtr(new CEffectExplosion(enemy->obj().pos)));
+								// SE
+								//DSound_SetFrequency(SE::EXPLODE, 1000);
+								se::DSound_Play("se_explosion");
+							}
 						}
 					}
 				}
@@ -142,43 +147,47 @@ void CCollision::step()
 
 		
 		auto& plCols = player->GetCollisionAreas();
-		for(auto& plcol : plCols)
+		for (auto& plcol : plCols)
 		{
 			auto& pc = *std::dynamic_pointer_cast<mymath::Rectf>(plcol);
-			
+
 			//-----------------------------------------
 			// ƒvƒŒƒCƒ„[ vs “GUŒ‚
-			for(auto& enemy : enemies)
+			if (em != nullptr)
 			{
-				const mymath::Vec3f& enpos = enemy->obj().pos;
-				//-----------------------------------------
-				// “GUŒ‚ 
-				auto& enemyAtks = enemy->GetAttackCollisions();
-				int i=0;
-				for(auto& col : enemyAtks)
+				auto& enemies = std::dynamic_pointer_cast<CEnemyMng>(em)->GetEnemies();
+				for (auto& enemy : enemies)
 				{
-					// “GUŒ‚ vs ƒvƒŒƒCƒ„[
-					if(col->Contains(pc))
+					const mymath::Vec3f& enpos = enemy->obj().pos;
+					//-----------------------------------------
+					// “GUŒ‚ 
+					auto& enemyAtks = enemy->GetAttackCollisions();
+					int i = 0;
+					for (auto& col : enemyAtks)
 					{
-						// ”ñƒ_ƒ
-						pl->ApplyDamage(enemy->attack->GetForce());
-						break;
-						// UŒ‚í—Ş•Êˆ—
-						//if(enemy->attack->findName("Atk_NWayShot"))
-						//{
-						//	
-						//}
+						// “GUŒ‚ vs ƒvƒŒƒCƒ„[
+						if (col->Contains(pc))
+						{
+							// ”ñƒ_ƒ
+							pl->ApplyDamage(enemy->attack->GetForce());
+							break;
+							// UŒ‚í—Ş•Êˆ—
+							//if(enemy->attack->findName("Atk_NWayShot"))
+							//{
+							//	
+							//}
+						}
 					}
 				}
 			}
 			//-----------------------------------------------------
 			// ƒvƒŒƒCƒ„[ vs ‰“‹——£UŒ‚
-			for(auto& shot : atk_shots)
+			for (auto& shot : atk_shots)
 			{
 				auto& atkCols = shot->GetCollisionAreas();
-				for(auto& atkcol : atkCols)
+				for (auto& atkcol : atkCols)
 				{
-					if(atkcol->Contains(pc))
+					if (atkcol->Contains(pc))
 					{
 						auto& s = std::dynamic_pointer_cast<CShot>(shot);
 						pl->ApplyDamage(s->GetForce());
@@ -192,23 +201,27 @@ void CCollision::step()
 	
 	//-----------------------------------------------------
 	// “G
-	for(auto& enemy : enemies)
+	if (em != nullptr)
 	{
-		auto& en = std::dynamic_pointer_cast<IEnemy>(enemy);
-		const mymath::Vec3f& enpos = en->obj().pos;
-		//-----------------------------------------
-		// ƒvƒŒƒCƒ„[ vs ActionPoint
-		for(auto& actp : sm.actionPoints)
+		auto& enemies = std::dynamic_pointer_cast<CEnemyMng>(em)->GetEnemies();
+		for (auto& enemy : enemies)
 		{
-			if(actp->Contains(mymath::Vec3f(),en->prePos,enpos))
+			auto& en = std::dynamic_pointer_cast<IEnemy>(enemy);
+			const mymath::Vec3f& enpos = en->obj().pos;
+			//-----------------------------------------
+			// ƒvƒŒƒCƒ„[ vs ActionPoint
+			for (auto& actp : sm.actionPoints)
 			{
-				// Œğ·
-				en->hit(actp);
-			}
-			else if(actp->Contains(mymath::Vec3f(),enpos))
-			{
-				// “à•ï
-				en->hit(actp);
+				if (actp->Contains(mymath::Vec3f(), en->prePos, enpos))
+				{
+					// Œğ·
+					en->hit(actp);
+				}
+				else if (actp->Contains(mymath::Vec3f(), enpos))
+				{
+					// “à•ï
+					en->hit(actp);
+				}
 			}
 		}
 	}

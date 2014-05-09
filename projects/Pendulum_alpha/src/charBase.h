@@ -186,7 +186,7 @@ extern void StopAnim(Anim& anim);
 
 #endif
 
-typedef std::shared_ptr<charabase::CharBase> CharPtr;
+typedef std::shared_ptr<CharBase> CharPtr;
 }	// namespace charabase
 
 

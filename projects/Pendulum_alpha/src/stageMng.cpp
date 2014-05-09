@@ -186,8 +186,13 @@ void CStageMng::LoadStage(const std::string& stageName)
 	ifstream f(file.str());
 	if(f.fail())return;
 	stageName_ = stageName;
-	
-	gm()->ClearObjects();
+
+	// 先に登録されているオブジェクトを消してから読み込む
+	auto& objs = gm()->GetObjects("Player,EnemyMng,Action", ',');
+	for (auto& obj : objs)
+		obj->kill();
+
+
 
 	if(LoadSize(f))
 	{
@@ -214,7 +219,6 @@ void CStageMng::LoadStage(const std::string& stageName)
 		f.clear();
 		f.seekg(0);
 	}
-
 	
 }
 
@@ -223,5 +227,5 @@ const std::shared_ptr<CStageMng> CStageMng::GetPtr()
 {
 	extern CGameManager *gm;
 	const auto& sm = gm->GetObj(typeid(CStageMng));
-	return std::dynamic_pointer_cast<CStageMng>(sm);;
+	return std::dynamic_pointer_cast<CStageMng>(sm);
 }

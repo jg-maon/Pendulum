@@ -182,6 +182,7 @@
     <Text Include="res\txt\enemy\bird.txt" />
     <Text Include="res\txt\enemy\enemyTable01.txt" />
     <Text Include="res\txt\resdata.txt" />
+    <Text Include="res\txt\stage\stage01.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,10 +9,6 @@
 #include	"obj.h"
 #endif
 
-#ifndef DEF_GAMEMANAGER_H
-#include	"GameManager.h"
-#endif
-
 #ifndef DEF_CHARBASE_H
 #include	"charBase.h"
 #endif
@@ -117,7 +113,6 @@ void InitGame()
 		TempObject t(gm);
 	}
 
-	setting::OnCreateSetup();
 
 	// シーン初期化
 	scene_.reset(new CSceneTitle());
@@ -136,6 +131,7 @@ void TerminateGame()
 }
 void system::OnCreate()
 {
+	/*
 	font::Draw_CreateFont(0, 30, "MS　ゴシック");
 	font::Draw_CreateFont(1, 20, "MS　ゴシック");
 	font::Draw_CreateFont(2, 10, "MS　ゴシック");
@@ -146,18 +142,19 @@ void system::OnCreate()
 	graph::Draw_LoadObject("back", "res/gra/cloud.png");
 	graph::Draw_LoadObject("enemy", "res/gra/enemy.png");
 	graph::Draw_LoadObject("effect", "res/gra/newEffect.png");
-	/*
+	
 	graph::Draw_LoadObject("shot", "res/gra/shot.png");
 	graph::Draw_LoadObject("effect", "res/gra/effect.png");
 	graph::Draw_LoadObject("enemy2", "res/gra/enemy2.png");
 	graph::Draw_LoadObject("boss", "res/gra/boss.png");
 	graph::Draw_LoadObject("bomb", "res/gra/bomb.png");
 	graph::Draw_LoadObject("enemyshot", "res/gra/enemyshot.png");
-	*/
 	//効果音のロード
 	se::DSound_LoadFile("se1", "res/snd/se1.wav");
 	//BGMのロード
 	bgm::DShow_LoadFile("bgm1", "res/snd/bgm1.mp3");
+	*/
+	setting::OnCreateSetup();
 	InitGame();
 }
 

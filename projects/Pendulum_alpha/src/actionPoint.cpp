@@ -6,8 +6,8 @@
 //#define D_CORD_TEST		// 座標描画
 #endif
 #include "actionPoint.h"
+#include "define.h"
 
-#include "lib\gplib.h"
 #include <typeinfo>
 
 
@@ -40,7 +40,7 @@ void CActionCircle::step()
 void CActionCircle::draw()
 {
 #ifdef D_CIRCLE_TEST
-	if(inScreen(static_cast<int>(circle_.radius)))
+	if(InScreen(static_cast<int>(circle_.radius)))
 	{
 		circle_.draw(0xff4050ff);
 	}
@@ -142,12 +142,12 @@ void CActionPolygon::draw()
 {
 #ifdef D_POLYGON_TEST
 	std::vector<mymath::Linef> lines = MakeLines();
-	mymath::Rectf rect = GetScreenRect();
+	mymath::Rectf rect = camera::GetScreenRect();
 	for(const auto& line : lines)
 	{
 		// 完全に画面外の場合スキップ
 		//if(!rect.Contains(line)) continue;
-		Draw_Line(int(line.sta.x),int(line.sta.y),
+		graph::Draw_Line(int(line.sta.x),int(line.sta.y),
 					int(line.end.x),int(line.end.y),
 					line.sta.z,
 					ARGB(255,255,0,0),1);
@@ -210,7 +210,7 @@ bool CActionPolygon::Contains(mymath::Vec3f& out, const mymath::Vec3f& sta, cons
 	{
 		mymath::Vec3f d1 = min - sta;
 		mymath::Vec3f d2 = points[i] - sta;
-		if(PYTHA(d1.x,d1.y) > PYTHA(d2.x,d2.y))
+		if(mymath::PYTHA(d1.x,d1.y) > mymath::PYTHA(d2.x,d2.y))
 			min = points[i];
 	}
 	out = min;
@@ -345,7 +345,7 @@ mymath::Vec3f CActionPolygon::IntersectionPoint2Nearest(const mymath::Linef& lin
 	{
 		mymath::Vec3f d1 = min - line.sta;
 		mymath::Vec3f d2 = points[i] - line.sta;
-		if(PYTHA(d1.x,d1.y) > PYTHA(d2.x,d2.y))
+		if(mymath::PYTHA(d1.x,d1.y) > mymath::PYTHA(d2.x,d2.y))
 			min = points[i];
 	}
 	return min;
@@ -366,7 +366,7 @@ mymath::Vec3f CActionPolygon::IntersectionPoint2Nearest(const mymath::Vec3f& sta
 	{
 		mymath::Vec3f d1 = min - sta;
 		mymath::Vec3f d2 = points[i] - sta;
-		if(PYTHA(d1.x,d1.y) > PYTHA(d2.x,d2.y))
+		if(mymath::PYTHA(d1.x,d1.y) > mymath::PYTHA(d2.x,d2.y))
 			min = points[i];
 	}
 	return min;

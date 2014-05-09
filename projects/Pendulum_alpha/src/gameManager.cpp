@@ -169,10 +169,11 @@ void CGameManager::ClearObjects()
 	// Œ»Ý“o˜^’†
 	for (auto& obj : objs_)
 		obj->kill();
-
+	/*
 	// ’Ç‰Á—\’è
 	for (auto& obj : addObjs_)
 		obj->kill();
+	*/
 }
 
 

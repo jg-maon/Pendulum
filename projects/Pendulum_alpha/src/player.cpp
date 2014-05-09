@@ -1,6 +1,6 @@
 
 #ifdef _DEBUG
-#define D_MOVE_TEST		// キーで移動
+//#define D_MOVE_TEST		// キーで移動
 //#define D_HANG_TEST			// 減速なし
 //#define D_GRAVITY_TEST		// 重力なし
 //#define D_COLOR_TEST	// HSV変換テスト
@@ -576,7 +576,7 @@ void CPlayer::draw()
 		<<	","		<< std::setw(3) << (int)attackRange_->g
 		<<	","		<< std::setw(3) << (int)attackRange_->b
 		<<	")";
-	Draw_FontText(
+	font::Draw_FontText(
 		arc.left, arc.bottom,0.f,
 		ss.str(),-1,
 		setting::GetFontID("font_MSG15"));

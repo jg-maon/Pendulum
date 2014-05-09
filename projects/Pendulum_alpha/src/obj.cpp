@@ -177,10 +177,9 @@ Base::Collisions IColObject::GetCollisionAreas() const
 	return cols;
 }
 
-Base::Collisions IColObject::SetCollisionAreas(const Base::Collisions& collisions)
+void IColObject::SetCollisionAreas(const Base::Collisions& collisions)
 {
 	collisions_ = collisions;
-	return GetCollisionAreas();
 }
 
 #pragma endregion // IColObject methods

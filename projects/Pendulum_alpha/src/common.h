@@ -19,7 +19,7 @@ std::string StrReplace(const std::string& str, const std::string& search, const 
 bool FindChunk(std::ifstream& f, const std::string& find);
 
 // ファイルストリームを先頭に戻す
-inline std::ifstream& SeekSet(std::ifstream& f);
+std::ifstream& SeekSet(std::ifstream& f);
 
 //======================================================
 #pragma region 関数のオーバーロード類
