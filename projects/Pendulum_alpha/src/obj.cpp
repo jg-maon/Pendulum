@@ -169,7 +169,24 @@ bool IColObject::LoadCollisions(std::ifstream& f)
 
 Base::Collisions IColObject::GetCollisionAreas() const
 {
-	Base::Collisions cols(collisions_);
+	using namespace mymath;
+	Base::Collisions cols;
+	for (const auto& col : collisions_)
+	{
+		const auto& id = *(col.get());
+		if (typeid(id) == typeid(Circlef))
+		{
+			cols.push_back(ShapefPtr(new Circlef(*std::dynamic_pointer_cast<Circlef>(col))));
+		}
+		else if (typeid(id) == typeid(Rectf))
+		{
+			cols.push_back(ShapefPtr(new Rectf(*std::dynamic_pointer_cast<Rectf>(col))));
+		}
+		else if (typeid(id) == typeid(Polyf))
+		{
+			cols.push_back(ShapefPtr(new Polyf(*std::dynamic_pointer_cast<Polyf>(col))));
+		}
+	}
 	for(auto& col : cols)
 	{
 		col->Offset(obj_.pos);

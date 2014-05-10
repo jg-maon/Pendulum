@@ -71,12 +71,12 @@ void CCollision::step()
 		// プレイヤー vs ActionPoint
 		for(auto& actp : sm.actionPoints)
 		{
-			if(actp->Contains(mymath::Vec3f(),pl->prePos,plpos))
+			if(actp->Contains(pl->prePos,plpos))
 			{
 				// 交差
 				pl->hit(actp);
 			}
-			else if(actp->Contains(mymath::Vec3f(),plpos))
+			else if(actp->Contains(plpos))
 			{
 				// 内包
 				pl->hit(actp);
@@ -114,7 +114,7 @@ void CCollision::step()
 							// ActioinPolygon以外排除
 							if (!actp->FindName("ActionPolygon"))continue;
 							// ActionPolygonと交差
-							if (actp->Contains(mymath::Vec3f(), line))
+							if (actp->Contains(line))
 							{
 								atkFlag = false;
 								break;
@@ -212,12 +212,12 @@ void CCollision::step()
 			// プレイヤー vs ActionPoint
 			for (auto& actp : sm.actionPoints)
 			{
-				if (actp->Contains(mymath::Vec3f(), en->prePos, enpos))
+				if (actp->Contains(en->prePos, enpos))
 				{
 					// 交差
 					en->hit(actp);
 				}
-				else if (actp->Contains(mymath::Vec3f(), enpos))
+				else if (actp->Contains(enpos))
 				{
 					// 内包
 					en->hit(actp);
