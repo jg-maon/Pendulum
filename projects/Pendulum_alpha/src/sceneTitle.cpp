@@ -9,9 +9,10 @@
 // CSceneTitle methods
 #pragma region
 // コンストラクタ
-CSceneTitle::CSceneTitle()
+CSceneTitle::CSceneTitle() :
+phase_(Phase::TITLE)
 {
-	
+
 }
 CSceneTitle::~CSceneTitle()
 {
@@ -36,7 +37,6 @@ void CSceneTitle::TitleStep()
 
 void CSceneTitle::DemoInit()
 {
-	phaseTime_ = 0.f;
 	demo_.pos.x = 100.f;
 }
 void CSceneTitle::DemoStep()
@@ -69,6 +69,12 @@ IScene* CSceneTitle::step()
 			DemoStep();
 			break;
 		}
+
+		// 何かアクションを起こしてシーンが切り替わるとき
+		if (input::CheckPush(input::KEY_BTN0))
+		{
+			return new CSceneStageSelect();
+		}
 		break;
 	case IScene::State::OUTING:
 		break;
@@ -76,11 +82,6 @@ IScene* CSceneTitle::step()
 		break;
 	}
 
-	// 何かアクションを起こしてシーンが切り替わるとき
-	if(input::CheckPush(input::KEY_BTN0))
-	{
-		return new CSceneStageSelect();
-	}
 	return this;
 }
 
