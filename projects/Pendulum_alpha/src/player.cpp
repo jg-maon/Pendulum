@@ -381,7 +381,8 @@ void CPlayer::move()
 		pos.x = clamp(pos.x, sm->rect.left, sm->rect.right);
 		pos.y = clamp(pos.y, sm->rect.top,	sm->rect.bottom);
 	}
-	attackRange_->pos = attackRange_->pos.TmpReplace(mymath::Vec3f::X|mymath::Vec3f::Y, pos);
+	attackRange_->pos = attackRange_->pos.TmpReplace(mymath::Vec3f::X | mymath::Vec3f::Y, pos);
+
 }
 
 
@@ -395,6 +396,9 @@ void CPlayer::step()
 
 	// ˆÚ“®ˆ—
 	move();
+	//----------------------------------------
+	// U‚èŒü‚«
+	obj_.scale.x = (velocity.x > 0.f) ? 1.f : -1.f;
 
 	// Chain•¶Žš
 #pragma region Chain•¶Žš
@@ -608,7 +612,7 @@ void CPlayer::draw()
 		for(int i=1; i <= digit; ++i)
 		{
 			// ‰ºˆÊŒ…‚©‚ç‡‚É•`‰æ(Chain•¶Žš‚Ì¶‚©‚çŒ¸‚ç‚µ‚Ä‚¢‚­)
-			graph::Draw_GraphicsNC(
+			graph::Draw_GraphicsLeftTopNC(
 				numberPos_.x - i*width,
 				numberPos_.y - 10.f,
 				numberPos_.z,

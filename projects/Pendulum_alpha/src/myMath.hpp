@@ -12,8 +12,8 @@
 
 namespace mymath
 {
-	const float PI = 3.14159265358979323846f;
-	const double PI_D = 3.14159265358979323846;
+ const float PI = 3.14159265358979323846f;
+ const double PI_D = 3.14159265358979323846;
 
 #ifndef M_PI
 #define M_PI   3.14159265358979323846f
@@ -34,7 +34,7 @@ namespace mymath
 // 2乗
 template <typename T> inline T POW2(const T& x)
 {
-	return x * x; 
+	return x * x;
 }
 // ピタゴラスの定理のルートなし
 template <typename T1, typename T2>	inline T1 PYTHA(const T1& x, const T2& y)
@@ -90,59 +90,59 @@ class Vec3
 public:
 	T x,y,z;
 
-	Vec3(T xx = 0, T yy = 0 , T zz = 0):
+	Vec3(T xx = 0, T yy = 0, T zz = 0) :
 		x(xx), y(yy), z(zz)
 	{}
-	Vec3(const T p[3]):
+	Vec3(const T p[3]) :
 		x(p[0]), y(p[1]), z(p[2])
 	{}
 
 	//Vec3(const Vec3<T>& v){ *this = v; }
 
 	// 代入、初期化系
-	Vec3<T>&	operator=(T v){ x=v;y=v;z=v; return *this; } 
-	Vec3<T>&	operator()(T xx, T yy = 0 , T zz = 0){ x=xx; y=yy; z=zz; return *this; }
+	Vec3<T>&	operator=(T v){ x = v; y = v; z = v; return *this; }
+	Vec3<T>&	operator()(T xx, T yy = 0, T zz = 0){ x = xx; y = yy; z = zz; return *this; }
 
 	// 単項
-	Vec3<T>		operator-() const { return Vec3<T>(-x,-y,-z); }
+	Vec3<T>		operator-() const { return Vec3<T>(-x, -y, -z); }
 
 	// 比較 
-	bool		operator==(const Vec3<T>& v) const { return (x==v.x && y==v.y && z==v.z); } 
-	bool		operator!=(const Vec3<T>& v) const { return (x!=v.x || y!=v.y || z!=v.z); } 
+	bool		operator==(const Vec3<T>& v) const { return (x == v.x && y == v.y && z == v.z); }
+	bool		operator!=(const Vec3<T>& v) const { return (x != v.x || y != v.y || z != v.z); }
 
 	// ベクトル操作(ベクトル対ベクトル)
-	Vec3<T>		operator+(const Vec3<T>& v) const { return Vec3<T>(x+v.x, y+v.y, z+v.z); } 
-	Vec3<T>		operator-(const Vec3<T>& v) const { return Vec3<T>(x-v.x, y-v.y, z-v.z); } 
-	Vec3<T>		operator*(const Vec3<T>& v) const { return Vec3<T>(x*v.x, y*v.y, z*v.z); } 
-	Vec3<T>		operator/(const Vec3<T>& v) const { return Vec3<T>(x/v.x, y/v.y, z/v.z); } 
-	Vec3<T>&	operator+=(const Vec3<T>& v){ x+=v.x; y+=v.y; z+=v.z; return *this; } 
-	Vec3<T>&	operator-=(const Vec3<T>& v){ x-=v.x; y-=v.y; z-=v.z; return *this; } 
-	Vec3<T>&	operator*=(const Vec3<T>& v){ x*=v.x; y*=v.y; z*=v.z; return *this; } 
-	Vec3<T>&	operator/=(const Vec3<T>& v){ x/=v.x; y/=v.y; z/=v.z; return *this; } 
+	Vec3<T>		operator+(const Vec3<T>& v) const { return Vec3<T>(x + v.x, y + v.y, z + v.z); }
+	Vec3<T>		operator-(const Vec3<T>& v) const { return Vec3<T>(x - v.x, y - v.y, z - v.z); }
+	Vec3<T>		operator*(const Vec3<T>& v) const { return Vec3<T>(x * v.x, y * v.y, z * v.z); }
+	Vec3<T>		operator/(const Vec3<T>& v) const { return Vec3<T>(x / v.x, y / v.y, z / v.z); }
+	Vec3<T>&	operator+=(const Vec3<T>& v){ x += v.x; y += v.y; z += v.z; return *this; }
+	Vec3<T>&	operator-=(const Vec3<T>& v){ x -= v.x; y -= v.y; z -= v.z; return *this; }
+	Vec3<T>&	operator*=(const Vec3<T>& v){ x *= v.x; y *= v.y; z *= v.z; return *this; }
+	Vec3<T>&	operator/=(const Vec3<T>& v){ x /= v.x; y /= v.y; z /= v.z; return *this; }
 
 	// 特殊演算
-	T			operator|( const Vec3<T>& v )	{ return Dot( *this, v ); }
-	Vec3<T>		operator&( const Vec3<T>& v )	{ return Cross( *this, v ); }
+	T			operator|(const Vec3<T>& v)	{ return Dot(*this, v); }
+	Vec3<T>		operator&(const Vec3<T>& v)	{ return Cross(*this, v); }
 
 	// ベクトル操作2(ベクトル対定数)
-	Vec3<T>		operator+(T v) const { return Vec3<T>(x+v,y+v,z+v); } 
-	Vec3<T>		operator-(T v) const { return Vec3<T>(x-v,y-v,z-v); } 
-	Vec3<T>		operator*(T v) const { return Vec3<T>(x*v,y*v,z*v); } 
-	Vec3<T>		operator/(T v) const { return Vec3<T>(x/v,y/v,z/v); } 
-	Vec3<T>&	operator+=(T v){ x+=v; y+=v; z+=v; return *this; }
-	Vec3<T>&	operator-=(T v){ x-=v; y-=v; z-=v; return *this; }
-	Vec3<T>&	operator*=(T v){ x*=v; y*=v; z*=v; return *this; }
-	Vec3<T>&	operator/=(T v){ x/=v; y/=v; z/=v; return *this; }
+	Vec3<T>		operator+(T v) const { return Vec3<T>(x + v, y + v, z + v); }
+	Vec3<T>		operator-(T v) const { return Vec3<T>(x - v, y - v, z - v); }
+	Vec3<T>		operator*(T v) const { return Vec3<T>(x * v, y * v, z * v); }
+	Vec3<T>		operator/(T v) const { return Vec3<T>(x / v, y / v, z / v); }
+	Vec3<T>&	operator+=(T v){ x += v; y += v; z += v; return *this; }
+	Vec3<T>&	operator-=(T v){ x -= v; y -= v; z -= v; return *this; }
+	Vec3<T>&	operator*=(T v){ x *= v; y *= v; z *= v; return *this; }
+	Vec3<T>&	operator/=(T v){ x /= v; y /= v; z /= v; return *this; }
 
 	// friend関数によるベクトル操作(定数対ベクトル)
-	friend Vec3<T>	operator+(T v, const Vec3<T>& obj){ return Vec3<T>(obj.x+v, obj.y+v, obj.z+v); } 
-	friend Vec3<T>	operator-(T v, const Vec3<T>& obj){ return Vec3<T>(obj.x-v, obj.y-v, obj.z-v); } 
-	friend Vec3<T>	operator*(T v, const Vec3<T>& obj){ return Vec3<T>(obj.x*v, obj.y*v, obj.z*v); } 
-	friend Vec3<T>	operator/(T v, const Vec3<T>& obj){ return Vec3<T>(obj.x/v, obj.y/v, obj.z/v); } 
+	friend Vec3<T>	operator+(T v, const Vec3<T>& obj){ return Vec3<T>(obj.x + v, obj.y + v, obj.z + v); }
+	friend Vec3<T>	operator-(T v, const Vec3<T>& obj){ return Vec3<T>(obj.x - v, obj.y - v, obj.z - v); }
+	friend Vec3<T>	operator*(T v, const Vec3<T>& obj){ return Vec3<T>(obj.x * v, obj.y * v, obj.z * v); }
+	friend Vec3<T>	operator/(T v, const Vec3<T>& obj){ return Vec3<T>(obj.x / v, obj.y / v, obj.z / v); }
 	  
 	// friend関数による比較
-	friend bool		operator==(T v, Vec3<T>& obj){ return (obj.x==v && obj.y==v && obj.z==v); } 
-	friend bool		operator!=(T v, Vec3<T>& obj){ return (obj.x!=v || obj.y!=v || obj.z!=v); } 
+	friend bool		operator==(T v, Vec3<T>& obj){ return (obj.x == v && obj.y == v && obj.z == v); }
+	friend bool		operator!=(T v, Vec3<T>& obj){ return (obj.x != v || obj.y != v || obj.z != v); }
 	
 	// キャスト
 	template<class T1>
@@ -157,22 +157,22 @@ public:
 	operator Vec3<T1>()
 	{
 		return Vec3<T1>(static_cast<T>(x),
-						static_cast<T>(y),
-						static_cast<T>(z));
+			static_cast<T>(y),
+			static_cast<T>(z));
 	}
 
 #pragma region member methods
 
-	static enum eTmpReplace { X=0x01, Y=0x02, Z=0x04 };
+	static enum eTmpReplace { X = 0x01, Y = 0x02, Z = 0x04 };
 	/*
 		@brief	一時的に値を置き換えたベクトルを返す
 		@param	[in]	flag	置き換えるベクトルの要素(X,Y,Zで指定、|で複数指定可)
 		@param	[in]	v		元ベクトル
 		@return	置き換えたベクトル
 	*/
-	Vec3<T>		TmpReplace( int flag, const Vec3<T>& v )
+	Vec3<T>		TmpReplace(int flag, const Vec3<T>& v)
 	{
-		return Vec3<T>( (flag&X)?v.x:x, (flag&Y)?v.y:y, (flag&Z)?v.z:z );
+		return Vec3<T>((flag&X) ? v.x : x, (flag&Y) ? v.y : y, (flag&Z) ? v.z : z);
 	}
 
 	/*
@@ -201,9 +201,9 @@ public:
 	Vec3<T>& Normalize()
 	{
 		float mag = 1.f / Length();
-		x = static_cast<T>(static_cast<float>(x) * mag);
-		y = static_cast<T>(static_cast<float>(y) * mag);
-		z = static_cast<T>(static_cast<float>(z) * mag);
+		x = static_cast<T>(static_cast<float>(x)* mag);
+		y = static_cast<T>(static_cast<float>(y)* mag);
+		z = static_cast<T>(static_cast<float>(z)* mag);
 		return *this;
 	}
 	/*
@@ -213,11 +213,10 @@ public:
 	Vec3<T>& Normalize2()
 	{
 		float mag = 1.f / Length2();
-		x = static_cast<T>(static_cast<float>(x) * mag);
-		y = static_cast<T>(static_cast<float>(y) * mag);
+		x = static_cast<T>(static_cast<float>(x)* mag);
+		y = static_cast<T>(static_cast<float>(y)* mag);
 		return *this;
 	}
-
 
 #pragma endregion // member methods
 	
@@ -239,8 +238,8 @@ public:
 	{
 		float l1 = v1.Length();
 		float l2 = v2.Length();
-		if( l1 == 0.0f || l2 == 0.0f ) return 0.0f;
-		return std::acosf( Dot(v1 , v2) / (l1 * l2) );
+		if (l1 == 0.0f || l2 == 0.0f) return 0.0f;
+		return std::acosf(Dot(v1, v2) / (l1 * l2));
 	}
 
 	/*
@@ -263,6 +262,7 @@ public:
 	{
 		return v1.x*v2.x + v1.y*v2.y;
 	}
+
 	/*
 		@brief	引数のベクトルとの外積(v1×v2)
 		@param	[in]	v1	ベクトル
@@ -271,7 +271,7 @@ public:
 	*/
 	static Vec3<T> Cross(const Vec3<T>& v1, const Vec3<T>& v2)
 	{
-		return Vec3<T>( (v1.y*v2.z)-(v1.z*v2.y), (v1.z*v2.x)-(v1.x*v2.z), (v1.x*v2.y)-(v1.y*v2.x) );
+		return Vec3<T>((v1.y*v2.z) - (v1.z*v2.y), (v1.z*v2.x) - (v1.x*v2.z), (v1.x*v2.y) - (v1.y*v2.x));
 	}
 	/*
 		@brief	引数のベクトルとのXY平面における外積(v1×v2)
@@ -291,7 +291,7 @@ public:
 	*/
 	static Vec3<T> Rotate(float angle)
 	{
-		return Vec3<T>( std::cosf(angle), std::sinf(angle) );
+		return Vec3<T>(std::cosf(angle), std::sinf(angle));
 	}
 
 #pragma endregion // static methods
@@ -314,17 +314,17 @@ public:
 	Vec3<T> sta;
 	Vec3<T> end;
 public:
-	Line():
+	Line() :
 		sta(0), end(0)
 	{}
-	Line(const Vec3<T>& s, const Vec3<T>& e):
+	Line(const Vec3<T>& s, const Vec3<T>& e) :
 		sta(s), end(e)
 	{}
-	Line(T sx, T sy, T sz, T ex, T ey, T ez):
-		sta(Vec3<T>(sx,sy,sz)), end(Vec3<T>(ex,ey,ez))
+	Line(T sx, T sy, T sz, T ex, T ey, T ez) :
+		sta(Vec3<T>(sx, sy, sz)), end(Vec3<T>(ex, ey, ez))
 	{}
-	Line(const T s[3], const T e[3]):
-		sta(Vec3<T>(s[0],s[1],s[2])), end(Vec3<T>(e[0],e[1],e[2]))
+	Line(const T s[3], const T e[3]) :
+		sta(Vec3<T>(s[0], s[1], s[2])), end(Vec3<T>(e[0], e[1], e[2]))
 	{}
 
 	/*
@@ -338,8 +338,8 @@ public:
 	{
 		Vec3<T> v1 = end - sta;
 		Vec3<T> v2 = line.end - line.sta;
-		return ( (v1 & (line.sta-sta)) | (v1 & (line.end-sta)) ) < 0.f
-			&& ( (v2 & (sta-line.sta)) | (v2 & (end-line.sta)) ) < 0.f;
+		return ((v1 & (line.sta - sta)) | (v1 & (line.end - sta))) < 0.f
+			&& ((v2 & (sta - line.sta)) | (v2 & (end - line.sta))) < 0.f;
 	}
 	/*
 		@brief	交差判定
@@ -353,8 +353,8 @@ public:
 	{
 		Vec3<T> v1 = end - sta;
 		Vec3<T> v2 = _end - _sta;
-		return ( (v1 & (_sta-sta)) | (v1 & (_end-sta)) ) < 0.f
-			&& ( (v2 & (sta-_sta)) | (v2 & (end-_sta)) ) < 0.f;
+		return ((v1 & (_sta - sta)) | (v1 & (_end - sta))) < 0.f
+			&& ((v2 & (sta - _sta)) | (v2 & (end - _sta))) < 0.f;
 	}
 
 	/*
@@ -383,12 +383,12 @@ public:
 		s = numeratorS / denominator;
 		return sta + ((end-sta) * r);
 		*/
-		
+
 		double ksi = (line.end.y - line.sta.y) * (line.end.x - sta.x) - (line.end.x - line.sta.x) * (line.end.y - sta.y);
 		double delta = (end.x - sta.x) * (line.end.y - line.sta.y) - (end.y - sta.y) * (line.end.x - line.sta.x);
 		double ramda = ksi / delta;
-		return sta + (end-sta) * static_cast<T>(ramda);
-		
+		return sta + (end - sta) * static_cast<T>(ramda);
+
 		/*
 		double s1 = ( (line.end.x - line.sta.x) * (sta.y - line.sta.y) - (line.end.y - line.sta.y) * (sta.x - line.sta.x)) / 2.0;
 		double s2 = ( (line.end.x - line.sta.x) * (line.sta.y - end.y) - (line.end.y - line.sta.y) * (line.sta.x - end.x)) / 2.0;
@@ -410,7 +410,7 @@ public:
 		double ksi = (_end.y - _sta.y) * (_end.x - sta.x) - (_end.x - _sta.x) * (_end.y - sta.y);
 		double delta = (end.x - sta.x) * (_end.y - _sta.y) - (end.y - sta.y) * (_end.x - _sta.x);
 		double ramda = ksi / delta;
-		return sta + (end-sta) * static_cast<T>(ramda);
+		return sta + (end - sta) * static_cast<T>(ramda);
 	}
 };
 typedef Line<float> Linef;
@@ -431,80 +431,95 @@ class Circle;
 /*
 	@brief	図形の基底クラス
 */
-template<typename T> class Shape
+template<typename T> class Shape 
 {
 private:
 public:
 	virtual ~Shape() = 0{}
 
 	/*
-		@brief	図形を値分ずらす
+		@brief			図形を値分ずらす
 		@param	[in]	offset	ずらす量
-		@return	自分自身
+		@return			自分自身
 	*/
-	virtual Shape<T>& Offset(const Vec3<T>& offset) = 0{return *this;}
+	virtual Shape<T>& Offset(const Vec3<T>& offset) = 0{ return *this; }
 
 	//================================================================================
 #pragma region Contains
 	/*
-		@brief	点の内包判定
+		@brief			点の内包判定
 		@param	[in]	point	判定する点
-		@return	内包しているか
+		@return			内包しているか
 		@retval true	している
 		@retval false	していない
 	*/
-	virtual bool Contains(const Vec3<T>& point)	const{return false;}
+	virtual bool Contains(const Vec3<T>& point) const{ return false; }
 
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	line(sta,end)	判定する線分
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	line(sta,end)	判定する線分(始点、終点)
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Line<T>& line, bool fullContain=false)	const{return false;}
+	virtual bool Contains(const Line<T>& line, bool fullContain = false, bool intersectOnly = false) const{ return false; }
 	
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	sta				判定する線分の始点
-		@param	[in]	end				判定する線分の終点
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第4引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	sta	判定する線分の始点
+		@param	[in]	end	判定する線分の終点
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Vec3<T>& sta, const Vec3<T>& end, bool fullContain=false)	const{return false;}
+	virtual bool Contains(const Vec3<T>& sta, const Vec3<T>& end, bool fullContain = false, bool intersectOnly = false) const{ return false; }
 	
 	/*
-		@brief	多角形の交差、内包判定
+		@brief			多角形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	poly			判定する多角形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Polygon<T>& poly, bool fullContain=false)	const{return false;}
+	virtual bool Contains(const Polygon<T>& poly, bool fullContain = false, bool intersectOnly = false) const{ return false; }
 	
 	/*
-		@brief	矩形の交差、内包判定
+		@brief			矩形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	rect			判定する矩形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Rect<T>& rect, bool fullContain=false)	const{return false;}
+	virtual bool Contains(const Rect<T>& rect, bool fullContain = false, bool intersectOnly = false) const{ return false; }
 
 	/*
-		@brief	円の交差、内包判定
+		@brief			円の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	circ			判定する円
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Circle<T,T>& circ, bool fullContain=false)	const{return false;}
+	virtual bool Contains(const Circle<T, T>& circ, bool fullContain = false, bool intersectOnly = false) const{ return false; }
 #pragma endregion // Contains
 	//================================================================================
 
@@ -518,7 +533,7 @@ public:
 		@param	[in]	point	内包している点
 		@return	交点
 	*/
-	virtual Vec3<T> IntersectionPoint2(const Vec3<T>& point)	const{return Vec3<T>();}
+	virtual Vec3<T> IntersectionPoint2(const Vec3<T>& point) const{return Vec3<T>();}
 	
 	/*
 		@brief	線分との交点の取得
@@ -528,7 +543,7 @@ public:
 		@param	[in]	line(sta,end)	比較線分
 		@return	全交点
 	*/
-	virtual std::vector<Vec3<T>> IntersectionPoint2(const Line<T>& line)	const{return std::vector<Vec3<T>>();}
+	virtual std::vector<Vec3<T>> IntersectionPoint2(const Line<T>& line) const{return std::vector<Vec3<T>>();}
 	
 	/*
 		@brief	線分との交点の取得
@@ -539,7 +554,7 @@ public:
 		@param	[in]	end	比較線分の終点
 		@return	全交点
 	*/
-	virtual std::vector<Vec3<T>> IntersectionPoint2(const Vec3<T>& sta, const Vec3<T>& end)	const{return std::vector<Vec3<T>>();}
+	virtual std::vector<Vec3<T>> IntersectionPoint2(const Vec3<T>& sta, const Vec3<T>& end) const{return std::vector<Vec3<T>>();}
 	
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
@@ -549,7 +564,7 @@ public:
 		@param	[in]	line(sta,end)	比較線分
 		@return	始点に近い交点
 	*/
-	virtual Vec3<T> IntersectionPoint2Nearest(const Line<T>& line)	const {return Vec3<T>();}
+	virtual Vec3<T> IntersectionPoint2Nearest(const Line<T>& line) const {return Vec3<T>();}
 	
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
@@ -560,7 +575,7 @@ public:
 		@param	[in]	end	比較線分の終点
 		@return	始点に近い交点
 	*/
-	virtual Vec3<T> IntersectionPoint2Nearest(const Vec3<T>& sta, const Vec3<T>& end)	const {return Vec3<T>();}
+	virtual Vec3<T> IntersectionPoint2Nearest(const Vec3<T>& sta, const Vec3<T>& end) const {return Vec3<T>();}
 #pragma endregion // Intersection
 	//================================================================================
 
@@ -575,371 +590,8 @@ typedef std::shared_ptr<Shapef> ShapefPtr;
 //=================================================================================================
 //=================================================================================================
 //=================================================================================================
-//
-//#pragma region Triangle
-///*
-//	@brief	三角形
-//*/
-//template <typename T> class Triangle : public Shape<T>
-//{
-//private:
-//
-//public:
-//	Vec3<T> points[3];	// ポリゴンを整形する頂点
-//	Triangle()
-//	{
-//		points[0] = 0;
-//		points[1] = 0;
-//		points[2] = 0;
-//	}
-//	Triangle(const Vec3<T>& aa, const Vec3<T>& bb, const Vec3<T>& cc)
-//	{
-//		points[0] = aa;
-//		points[1] = bb;
-//		points[2] = cc;
-//	}
-//	Triangle(T ax, T ay, T az, T bx, T by, T bz, T cx, T cy, T cz):
-//		points[0](Vec3<T>(ax, ay, az)),
-//		points[1](Vec3<T>(bx, by, bz)),
-//		points[2](Vec3<T>(cx, cy, cz))
-//	{}
-//	Triangle(T a[3], T b[3], T c[3]):
-//		points[0](Vec3<T>(a[0], a[1], a[2])),
-//		points[1](Vec3<T>(b[0], b[1], b[2])),
-//		points[2](Vec3<T>(c[0], c[1], c[2]))
-//	{}
-//	
-//	/*
-//		@brief	図形を値分ずらす
-//		@param	[in]	offset	ずらす量
-//		@return	自分自身
-//	*/
-//	virtual Shape<T>& Offset(const Vec3<T>& offset) override
-//	{
-//		for(auto& point : points)
-//		{
-//			point += offset;
-//		}
-//		return *this;
-//	}
-//
-//	//================================================================================
-//#pragma region Contains
-//	/*
-//		@brief	点の内包判定
-//		@param	[in]	point	判定する点
-//		@return	内包しているか
-//		@retval true	している
-//		@retval false	していない
-//	*/
-//	bool Contains(const Vec3<T>& point) const override
-//	{
-//		int cnt = 0;
-//		for(int i=0; i<3; ++i)
-//		{
-//			int j = (i+1) % 3;
-//			Vec3<T> vec(points[j] - points[i]);	// ab,bc,ca
-//			Vec3<T> p_p(point - points[i]);		// ap,bp,cp 
-//			// 外積の向き判定
-//			cnt += (Vec3<T>::Dot2(vec,p_p) > static_cast<T>(0)) ? 1 : -1;
-//		}
-//		return (cnt == 3 || cnt == -3);
-//	}
-//	/*
-//		@brief	線分の交差、内包判定
-//		@param	[in]	line(sta,end)	判定する線分
-//		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-//		@return	交差、内包しているか
-//		@retval	true	している
-//		@retval	false	していない
-//	*/
-//	bool Contains(const Line<T>& line, bool fullContain = false) const override
-//	{
-//		// 完全内包
-//		if(fullContain)
-//		{
-//			return ( Contains(line.sta) && Contains(line.end) );
-//		}
-//		// 外周との交差判定
-//		std::vector<Vec3<T>> intersections;
-//		for(int i = 0; i < 3; ++i)
-//		{
-//			int j = (i+1) % 3;
-//			if(line.Intersect(points[i], points[j]))
-//			{
-//				intersections.push_back(line.IntersectionPoint2(points[i],points[j]));
-//			}
-//		}
-//		// 交点が無かった
-//		if(intersections.empty())
-//		{
-//			// 完全内包チェック(始点または終点が内包されていれば完全内包といえる)
-//			return Contains(line.sta);
-//		}
-//		return true;
-//	}
-//	/*
-//		@brief	線分の交差、内包判定
-//		@param	[in]	sta				判定する線分の始点
-//		@param	[in]	end				判定する線分の終点
-//		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-//		@return	交差、内包しているか
-//		@retval	true	している
-//		@retval	false	していない
-//	*/
-//	bool Contains(const Vec3<T>& sta, const Vec3<T>& end, bool fullContain = false) const override
-//	{
-//		// 完全内包
-//		if(fullContain)
-//		{
-//			return ( Contains(sta) && Contains(end) );
-//		}
-//		// 外周との交差判定
-//		std::vector<Vec3<T>> intersections;
-//		Line<T> line(sta, end);
-//		for(int i = 0; i < 3; ++i)
-//		{
-//			int j = (i+1) % 3;
-//			if(line.Intersect(points[i],points[j]))
-//				intersections.push_back(line.IntersectionPoint2(points[i],points[j]));
-//		}
-//		// 交点が無かった
-//		if(intersections.empty())
-//		{
-//			// 完全内包チェック(始点または終点が内包されていれば完全内包といえる)
-//			return Contains(sta);
-//		}
-//		return true;
-//	}
-//	/*
-//		@brief	三角形の交差、内包判定
-//		@param	[in]	tri				判定する三角形
-//		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-//		@return	交差、内包しているか
-//		@retval	true	している
-//		@retval	false	していない
-//	*/
-//	bool Contains(const Triangle<T>& tri, bool fullContain = false) const override
-//	{
-//		bool vertextes[3]={false,false,false};	// 頂点の内包
-//		// 頂点内包
-//		for(int i=0; i<3; ++i)
-//		{
-//			vertextes[i] = Contains(tri.points[i]);
-//			if(!fullContain && vertextes[i])
-//				return true;
-//		}
-//		if(fullContain)
-//			return vertextes[0] && vertextes[1] && vertextes[2];
-//		
-//		// 辺交差
-//		for(int i=0; i<3; ++i)
-//		{
-//			int j = (i+1) % 3;
-//			Line<T> line(points[i],points[j]);
-//			for(int k = 0; k < 3; ++k)
-//			{
-//				int l = (k+1) % 3;
-//				if(line.Intersect(tri.points[k], tri.points[l]))
-//					return true;
-//			}
-//		}
-//		return false;
-//	}
-//	/*
-//		@brief	矩形の交差、内包判定
-//		@param	[in]	rect			判定する矩形
-//		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-//		@return	交差、内包しているか
-//		@retval	true	している
-//		@retval	false	していない
-//	*/
-//	bool Contains(const Rect<T>& rect, bool fullContain = false) const override
-//	{
-//		bool vertextes[4]={false,false,false,false};	// 頂点の内包
-//		// 頂点内包
-//		Vec3<T> rp[4] = {
-//			Vec3<T>(rect.left,	rect.top,	points[0].z),
-//			Vec3<T>(rect.right,	rect.top,	points[0].z),
-//			Vec3<T>(rect.left,	rect.bottom,points[0].z),
-//			Vec3<T>(rect.right,	rect.bottom,points[0].z)
-//		};
-//		for(int i=0; i<4; ++i)
-//		{
-//			vertextes[i] = Contains(rp[i]);
-//			if(!fullContain && vertextes[i])
-//				return true;
-//		}
-//		if(fullContain)
-//			return vertextes[0] && vertextes[1] && vertextes[2] && vertextes[3];
-//		
-//		// 辺交差
-//		for(int i=0; i<3; ++i)
-//		{
-//			int j = (i+1) % 3;
-//			Line<T> line(points[i],points[j]);
-//			for(int k = 0; k < 4; ++k)
-//			{
-//				int l = (k+1) % 4;
-//				if(line.Intersect(rp[k], rp[l]))
-//					return true;
-//			}
-//		}
-//		return false;
-//	}
-//#pragma endregion // Contains
-//	//================================================================================
-//
-//	//================================================================================
-//#pragma region Intersection
-//	/*
-//		@brief	内包している点から一番近い交点の取得
-//			if(Contains(p))
-//				point = IntersectionPoint2(p);
-//		@attention	交差していることが前提
-//		@param	[in]	point	内包している点
-//		@return	交点
-//	*/
-//	Vec3<T> IntersectionPoint2(const Vec3<T>& point) const override
-//	{
-//		Vec3<T> ab(points[1] - points[0]);	// p0 -> p1
-//		Vec3<T> bp(point - points[1]);		// p1 -> point
-//
-//		Vec3<T> bc(points[2] - points[1]);	// p1 -> p2
-//		Vec3<T> cp(point - points[2]);		// p2 -> point
-//
-//		Vec3<T> ca(points[0] - points[2]);	// p2 -> p0
-//		Vec3<T> ap(point - points[0]);		// p0 -> point
-//
-//		// z成分のみの外積
-//		T c1((ab.x * bp.y) - (ab.y * bp.x));
-//		T c2((bc.x * cp.y) - (bc.y * cp.x));
-//		T c3((ca.x * ap.y) - (ca.y * ap.x));
-//		
-//		Vec3<T> d_ab((Vec3<T>::Dot(ab.Normalize2(),bp) * ab.Normalize2()) - bp);			
-//		Vec3<T> d_bc((Vec3<T>::Dot(bc.Normalize2(),cp) * bc.Normalize2()) - cp);
-//		Vec3<T> d_ca((Vec3<T>::Dot(ca.Normalize2(),ap) * ca.Normalize2()) - ap);
-//		Vec3<T> work;	// 最も近い垂線ベクトル格納用
-//		// min( min(ab, bc), ca )
-//		work = (PYTHA(d_ab.x,d_ab.y) < PYTHA(d_bc.x,d_bc.y))? d_ab : d_bc;
-//		work = (PYTHA(work.x,work.y) < PYTHA(d_ca.x,d_ca.y))? work : d_ca;
-//		return (work + point);
-//
-//	}
-//
-//	/*
-//		@brief	線分との交点の取得
-//			if(Contains(line))
-//				points = IntersectionPoint2(line);
-//		@attention	交差していることが前提
-//		@param	[in]	line(sta,end)	比較線分
-//		@return	全交点
-//	*/
-//	std::vector<Vec3<T>> IntersectionPoint2(const Line<T>& line) const override
-//	{
-//		std::vector<Vec3<T>> intersections;
-//		for(int i=0; i<3; ++i)
-//		{
-//			int j = (i+1) % 3;
-//			if(line.Intersect(points[i],points[j]))
-//				intersections.push_back(line.IntersectionPoint2(points[i],points[j]));
-//		}
-//		return intersections;
-//	}
-//	/*
-//		@brief	線分との交点の取得
-//			if(Contains(pos,next))
-//				points = IntersectionPoint2(pos,next);
-//		@attention	交差していることが前提
-//		@param	[in]	sta	比較線分の始点
-//		@param	[in]	end	比較線分の終点
-//		@return	全交点
-//	*/
-//	std::vector<Vec3<T>> IntersectionPoint2(const Vec3<T>& sta, const Vec3<T>& end) const override
-//	{
-//		std::vector<Vec3<T>> intersections;
-//		Line<T> line(sta,end);
-//		for(int i=0; i<3; ++i)
-//		{
-//			int j = (i+1) % 3;
-//			if(line.Intersect(points[i],points[j]))
-//				intersections.push_back(line.IntersectionPoint2(points[i],points[j]));
-//		}
-//		return intersections;
-//	}
-//
-//
-//	/*
-//		@brief	線分との交点のうち、始点に近い点を取得
-//			if(Contains(line))
-//				point = IntersectionPoint2Nearest(line);
-//		@attention	交差していることが前提
-//		@param	[in]	line(sta,end)	比較線分
-//		@return	始点に近い交点
-//	*/
-//	Vec3<T> IntersectionPoint2Nearest(const Line<T>& line) const override
-//	{
-//		std::vector<Vec3<T>> intersections;
-//		for(int i=0; i<3; ++i)
-//		{
-//			int j = (i+1) % 3;
-//			if(line.Intersect(points[i],points[j]))
-//				intersections.push_back(line.IntersectionPoint2(points[i],points[j]));
-//		}
-//		// 始点に一番近い交点の算出
-//		Vec3<T> min = intersections[0];
-//		for(size_t i = 1; i < intersections.size(); ++i)
-//		{
-//			Vec3<T> d1 = min - line.sta;
-//			Vec3<T> d2 = intersections[i] - line.sta;
-//			if(PYTHA(d1.x, d1.y) > PYTHA(d2.x, d2.y))
-//				min = intersections[i];
-//		}
-//		return min;
-//	}
-//	/*
-//		@brief	線分との交点のうち、始点に近い点を取得
-//			if(Contains(pos,next))
-//				point = IntersectionPoint2Nearest(pos,next);
-//		@attention	交差していることが前提
-//		@param	[in]	sta	比較線分の始点
-//		@param	[in]	end	比較線分の終点
-//		@return	始点に近い交点
-//	*/
-//	Vec3<T> IntersectionPoint2Nearest(const Vec3<T>& sta, const Vec3<T>& end) const override
-//	{
-//		std::vector<Vec3<T>> intersections;
-//		Line<T> line(sta,end);
-//		for(int i=0; i<3; ++i)
-//		{
-//			int j = (i+1) % 3;
-//			if(line.Intersect(points[i],points[j]))
-//				intersections.push_back(line.IntersectionPoint2(points[i],points[j]));
-//		}
-//		// 始点に一番近い交点の算出
-//		Vec3<T> min = intersections[0];
-//		for(size_t i = 1; i < intersections.size(); ++i)
-//		{
-//			Vec3<T> d1 = min - sta;
-//			Vec3<T> d2 = intersections[i] - sta;
-//			if(PYTHA(d1.x, d1.y) > PYTHA(d2.x, d2.y))
-//				min = intersections[i];
-//		}
-//		return min;
-//	}
-//#pragma endregion // Intersection
-//	//================================================================================
-//	
-//};
-//typedef Triangle<float> Trif;
-//typedef Triangle<int> Trii;
-//
-//#pragma endregion // Triangle
-//
 
-//=================================================================================================
-//=================================================================================================
-//=================================================================================================
+
 
 #pragma region Polygon
 /*
@@ -952,6 +604,13 @@ public:
 
 public:
 	/*
+		@param	[in]	vertexNum	頂点数
+	*/
+	Polygon(size_t vertexNum)
+	{
+		points.resize(vertexNum);
+	}
+	/*
 		@param	[in]	vertexes	頂点群
 	*/
 	Polygon(const std::vector<Vec3<T>>& vertexes)
@@ -963,7 +622,7 @@ public:
 		@param	[in]	size		頂点数
 		@attension		頂点数
 	*/
-	Polygon(const Vec3<T> vertexes[], size_t size )
+	Polygon(const Vec3<T> vertexes[], size_t size)
 	{
 		points.clear();
 		for (size_t i = 0; i < size, ++i)
@@ -1075,19 +734,23 @@ public:
 		return (cnt == size || cnt == -size);
 	}
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	line(sta,end)	判定する線分
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	line(sta,end)	判定する線分(始点、終点)
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Line<T>& line, bool fullContain = false) const override
+	virtual bool Contains(const Line<T>& line, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		// 完全内包
 		if (fullContain)
 		{
-			return (Contains(line.sta) && Contains(line.end) && !Contains(line));
+			// 始点と終点を内包しており、直線が交差していない場合
+			return (Contains(line.sta) && Contains(line.end) && !Contains(line, false, true));
 		}
 		// 外周との交差判定
 		std::vector<Vec3<T>> intersections;
@@ -1104,25 +767,29 @@ public:
 		if (intersections.empty())
 		{
 			// 完全内包チェック(始点または終点が内包されていれば完全内包といえる)
-			return Contains(line.sta);
+			return !intersectOnly && Contains(line.sta);
 		}
 		return true;
 	}
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	sta				判定する線分の始点
-		@param	[in]	end				判定する線分の終点
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第4引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	sta	判定する線分の始点
+		@param	[in]	end	判定する線分の終点
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Vec3<T>& sta, const Vec3<T>& end, bool fullContain = false) const override
+	virtual bool Contains(const Vec3<T>& sta, const Vec3<T>& end, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		// 完全内包
 		if (fullContain)
 		{
-			return (Contains(sta) && Contains(end) && !Contains(sta, end));
+			// 始点と終点を内包しており、直線が交差していない場合
+			return (Contains(sta) && Contains(end) && !Contains(sta, end, false, true));
 		}
 		// 外周との交差判定
 		std::vector<Vec3<T>> intersections;
@@ -1138,19 +805,22 @@ public:
 		if (intersections.empty())
 		{
 			// 完全内包チェック(始点または終点が内包されていれば完全内包といえる)
-			return Contains(sta);
+			return !intersectOnly && Contains(sta);
 		}
 		return true;
 	}
 	/*
-		@brief	多角形交差、内包判定
+		@brief			多角形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	poly			判定する多角形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Polygon<T>& poly, bool fullContain = false) const override
+	virtual bool Contains(const Polygon<T>& poly, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		int destSize = static_cast<int>(poly.points.size());
 		int size = static_cast<int>(points.size());
@@ -1159,7 +829,7 @@ public:
 		for (int i = 0; i < destSize; ++i)
 		{
 			bool con = Contains(poly.points[i]);
-			if (!fullContain && con)
+			if (!intersectOnly && !fullContain && con)
 				return true;
 			else if (con)
 			{
@@ -1186,14 +856,17 @@ public:
 		return false;
 	}
 	/*
-		@brief	矩形の交差、内包判定
+		@brief			矩形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	rect			判定する矩形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Rect<T>& rect, bool fullContain = false) const override
+	virtual bool Contains(const Rect<T>& rect, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		bool vertextes[4] = { false, false, false, false };	// 頂点の内包
 		// 頂点内包
@@ -1206,7 +879,7 @@ public:
 		for (int i = 0; i < 4; ++i)
 		{
 			vertextes[i] = Contains(rp[i]);
-			if (!fullContain && vertextes[i])
+			if (!intersectOnly && !fullContain && vertextes[i])
 				return true;
 		}
 		if (fullContain)
@@ -1229,14 +902,17 @@ public:
 	}
 
 	/*
-		@brief	円の交差、内包判定
+		@brief			円の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	circ			判定する円
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Circle<T, T>& circ, bool fullContain = false) const override
+	virtual bool Contains(const Circle<T, T>& circ, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		// 辺交差
 		int size = static_cast<int>(points.size());
@@ -1250,12 +926,12 @@ public:
 			}
 		}
 		// 完全内包(中心がPolygon内にあり、Circleの中にない)
-		if (Contains(circ.center) && !circ.Contains(*this))
+		if (!intersectOnly && Contains(circ.center) && !circ.Contains(*this))
 		{
 			return true;
 		}
 
-		return false; 
+		return false;
 	}
 
 #pragma endregion // Contains
@@ -1288,24 +964,7 @@ public:
 			crosses.push_back(Vec3<T>::Dot2(vec, pv));
 			normalVecs.push_back((Vec3<T>::Dot(vec.Normalize2(), pv) * vec.Normalize2()) - pv);
 		}
-		
-		/*
-		Vec3<T> ab(points[1] - points[0]);	// p0 -> p1
-		Vec3<T> bp(point - points[1]);		// p1 -> point
 
-		Vec3<T> bc(points[2] - points[1]);	// p1 -> p2
-		Vec3<T> cp(point - points[2]);		// p2 -> point
-
-		Vec3<T> ca(points[0] - points[2]);	// p2 -> p0
-		Vec3<T> ap(point - points[0]);		// p0 -> point
-		// z成分のみの外積
-		T c1((ab.x * bp.y) - (ab.y * bp.x));
-		T c2((bc.x * cp.y) - (bc.y * cp.x));
-		T c3((ca.x * ap.y) - (ca.y * ap.x));
-		Vec3<T> d_ab((Vec3<T>::Dot(ab.Normalize2(), bp) * ab.Normalize2()) - bp);
-		Vec3<T> d_bc((Vec3<T>::Dot(bc.Normalize2(), cp) * bc.Normalize2()) - cp);
-		Vec3<T> d_ca((Vec3<T>::Dot(ca.Normalize2(), ap) * ca.Normalize2()) - ap);
-		*/
 		Vec3<T> work;	// 最も近い垂線ベクトル格納用
 		// min( min(ab, bc), ca )
 		work = normalVecs[0];
@@ -1450,7 +1109,7 @@ public:
 		left(leftTop.x), top(leftTop.y),
 		right(rightBottom.x), bottom(rightBottom.y)
 	{}
-	Rect(const RECT& rect):
+	Rect(const RECT& rect) :
 		left((T)rect.left), top((T)rect.top),
 		right((T)rect.right), bottom((T)rect.bottom)
 	{}
@@ -1469,6 +1128,42 @@ public:
 		return *this;
 	}
 
+	template<class T1>
+	Rect<T>& operator = (const Rect<T1>& rt)
+	{
+		left = static_cast<T>(rt.left);
+		top = static_cast<T>(rt.top);
+		right = static_cast<T>(rt.right);
+		bottom = static_cast<T>(rt.bottom);
+		return *this;
+	}
+
+	template<class T1>
+	operator Rect<T1>()
+	{
+		Rect<T1> rt(static_cast<T1>(left),
+			static_cast<T1>(top),
+			static_cast<T1>(right),
+			static_cast<T1>(bottom));
+
+		return rt;
+	}
+
+	/*
+		@brief　矩形をずらす
+		@param	[in]	ofs_x	水平方向にそれぞれに加算する量
+		@param	[in]	ofs_y	鉛直方向にそれぞれに加算する量
+		@return ずらしたあとの自身(連続して書けるように)
+
+	Rect<T>& offset(T ofs_x, T ofs_y)
+	{
+		left	+= ofs_x;
+		right	+= ofs_x;
+		top		+= ofs_y;
+		bottom	+= ofs_y;
+		return *this;
+	}*/
+
 	//================================================================================
 #pragma region Contains
 	/*
@@ -1481,107 +1176,116 @@ public:
 	virtual bool Contains(const Vec3<T>& point) const override
 	{
 		return left <= point.x && point.x <= right
-			&& top	<= point.y && point.y <= bottom;
+			&& top <= point.y && point.y <= bottom;
 	}
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	line(sta,end)	判定する線分
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	line(sta,end)	判定する線分(始点、終点)
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Line<T>& line, bool fullContain = false) const override
+	virtual bool Contains(const Line<T>& line, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		// 完全内包
-		if(fullContain)
+		if (fullContain)
 		{
-			return ( Contains(line.sta) && Contains(line.end) );
+			return (Contains(line.sta) && Contains(line.end));
 		}
 		// 外周との交差判定
 		bool intersection = false;
 		Vec3<T> points[4] = {
-			Vec3<T>(left,	top,	line.sta.z),
-			Vec3<T>(right,	top,	line.sta.z),
-			Vec3<T>(left,	bottom,	line.sta.z),
-			Vec3<T>(right,	bottom,	line.sta.z)
+			Vec3<T>(left, top, line.sta.z),
+			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(left, bottom, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z)
 		};
-		for(int i = 0; i < 4; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
-			int j = (i+1) % 4;
-			if(line.Intersect(points[i],points[j]))
+			int j = (i + 1) % 4;
+			if (line.Intersect(points[i], points[j]))
 			{
 				intersection = true;
 				break;
 			}
 		}
 		// 交点が無かった
-		if(!intersection)
+		if (!intersection)
 		{
 			// 完全内包チェック(始点または終点が内包されていれば完全内包といえる)
-			return Contains(line.sta);
+			return !intersectOnly && Contains(line.sta);
 		}
 		return true;
 	}
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	sta				判定する線分の始点
-		@param	[in]	end				判定する線分の終点
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第4引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	sta	判定する線分の始点
+		@param	[in]	end	判定する線分の終点
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Vec3<T>& sta, const Vec3<T>& end, bool fullContain = false) const override
+	virtual bool Contains(const Vec3<T>& sta, const Vec3<T>& end, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		// 完全内包
-		if(fullContain)
+		if (fullContain)
 		{
-			return ( Contains(sta) && Contains(end) );
+			return (Contains(sta) && Contains(end));
 		}
 		// 外周との交差判定
 		bool intersection = false;
-		Line<T> line(sta,end);
+		Line<T> line(sta, end);
 		Vec3<T> points[4] = {
-			Vec3<T>(left,	top,	line.sta.z),
-			Vec3<T>(right,	top,	line.sta.z),
-			Vec3<T>(left,	bottom,	line.sta.z),
-			Vec3<T>(right,	bottom,	line.sta.z)
+			Vec3<T>(left, top, line.sta.z),
+			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(left, bottom, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z)
 		};
-		for(int i = 0; i < 4; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
-			int j = (i+1) % 4;
-			if(line.Intersect(points[i],points[j]))
+			int j = (i + 1) % 4;
+			if (line.Intersect(points[i], points[j]))
 			{
 				intersection = true;
 				break;
 			}
 		}
 		// 交点が無かった
-		if(!intersection)
+		if (!intersection)
 		{
 			// 完全内包チェック(始点または終点が内包されていれば完全内包といえる)
-			return Contains(sta);
+			return !intersectOnly && Contains(sta);
 		}
 		return true;
 	}
 	/*
-		@brief	多角形の交差、内包判定
+		@brief			多角形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	poly			判定する多角形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Polygon<T>& poly, bool fullContain = false) const override
+	virtual bool Contains(const Polygon<T>& poly, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		int size = static_cast<int>(poly.points.size());
 		int conVer = 0;				// 内包頂点数
 		// 頂点内包
-		for(int i=0; i < size; ++i)
+		for (int i = 0; i < size; ++i)
 		{
 			bool con = Contains(poly.points[i]);
-			if (!fullContain && con)
+			if (!intersectOnly && !fullContain && con)
 				return true;
 			else if (con)
 			{
@@ -1594,114 +1298,91 @@ public:
 		}
 
 		Vec3<T> points[4] = {
-			Vec3<T>(left,	top,	poly.points[0].z),
-			Vec3<T>(right,	top,	poly.points[0].z),
-			Vec3<T>(left,	bottom, poly.points[0].z),
-			Vec3<T>(right,	bottom, poly.points[0].z)
+			Vec3<T>(left, top, poly.points[0].z),
+			Vec3<T>(right, top, poly.points[0].z),
+			Vec3<T>(left, bottom, poly.points[0].z),
+			Vec3<T>(right, bottom, poly.points[0].z)
 		};
 		// 辺交差
-		for(int i=0; i < 4; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
 			int j = (i + 1) % 4;
-			Line<T> line(points[i],points[j]);
-			for(int k = 0; k < size; ++k)
+			Line<T> line(points[i], points[j]);
+			for (int k = 0; k < size; ++k)
 			{
 				int l = (k + 1) % size;
-				if(line.Intersect(poly.points[k], poly.points[l]))
+				if (line.Intersect(poly.points[k], poly.points[l]))
 					return true;
 			}
 		}
 		return false;
 	}
 	/*
-		@brief	矩形の交差、内包判定
+		@brief			矩形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	rect			判定する矩形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Rect<T>& rect, bool fullContain = false) const override
+	virtual bool Contains(const Rect<T>& rect, bool fullContain = false, bool intersectOnly = false) const override
 	{
-		if(fullContain)
+		if (fullContain || intersectOnly)
 		{
-			bool vertextes[4]={false,false,false,false};	// 頂点の内包
 			Vec3<T> rp[4] = {
-				Vec3<T>(rect.left,rect.top,0),
-				Vec3<T>(rect.right,rect.top,0),
-				Vec3<T>(rect.left,rect.bottom,0),
-				Vec3<T>(rect.right,rect.bottom,0)
+				Vec3<T>(rect.left, rect.top, 0),
+				Vec3<T>(rect.right, rect.top, 0),
+				Vec3<T>(rect.left, rect.bottom, 0),
+				Vec3<T>(rect.right, rect.bottom, 0)
 			};
 			// 頂点内包
-			for(int i=0; i<4; ++i)
+			int conVer = 0;
+			for (int i = 0; i < 4; ++i)
 			{
-				if(Contains(rp[i])) continue;
-				return false;
+				if (Contains(rp[i]))
+					conVer++;
 			}
-			return true;
-		}
-		else
-		{
-			if(left > rect.right) return false;
-			if(rect.left > right) return false;
-			if(top > rect.bottom) return false;
-			if(rect.top > bottom) return false;
-			return true;
-		}
-		/*
-		bool vertextes[4]={false,false,false,false};	// 頂点の内包
-		Vec3<T> points[4] = {
-			Vec3<T>(left,top,0),
-			Vec3<T>(right,top,0),
-			Vec3<T>(left,bottom,0),
-			Vec3<T>(right,bottom,0)
-		};
-		Vec3<T> rp[4] = {
-			Vec3<T>(rect.left,rect.top,0),
-			Vec3<T>(rect.right,rect.top,0),
-			Vec3<T>(rect.left,rect.bottom,0),
-			Vec3<T>(rect.right,rect.bottom,0)
-		};
-		// 頂点内包
-		for(int i=0; i<4; ++i)
-		{
-			vertextes[i] = Contains(rp[i]);
-			if(!fullContain && vertextes[i])
-				return true;
-		}
-		if(fullContain)
-			return vertextes[0] && vertextes[1] && vertextes[2] && vertextes[3];
-		
-		// 辺交差
-		for(int i=0; i<4; ++i)
-		{
-			int j = (i+1) % 4;
-			Line<T> line(points[i],points[j]);
-			for(int k = 0; k < 4; ++k)
+			if (fullContain)
+				return conVer == 4;
+			for (int i = 0; i < 4; ++i)
 			{
-				int l = (k+1) % 4;
-				if(line.Intersect(rp[k], rp[l]))
+				int j = (i + 1) % 4;
+				if (Contains(rp[i], rp[j]))
 					return true;
 			}
 		}
-		*/
+		else
+		{
+			if (right < rect.left) return false;
+			if (rect.right < left) return false;
+			if (bottom < rect.top) return false;
+			if (rect.bottom < top) return false;
+			return true;
+		}
+		return false;
 	}
 
 	/*
-		@brief	円の交差、内包判定
+		@brief			円の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	circ			判定する円
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Circle<T, T>& circ, bool fullContain = false) const override
+	virtual bool Contains(const Circle<T, T>& circ, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		Vec3<T> points[4] = {
-			Vec3<T>(left,	top,	circ.center.z),
-			Vec3<T>(right,	top,	circ.center.z),
-			Vec3<T>(left,	bottom, circ.center.z),
-			Vec3<T>(right,	bottom, circ.center.z)
+			Vec3<T>(left, top, circ.center.z),
+			Vec3<T>(right, top, circ.center.z),
+			Vec3<T>(left, bottom, circ.center.z),
+			Vec3<T>(right, bottom, circ.center.z)
 		};
 		// 辺交差;
 		for (int i = 0; i < 4; ++i)
@@ -1714,7 +1395,7 @@ public:
 			}
 		}
 		// 完全内包(中心がPolygon内にあり、Circleの中にない)
-		if (Contains(circ.center) && !circ.Contains(*this))
+		if (!intersectOnly && Contains(circ.center) && !circ.Contains(*this))
 		{
 			return true;
 		}
@@ -1739,10 +1420,10 @@ public:
 	Vec3<T> IntersectionPoint2(const Vec3<T>& point) const override
 	{
 		Vec3<T> points[4] = {
-			Vec3<T>(left,	top,	point.z),
-			Vec3<T>(right,	top,	point.z),
-			Vec3<T>(left,	bottom,	point.z),
-			Vec3<T>(right,	bottom,	point.z)
+			Vec3<T>(left, top, point.z),
+			Vec3<T>(right, top, point.z),
+			Vec3<T>(left, bottom, point.z),
+			Vec3<T>(right, bottom, point.z)
 		};
 		Vec3<T> ab(points[1] - points[0]);	// p0 -> p1
 		Vec3<T> bp(point - points[1]);		// p1 -> point
@@ -1762,16 +1443,16 @@ public:
 		T c2 = Vec3<T>::Cross2(bc, cp);
 		T c3 = Vec3<T>::Cross2(cd, dp);
 		T c4 = Vec3<T>::Cross2(da, ap);
-		
-		Vec3<T> d_ab((Vec3<T>::Dot(ab.Normalize2(),bp) * ab.Normalize2()) - bp);			
-		Vec3<T> d_bc((Vec3<T>::Dot(bc.Normalize2(),cp) * bc.Normalize2()) - cp);
-		Vec3<T> d_cd((Vec3<T>::Dot(cd.Normalize2(),dp) * cd.Normalize2()) - dp);
-		Vec3<T> d_da((Vec3<T>::Dot(da.Normalize2(),ap) * da.Normalize2()) - ap);
+
+		Vec3<T> d_ab((Vec3<T>::Dot(ab.Normalize2(), bp) * ab.Normalize2()) - bp);
+		Vec3<T> d_bc((Vec3<T>::Dot(bc.Normalize2(), cp) * bc.Normalize2()) - cp);
+		Vec3<T> d_cd((Vec3<T>::Dot(cd.Normalize2(), dp) * cd.Normalize2()) - dp);
+		Vec3<T> d_da((Vec3<T>::Dot(da.Normalize2(), ap) * da.Normalize2()) - ap);
 		Vec3<T> work;	// 最も近い垂線ベクトル格納用
 		// min( min( min(ab, bc), cd ) , da)
-		work = (PYTHA(d_ab.x,d_ab.y) < PYTHA(d_bc.x,d_bc.y))? d_ab : d_bc;
-		work = (PYTHA(work.x,work.y) < PYTHA(d_cd.x,d_cd.y))? work : d_cd;
-		work = (PYTHA(work.x,work.y) < PYTHA(d_da.x,d_da.y))? work : d_da;
+		work = (PYTHA(d_ab.x, d_ab.y) < PYTHA(d_bc.x, d_bc.y)) ? d_ab : d_bc;
+		work = (PYTHA(work.x, work.y) < PYTHA(d_cd.x, d_cd.y)) ? work : d_cd;
+		work = (PYTHA(work.x, work.y) < PYTHA(d_da.x, d_da.y)) ? work : d_da;
 		return (work + point);
 
 	}
@@ -1788,16 +1469,16 @@ public:
 	{
 		std::vector<Vec3<T>> intersections;
 		Vec3<T> points[4] = {
-			Vec3<T>(left,	top,	line.sta.z),
-			Vec3<T>(right,	top,	line.sta.z),
-			Vec3<T>(left,	bottom,	line.sta.z),
-			Vec3<T>(right,	bottom,	line.sta.z)
+			Vec3<T>(left, top, line.sta.z),
+			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(left, bottom, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z)
 		};
-		for(int i=0; i<4; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
-			int j = (i+1) % 4;
-			if(line.Intersect(points[i],points[j]))
-				intersections.push_back(line.IntersectionPoint2(points[i],points[j]));
+			int j = (i + 1) % 4;
+			if (line.Intersect(points[i], points[j]))
+				intersections.push_back(line.IntersectionPoint2(points[i], points[j]));
 		}
 		return intersections;
 	}
@@ -1813,18 +1494,18 @@ public:
 	std::vector<Vec3<T>> IntersectionPoint2(const Vec3<T>& sta, const Vec3<T>& end) const override
 	{
 		std::vector<Vec3<T>> intersections;
-		Line<T> line(sta,end);
+		Line<T> line(sta, end);
 		Vec3<T> points[4] = {
-			Vec3<T>(left,	top,	line.sta.z),
-			Vec3<T>(right,	top,	line.sta.z),
-			Vec3<T>(left,	bottom,	line.sta.z),
-			Vec3<T>(right,	bottom,	line.sta.z)
+			Vec3<T>(left, top, line.sta.z),
+			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(left, bottom, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z)
 		};
-		for(int i=0; i<4; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
-			int j = (i+1) % 4;
-			if(line.Intersect(points[i],points[j]))
-				intersections.push_back(line.IntersectionPoint2(points[i],points[j]));
+			int j = (i + 1) % 4;
+			if (line.Intersect(points[i], points[j]))
+				intersections.push_back(line.IntersectionPoint2(points[i], points[j]));
 		}
 		return intersections;
 	}
@@ -1842,24 +1523,24 @@ public:
 	{
 		std::vector<Vec3<T>> intersections;
 		Vec3<T> points[4] = {
-			Vec3<T>(left,	top,	line.sta.z),
-			Vec3<T>(right,	top,	line.sta.z),
-			Vec3<T>(left,	bottom,	line.sta.z),
-			Vec3<T>(right,	bottom,	line.sta.z)
+			Vec3<T>(left, top, line.sta.z),
+			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(left, bottom, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z)
 		};
-		for(int i=0; i<4; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
-			int j = (i+1) % 4;
-			if(line.Intersect(points[i],points[j]))
-				intersections.push_back(line.IntersectionPoint2(points[i],points[j]));
+			int j = (i + 1) % 4;
+			if (line.Intersect(points[i], points[j]))
+				intersections.push_back(line.IntersectionPoint2(points[i], points[j]));
 		}
 		// 始点に一番近い交点の算出
 		Vec3<T> min = intersections[0];
-		for(size_t i = 1; i < intersections.size(); ++i)
+		for (size_t i = 1; i < intersections.size(); ++i)
 		{
 			Vec3<T> d1 = min - line.sta;
 			Vec3<T> d2 = intersections[i] - line.sta;
-			if(PYTHA(d1.x, d1.y) > PYTHA(d2.x, d2.y))
+			if (PYTHA(d1.x, d1.y) > PYTHA(d2.x, d2.y))
 				min = intersections[i];
 		}
 		return min;
@@ -1876,26 +1557,26 @@ public:
 	Vec3<T> IntersectionPoint2Nearest(const Vec3<T>& sta, const Vec3<T>& end) const override
 	{
 		std::vector<Vec3<T>> intersections;
-		Line<T> line(sta,end);
+		Line<T> line(sta, end);
 		Vec3<T> points[4] = {
-			Vec3<T>(left,	top,	line.sta.z),
-			Vec3<T>(right,	top,	line.sta.z),
-			Vec3<T>(left,	bottom,	line.sta.z),
-			Vec3<T>(right,	bottom,	line.sta.z)
+			Vec3<T>(left, top, line.sta.z),
+			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(left, bottom, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z)
 		};
-		for(int i=0; i<4; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
-			int j = (i+1) % 4;
-			if(line.Intersect(points[i],points[j]))
-				intersections.push_back(line.IntersectionPoint2(points[i],points[j]));
+			int j = (i + 1) % 4;
+			if (line.Intersect(points[i], points[j]))
+				intersections.push_back(line.IntersectionPoint2(points[i], points[j]));
 		}
 		// 始点に一番近い交点の算出
 		Vec3<T> min = intersections[0];
-		for(size_t i = 1; i < intersections.size(); ++i)
+		for (size_t i = 1; i < intersections.size(); ++i)
 		{
 			Vec3<T> d1 = min - sta;
 			Vec3<T> d2 = intersections[i] - sta;
-			if(PYTHA(d1.x, d1.y) > PYTHA(d2.x, d2.y))
+			if (PYTHA(d1.x, d1.y) > PYTHA(d2.x, d2.y))
 				min = intersections[i];
 		}
 		return min;
@@ -1903,40 +1584,6 @@ public:
 #pragma endregion // Intersection
 	//================================================================================
 	
-	template<class T1>
-	Rect<T>& operator = (const Rect<T1>& rt)
-	{
-		left	= static_cast<T>(rt.left);
-		top		= static_cast<T>(rt.top);
-		right	= static_cast<T>(rt.right);
-		bottom	= static_cast<T>(rt.bottom);
-		return *this;
-	}
-	template<class T1>
-	operator Rect<T1>()
-	{
-		Rect<T1> rt(	static_cast<T1>(left),
-						static_cast<T1>(top),
-						static_cast<T1>(right),
-						static_cast<T1>(bottom));
-
-		return rt;
-	}
-
-	/*
-		@brief　矩形をずらす
-		@param	[in]	ofs_x	水平方向にそれぞれに加算する量
-		@param	[in]	ofs_y	鉛直方向にそれぞれに加算する量
-		return ずらしたあとの自身(連続して書けるように)
-	
-	Rect<T>& offset(T ofs_x, T ofs_y)
-	{
-		left	+= ofs_x;
-		right	+= ofs_x;
-		top		+= ofs_y;
-		bottom	+= ofs_y;
-		return *this;
-	}*/
 };
 typedef Rect<int>	Recti;
 typedef Rect<float>	Rectf;
@@ -1989,107 +1636,23 @@ public:
 	*/
 	bool Contains(const Vec3<T1>& point) const override
 	{
-		const Vec3<T1>& c = center;
-		const Vec3<T1>& p = point;
+	 const Vec3<T1>& c = center;
+	 const Vec3<T1>& p = point;
 		return (PYTHA(p.x - c.x, p.y - c.y) <= POW2(radius));
 	}
-
-	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	line(sta,end)	判定する線分
-		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
-		@retval	true	している
-		@retval	false	していない
-	*/
-	bool Contains(const Line<T1>& line, bool fullContain = false) const override
-	{
-		Vec3<T1> sp(center - line.sta); // 線分始点から円中心へのベクトル(start->pos)
-		Vec3<T1> ep(center - line.end); // 線分終点から円中心へのベクトル(end->pos)
-		bool isInner = (PYTHA(sp.x, sp.y) < POW2(radius))
-			&& (PYTHA(ep.x, ep.y) < POW2(radius));
-		// 完全内包(円の内側)
-		if (fullContain)
-		{
-			return isInner;
-		}
-		if (isInner)
-		{
-			return false;
-		}
-		Vec3<T1> nv((line.end - line.sta).Normalize2());	// 線分の単位ベクトル(normalize-vector)
-		// 円中心から線分への垂線 d=((n・p)*n)-p
-		Vec3<T1> dist((Vec3<T1>::Dot(nv, sp) * nv) - sp);
-
-		if (PYTHA(dist.x, dist.y) > POW2(radius))
-		{
-			// 垂線判定(円の外側)
-			return false;
-		}
-		else if ((PYTHA(sp.x, sp.y) > POW2(radius) && PYTHA(ep.x, ep.y) > POW2(radius))
-			&& (((sp.x > 0.f) ? 1.f : -1.f) == ((ep.x > 0.f) ? 1.f : -1.f))
-			&& (((sp.y > 0.f) ? 1.f : -1.f) == ((ep.y > 0.f) ? 1.f : -1.f)))
-		{
-			// 符号判定(中心点をまたがない)
-			return false;
-		}
-		return true;
-	}
-	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	sta				判定する線分の始点
-		@param	[in]	end				判定する線分の終点
-		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
-		@retval	true	している
-		@retval	false	していない
-	*/
-	bool Contains(const Vec3<T1>& sta, const Vec3<T1>& end, bool fullContain = false) const override
-	{
-		Vec3<T1> sp(center - sta); // 線分始点から円中心へのベクトル
-		Vec3<T1> ep(center - end); // 線分終点から円中心へのベクトル
-		bool isInner = (PYTHA(sp.x, sp.y) < POW2(radius))
-			&& (PYTHA(ep.x, ep.y) < POW2(radius));
-		// 完全内包(円の内側)
-		if (fullContain)
-		{
-			return isInner;
-		}
-		if (isInner)
-		{
-			return false;
-		}
-		Vec3<T1> nv((end - sta).Normalize2());	// 線分の単位ベクトル
-		// 円中心から線分への垂線 d=((n・p)n)-p
-		Vec3<T1> dist((Vec3<T1>::Dot(nv, sp) * nv) - sp);
-		if (PYTHA(dist.x, dist.y) > POW2(radius))
-		{
-			// 垂線判定(円の外側)
-			return false;
-		}
-		else if ((PYTHA(sp.x, sp.y) > POW2(radius) && PYTHA(ep.x, ep.y) > POW2(radius))
-			&& (((sp.x > 0.f) ? 1.f : -1.f) == ((ep.x > 0.f) ? 1.f : -1.f))
-			&& (((sp.y > 0.f) ? 1.f : -1.f) == ((ep.y > 0.f) ? 1.f : -1.f)))
-		{
-			// 符号判定(中心点をまたがない)
-			return false;
-		}
-		return true;
-	}
-
 
 	/*
 		@brief			線分の内包判定
 		@attension		線分の両端が円の中にある場合は第3引数により変わる
 						完全内包と円周交差は内包が優先される
 		@param	[in]	line(sta,end)	判定する線分(始点、終点)
-		@param	[in]	fullContain		完全内包とするか
-		@param	[in]	intersectOnly	円周との交差のみにするか
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	円周との交差のみにするか(デフォルト：false)
 		@return			内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	bool Contains(const Line<T1>& line, bool fullContain, bool intersectOnly) const
+	virtual bool Contains(const Line<T1>& line, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		Vec3<T1> sp(center - line.sta); // 線分始点から円中心へのベクトル(start->pos)
 		Vec3<T1> ep(center - line.end); // 線分終点から円中心へのベクトル(end->pos)
@@ -2128,13 +1691,13 @@ public:
 						完全内包と円周交差は内包が優先される
 		@param	[in]	sta	判定する線分の始点
 		@param	[in]	end	判定する線分の終点
-		@param	[in]	fullContain		完全内包とするか
-		@param	[in]	intersectOnly	円周との交差のみにするか
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	円周との交差のみにするか(デフォルト：false)
 		@return			内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	bool Contains(const Vec3<T1>& sta, const Vec3<T1>& end, bool fullContain, bool intersectOnly) const
+	virtual bool Contains(const Vec3<T1>& sta, const Vec3<T1>& end, bool fullContain=false, bool intersectOnly=false) const override
 	{
 		Vec3<T1> sp(center - sta); // 線分始点から円中心へのベクトル
 		Vec3<T1> ep(center - end); // 線分終点から円中心へのベクトル
@@ -2170,14 +1733,17 @@ public:
 
 
 	/*
-		@brief	多角形の交差、内包判定
+		@brief			多角形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	poly			判定する多角形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	bool Contains(const Polygon<T1>& poly, bool fullContain = false) const override
+	virtual bool Contains(const Polygon<T1>& poly, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		int size = static_cast<int>(poly.points.size());
 		int conVer = 0;				// 内包頂点数
@@ -2185,7 +1751,7 @@ public:
 		for (int i = 0; i < size; ++i)
 		{
 			bool con = Contains(poly.points[i]);
-			if (!fullContain && con)
+			if (!intersectOnly && !fullContain && con)
 				return true;
 			else if (con)
 			{
@@ -2206,15 +1772,20 @@ public:
 		}
 		return false;
 	}
+
+
 	/*
-		@brief	矩形の交差、内包判定
+		@brief			矩形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	rect			判定する矩形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	bool Contains(const Rect<T1>& rect, bool fullContain = false) const override
+	virtual bool Contains(const Rect<T1>& rect, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		bool vertextes[4] = { false, false, false, false };	// 頂点の内包
 		Vec3<T1> rp[4] = {
@@ -2227,7 +1798,7 @@ public:
 		for (int i = 0; i < 4; ++i)
 		{
 			vertextes[i] = Contains(rp[i]);
-			if (!fullContain && vertextes[i])
+			if (!intersectOnly && !fullContain && vertextes[i])
 				return true;
 		}
 		if (fullContain)
@@ -2244,14 +1815,17 @@ public:
 	}
 
 	/*
-		@brief	円の交差、内包判定
+		@brief			円の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
 		@param	[in]	circ			判定する円
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@return	交差、内包しているか
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const Circle<T1, T2>& circ, bool fullContain = false) const override
+	virtual bool Contains(const Circle<T1, T2>& circ, bool fullContain = false, bool intersectOnly = false) const override
 	{
 		// 辺交差or内包
 		Vec3<T1> dist = circ.center - center;
@@ -2261,6 +1835,11 @@ public:
 			{
 				// 完全内包
 				return dist.Length2() + circ.radius < radius;
+			}
+			else if (intersectOnly)
+			{
+				// 完全内包でない
+				return dist.Length2() + circ.radius >= radius;
 			}
 			return true;
 		}
@@ -2316,14 +1895,14 @@ public:
 			float i_rad;	// 垂線から交点の角度
 			if (PYTHA(dist.x, dist.y) > 0.0f)
 			{
-				d_rad = std::atan2f(dist.y, dist.x);
+				d_rad = std::atan2f(static_cast<float>(dist.y), static_cast<float>(dist.x));
 				i_rad = std::acosf(dist.Length2() / radius);
 			}
 			else
 			{
 				// 線分が円中心を通る場合
-				d_rad = std::atan2f(line.end.y, line.end.x);
-				i_rad = M_PI / 2.0f;
+				d_rad = std::atan2f(static_cast<float>(line.end.y), static_cast<float>(line.end.x));
+				i_rad = PI / 2.0f;
 			}
 
 			Vec3<T1> temp[] =
@@ -2391,14 +1970,14 @@ public:
 			float i_rad;	// 垂線から交点の角度
 			if (PYTHA(dist.x, dist.y) > 0.0f)
 			{
-				d_rad = std::atan2f(dist.y, dist.x);
+				d_rad = std::atan2f(static_cast<float>(dist.y), static_cast<float>(dist.x));
 				i_rad = std::acosf(dist.Length2() / radius);
 			}
 			else
 			{
 				// 線分が円中心を通る場合
-				d_rad = std::atan2f(end.y, end.x);
-				i_rad = M_PI / 2.0f;
+				d_rad = std::atan2f(static_cast<float>(end.y), static_cast<float>(end.x));
+				i_rad = PI / 2.0f;
 			}
 
 			Vec3<T1> temp[] =
@@ -2467,14 +2046,14 @@ public:
 			float i_rad;	// 垂線から交点の角度
 			if (PYTHA(dist.x, dist.y) > 0.0f)
 			{
-				d_rad = std::atan2f(dist.y, dist.x);
+				d_rad = std::atan2f(static_cast<float>(dist.y), static_cast<float>(dist.x));
 				i_rad = std::acosf(dist.Length2() / radius);
 			}
 			else
 			{
 				// 線分が円中心を通る場合
-				d_rad = std::atan2f(line.end.y, line.end.x);
-				i_rad = M_PI / 2.0f;
+				d_rad = std::atan2f(static_cast<float>(line.end.y), static_cast<float>(line.end.x));
+				i_rad = PI / 2.0f;
 			}
 
 			Vec3<T1> temp[] =
@@ -2523,6 +2102,8 @@ public:
 		}
 		return min;
 	}
+
+
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
 			if(Contains(pos,next))
@@ -2551,14 +2132,14 @@ public:
 			float i_rad;	// 垂線から交点の角度
 			if (PYTHA(dist.x, dist.y) > 0.0f)
 			{
-				d_rad = std::atan2f(dist.y, dist.x);
+				d_rad = std::atan2f(static_cast<float>(dist.y), static_cast<float>(dist.x));
 				i_rad = std::acosf(dist.Length2() / radius);
 			}
 			else
 			{
 				// 線分が円中心を通る場合
-				d_rad = std::atan2f(end.y, end.x);
-				i_rad = M_PI / 2.0f;
+				d_rad = std::atan2f(static_cast<float>(end.y), static_cast<float>(end.x));
+				i_rad = PI / 2.0f;
 			}
 
 			Vec3<T1> temp[] =
@@ -2607,6 +2188,7 @@ public:
 		}
 		return min;
 	}
+
 #pragma endregion // Intersection
 	//================================================================================
 
@@ -2632,8 +2214,8 @@ public:
 	{
 		for(int i=0; i<360; ++i)
 		{
-			float rad = static_cast<float>(i)	* 2.0f * M_PI / 360.0f;
-			float ra2 = static_cast<float>(i+1)	* 2.0f * M_PI / 360.0f;
+			float rad = static_cast<float>(i)	* 2.0f * PI / 360.0f;
+			float ra2 = static_cast<float>(i+1)	* 2.0f * PI / 360.0f;
 			POINT sta = { LONG(std::cosf(rad) * radius + center_x), LONG(-std::sinf(rad) * radius + center_y) };
 			POINT end = { LONG(std::cosf(ra2) * radius + center_x), LONG(-std::sinf(ra2) * radius + center_y) };
 			graph::Draw_Line(	(int)sta.x,

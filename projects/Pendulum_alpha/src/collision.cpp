@@ -79,7 +79,7 @@ void CCollision::step()
 			else if(actp->Contains(plpos))
 			{
 				// 内包
-				pl->hit(actp);
+				//pl->hit(actp);
 			}
 		}
 		
@@ -100,16 +100,16 @@ void CCollision::step()
 				{
 					const mymath::Vec3f& enpos = enemy->obj().pos;
 					mouse.z = enpos.z;
-					auto& enemyCollisions = enemy->GetCollisionAreas();
+					const auto& enemyCollisions = enemy->GetCollisionAreas();
 					// 当たり判定
-					for (auto& col : enemyCollisions)
+					for (const auto& col : enemyCollisions)
 					{
 						// 当たり判定内のみ
-						if (!(col->Contains(mouse))) continue;
+						if (!(col->Contains(plpos, mouse))) continue;
 						mymath::Linef line(plpos, col->IntersectionPoint2Nearest(plpos, mouse));
 						// 敵との直線距離にActionPolygonがない場合のみ攻撃有効
 						bool atkFlag = true;
-						for (auto& actp : sm.actionPoints)
+						for (const auto& actp : sm.actionPoints)
 						{
 							// ActioinPolygon以外排除
 							if (!actp->FindName("ActionPolygon"))continue;
@@ -134,11 +134,12 @@ void CCollision::step()
 
 								// 爆散エフェクト
 								for (int i = 0; i < 3; ++i)
-									InsertObject(ObjPtr(new CEffectExplosion(enemy->obj().pos)));
+									gm()->AddObject(ObjPtr(new CEffectExplosion(enemy->obj().pos)));
 								// SE
 								//DSound_SetFrequency(SE::EXPLODE, 1000);
 								se::DSound_Play("se_explosion");
 							}
+							break;
 						}
 					}
 				}
@@ -209,7 +210,7 @@ void CCollision::step()
 			auto& en = std::dynamic_pointer_cast<IEnemy>(enemy);
 			const mymath::Vec3f& enpos = en->obj().pos;
 			//-----------------------------------------
-			// プレイヤー vs ActionPoint
+			// 敵 vs ActionPoint
 			for (auto& actp : sm.actionPoints)
 			{
 				if (actp->Contains(en->prePos, enpos))
@@ -220,7 +221,7 @@ void CCollision::step()
 				else if (actp->Contains(enpos))
 				{
 					// 内包
-					en->hit(actp);
+					//en->hit(actp);
 				}
 			}
 		}

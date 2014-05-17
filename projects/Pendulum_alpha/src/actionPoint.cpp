@@ -273,12 +273,12 @@ bool CActionPolygon::Contains(const mymath::Vec3f& point) const
 }
 bool CActionPolygon::Contains(const mymath::Linef& line) const
 {
-	return polygon_.Contains(line);
+	return polygon_.Contains(line, false, true);
 }
 
 bool CActionPolygon::Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end) const
 {
-	return polygon_.Contains(sta, end);
+	return polygon_.Contains(sta, end, false, true);
 }
 
 bool CActionPolygon::Contains(const mymath::ShapefPtr& shape) const

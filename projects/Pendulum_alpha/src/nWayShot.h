@@ -24,6 +24,7 @@ private:
 	void init()
 	{
 		cnt_ = 0;
+		collisions_.push_back(mymath::ShapefPtr(new mymath::Circlef(0.f, 0.f, obj_.pos.z, obj_.HalfHeight())));
 	}
 public:
 	/*
@@ -34,6 +35,7 @@ public:
 		IAttack("Atk_Shot")
 	{
 		obj_ = shot;
+		init();
 	}
 	/*
 		@brief	èâä˙âª
@@ -42,10 +44,10 @@ public:
 	*/
 	CShot(const CShot& shot, const mymath::Vec3f& acceleration):
 		IAttack("Atk_Shot")
-		,cnt_(0)
 		,acceleration_(acceleration)
 	{
 		obj_ = shot.obj();
+		init();
 	}
 	virtual void step() override
 	{

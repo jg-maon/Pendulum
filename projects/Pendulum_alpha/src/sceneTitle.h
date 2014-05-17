@@ -5,6 +5,10 @@
 #include "sceneBase.hpp"
 #endif
 
+#ifndef DEF_MYMATH_HPP
+#include "myMath.hpp"
+#endif
+
 class CSceneTitle : public IScene
 {
 private:

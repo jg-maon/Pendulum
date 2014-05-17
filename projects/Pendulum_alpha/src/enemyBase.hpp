@@ -60,7 +60,7 @@ public:
 		@brief	UŒ‚‚Ì“–‚½‚è”»’è—Ìˆæ‚ÌŽæ“¾
 		@return	UŒ‚‚Ì“–‚½‚è”»’è—Ìˆæ
 	*/
-	virtual Collisions GetAttackCollisions(){return attack_->GetCollisionAreas();}
+	virtual Collisions GetAttackCollisions() const {return attack_->GetCollisionAreas();}
 
 	/*
 		@brief	UŒ‚Žè’iî•ñ‚ÌŠi”[
@@ -92,6 +92,7 @@ public:
 				LoadValue(f, obj_, shot_info.size.y);
 
 				CShot shot(shot_info);
+				f >> buf;	// “–‚½‚è”»’èƒ‰ƒxƒ‹“Ç‚Ý”ò‚Î‚µ
 				shot.LoadCollisions(f);
 				attack_ = AttackPtr(new CNWayShot(shot));
 			}

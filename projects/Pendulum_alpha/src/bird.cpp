@@ -240,6 +240,7 @@ void CBird::hit(const ObjPtr& rival)
 		intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
 		obj_.pos = intersection;
 		obj_.pos -= dist.Normalize();
+		
 	}
 }
 
@@ -251,7 +252,6 @@ bool CBird::ApplyDamage(int dam)
 	if(state_ == State::DESTROY) return true;
 	// ダメージが入ったら即死
 	state_ = State::DESTROY;
-	collisions_.clear();	// 死亡アニメーション中の当たり判定を消す
 
 	//
 	//// 爆散エフェクト
@@ -264,12 +264,11 @@ bool CBird::ApplyDamage(int dam)
 
 Base::Collisions CBird::GetCollisionAreas()
 {
-	Base::Collisions cols;	// return用
 	// 死亡アニメーション中はスキップ
 	if(state_ != State::DESTROY)
 	{
-		return super::GetCollisionAreas();
+		return __super::GetCollisionAreas();
 	}
-	return cols;
+	return Base::Collisions();
 }
 

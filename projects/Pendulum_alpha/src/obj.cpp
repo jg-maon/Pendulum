@@ -127,39 +127,40 @@ void IColObject::hit(const ObjPtr& rival)
 
 bool IColObject::LoadCollisions(std::ifstream& f)
 {
-	using namespace mymath;
 	std::string buf;
 	f >> buf;
-	if(buf != "{") return f.eof();
-	while(!f.eof() && buf != "}")
+	if (buf != "{") return f.eof();
+	collisions_.clear();
+	while (!f.eof() && buf != "}")
 	{
-		if(buf == "Circle")
+		if (buf == "Circle")
 		{
 			mymath::Circlef c;
-			if(LoadValue(f, obj_, c.center.x))return true;
-			if(LoadValue(f, obj_, c.center.y))return true;
-			if(LoadValue(f, obj_, c.radius))return true;
+			if (LoadValue(f, obj_, c.center.x)) return true;
+			if (LoadValue(f, obj_, c.center.y)) return true;
+			if (LoadValue(f, obj_, c.radius)) return true;
 			collisions_.push_back(mymath::ShapefPtr(new mymath::Circlef(c)));
 		}
-		else if(buf == "Polygon")
+		else if (buf == "Polygon")
 		{
 			int vNum;	// ’¸“_”
 			f >> vNum;
-			//Polygonf p(vNum);
-			for(int i=0; i<vNum; ++i)
+			mymath::Polyf p(vNum);
+			for (int i = 0; i < vNum; ++i)
 			{
-				//if(LoadValue(f, obj_, p.points[i].x))return true;
-				//if(LoadValue(f, obj_, p.points[i].y))return true;
+				if (LoadValue(f, obj_, p.points[i].x)) return true;
+				if (LoadValue(f, obj_, p.points[i].y)) return true;
 			}
-			//collisions_.push_back(mymath::ShapefPtr(new Polygonf(p))));
+			collisions_.push_back(mymath::ShapefPtr(new mymath::Polyf(p)));
+			return f.eof();
 		}
-		else if(buf == "Rect")
+		else if (buf == "Rect")
 		{
 			mymath::Rectf r;
-			if(LoadValue(f, obj_, r.left))return true;
-			if(LoadValue(f, obj_, r.top))return true;
-			if(LoadValue(f, obj_, r.right))return true;
-			if(LoadValue(f, obj_, r.bottom))return true;
+			if (LoadValue(f, obj_, r.left))return true;
+			if (LoadValue(f, obj_, r.top))return true;
+			if (LoadValue(f, obj_, r.right))return true;
+			if (LoadValue(f, obj_, r.bottom))return true;
 			collisions_.push_back(mymath::ShapefPtr(new mymath::Rectf(r)));
 		}
 		f >> buf;

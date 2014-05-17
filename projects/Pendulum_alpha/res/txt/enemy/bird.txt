@@ -16,7 +16,7 @@ Circle	0	0	halfWidth
 //Polygon	4	-1	   -1		-1 1	1 1	1 -1	
 
 lŠp(‚»‚Ì‚¤‚¿Polygon‚É‹zû)	¶	ã	‰E	‰ºÀ•W
-Rect	-halfWidth	-halfHeight	halfWidth	halfHeight
+//Rect	-halfWidth	-halfHeight	halfWidth	halfHeight
 }
 
 

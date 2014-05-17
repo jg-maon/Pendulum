@@ -56,6 +56,7 @@ IScene* CSceneTitle::step()
 	switch (state_)
 	{
 	case IScene::State::INNING:
+		state_ = IScene::State::MAIN;
 		break;
 	case IScene::State::MAIN:
 		switch (phase_)
@@ -73,10 +74,11 @@ IScene* CSceneTitle::step()
 		// 何かアクションを起こしてシーンが切り替わるとき
 		if (input::CheckPush(input::KEY_BTN0))
 		{
-			return new CSceneStageSelect();
+			state_ = IScene::State::OUTING;
 		}
 		break;
 	case IScene::State::OUTING:
+		return new CSceneStageSelect();
 		break;
 	default:
 		break;

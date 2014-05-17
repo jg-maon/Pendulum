@@ -11,7 +11,6 @@
 */
 class ICharacter : public IColObject
 {
-	typedef IColObject super;
 
 protected:
 	int health_;				// ‘Ì—Í
@@ -37,12 +36,12 @@ public:
 	*/
 	virtual void step() = 0{prePos_ = obj_.pos;}
 	virtual void draw() = 0{}
-	virtual void hit(const ObjPtr& rival){super::hit(rival);}
+	virtual void hit(const ObjPtr& rival){__super::hit(rival);}
 	/*
 		@brief	“–‚½‚è”»’è—Ìˆæ‚Ìæ“¾
 		@return	“–‚½‚è”»’è—Ìˆæ
 	*/
-	virtual Collisions GetCollisionAreas(){return super::GetCollisionAreas();}
+	virtual Collisions GetCollisionAreas(){return __super::GetCollisionAreas();}
 
 	/*
 		@brief	UŒ‚—Í‚Ìæ“¾

@@ -151,7 +151,7 @@ void CStageMng::step()
 	for(auto& ap : actionPoints_)
 		ap->step();
 	// 多重スクロールとか
-
+	/*
 #ifdef _DEBUG
 	if(input::CheckPush(input::KEY_F1))
 	{
@@ -164,7 +164,7 @@ void CStageMng::step()
 		}
 	}
 #endif
-
+	*/
 
 }
 
