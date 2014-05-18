@@ -50,11 +50,27 @@ private:
 		@return	なし
 	*/
 	void DemoStep();
+
+
+protected:
+	/*
+		@brief	メイン更新処理
+		@return	メイン終了か
+		@retval	true	メイン終了(フェードイン開始)
+		@retval	false	メイン処理中
+	*/
+	bool update() override;
+
+	/*
+		@brief	次のシーンに切り替わる瞬間に呼ばれる
+		@return	次のシーン
+	*/
+	IScene* NextScene() override;
+
 public:
 	CSceneTitle();
 	~CSceneTitle();
-	IScene* step() override;	// 更新
-	void	draw() override;	// 描画
+	void draw() override;	// 描画
 };
 
 

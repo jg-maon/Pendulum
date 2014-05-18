@@ -81,7 +81,13 @@ namespace color
 	@param	[out]	b		Blue
 	@return	‚È‚µ
 */
-template <class T>	inline void Color_SeparateARGB(D3DCOLOR argb, T& a, T& r, T& g, T& b);
+template <class T> void Color_SeparateARGB(D3DCOLOR argb, T& a, T& r, T& g, T& b)
+{
+	a = static_cast<T>(argb >> 24 & 0xff);
+	r = static_cast<T>(argb >> 16 & 0xff);
+	g = static_cast<T>(argb >> 8 & 0xff);
+	b = static_cast<T>(argb & 0xff);
+}
 
 /*
 	@brief	AHSV‚ÌHƒ`ƒƒƒ“ƒlƒ‹‚Ì‚Ý‰ÁŽZ

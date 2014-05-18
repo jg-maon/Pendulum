@@ -117,22 +117,6 @@ inline string getFloatString(T_ f, int val, int w, char fill)
 namespace color
 {
 
-/*
-	@brief	ARGBを各色に分解
-	@param	[in]	argb	分解させる色
-	@param	[out]	a		Alpha
-	@param	[out]	r		Red
-	@param	[out]	g		Green
-	@param	[out]	b		Blue
-	@return	なし
-*/
-template <class T>	inline void Color_SeparateARGB(D3DCOLOR argb, T& a, T& r, T& g, T& b)
-{
-	a = static_cast<T>(argb >> 24	& 0xff);
-	r = static_cast<T>(argb >> 16	& 0xff);
-	g = static_cast<T>(argb >> 8	& 0xff);
-	b = static_cast<T>(argb & 0xff);
-}
 
 /*
 	@brief	AHSVのHチャンネルのみ加算

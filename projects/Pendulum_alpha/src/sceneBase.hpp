@@ -1,11 +1,27 @@
 #ifndef DEF_SCENEBASE_HPP
 #define DEF_SCENEBASE_HPP
 
+#ifndef DEF_FADE_H
+#include "fade.h"
+#endif
+
+#ifndef DEF_DEFINE_H
+#include "define.h"
+#endif
+
+#include <string>
 
 #include <memory>
+
 class IScene
 {
+private:
+	const float FADE_IN_TIME;			// フェードインにかける時間
+	const float FADE_OUT_TIME;			// フェードアウトにかける時間
 protected:
+
+	const std::string BGM_RESNAME;		// BGM音源
+
 	enum class State		// シーン内部状態
 	{
 		INNING,		// シーン移り始め(INだとdefineされているので区別)
@@ -13,15 +29,79 @@ protected:
 		OUTING,		// シーン移り終わり(OUTだとdefineされているので区別)
 	};
 	State state_;
+
 	int bgmVolum_;		// BGM音量
 	//std::string name_;
+
+protected:
+	/*
+		@brief	メイン更新処理
+		@return	メイン終了か
+		@retval	true	メイン終了(フェードイン開始)
+		@retval	false	メイン処理中
+	*/
+	virtual bool update() = 0{ return false; }
+
+	/*
+		@brief	次のシーンに切り替わる瞬間に呼ばれる
+		@return	次のシーン
+	*/
+	virtual IScene* NextScene() = 0{ return this; }
+
 public:
-	IScene():state_(IScene::State::INNING),bgmVolum_(100){}
+	/*
+		@param	[in]	bgm			BGM管理名
+		@param	[in]	fadeInTime	フェードインにかける時間(デフォルト0.3秒)
+		@param	[in]	fadeOutTime	フェードアウトにかける時間(デフォルト0.3秒)
+	*/
+	IScene(const std::string& bgm, float fadeInTime = 0.3f, float fadeOutTime = 0.3f) :
+		BGM_RESNAME(bgm)
+		, FADE_IN_TIME(fadeInTime)
+		, FADE_OUT_TIME(fadeOutTime)
+		, state_(IScene::State::INNING)
+		, bgmVolum_(100)
+	{
+		bgm::DShow_Play(BGM_RESNAME);
+		CFade::StartFadeIn();
+	}
 	//IScene(const std::string& name):name_(name){}
 	
 	virtual ~IScene() =0 {}
 
-	virtual IScene* step() =0 {return this;}
+	virtual IScene* step()
+	{
+		switch (state_)
+		{
+		case IScene::State::INNING:
+			if (CFade::FadeIn(255.f / FADE_IN_TIME*system::FrameTime))
+			{
+				state_ = State::MAIN;
+			}
+			break;
+		case IScene::State::MAIN:
+			if (update())
+			{
+				// フェードアウト開始
+				CFade::StartFadeOut();
+				state_ = State::OUTING;
+			}
+			break;
+		case IScene::State::OUTING:
+			//--------------------------------------
+			// BGMフェードアウト
+			bgmVolum_ -= static_cast<int>(100.f / FADE_OUT_TIME * system::FrameTime);
+			if (bgmVolum_ <= 0)
+				bgmVolum_ = 0;
+			bgm::DShow_VolumeControl(BGM_RESNAME, bgmVolum_);
+			//--------------------------------------
+			if (CFade::FadeOut(255.f / FADE_OUT_TIME * system::FrameTime))
+			{
+				return NextScene();
+			}
+			break;
+		}
+		return this;
+	}
 	virtual void draw() =0 {}
 	
 };

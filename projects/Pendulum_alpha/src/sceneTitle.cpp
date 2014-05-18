@@ -10,13 +10,26 @@
 #pragma region
 // コンストラクタ
 CSceneTitle::CSceneTitle() :
-phase_(Phase::TITLE)
+IScene("bgm_title")
+, phase_(Phase::TITLE)
 {
-
+	CFade::ChangeColor(-1);
 }
 CSceneTitle::~CSceneTitle()
 {
+	
 }
+
+
+// 描画
+void CSceneTitle::draw()
+{
+	//DSound_
+	font::Draw_FontTextNC(100, 200, 0.5f, "タイトル画面", -1, 0);
+	font::Draw_FontTextNC(100, 250, 0.5f, "ボタン1でシーン切り替え", -1, 0);
+}
+
+
 
 void CSceneTitle::TitleInit()
 {
@@ -50,49 +63,33 @@ void CSceneTitle::DemoStep()
 	}
 }
 
-// 処理
-IScene* CSceneTitle::step()
-{
-	switch (state_)
-	{
-	case IScene::State::INNING:
-		state_ = IScene::State::MAIN;
-		break;
-	case IScene::State::MAIN:
-		switch (phase_)
-		{
-		case Phase::TITLE:
-			// タイトル画面表示中
-			TitleStep();
-			break;
-		case Phase::DEMO:
-			// デモプレイ表示中
-			DemoStep();
-			break;
-		}
 
-		// 何かアクションを起こしてシーンが切り替わるとき
-		if (input::CheckPush(input::KEY_BTN0))
-		{
-			state_ = IScene::State::OUTING;
-		}
+// 処理
+bool CSceneTitle::update()
+{
+	switch (phase_)
+	{
+	case Phase::TITLE:
+		// タイトル画面表示中
+		TitleStep();
 		break;
-	case IScene::State::OUTING:
-		return new CSceneStageSelect();
-		break;
-	default:
+	case Phase::DEMO:
+		// デモプレイ表示中
+		DemoStep();
 		break;
 	}
 
-	return this;
+	// 何かアクションを起こしてシーンが切り替わるとき
+	if (input::CheckPush(input::KEY_BTN0))
+	{
+		return true;
+	}
+	return false;
 }
 
-// 描画
-void CSceneTitle::draw()
+IScene* CSceneTitle::NextScene()
 {
-	//DSound_
-	font::Draw_FontTextNC(100,200,0.5f,"タイトル画面",-1,0);
-	font::Draw_FontTextNC(100,250,0.5f,"ボタン1でシーン切り替え",-1,0);
+	return new CSceneStageSelect();
 }
 
 

@@ -16,12 +16,12 @@
 }
 
 //＿BGM＿管理名(bgm_でスタート)＿パス
-	bgm_title		res/snd/bgm/uzumaki.mp3
-	bgm_stageSelect	res/snd/bgm/uzumaki.mp3
-	bgm_result		res/snd/bgm/uzumaki.mp3
 #BGM
 {
-	bgm_main		res/snd/bgm/uzumaki.mp3
+	bgm_title		res/snd/bgm/title.mp3
+	bgm_stageSelect	res/snd/bgm/stageSelect.mp3
+	bgm_main		res/snd/bgm/main.mp3
+	bgm_end			res/snd/bgm/end.mp3
 }
 
 //＿SE＿管理名(se_でスタート)＿パス

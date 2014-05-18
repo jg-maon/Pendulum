@@ -22,6 +22,13 @@ public:
 	static void ChangeColor(unsigned char r, unsigned char g, unsigned char b);
 
 	/*
+		@brief	色変更
+		@param	[in]	argb	D3DCOLOR_ARGB指定でできるようにした色
+		@return	なし
+	*/
+	static void ChangeColor(unsigned long argb);
+
+	/*
 		@brief	フェードイン開始
 		@return	なし
 	*/

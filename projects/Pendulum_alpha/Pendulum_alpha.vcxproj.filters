@@ -390,5 +390,8 @@
     <Text Include="res\txt\stage\stage01.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
+    <Text Include="res\txt\enemy\enemyTable02.txt">
+      <Filter>リソース ファイル</Filter>
+    </Text>
   </ItemGroup>
 </Project>

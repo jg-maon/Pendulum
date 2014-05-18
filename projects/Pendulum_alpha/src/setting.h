@@ -7,47 +7,47 @@
 
 namespace setting
 {
-
-enum Font
-{
-	MSGOSICK,
-	POP30,
-	POP25,
-	POP12,
-	MSG15,
-	FONT_NUM,			// これより上に記述、cpp内の配列に追加
-};
-
-enum ImgTbl
-{
-	backgroundIMG,
-	playerIMG,
-	birdIMG,
-	shotIMG,
-	circleIMG,
-	expIMG,
-	numberIMG,
-	chainIMG,
-
-	IMG_NUM,			// これより上に記述、cpp内の配列に追加
-};
-
-enum BGM
-{
-	TITLE,
-	STAGESELECT,
-	MAIN,
-	RESULT,
-
-	BGM_NUM
-};
-
-
-enum SE
-{
-	EXPLODE,
-	SE_NUM
-};
+//
+//enum Font
+//{
+//	MSGOSICK,
+//	POP30,
+//	POP25,
+//	POP12,
+//	MSG15,
+//	FONT_NUM,			// これより上に記述、cpp内の配列に追加
+//};
+//
+//enum ImgTbl
+//{
+//	backgroundIMG,
+//	playerIMG,
+//	birdIMG,
+//	shotIMG,
+//	circleIMG,
+//	expIMG,
+//	numberIMG,
+//	chainIMG,
+//
+//	IMG_NUM,			// これより上に記述、cpp内の配列に追加
+//};
+//
+//enum BGM
+//{
+//	TITLE,
+//	STAGESELECT,
+//	MAIN,
+//	RESULT,
+//
+//	BGM_NUM
+//};
+//
+//
+//enum SE
+//{
+//	EXPLODE,
+//	SE_NUM
+//};
 
 
 extern void OnCreateSetup();

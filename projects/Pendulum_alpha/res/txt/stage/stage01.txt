@@ -7,7 +7,7 @@
 1500	4500
 
 #Enemy
-enemy01.txt
+enemyTable02.txt
 
 #ActionCircle
 {

@@ -2,6 +2,8 @@
 
 #include "define.h"
 
+#include "common.h"
+
 unsigned char CFade::r_ = 0;
 unsigned char CFade::g_ = 0;
 unsigned char CFade::b_ = 0;
@@ -16,6 +18,13 @@ void CFade::ChangeColor(unsigned char r, unsigned char g, unsigned char b)
 	r_ = r;
 	g_ = g;
 	b_ = b;
+}
+
+void CFade::ChangeColor(unsigned long argb)
+{
+	u_char tmp;
+	common::color::Color_SeparateARGB(
+		argb, tmp, r_, g_, b_);
 }
 
 void CFade::StartFadeIn()
