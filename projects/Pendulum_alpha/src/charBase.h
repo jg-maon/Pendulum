@@ -1,7 +1,7 @@
 #ifndef DEF_CHARBASE_H
 #define DEF_CHARBASE_H
 
-#define DEF_CHARBASE_EXT
+//#define DEF_CHARBASE_EXT
 
 #ifndef DEF_MYMATH_HPP
 #include "MyMath.hpp"
@@ -16,10 +16,10 @@ namespace charabase
 class Anim
 {
 public:
-	int		no;				//現在のアニメNO　この値は0,1,2,3,4,とカウントするだけ
-	float	cnt;			//アニメ更新カウンタ
-	float	speed;			//アニメ更新速度
-	int		max;			//アニメ枚数　この値にnoが来ると0からカウント
+	int		no;				// 現在のアニメNO　この値は0,1,2,3,4,とカウントするだけ
+	float	cnt;			// アニメ更新カウンタ
+	float	speed;			// アニメ更新速度
+	int		max;			// アニメ枚数　この値にnoが来ると0からカウント
 
 	/*
 		@brief	アニメーションの設定
@@ -158,8 +158,9 @@ public:
 
 
 };
-#ifdef DEF_CHARBASE_EXT
 
+
+#ifdef DEF_CHARBASE_EXT
 #include <wtypes.h>	//  RECT用
 
 extern void MoveChar(CharBase& cb);

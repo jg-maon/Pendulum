@@ -20,6 +20,7 @@ private:
 	const float FADE_OUT_TIME;			// フェードアウトにかける時間
 protected:
 
+	const std::string BACK_RESNAME;		// 背景
 	const std::string BGM_RESNAME;		// BGM音源
 
 	enum class State		// シーン内部状態
@@ -50,12 +51,14 @@ protected:
 
 public:
 	/*
+		@param	[in]	back		背景画像管理名
 		@param	[in]	bgm			BGM管理名
 		@param	[in]	fadeInTime	フェードインにかける時間(デフォルト0.3秒)
 		@param	[in]	fadeOutTime	フェードアウトにかける時間(デフォルト0.3秒)
 	*/
-	IScene(const std::string& bgm, float fadeInTime = 0.3f, float fadeOutTime = 0.3f) :
-		BGM_RESNAME(bgm)
+	IScene(const std::string& back, const std::string& bgm, float fadeInTime = 0.3f, float fadeOutTime = 0.3f) :
+		BACK_RESNAME(back)
+		, BGM_RESNAME(bgm)
 		, FADE_IN_TIME(fadeInTime)
 		, FADE_OUT_TIME(fadeOutTime)
 		, state_(IScene::State::INNING)
@@ -102,7 +105,19 @@ public:
 		}
 		return this;
 	}
-	virtual void draw() =0 {}
+
+	virtual void draw()
+	{
+		SIZE size = graph::Draw_GetImageSize2(BACK_RESNAME);
+		graph::Draw_GraphicsLeftTopNC(
+			0, 0, 1.f,
+			BACK_RESNAME,
+			0, 0,
+			size.cx, size.cy,
+			0, nullptr,
+			static_cast<float>(system::WINW) / size.cx,
+			static_cast<float>(system::WINH) / size.cy);
+	}
 	
 };
 

@@ -17,7 +17,7 @@ extern CGameManager* gm;
 #pragma region
 // コンストラクタ
 CSceneMain::CSceneMain():
-IScene("bgm_main")
+IScene("","bgm_main")
 {
 	InsertObject(ObjPtr(new CCollision()));
 }

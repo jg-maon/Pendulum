@@ -13,7 +13,7 @@ extern CGameManager* gm;
 #pragma region CSceneStageSelect methods
 // コンストラクタ
 CSceneStageSelect::CSceneStageSelect() :
-IScene("bgm_stageSelect")
+IScene("img_stageSelect", "bgm_stageSelect")
 {
 	InsertObject(ObjPtr(new CStageMng()));
 }
@@ -25,6 +25,10 @@ CSceneStageSelect::~CSceneStageSelect()
 void CSceneStageSelect::draw()
 {
 	font::Draw_FontTextNC(100, 200, 0.5f, "ステージセレクト画面", -1, 0);
+
+	// 背景
+	__super::draw();
+
 }
 
 

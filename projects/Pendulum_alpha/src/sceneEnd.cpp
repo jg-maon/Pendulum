@@ -8,7 +8,7 @@
 #pragma region
 // コンストラクタ
 CSceneEnd::CSceneEnd():
-IScene("bgm_end")
+IScene("img_end", "bgm_end")
 {
 }
 CSceneEnd::~CSceneEnd()
@@ -19,6 +19,10 @@ CSceneEnd::~CSceneEnd()
 void CSceneEnd::draw()
 {
 	font::Draw_FontText(100, 200, 0.5f, "エンド画面", -1, 0);
+
+	// 背景
+	//__super::draw();
+
 }
 
 

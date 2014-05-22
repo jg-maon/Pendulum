@@ -5,14 +5,20 @@
 //＿画像＿管理名(img_でスタート)＿パス＿透過色(16進ARGB)
 #IMG
 {
-	img_bird		res/gra/enemy/bird/bird.png		0xff000000
-	img_player		res/gra/player.png				0xff00ff00
-	img_birdShot	res/gra/enemy/bird/birdShot.png	0xff000000
+	img_circle		res/gra/circle_x96.png			0xff000000
 	img_explosion	res/gra/effect/explosion.png	0xff000000
 	img_number		res/gra/ui/number.png			0xff000000
 	img_chain		res/gra/ui/chain.png			0xff000000
-	img_circle		res/gra/circle_x96.png			0xff000000
-	img_stage01		res/gra/stages/stage01/bg.jpg	0xff000000
+	
+	img_title		res/gra/title/bg.jpg			0xff00ff00
+	img_stageSelect	res/gra/stageSelect/bg.jpg		0xff00ff00
+
+	img_stage01		res/gra/main/stages/stage01/bg.jpg	0xff000000
+	img_player		res/gra/main/character/player.png				0xff00ff00
+	img_bird		res/gra/main/character/enemy/bird/bird.png		0xff000000
+	img_birdShot	res/gra/main/character/enemy/bird/birdShot.png	0xff000000
+
+	
 }
 
 //＿BGM＿管理名(bgm_でスタート)＿パス
