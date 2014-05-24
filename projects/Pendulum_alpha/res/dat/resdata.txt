@@ -1,9 +1,8 @@
 //＿リソースファイル管理データ
 //＿#タグ{}の間に記述
-//＿管理名＿＿パスの順に入力
 
 //＿画像＿管理名(img_でスタート)＿パス＿透過色(16進ARGB)
-#IMG
+#Img
 {
 	img_circle		res/gra/circle_x96.png			0xff000000
 	img_explosion	res/gra/effect/explosion.png	0xff000000
@@ -22,7 +21,7 @@
 }
 
 //＿BGM＿管理名(bgm_でスタート)＿パス
-#BGM
+#Bgm
 {
 	bgm_title		res/snd/bgm/title.mp3
 	bgm_stageSelect	res/snd/bgm/stageSelect.mp3
@@ -31,13 +30,13 @@
 }
 
 //＿SE＿管理名(se_でスタート)＿パス
-#SE
+#Se
 {
 	se_explosion		res/snd/se/explosion.wav
 }
 
 //＿フォント＿管理名(font_でスタート)＿フォント名(全角スペースは'＿'を使う)＿サイズ
-#FONT
+#Font
 {
 	font_MSGOSICK30	MS＿ゴシック		30
 	font_MSGOSICK20	MS＿ゴシック		20

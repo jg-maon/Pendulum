@@ -99,6 +99,9 @@
     <Filter Include="ソース ファイル\InGame\Character\Player">
       <UniqueIdentifier>{6a2ddff4-9777-4ba1-87e1-e3918057123f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\InGame\ScoreManager">
+      <UniqueIdentifier>{d7263c29-93d4-4e29-97d3-95eb129cd2aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -269,6 +272,9 @@
     <ClInclude Include="src\sceneBase.hpp">
       <Filter>ソース ファイル\Sequence\Base</Filter>
     </ClInclude>
+    <ClInclude Include="src\scoreMng.h">
+      <Filter>ソース ファイル\InGame\ScoreManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -376,22 +382,30 @@
     <ClCompile Include="src\player.cpp">
       <Filter>ソース ファイル\InGame\Character\Player</Filter>
     </ClCompile>
+    <ClCompile Include="src\scoreMng.cpp">
+      <Filter>ソース ファイル\InGame\ScoreManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="res\txt\resdata.txt">
+    <Text Include="res\dat\resdata.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
-    <Text Include="res\txt\enemy\enemyTable01.txt">
+    <Text Include="res\dat\stage\stage01.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
-    <Text Include="res\txt\enemy\bird.txt">
+    <Text Include="res\dat\enemy\enemyTable01.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
-    <Text Include="res\txt\stage\stage01.txt">
+    <Text Include="res\dat\enemy\enemyTable02.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
-    <Text Include="res\txt\enemy\enemyTable02.txt">
+    <Text Include="res\dat\enemy\bird.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\dat\rank.dat">
+      <Filter>リソース ファイル</Filter>
+    </None>
   </ItemGroup>
 </Project>

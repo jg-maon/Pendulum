@@ -8,7 +8,7 @@
 #endif
 #define D_ACT_TEST			// マウスクリック座標でぶら下がる
 #define D_ATK_TEST	// 攻撃範囲拡大
-#define USE_CIRCLE_EXT
+#define DEF_SHAPE_DRAW
 
 #include "player.h"
 #ifndef DEF_DEFINE_H

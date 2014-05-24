@@ -156,7 +156,7 @@ void CStageMng::step()
 	if(input::CheckPush(input::KEY_F1))
 	{
 		std::stringstream file;
-		file << "res/txt/stage/" << stageName_ << ".txt";
+		file << "res/dat/stage/" << stageName_ << ".txt";
 		ifstream f(file.str());
 		if(f.is_open())
 		{
@@ -182,16 +182,20 @@ void CStageMng::draw()
 void CStageMng::LoadStage(const std::string& stageName)
 {
 	std::stringstream file;
-	file << "res/txt/stage/" << stageName << ".txt";
+	file << "res/dat/stage/" << stageName << ".txt";
 	ifstream f(file.str());
-	if(f.fail())return;
+	if (f.fail())
+	{
+		debug::Dbg_BoxToMessage("CStageMng::LoadStage");
+		return;
+	}
 	stageName_ = stageName;
 
 	// 先に登録されているオブジェクトを消してから読み込む
 	auto& objs = gm()->GetObjects("Player,EnemyMng,Action", ',');
 	for (auto& obj : objs)
 		obj->kill();
-
+	actionPoints_.clear();
 
 
 	if(LoadSize(f))

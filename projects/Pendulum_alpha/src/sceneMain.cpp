@@ -9,7 +9,6 @@
 
 #include "sceneEnd.h"		// ƒV[ƒ“‘JˆÚ
 
-extern CGameManager* gm;
 
 
 //======================================

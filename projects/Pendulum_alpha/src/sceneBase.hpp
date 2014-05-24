@@ -9,6 +9,10 @@
 #include "define.h"
 #endif
 
+#ifndef DEF_GAMEMANAGER_H
+#include "gameManager.h"
+#endif
+
 #include <string>
 
 #include <memory>
@@ -16,8 +20,11 @@
 class IScene
 {
 private:
+	static CGameManager* gm_;			// ゲームマネージャを扱うためのクラス
+
 	const float FADE_IN_TIME;			// フェードインにかける時間
 	const float FADE_OUT_TIME;			// フェードアウトにかける時間
+
 protected:
 
 	const std::string BACK_RESNAME;		// 背景
@@ -35,6 +42,25 @@ protected:
 	//std::string name_;
 
 protected:
+	/*
+		@brief	ゲームマネージャの取得
+		@return	ゲームマネージャ
+	*/
+	CGameManager* gm() const
+	{
+		return gm_;
+	}
+	/*
+		@brief	ゲームマネージャの設定
+		@return	なし
+	*/
+	void gm(CGameManager* gm)
+	{
+		gm_ = gm;
+	}
+
+
+
 	/*
 		@brief	メイン更新処理
 		@return	メイン終了か
@@ -67,6 +93,12 @@ public:
 		bgm::DShow_Play(BGM_RESNAME);
 		CFade::StartFadeIn();
 	}
+	IScene() :
+		BACK_RESNAME("")
+		, BGM_RESNAME("")
+		, FADE_IN_TIME(0.3f)
+		, FADE_OUT_TIME(0.3f)
+	{}
 	//IScene(const std::string& name):name_(name){}
 	
 	virtual ~IScene() =0 {}
@@ -120,5 +152,21 @@ public:
 	}
 	
 };
+
+
+class TempScene : public IScene
+{
+protected:
+	virtual bool update() override{ return false; }
+	virtual IScene* NextScene() override{ return this; }
+public:
+	TempScene(CGameManager *game) :
+		IScene()
+	{
+		gm(game);
+	}
+	~TempScene(){}
+};
+
 
 #endif

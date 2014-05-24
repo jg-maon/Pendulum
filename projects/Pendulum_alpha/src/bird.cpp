@@ -1,5 +1,5 @@
 #ifdef _DEBUG
-//#define USE_CIRCLE_EXT
+#define DEF_SHAPE_DRAW
 #endif
 
 #include "define.h"
@@ -55,7 +55,12 @@ CBird::~CBird()
 void CBird::init()
 {
 	using common::FindChunk;
-	std::ifstream f("res/txt/enemy/bird.txt");
+	std::ifstream f("res/dat/enemy/bird.txt");
+	if (f.fail())
+	{
+		debug::Dbg_BoxToMessage("CBird::init");
+		return;
+	}
 	std::string buf;
 	if(FindChunk(f, "#Img"))
 	{
@@ -78,6 +83,43 @@ void CBird::init()
 
 
 }
+
+void CBird::step()
+{
+	ICharacter::step();
+	elapsedTime_ += system::FrameTime;
+
+	DecideState();
+
+	if (attack_ != nullptr)
+		attack_->step();
+
+	// プレイヤーを向く
+	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
+
+	if (obj_.pos.x < plPos.x)
+		obj_.scale.x = 1.f;
+	else
+		obj_.scale.x = -1.f;
+
+	(this->*StateStep_[static_cast<int>(state_)])();
+
+}
+
+void CBird::draw()
+{
+	const auto& cols = GetCollisionAreas();
+	for (const auto& col : cols)
+		col->draw();
+	if (attack_ != nullptr)
+		attack_->draw();
+	mymath::Rectf rect = camera::GetScreenRect();
+	if (rect.Contains(obj_.GetRect()))
+	{
+		obj_.draw();
+	}
+}
+
 
 void CBird::WaitStep()
 {
@@ -193,39 +235,6 @@ void CBird::CreateAttack()
 				5,
 				angle,INTERVAL,
 				SP,ACC);
-}
-
-void CBird::step()
-{
-	ICharacter::step();
-	elapsedTime_ += system::FrameTime;
-	
-	DecideState();
-	
-	if(attack_ != nullptr)
-		attack_->step();
-
-	// プレイヤーを向く
-	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
-	
-	if (obj_.pos.x < plPos.x)
-		obj_.scale.x = 1.f;
-	else
-		obj_.scale.x = -1.f;
-	
-	(this->*StateStep_[static_cast<int>(state_)])();
-
-}
-
-void CBird::draw()
-{
-	if(attack_ != nullptr)
-		attack_->draw();
-	mymath::Rectf rect = camera::GetScreenRect();
-	if(rect.Contains(obj_.GetRect()))
-	{
-		obj_.draw();
-	}
 }
 
 

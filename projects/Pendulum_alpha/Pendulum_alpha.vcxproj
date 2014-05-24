@@ -138,6 +138,7 @@
     <ClInclude Include="src\sceneMain.h" />
     <ClInclude Include="src\sceneStageSelect.h" />
     <ClInclude Include="src\sceneTitle.h" />
+    <ClInclude Include="src\scoreMng.h" />
     <ClInclude Include="src\setting.h" />
     <ClInclude Include="src\stageMng.h" />
   </ItemGroup>
@@ -175,15 +176,19 @@
     <ClCompile Include="src\sceneMain.cpp" />
     <ClCompile Include="src\sceneStageSelect.cpp" />
     <ClCompile Include="src\sceneTitle.cpp" />
+    <ClCompile Include="src\scoreMng.cpp" />
     <ClCompile Include="src\setting.cpp" />
     <ClCompile Include="src\stageMng.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="res\txt\enemy\bird.txt" />
-    <Text Include="res\txt\enemy\enemyTable01.txt" />
-    <Text Include="res\txt\enemy\enemyTable02.txt" />
-    <Text Include="res\txt\resdata.txt" />
-    <Text Include="res\txt\stage\stage01.txt" />
+    <Text Include="res\dat\enemy\bird.txt" />
+    <Text Include="res\dat\enemy\enemyTable01.txt" />
+    <Text Include="res\dat\enemy\enemyTable02.txt" />
+    <Text Include="res\dat\resdata.txt" />
+    <Text Include="res\dat\stage\stage01.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\dat\rank.dat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

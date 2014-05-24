@@ -1,10 +1,15 @@
 #ifdef _DEBUG
 #define D_CIRCLE_TEST		// CActionCircleì‡îªíËâ~ÇÃï`âÊ
-#define USE_CIRCLE_EXT
 #define D_POLYGON_TEST		// CActionPolygonï`âÊ
 
 //#define D_CORD_TEST		// ç¿ïWï`âÊ
 #endif
+
+#ifdef D_CIRCLE_TEST
+#define DEF_SHAPE_DRAW
+#define USE_CIRCLE_EXT
+#endif
+
 #include "actionPoint.h"
 #include "define.h"
 

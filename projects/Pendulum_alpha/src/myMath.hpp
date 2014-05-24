@@ -6,7 +6,7 @@
 
 #include <wtypes.h>	//  RECT用
 
-#ifdef USE_CIRCLE_EXT
+#if defined(DEF_SHAPE_DRAW) || defined(USE_CIRCLE_EXT)
 #include "../../../lib/gplib.h"
 #endif
 
@@ -579,6 +579,16 @@ public:
 #pragma endregion // Intersection
 	//================================================================================
 
+#ifdef DEF_SHAPE_DRAW
+	/*
+		@brief	図形の描画
+		@param	[in]	color	線の色
+		@param	[in]	size	線の太さ
+		@return	なし
+	*/
+	virtual void draw(D3DCOLOR color = -1, int size = 1) const = 0{};
+#endif
+
 };
 typedef	Shape<int>		Shapei;
 typedef Shape<float>	Shapef;
@@ -1083,6 +1093,29 @@ public:
 #pragma endregion // Intersection
 	//================================================================================
 
+#ifdef DEF_SHAPE_DRAW
+	/*
+		@brief	図形の描画
+		@param	[in]	color	線の色
+		@param	[in]	size	線の太さ
+		@return	なし
+	*/
+	virtual void draw(D3DCOLOR color = -1, int size = 1) const override
+	{
+		for (size_t i = 0; i < points.size(); ++i)
+		{
+			size_t j = (i + 1) % points.size();
+			graph::Draw_Line(
+				static_cast<int>(points[i].x),
+				static_cast<int>(points[i].y),
+				static_cast<int>(points[j].x),
+				static_cast<int>(points[j].y),
+				points[i].z,
+				color,
+				size);
+		}
+	}
+#endif
 };
 typedef Polygon<float> Polyf;
 typedef Polygon<int> Polyi;
@@ -1583,7 +1616,26 @@ public:
 	}
 #pragma endregion // Intersection
 	//================================================================================
-	
+
+#ifdef DEF_SHAPE_DRAW
+	/*
+		@brief	図形の描画
+		@param	[in]	color	線の色
+		@param	[in]	size	線の太さ
+		@return	なし
+	*/
+	virtual void draw(D3DCOLOR color = -1, int size = 1) const override
+	{
+		graph::Draw_Box(
+			static_cast<int>(left),
+			static_cast<int>(top),
+			static_cast<int>(right),
+			static_cast<int>(bottom),
+			0.0f,
+			color, color, size, true);
+
+	}
+#endif
 };
 typedef Rect<int>	Recti;
 typedef Rect<float>	Rectf;
@@ -2193,24 +2245,17 @@ public:
 	//================================================================================
 
 #ifdef USE_CIRCLE_EXT
-	void draw(D3DCOLOR color = 0xffffffff)
-	{
-		for(int i=0; i<360; ++i)
-		{
-			float rad = static_cast<float>(i)	* 2.0f * PI / 360.0f;
-			float ra2 = static_cast<float>(i+1)	* 2.0f * PI / 360.0f;
-			POINT sta = { LONG(std::cosf(rad) * radius + center.x), LONG(-std::sinf(rad) * radius + center.y) };
-			POINT end = { LONG(std::cosf(ra2) * radius + center.x), LONG(-std::sinf(ra2) * radius + center.y) };
-			graph::Draw_Line(	(int)sta.x,
-				(int)sta.y,
-				(int)end.x,
-				(int)end.y,
-				0.f,
-				color,1);
-		}
-	}
-
-	static void draw(T1 center_x, T1 center_y, T1 center_z, T2 radius, D3DCOLOR color = 0xffffffff)
+	/*
+		@brief	円の描画
+		@param	[in]	center_x	中心X座標
+		@param	[in]	center_y	中心Y座標
+		@param	[in]	center_z	中心Z座標
+		@param	[in]	radius		半径
+		@param	[in]	color		線色(デフォルト:白)
+		@param	[in]	size		線の太さ(デフォルト:1)
+		@return	なし
+	*/
+	static void draw(T1 center_x, T1 center_y, T1 center_z, T2 radius, D3DCOLOR color = 0xffffffff, int size = 1)
 	{
 		for(int i=0; i<360; ++i)
 		{
@@ -2223,15 +2268,36 @@ public:
 				(int)end.x,
 				(int)end.y,
 				center_z,
-				color,1);
+				color, size);
 		}
 	}
-	//#else
-	//	void draw(unsigned long color = 0xffffffff)
-	//	{
-	//	}
 #endif
 
+#ifdef DEF_SHAPE_DRAW
+	/*
+		@brief	図形の描画
+		@param	[in]	color	線の色
+		@param	[in]	size	線の太さ
+		@return	なし
+	*/
+	virtual void draw(D3DCOLOR color = -1, int size = 1) const override
+	{
+		for(int i=0; i<360; ++i)
+		{
+			float rad = static_cast<float>(i)* 2.0f * PI / 360.0f;
+			float ra2 = static_cast<float>(i + 1)	* 2.0f * PI / 360.0f;
+			POINT sta = { LONG(std::cosf(rad) * radius + center.x), LONG(-std::sinf(rad) * radius + center.y) };
+			POINT end = { LONG(std::cosf(ra2) * radius + center.x), LONG(-std::sinf(ra2) * radius + center.y) };
+			graph::Draw_Line(
+				static_cast<int>(sta.x),
+				static_cast<int>(sta.y),
+				static_cast<int>(end.x),
+				static_cast<int>(end.y),
+				0.f,
+				color, size);
+		}
+	}
+#endif
 };
 typedef Circle<int,int> Circlei;
 typedef Circle<float,float> Circlef;

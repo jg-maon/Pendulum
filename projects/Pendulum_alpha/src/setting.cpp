@@ -30,28 +30,28 @@ void LoadFont(ifstream& f);
 // OnCreateÇÊÇËåƒÇŒÇÍÇÈsettingèÄîı
 void OnCreateSetup()
 {
-	ifstream f("res/txt/resdata.txt");
+	ifstream f("res/dat/resdata.txt");
 	if (f.fail())
 	{
-		gplib::debug::Dbg_BoxToMessage("huh?");
+		gplib::debug::Dbg_BoxToMessage("huh?OnCreateSetup");
 		return;
 	}
-	if (common::FindChunk(f, "#IMG"))
+	if (common::FindChunk(f, "#Img"))
 	{
 		LoadImg(f);
 	}
 	common::SeekSet(f);
-	if (common::FindChunk(f, "#BGM"))
+	if (common::FindChunk(f, "#Bgm"))
 	{
 		LoadBGM(f);
 	}
 	common::SeekSet(f);
-	if (common::FindChunk(f, "#SE"))
+	if (common::FindChunk(f, "#Se"))
 	{
 		LoadSE(f);
 	}
 	common::SeekSet(f);
-	if (common::FindChunk(f, "#FONT"))
+	if (common::FindChunk(f, "#Font"))
 	{
 		LoadFont(f);
 	}

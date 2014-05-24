@@ -20,6 +20,8 @@ bool FindChunk(std::ifstream& f, const std::string& find);
 
 // ファイルストリームを先頭に戻す
 std::ifstream& SeekSet(std::ifstream& f);
+// ファイルストリームを先頭に戻す
+std::ofstream& SeekSet(std::ofstream& f);
 
 //======================================================
 #pragma region 関数のオーバーロード類

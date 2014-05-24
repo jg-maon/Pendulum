@@ -5,8 +5,8 @@
 #include "Fade.h"
 
 #include "stageMng.h"
+#include "scoreMng.h"
 
-extern CGameManager* gm;
 
 //======================================
 // CSceneStageSelect methods
@@ -15,7 +15,9 @@ extern CGameManager* gm;
 CSceneStageSelect::CSceneStageSelect() :
 IScene("img_stageSelect", "bgm_stageSelect")
 {
+	gm()->init();
 	InsertObject(ObjPtr(new CStageMng()));
+	InsertObject(ObjPtr(new CScoreMng()));
 }
 CSceneStageSelect::~CSceneStageSelect()
 {
@@ -46,7 +48,7 @@ bool CSceneStageSelect::update()
 
 IScene* CSceneStageSelect::NextScene()
 {
-	const auto& sm = gm->GetObjects("StageMng");
+	const auto& sm = gm()->GetObjects("StageMng");
 	if (!sm.empty())
 	{
 		std::dynamic_pointer_cast<CStageMng>(sm[0])->LoadStage("stage01");

@@ -40,6 +40,12 @@ std::ifstream& SeekSet(std::ifstream& f)
 	f.seekg(0);
 	return f;
 }
+std::ofstream& SeekSet(std::ofstream& f)
+{
+	f.clear();
+	f.seekp(0);
+	return f;
+}
 
 
 //======================================================

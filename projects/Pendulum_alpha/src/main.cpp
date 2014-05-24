@@ -47,6 +47,8 @@ CGameManager *gm = nullptr;
 
 // シーン
 std::unique_ptr<IScene> scene_;
+CGameManager* IScene::gm_ = nullptr;
+
 
 
 //**************************************************************************************//
@@ -110,7 +112,8 @@ void InitGame()
 	////ゲーム管理の初期化
 	gm = new CGameManager();
 	{
-		TempObject t(gm);
+		TempObject to(gm);
+		TempScene ts(gm);
 	}
 
 
@@ -131,29 +134,6 @@ void TerminateGame()
 }
 void system::OnCreate()
 {
-	/*
-	font::Draw_CreateFont(0, 30, "MS　ゴシック");
-	font::Draw_CreateFont(1, 20, "MS　ゴシック");
-	font::Draw_CreateFont(2, 10, "MS　ゴシック");
-
-	//画像のロード
-	graph::Draw_LoadObject("player", "res/gra/Act_Chara1.png");
-	graph::Draw_LoadObject("mapchip", "res/gra/block.png");
-	graph::Draw_LoadObject("back", "res/gra/cloud.png");
-	graph::Draw_LoadObject("enemy", "res/gra/enemy.png");
-	graph::Draw_LoadObject("effect", "res/gra/newEffect.png");
-	
-	graph::Draw_LoadObject("shot", "res/gra/shot.png");
-	graph::Draw_LoadObject("effect", "res/gra/effect.png");
-	graph::Draw_LoadObject("enemy2", "res/gra/enemy2.png");
-	graph::Draw_LoadObject("boss", "res/gra/boss.png");
-	graph::Draw_LoadObject("bomb", "res/gra/bomb.png");
-	graph::Draw_LoadObject("enemyshot", "res/gra/enemyshot.png");
-	//効果音のロード
-	se::DSound_LoadFile("se1", "res/snd/se1.wav");
-	//BGMのロード
-	bgm::DShow_LoadFile("bgm1", "res/snd/bgm1.mp3");
-	*/
 	setting::OnCreateSetup();
 	InitGame();
 }

@@ -52,9 +52,13 @@ void CEnemyMng::LoadEnemiesInfo(const std::string& fileName)
 {
 	
 	std::stringstream file;
-	file << "res/txt/enemy/" << fileName;
+	file << "res/dat/enemy/" << fileName;
 	std::ifstream f(file.str());
-	if(f.fail())return;
+	if (f.fail())
+	{
+		debug::Dbg_BoxToMessage("CEnemyMng::LoadEnemiesInfo");
+		return;
+	}
 	enemies_.clear();
 	temp_.clear();
 
