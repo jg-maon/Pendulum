@@ -181,14 +181,15 @@
     <ClCompile Include="src\stageMng.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="res\dat\enemy\bird.txt" />
-    <Text Include="res\dat\enemy\enemyTable01.txt" />
-    <Text Include="res\dat\enemy\enemyTable02.txt" />
-    <Text Include="res\dat\resdata.txt" />
-    <Text Include="res\dat\stage\stage01.txt" />
+    <Text Include="res\dat\main\enemy\bird.txt" />
+    <Text Include="res\dat\main\enemy\enemyTable01.txt" />
+    <Text Include="res\dat\main\enemy\enemyTable02.txt" />
+    <Text Include="res\dat\main\stage\stage01.txt" />
+    <Text Include="res\dat\resdata.dat" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\dat\rank.dat" />
+    <None Include="res\dat\path.ini" />
+    <None Include="res\dat\stageSelect\setting.dat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

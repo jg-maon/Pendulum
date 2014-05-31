@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.2 r9819"
+   sodipodi:docname="abc.svg">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient5014">
+      <stop
+         id="stop5016"
+         offset="0"
+         style="stop-color:#10be7f;stop-opacity:1;" />
+      <stop
+         id="stop5018"
+         offset="1"
+         style="stop-color:#58ae1c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient5008">
+      <stop
+         id="stop5010"
+         offset="0"
+         style="stop-color:#10be7f;stop-opacity:1;" />
+      <stop
+         id="stop5012"
+         offset="1"
+         style="stop-color:#58ae1c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4624">
+      <stop
+         style="stop-color:#10be7f;stop-opacity:1;"
+         offset="0"
+         id="stop4626" />
+      <stop
+         style="stop-color:#58ae1c;stop-opacity:1;"
+         offset="1"
+         id="stop4628" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3817">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop3819" />
+      <stop
+         style="stop-color:#525252;stop-opacity:1;"
+         offset="1"
+         id="stop3821" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3817"
+       id="linearGradient3823"
+       x1="4.8981979e-005"
+       y1="1070.5905"
+       x2="578.57543"
+       y2="1070.5905"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3817"
+       id="linearGradient3825"
+       x1="5.3761178e-005"
+       y1="924.11119"
+       x2="644.31351"
+       y2="924.11119"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5008"
+       id="linearGradient4630"
+       x1="0.50512636"
+       y1="971.45099"
+       x2="601.51532"
+       y2="1092.1641"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4624"
+       id="linearGradient4636"
+       gradientUnits="userSpaceOnUse"
+       x1="0.50512636"
+       y1="971.45093"
+       x2="600.00006"
+       y2="1053.7783" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4624"
+       id="linearGradient4638"
+       gradientUnits="userSpaceOnUse"
+       x1="0.50512636"
+       y1="971.45093"
+       x2="600.00006"
+       y2="1053.7783" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5014"
+       id="linearGradient5006"
+       x1="0.6487422"
+       y1="724.4787"
+       x2="772.53613"
+       y2="818.46887"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.93094927,0,0,0.93094927,0,0.71823009)" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="358.04795"
+     inkscape:cy="65.929036"
+     inkscape:document-units="px"
+     inkscape:current-layer="g5020"
+     showgrid="false"
+     inkscape:window-width="1280"
+     inkscape:window-height="747"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="レイヤー"
+     style="display:none"
+     sodipodi:insensitive="true">
+    <rect
+       style="fill:#ffed00;fill-opacity:1;fill-rule:nonzero;stroke:#2f0606;stroke-width:0.54483032;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect2995"
+       width="707.32758"
+       height="184.28572"
+       x="-18.760336"
+       y="906.09625" />
+  </g>
+  <g
+     inkscape:label="レイヤー 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g5020"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       inkscape:export-filename="abc.png">
+      <g
+         id="g6151"
+         inkscape:export-filename="abc.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90">
+        <g
+           id="g4617"
+           style="fill:url(#linearGradient4630);fill-opacity:1"
+           inkscape:export-filename="D:\13CI0236\TGS\Pendulum\work\res\gra\UI\abc.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90"
+           transform="matrix(0.86666655,0,0,1,2.8300894e-7,-40.000018)">
+          <text
+             transform="scale(0.93122381,1.0738557)"
+             sodipodi:linespacing="125%"
+             id="text2985"
+             y="947.25055"
+             x="-0.43933994"
+             style="font-size:50.16743088px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient4636);fill-opacity:1;stroke:none;font-family:Meiryo UI;-inkscape-font-specification:Meiryo UI"
+             xml:space="preserve"><tspan
+               style="font-size:50.16743087999999800px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4636);fill-opacity:1;font-family:SeichoShonanGyoshoP;-inkscape-font-specification:SeichoShonanGyoshoP;letter-spacing:0px"
+               y="947.25055"
+               x="-0.43933994"
+               id="tspan2987"
+               sodipodi:role="line">ABCDEFGH<tspan
+   id="tspan6253"
+   style="letter-spacing:3.22251716px">I</tspan>JK<tspan
+   id="tspan5031"
+   style="letter-spacing:0.58005309px">L<tspan
+   id="tspan6089"
+   style="letter-spacing:0.21483448px">M</tspan><tspan
+   style="letter-spacing:-1.07417239px"
+   id="tspan6099">NO</tspan>P</tspan><tspan
+   style="letter-spacing:-0.42966895px"
+   id="tspan6275">QR</tspan><tspan
+   id="tspan6255"
+   style="letter-spacing:1.07417239px">S</tspan><tspan
+   id="tspan6468"
+   style="letter-spacing:0.61227826px">T</tspan><tspan
+   id="tspan6490"
+   style="letter-spacing:-0.92378825px">U</tspan><tspan
+   id="tspan6515"
+   style="letter-spacing:-0.75192067px">VW</tspan><tspan
+   id="tspan6494"
+   style="letter-spacing:0.21483448px">X</tspan><tspan
+   id="tspan6521"
+   style="letter-spacing:0.60153654px">YZ</tspan></tspan><tspan
+               style="font-size:50.16743087999999800px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4636);fill-opacity:1;font-family:SeichoShonanGyoshoP;-inkscape-font-specification:SeichoShonanGyoshoP;letter-spacing:0px"
+               y="1009.9598"
+               x="-0.43933994"
+               sodipodi:role="line"
+               id="tspan4998" /><tspan
+               id="tspan2989"
+               style="font-size:50.16743087999999800px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4636);fill-opacity:1;font-family:SeichoShonanGyoshoP;-inkscape-font-specification:SeichoShonanGyoshoP;letter-spacing:0px"
+               y="1072.6691"
+               x="-0.43933994"
+               sodipodi:role="line" /></text>
+          <text
+             inkscape:export-ydpi="90"
+             inkscape:export-xdpi="90"
+             transform="scale(1.0370299,0.96429235)"
+             sodipodi:linespacing="125%"
+             id="text2991"
+             y="1087.0125"
+             x="-1.7035365"
+             style="font-size:45.45854187px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient4638);fill-opacity:1;stroke:none;font-family:Meiryo UI;-inkscape-font-specification:Meiryo UI"
+             xml:space="preserve"><tspan
+               style="font-size:45.45854186999999800px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4638);fill-opacity:1;font-family:SeichoShonanGyosho;-inkscape-font-specification:SeichoShonanGyosho"
+               y="1087.0125"
+               x="-1.7035365"
+               id="tspan2993"
+               sodipodi:role="line"
+               dx="0">abcdefghijklmnopqrstuvwxyz</tspan></text>
+        </g>
+        <text
+           xml:space="preserve"
+           style="font-size:47.82482147px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient5006);fill-opacity:1;stroke:none;font-family:SeichoShonanGyosho;-inkscape-font-specification:SeichoShonanGyosho"
+           x="2.9282432e-006"
+           y="762.81482"
+           id="text4640"
+           sodipodi:linespacing="125%"
+           transform="scale(0.72485958,1.3795775)"
+           inkscape:export-filename="D:\13CI0236\TGS\Pendulum\work\res\gra\UI\abc.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90"><tspan
+             sodipodi:role="line"
+             x="2.9282432e-006"
+             y="762.81482"
+             id="tspan4644"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:url(#linearGradient5006);fill-opacity:1;font-family:SeichoShonanGyosho;-inkscape-font-specification:SeichoShonanGyosho"> ← </tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>

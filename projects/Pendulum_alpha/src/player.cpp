@@ -413,7 +413,7 @@ void CPlayer::step()
 
 		case ChainState::APPEARING:
 			chainMsg_->alpha = Easing::Linear(chainAnimTime_, 0.f, 255.f, appearTime);
-			chainMsg_->pos.x = Easing::QuadOut(chainAnimTime_, chainStaPos_.x, 30.f, appearTime);
+			chainMsg_->pos.x = Easing::QuadOut(chainAnimTime_, chainStaPos_.x, appearMoveX, appearTime);
 			
 			if((chainAnimTime_ += system::FrameTime) >= appearTime)
 			{
@@ -505,14 +505,14 @@ void CPlayer::draw()
 	D3DCOLOR color = (isAttacking_) ? 0xfff0f020 : 0xa0efefef;
 	circle_.draw(color);
 #endif
-	const mymath::Rectf& colrect = *std::dynamic_pointer_cast<mymath::Rectf>(GetCollisionAreas()[0]);
-	graph::Draw_Box(
-		(int)colrect.left, (int)colrect.top,
-		(int)colrect.right, (int)colrect.bottom,
-		pos.z - 0.1f,
-		0xff00ff00, ARGB(255, 255, 255, 255), 1, true);
+
 	
 #ifdef _DEBUG
+	const auto& cols = GetCollisionAreas();
+	for (const auto& col : cols)
+	{
+		col->draw(0xff00ff00, 1);
+	}
 	mymath::Recti rc = obj_.GetRect();
 
 	//rc.offset((int)obj_.pos.x, (int)obj_.pos.y);

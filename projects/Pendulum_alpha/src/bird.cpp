@@ -55,7 +55,7 @@ CBird::~CBird()
 void CBird::init()
 {
 	using common::FindChunk;
-	std::ifstream f("res/dat/enemy/bird.txt");
+	std::ifstream f("res/dat/main/enemy/bird.txt");
 	if (f.fail())
 	{
 		debug::Dbg_BoxToMessage("CBird::init");
@@ -108,9 +108,11 @@ void CBird::step()
 
 void CBird::draw()
 {
+#ifdef DEF_SHAPE_DRAW
 	const auto& cols = GetCollisionAreas();
 	for (const auto& col : cols)
 		col->draw();
+#endif
 	if (attack_ != nullptr)
 		attack_->draw();
 	mymath::Rectf rect = camera::GetScreenRect();

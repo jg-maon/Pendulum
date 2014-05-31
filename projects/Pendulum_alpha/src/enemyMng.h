@@ -13,7 +13,9 @@ private:
 	std::vector<EnemyPtr> temp_;
 	std::vector<EnemyPtr> enemies_;
 
-private:
+public:
+	static std::string enemyTableFile;				// 敵テーブルファイルパス
+
 public:
 	CEnemyMng();
 	virtual void step() override;

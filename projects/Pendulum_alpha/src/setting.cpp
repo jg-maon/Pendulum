@@ -2,6 +2,11 @@
 #include "../../../lib/gplib.h"
 #include "common.h"
 
+#include "scoreMng.h"
+#include "enemyMng.h"
+#include "stageMng.h"
+
+
 #include <unordered_map>		// Fontテーブル用
 
 #include <fstream>
@@ -20,42 +25,92 @@ struct ResData
 // フォント用
 std::unordered_map<std::string, int> fontTable_;
 
-
-
-void LoadImg(ifstream& f);
-void LoadBGM(ifstream& f);
-void LoadSE(ifstream& f);
-void LoadFont(ifstream& f);
+//---------------------------
+// リソースファイル読み込み関連
+void LoadRes(ifstream&);
+void LoadImg(ifstream&);
+void LoadBGM(ifstream&);
+void LoadSE(ifstream&);
+void LoadFont(ifstream&);
+//---------------------------
 
 // OnCreateより呼ばれるsetting準備
 void OnCreateSetup()
 {
-	ifstream f("res/dat/resdata.txt");
-	if (f.fail())
+	ifstream iniF("res/dat/path.ini");
+	if (iniF.fail())
 	{
 		gplib::debug::Dbg_BoxToMessage("huh?OnCreateSetup");
 		return;
 	}
-	if (common::FindChunk(f, "#Img"))
+	//====================================
+	//------------------------------
+	// リソースファイル読み込み
+	if (common::FindChunk(common::SeekSet(iniF), "#ResourceFile"))
 	{
-		LoadImg(f);
+		LoadRes(iniF);
 	}
-	common::SeekSet(f);
-	if (common::FindChunk(f, "#Bgm"))
+	//------------------------------
+	// ランキングファイルパス読み込み
+	if (common::FindChunk(common::SeekSet(iniF), "#RankingFile"))
 	{
-		LoadBGM(f);
+		iniF >> CScoreMng::rankingFile;
 	}
-	common::SeekSet(f);
-	if (common::FindChunk(f, "#Se"))
+	//------------------------------
+	// ステージファイルパス読み込み
+	if (common::FindChunk(common::SeekSet(iniF), "#StageFile"))
 	{
-		LoadSE(f);
+		iniF >> CStageMng::stageFile;
 	}
-	common::SeekSet(f);
-	if (common::FindChunk(f, "#Font"))
+	//------------------------------
+	// 敵テーブルファイルパス読み込み
+	if (common::FindChunk(common::SeekSet(iniF), "#EnemyTableFile"))
 	{
-		LoadFont(f);
+		iniF >> CEnemyMng::enemyTableFile;
 	}
-	common::SeekSet(f);
+
+	//------------------------------
+	// ステージファイルパス読み込み
+	//if (common::FindChunk(common::SeekSet(iniF), "#StageFile"))
+	//{
+	//	iniF >> CStageMng::stageFile;
+	//}
+}
+
+void LoadRes(ifstream& iniF)
+{
+	//====================================
+	// リソースファイル読み込み
+	std::string buf;
+	iniF >> buf;
+	ifstream resF(buf);
+	if (resF.fail())
+	{
+		gplib::debug::Dbg_BoxToMessage("OnCreateSetup_resourceFile_NotFound");
+		return;
+	}
+	
+	//--------------------------
+	if (common::FindChunk(resF, "#Img"))
+	{
+		LoadImg(resF);
+	}
+	common::SeekSet(resF);
+	if (common::FindChunk(resF, "#Bgm"))
+	{
+		LoadBGM(resF);
+	}
+	common::SeekSet(resF);
+	if (common::FindChunk(resF, "#Se"))
+	{
+		LoadSE(resF);
+	}
+	common::SeekSet(resF);
+	if (common::FindChunk(resF, "#Font"))
+	{
+		LoadFont(resF);
+	}
+	common::SeekSet(resF);
 }
 
 void LoadImg(ifstream& f)
@@ -190,9 +245,14 @@ void LoadFont(ifstream& f)
 	}
 }
 
+
 int GetFontID(const std::string& resname)
 {
 	return fontTable_[resname];
 }
+
+
+
+
 
 }	// namespace setting

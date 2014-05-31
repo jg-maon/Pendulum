@@ -5,6 +5,7 @@
 #include "obj.h"
 #endif
 
+#include <string>
 
 /*
 	@brief	スコア周り管理クラス
@@ -17,7 +18,6 @@ private:
 	{
 		RANK_NUM = 50,		// ランキング登録数
 	};
-	static const std::string RANKING_FILE;	// ランキングファイル名
 
 	int score_;			// 現在のスコア
 
@@ -25,6 +25,23 @@ private:
 	{
 		std::string name;		// 名前
 		int score;				// スコア
+		// 空要素
+		static Ranking empty()
+		{
+			Ranking tmp = { "NONAME", 0 };
+			return tmp;
+		}
+		// ファイル入出力
+		friend std::ifstream& operator>>(std::ifstream& f, Ranking& rank)
+		{ 
+			f >> rank.name >> rank.score;
+			return f;
+		}
+		friend std::ofstream& operator<<(std::ofstream& f, const Ranking& rank)
+		{
+			f << rank.name << "\t" << rank.score << std::endl;
+			return f;
+		}
 		// sort用
 		bool operator<(const Ranking& rank) const
 		{
@@ -34,13 +51,10 @@ private:
 		{
 			return score > rank.score;
 		}
-		static Ranking empty()
-		{
-			Ranking tmp = { "NONAME", 0 };
-			return tmp;
-		}
 	};
 	std::vector<Ranking> ranking_;		// ランキング
+public:
+	static std::string rankingFile;		// ランキングファイルパス名
 
 public:
 	/*

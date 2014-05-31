@@ -7,6 +7,33 @@
 
 class CSceneEnd : public IScene
 {
+private:
+	enum class State
+	{
+		NAME,					// 名前選択
+		REGISTER_ANIM,			// 登録決定アニメーション中
+		ANIM_END,				// アニメーション終了
+	};
+	State state_;
+
+	int selectChar_;			// 選択文字番号
+
+	float registerAnimTime_;	// 登録アニメーションカウント
+
+
+private:
+	/*
+		@brief	名前選択処理
+		@return	なし
+	*/
+	void DecideName();
+
+	/*
+		@brief	登録決定アニメーション処理
+		@return	なし
+	*/
+	void RegisterAnimation();
+
 protected:
 	/*
 		@brief	メイン更新処理

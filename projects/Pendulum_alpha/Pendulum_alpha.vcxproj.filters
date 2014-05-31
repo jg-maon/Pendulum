@@ -387,24 +387,27 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="res\dat\resdata.txt">
+    <Text Include="res\dat\resdata.dat">
       <Filter>リソース ファイル</Filter>
     </Text>
-    <Text Include="res\dat\stage\stage01.txt">
+    <Text Include="res\dat\main\enemy\bird.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
-    <Text Include="res\dat\enemy\enemyTable01.txt">
+    <Text Include="res\dat\main\enemy\enemyTable01.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
-    <Text Include="res\dat\enemy\enemyTable02.txt">
+    <Text Include="res\dat\main\enemy\enemyTable02.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
-    <Text Include="res\dat\enemy\bird.txt">
+    <Text Include="res\dat\main\stage\stage01.txt">
       <Filter>リソース ファイル</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\dat\rank.dat">
+    <None Include="res\dat\stageSelect\setting.dat">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="res\dat\path.ini">
       <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>

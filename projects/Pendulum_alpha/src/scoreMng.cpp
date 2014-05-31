@@ -5,8 +5,7 @@
 #include <algorithm>	// sort
 #include <functional>	// greater
 
-
-const std::string CScoreMng::RANKING_FILE = "res/dat/rank.dat";
+std::string CScoreMng::rankingFile;
 
 CScoreMng::CScoreMng():
 Base("ScoreMng")
@@ -15,13 +14,13 @@ Base("ScoreMng")
 	// ランキング情報読み込み
 	ranking_.clear();
 	ranking_.reserve(RANK_NUM + 1);
-	std::ifstream f(RANKING_FILE);
+	std::ifstream f(rankingFile);
 	if (f.is_open())
 	{
 		while (!f.eof())
 		{
 			Ranking tmp;
-			f >> tmp.name >> tmp.score;
+			f >> tmp;
 			if (f.eof())break;
 			ranking_.push_back(tmp);
 		}
@@ -69,10 +68,10 @@ void CScoreMng::RegisterRanking(const std::string& name)
 	//ranking_.pop_back();
 
 	// ランキングファイル上書き
-	std::ofstream f(RANKING_FILE);
+	std::ofstream f(rankingFile);
 	for (const auto& rank : ranking_)
 	{
-		f << rank.name << "\t" << rank.score << std::endl;
+		f << rank;
 	}
 
 

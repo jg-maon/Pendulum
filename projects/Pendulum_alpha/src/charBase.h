@@ -26,7 +26,7 @@ public:
 		@param	[in]	max	最大値
 		@param	[in]	speed	1フレームあたりの増加量
 	*/
-	Anim(int max, float speed);
+	Anim(int max = 0, float speed = 0.f);
 
 	/*
 		@brief	アニメーションの設定

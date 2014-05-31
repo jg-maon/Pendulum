@@ -9,10 +9,18 @@
 
 mymath::Recti* CGameManager::winRect_ = nullptr;
 
-CGameManager::CGameManager()
+CGameManager::CGameManager() :
+showCursor_(false)
+//, cursorAnim_(360.f,10.f)
 {
-	objs_.clear();
-	addObjs_.clear();
+	ShowCursor(showCursor_ == true);
+	init();
+	cursor_ = charabase::CharPtr(new charabase::CharBase(
+		mymath::Vec3f(), mymath::Vec3f(),
+		"img_cursor",
+		CursorSize::width,
+		CursorSize::height));
+	cursor_->alpha = 200.f;
 }
 
 CGameManager::~CGameManager()
@@ -45,6 +53,35 @@ void CGameManager::init()
 
 void CGameManager::step()
 {
+	//=======================================================
+	// カーソル処理
+	if (input::CheckPush(input::KEY_F1))
+	{
+		showCursor_ ^= 1;
+		ShowCursor(showCursor_ == true);
+	}
+	//-------------------------------------
+	// カーソルアニメーション
+	//cursorAnim_.step();
+	if ((cursor_->angle += 4.f) >= 360.f)
+		cursor_->angle -= 360.f;
+	//-------------------------------------
+	// ウィンドウ外へ出ないように
+	mymath::Vec3f& cursorPos = cursor_->pos;
+	const float& halfWidth = cursor_->HalfWidth();
+	const float& halfHeight = cursor_->HalfHeight();
+	cursorPos = camera::GetCursorPosition();
+	RECT rt = camera::GetScreenRect();
+	if (cursorPos.x - halfWidth < rt.left)
+		cursorPos.x = rt.left + halfWidth;
+	else if (cursorPos.x + halfWidth > rt.right)
+		cursorPos.x = rt.right - halfWidth;
+	if (cursorPos.y - halfHeight < rt.top)
+		cursorPos.y = rt.top + halfHeight;
+	else if (cursorPos.y + halfHeight > rt.bottom)
+		cursorPos.y = rt.bottom - halfHeight;
+	//=======================================================
+	
 	//ゲームオーバー時、クリア時に判定処理は行わない。
 	if (gameover::isGameOver()) return;
 
@@ -64,6 +101,10 @@ void CGameManager::step()
 
 void CGameManager::draw()
 {
+	graph::Draw_SetRenderMode(ADD);
+	for (int i = 0; i < 5; ++i)
+		cursor_->draw();
+	graph::Draw_EndRenderMode();
 	for (const auto& obj : objs_)
 	{
 		obj->draw();
@@ -223,6 +264,12 @@ void CGameManager::winRect(mymath::Recti* newRect)
 {
 	winRect_ = newRect;
 }
+
+const mymath::Vec3f& CGameManager::GetCursorPos() const
+{
+	return cursor_->pos;
+}
+
 
 mymath::Vec3f CGameManager::GetPlayerPos() const
 {

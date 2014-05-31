@@ -70,7 +70,7 @@ template<typename T> inline T	round(T a)
 #ifndef clamp
 #define clamp(x,minVal,maxVal)		( min(max( (minVal), (x)), (maxVal)) )
 //template<class T>
-//inline clamp(const T x, const T minVal, const T maxVal)
+//inline T clamp(const T x, const T minVal, const T maxVal)
 //{
 //	return ( min(max( minVal, x), maxVal) );
 //}
@@ -100,8 +100,10 @@ public:
 	//Vec3(const Vec3<T>& v){ *this = v; }
 
 	// ë„ì¸ÅAèâä˙âªån
-	Vec3<T>&	operator=(T v){ x = v; y = v; z = v; return *this; }
 	Vec3<T>&	operator()(T xx, T yy = 0, T zz = 0){ x = xx; y = yy; z = zz; return *this; }
+	Vec3<T>&	operator=(T v){ x = v; y = v; z = v; return *this; }
+	Vec3<T>&	operator=(const POINT& p){	x = static_cast<T>(p.x); y = static_cast<T>(p.y); return *this;	}
+
 
 	// íPçÄ
 	Vec3<T>		operator-() const { return Vec3<T>(-x, -y, -z); }
@@ -1110,7 +1112,7 @@ public:
 				static_cast<int>(points[i].y),
 				static_cast<int>(points[j].x),
 				static_cast<int>(points[j].y),
-				points[i].z,
+				static_cast<float>(points[i].z),
 				color,
 				size);
 		}
@@ -2293,7 +2295,7 @@ public:
 				static_cast<int>(sta.y),
 				static_cast<int>(end.x),
 				static_cast<int>(end.y),
-				0.f,
+				static_cast<float>(center.z),
 				color, size);
 		}
 	}

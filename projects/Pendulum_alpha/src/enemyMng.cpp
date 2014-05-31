@@ -12,6 +12,7 @@
 #include "bird.h"
 //---------------------------------
 
+std::string CEnemyMng::enemyTableFile;
 
 CEnemyMng::CEnemyMng():
 	Base("EnemyMng")
@@ -50,13 +51,11 @@ ObjPtr CEnemyMng::GetPtr()
 
 void CEnemyMng::LoadEnemiesInfo(const std::string& fileName)
 {
-	
-	std::stringstream file;
-	file << "res/dat/enemy/" << fileName;
-	std::ifstream f(file.str());
+	std::string file = common::StrReplace(enemyTableFile, "ENEMYTABLE", fileName);
+	std::ifstream f(file);
 	if (f.fail())
 	{
-		debug::Dbg_BoxToMessage("CEnemyMng::LoadEnemiesInfo");
+		debug::Dbg_BoxToMessage("CEnemyMng::LoadEnemiesInfo path:%s", file.c_str());
 		return;
 	}
 	enemies_.clear();

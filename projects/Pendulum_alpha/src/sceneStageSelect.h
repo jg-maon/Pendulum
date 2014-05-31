@@ -8,7 +8,7 @@
 class CSceneStageSelect : public IScene
 {
 private:
-
+	static mymath::Recti* fieldRect_;		// ステージ選択フィールドサイズ
 protected:
 	/*
 		@brief	メイン更新処理

@@ -6,6 +6,7 @@
 #include <algorithm>
 
 using namespace math;
+using namespace mymath;
 
 #pragma region Easing methods
 	
@@ -131,7 +132,7 @@ float Easing::ElasticIn(float t, const float b, const float c, const float d) {
   float a = c;
   float s=p/4.f;
   t-=1.f;
-  return -(a * std::pow(2.0f,10.0f*t) * std::sinf( (t*d-s)*(2.0f * PI)/p )) + b;
+  return -(a * std::powf(2.0f,10.0f*t) * std::sinf( (t*d-s)*(2.0f * M_PI)/p )) + b;
 }
 
 float Easing::ElasticOut(float t, const float b, const float c, const float d) {
@@ -143,7 +144,7 @@ float Easing::ElasticOut(float t, const float b, const float c, const float d) {
 
   float a = c;
   float s=p/4.f;
-  return (a* std::pow(2.0f,-10.0f*t) * std::sinf( (t*d-s)*(2.0f * PI)/p ) + c + b);
+  return (a* std::powf(2.0f,-10.0f*t) * std::sinf( (t*d-s)*(2.0f * M_PI)/p ) + c + b);
 }
 
 float Easing::ElasticInOut(float t, const float b, const float c, const float d) {
@@ -158,20 +159,20 @@ float Easing::ElasticInOut(float t, const float b, const float c, const float d)
   if (t < 1.f)
   {
     t-=1.f;
-    return -0.5f*(a * std::pow(2.0f,10.0f*t) * std::sinf( (t*d-s)*(2.0f * PI)/p )) + b;
+    return -0.5f*(a * std::powf(2.0f,10.0f*t) * std::sinf( (t*d-s)*(2.0f * M_PI)/p )) + b;
   }
   t-=1.f;
-  return a * std::pow(2.0f,-10.0f*t) * std::sinf( (t*d-s)*(2.0f * PI)/p )*0.5f + c + b;
+  return a * std::powf(2.0f,-10.0f*t) * std::sinf( (t*d-s)*(2.0f * M_PI)/p )*0.5f + c + b;
 }
 
 
 float Easing::ExpoIn(float t, const float b, const float c, const float d) {
   t = clamp(t, 0.0f, d);
-  return (t==0.f) ? b : c * std::pow(2.0f, 10.0f * (t/d - 1.0f)) + b;
+  return (t==0.f) ? b : c * std::powf(2.0f, 10.0f * (t/d - 1.0f)) + b;
 }
 
 float Easing::ExpoOut(float t, const float b, const float c, const float d) {
-  return (t==d) ? b+c : c * (-std::pow(2.0f, -10.0f * t/d) + 1.0f) + b;
+  return (t==d) ? b+c : c * (-std::powf(2.0f, -10.0f * t/d) + 1.0f) + b;
 }
 
 float Easing::ExpoInOut(float t, const float b, const float c, const float d) {
@@ -179,8 +180,8 @@ float Easing::ExpoInOut(float t, const float b, const float c, const float d) {
 
   if (t==0.f)         return b;
   if (t==d)         return b+c;
-  if ((t/=d/2.f) < 1.f) return c/2.f * std::pow(2.0f, 10.0f * (t - 1.0f)) + b;
-  return c/2.f * (-std::pow(2.0f, -10.0f * --t) + 2.0f) + b;
+  if ((t/=d/2.f) < 1.f) return c/2.f * std::powf(2.0f, 10.0f * (t - 1.0f)) + b;
+  return c/2.f * (-std::powf(2.0f, -10.0f * --t) + 2.0f) + b;
 }
 
 
@@ -255,17 +256,17 @@ float Easing::QuintInOut(float t, const float b, const float c, const float d) {
 
 float Easing::SineIn(float t, const float b, const float c, const float d) {
   t = clamp(t, 0.0f, d);
-  return -c * std::cosf(t/d * (PI/2.f)) + c + b;
+  return -c * std::cosf(t/d * (M_PI/2.f)) + c + b;
 }
 
 float Easing::SineOut(float t, const float b, const float c, const float d) {
   t = clamp(t, 0.0f, d);
-  return c * std::sinf(t/d * (PI/2.f)) + b;
+  return c * std::sinf(t/d * (M_PI/2.f)) + b;
 }
 
 float Easing::SineInOut(float t, const float b, const float c, const float d) {
   t = clamp(t, 0.0f, d);
-  return -c/2.f * (std::cosf(PI*t/d) - 1.f) + b;
+  return -c/2.f * (std::cosf(M_PI*t/d) - 1.f) + b;
 }
 
 #pragma endregion	// Easing methods

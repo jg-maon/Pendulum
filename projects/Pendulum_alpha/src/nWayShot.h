@@ -30,6 +30,18 @@ public:
 	/*
 		@brief	‰Šú‰»
 		@param	[in]	shot			’e‚Ìî•ñ
+		@param	[in]	acceleration	‰Á‘¬“x
+	*/
+	CShot(const CShot& shot, const mymath::Vec3f& acceleration = mymath::Vec3f()) :
+		IAttack("Atk_Shot")
+		, acceleration_(acceleration)
+	{
+		obj_ = shot.obj();
+		init();
+	}
+	/*
+		@brief	‰Šú‰»
+		@param	[in]	shot			’e‚Ìî•ñ
 	*/
 	CShot(const charabase::CharBase& shot):
 		IAttack("Atk_Shot")
@@ -37,23 +49,11 @@ public:
 		obj_ = shot;
 		init();
 	}
-	/*
-		@brief	‰Šú‰»
-		@param	[in]	shot			’e‚Ìî•ñ
-		@param	[in]	acceleration	‰Á‘¬“x
-	*/
-	CShot(const CShot& shot, const mymath::Vec3f& acceleration):
-		IAttack("Atk_Shot")
-		,acceleration_(acceleration)
-	{
-		obj_ = shot.obj();
-		init();
-	}
 	virtual void step() override
 	{
 		obj_.Move();
 		obj_.add += acceleration_;
-		if(++cnt_ > 1200)
+		if(++cnt_ > 300)
 		{
 			kill();
 		}

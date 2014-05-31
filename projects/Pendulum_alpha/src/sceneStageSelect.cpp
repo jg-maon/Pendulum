@@ -37,6 +37,7 @@ void CSceneStageSelect::draw()
 // 処理
 bool CSceneStageSelect::update()
 {
+
 	// 何かアクションを起こしてシーンが切り替わるとき
 	if (input::CheckPush(input::KEY_BTN0))
 	{

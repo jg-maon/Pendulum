@@ -24,6 +24,9 @@ private:
 public:
 	const std::vector<ActPtPtr>& actionPoints;
 	const mymath::Recti& rect;
+
+	static std::string stageFile;		// ステージファイルパス
+
 private:
 	/*
 		@brief		ステージサイズの読み込み

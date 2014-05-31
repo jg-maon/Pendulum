@@ -4,11 +4,15 @@
 //ライブラリ
 #ifndef DEF_DEFINE_H
 #include "define.h"
-#endif
 using namespace gplib;
+#endif
 
 #ifndef DEF_OBJ_H
 #include "obj.h"
+#endif
+
+#ifndef DEF_CHARBASE_H
+#include "charBase.h"
 #endif
 
 #include	<vector>
@@ -29,7 +33,16 @@ private:
 	float count_;
 
 	static mymath::Recti* winRect_;		// ウィンドウサイズ
+	
+	bool showCursor_;					// true:カーソルの表示
 
+	enum CursorSize
+	{
+		width = 48,
+		height = 48,
+	};
+	charabase::CharPtr cursor_;			// カーソル
+	//charabase::Anim cursorAnim_;		// カーソルアニメーション用
 
 private:
 
@@ -128,6 +141,12 @@ public:
 		@return	なし
 	*/
 	void winRect(mymath::Recti* newRect);
+
+	/*
+		@brief	マウスカーソルの座標を取得
+		@return	マウスカーソル座標
+	*/
+	const mymath::Vec3f& GetCursorPos() const;
 
 	/*
 		@brief	プレイヤー座標の取得
