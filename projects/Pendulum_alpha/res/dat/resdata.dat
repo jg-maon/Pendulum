@@ -12,7 +12,16 @@
 	img_explosion	res/gra/effect/explosion.png	0xff000000
 		
 	img_title		res/gra/title/bg.jpg			0xff00ff00
-	img_stageSelect	res/gra/stageSelect/bg.jpg		0xff00ff00
+
+	img_stageSelect	res/gra/stageSelect/bg.png		0xff00ff00
+	img_ss01			res/gra/stageSelect/stage01.png			0xff000000
+	img_stageDescription01	res/gra/stageSelect/stageDesc01.png	0xff00ff00
+	img_ss02			res/gra/stageSelect/stage02.png			0xff000000
+	img_stageDescription02	res/gra/stageSelect/stageDesc02.png	0xff00ff00
+	img_ss03			res/gra/stageSelect/stage03.png			0xff000000
+	img_stageDescription03	res/gra/stageSelect/stageDesc03.png	0xff00ff00
+	img_ss04			res/gra/stageSelect/stage04.png			0xff000000
+	img_stageDescription04	res/gra/stageSelect/stageDesc04.png	0xff00ff00
 
 	img_stage01		res/gra/main/stages/stage01/bg.jpg	0xff000000
 	img_player		res/gra/main/character/player.png				0xff00ff00

@@ -96,6 +96,12 @@ public:
 	Vec3(const T p[3]) :
 		x(p[0]), y(p[1]), z(p[2])
 	{}
+	Vec3(const POINT& p)
+	{
+		x = static_cast<T>(p.x);
+		y = static_cast<T>(p.y);
+		z = static_cast<T>(0);
+	}
 
 	//Vec3(const Vec3<T>& v){ *this = v; }
 

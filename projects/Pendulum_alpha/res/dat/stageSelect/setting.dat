@@ -1,0 +1,52 @@
+#BGWidth	5000
+#BGHeight	3000
+
+#BGLeft		0
+#BGTop		0
+#BGRight	2500
+#BGBottom	1500
+
+#Left	0
+#Top	0
+#Right	2500
+#Bottom	1500
+
+#StartCameraPos
+1250	750
+
+
+
+ステージ名
+座標XY
+ステージ画像管理名
+画像サイズWH
+ステージ説明画像管理名
+画像サイズWH
+
+#Stage01
+1450	750
+img_ss01
+200	200
+img_stageDescription01
+300	400
+
+#Stage02
+360	1000
+img_ss02
+200	200
+img_stageDescription02
+300	400
+
+#Stage03
+250	350
+img_ss03
+200	200
+img_stageDescription03
+300	400
+
+＃Stage04
+3000	2800
+img_ss04
+200	200
+img_stageDescription04
+300	400

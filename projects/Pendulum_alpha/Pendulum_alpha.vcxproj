@@ -185,6 +185,8 @@
     <Text Include="res\dat\main\enemy\enemyTable01.txt" />
     <Text Include="res\dat\main\enemy\enemyTable02.txt" />
     <Text Include="res\dat\main\stage\stage01.txt" />
+    <Text Include="res\dat\main\stage\stage02.txt" />
+    <Text Include="res\dat\main\stage\stage03.txt" />
     <Text Include="res\dat\resdata.dat" />
   </ItemGroup>
   <ItemGroup>

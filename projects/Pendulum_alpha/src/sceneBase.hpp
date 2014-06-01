@@ -90,6 +90,8 @@ public:
 		, state_(IScene::State::INNING)
 		, bgmVolum_(100)
 	{
+		bgm::DShow_SetStartPos(BGM_RESNAME);
+		bgm::DShow_VolumeControl(BGM_RESNAME, bgmVolum_);
 		bgm::DShow_Play(BGM_RESNAME);
 		CFade::StartFadeIn();
 	}

@@ -102,6 +102,18 @@
     <Filter Include="ソース ファイル\InGame\ScoreManager">
       <UniqueIdentifier>{d7263c29-93d4-4e29-97d3-95eb129cd2aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Title">
+      <UniqueIdentifier>{6ed2f9d4-0c94-42f8-93fc-9d3e8b1d64d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main">
+      <UniqueIdentifier>{7354ce4e-bd76-48e2-90c8-6a814494935c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\StageSelect">
+      <UniqueIdentifier>{918af74d-a0b5-4701-af42-b4a3d75ddb6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Result">
+      <UniqueIdentifier>{9a179229-4807-45e0-89fe-0732fa8d43d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -391,24 +403,30 @@
       <Filter>リソース ファイル</Filter>
     </Text>
     <Text Include="res\dat\main\enemy\bird.txt">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\Main</Filter>
     </Text>
     <Text Include="res\dat\main\enemy\enemyTable01.txt">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\Main</Filter>
     </Text>
     <Text Include="res\dat\main\enemy\enemyTable02.txt">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\Main</Filter>
     </Text>
     <Text Include="res\dat\main\stage\stage01.txt">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\Main</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage03.txt">
+      <Filter>リソース ファイル\Main</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage02.txt">
+      <Filter>リソース ファイル\Main</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\dat\stageSelect\setting.dat">
-      <Filter>リソース ファイル</Filter>
-    </None>
     <None Include="res\dat\path.ini">
       <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="res\dat\stageSelect\setting.dat">
+      <Filter>リソース ファイル\StageSelect</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@
 #include "scoreMng.h"
 #include "enemyMng.h"
 #include "stageMng.h"
+#include "sceneStageSelect.h"
 
 
 #include <unordered_map>		// Fontテーブル用
@@ -19,7 +20,6 @@ struct ResData
 {
 	std::string resname;
 	std::string path;
-	
 };
 
 // フォント用
@@ -70,13 +70,14 @@ void OnCreateSetup()
 	}
 
 	//------------------------------
-	// ステージファイルパス読み込み
-	//if (common::FindChunk(common::SeekSet(iniF), "#StageFile"))
-	//{
-	//	iniF >> CStageMng::stageFile;
-	//}
+	// ステージセレクトファイルパス読み込み
+	if (common::FindChunk(common::SeekSet(iniF), "#StageSelectFile"))
+	{
+		iniF >> CSceneStageSelect::settingFile;
+	}
 }
 
+#pragma region リソースファイル読み込み
 void LoadRes(ifstream& iniF)
 {
 	//====================================
@@ -245,6 +246,7 @@ void LoadFont(ifstream& f)
 	}
 }
 
+#pragma endregion // リソースファイル読み込み
 
 int GetFontID(const std::string& resname)
 {
