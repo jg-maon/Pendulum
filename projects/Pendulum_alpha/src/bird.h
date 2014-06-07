@@ -85,7 +85,7 @@ private:
 	void CreateAttack();
 	
 public:
-	CBird(const mymath::Vec3f& pos);
+	CBird(const mymath::Vec3f& pos = mymath::Vec3f());
 	CBird(float x, float y, float z = 0.5f);
 	~CBird();
 	virtual void step() override;

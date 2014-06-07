@@ -114,6 +114,12 @@
     <Filter Include="リソース ファイル\Result">
       <UniqueIdentifier>{9a179229-4807-45e0-89fe-0732fa8d43d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\FileManager">
+      <UniqueIdentifier>{0668c272-8aa0-42d6-a898-569fd0fb48c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\FileManager\Loader">
+      <UniqueIdentifier>{26d86dae-6fc7-4f56-ab7b-89d8cf6e4c44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -287,6 +293,12 @@
     <ClInclude Include="src\scoreMng.h">
       <Filter>ソース ファイル\InGame\ScoreManager</Filter>
     </ClInclude>
+    <ClInclude Include="src\fileMng.h">
+      <Filter>ソース ファイル\FileManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fileLoader.h">
+      <Filter>ソース ファイル\FileManager\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -396,6 +408,12 @@
     </ClCompile>
     <ClCompile Include="src\scoreMng.cpp">
       <Filter>ソース ファイル\InGame\ScoreManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fileMng.cpp">
+      <Filter>ソース ファイル\FileManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fileLoader.cpp">
+      <Filter>ソース ファイル\FileManager\Loader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

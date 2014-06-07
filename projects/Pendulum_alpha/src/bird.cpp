@@ -28,7 +28,6 @@ void (CBird::*CBird::StateStep_[])() =
 	&CBird::DestroyStep,
 };
 
-
 CBird::CBird(const mymath::Vec3f& pos):
 	IEnemy("E_Bird") 
 	,startPos_(pos)
@@ -108,11 +107,6 @@ void CBird::step()
 
 void CBird::draw()
 {
-#ifdef DEF_SHAPE_DRAW
-	const auto& cols = GetCollisionAreas();
-	for (const auto& col : cols)
-		col->draw();
-#endif
 	if (attack_ != nullptr)
 		attack_->draw();
 	mymath::Rectf rect = camera::GetScreenRect();
@@ -120,6 +114,11 @@ void CBird::draw()
 	{
 		obj_.draw();
 	}
+#ifdef DEF_SHAPE_DRAW
+	const auto& cols = GetCollisionAreas();
+	for (const auto& col : cols)
+		col->draw();
+#endif
 }
 
 

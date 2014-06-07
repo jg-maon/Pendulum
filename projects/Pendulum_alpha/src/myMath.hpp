@@ -299,7 +299,7 @@ public:
 	*/
 	static Vec3<T> Rotate(float angle)
 	{
-		return Vec3<T>(std::cosf(angle), std::sinf(angle));
+		return Vec3<T>(static_cast<T>(std::cosf(angle)), static_cast<T>(std::sinf(angle)));
 	}
 
 #pragma endregion // static methods
@@ -451,6 +451,13 @@ public:
 		@return			©•ª©g
 	*/
 	virtual Shape<T>& Offset(const Vec3<T>& offset) = 0{ return *this; }
+
+	/*
+		@brief			}Œ`‚ğ‰ñ“]‚³‚¹‚é
+		@param	[in]	angle	‰ñ“]Šp“x(unit:radian)
+		@return			©•ª©g
+	*/
+	virtual Shape<T>& Rotate(float angle) = 0{ return *this; }
 
 	//================================================================================
 #pragma region Contains
@@ -727,6 +734,32 @@ public:
 		}
 		return *this;
 	}
+
+	/*
+		@brief			}Œ`‚ğ‰ñ“]‚³‚¹‚é
+		@param	[in]	angle	‰ñ“]Šp“x(unit:radian)
+		@return			©•ª©g
+	*/
+	virtual Shape<T>& Rotate(float angle) override
+	{
+		D3DXMATRIX mt;
+		D3DXMatrixRotationZ(&mt, angle);
+		D3DXVECTOR3 vec;
+		for (auto& point : points)
+		{
+			vec.x = point.x;
+			vec.y = point.y;
+			vec.z = point.z;
+			D3DXVec3TransformCoord(&vec, &vec, &mt);
+			point.x = vec.x;
+			point.y = vec.y;
+			point.z = vec.z;
+
+			//point = Vec3<T>::Rotate(angle) * point;
+		}
+		return *this; 
+	}
+
 
 	//================================================================================
 #pragma region Contains
@@ -1155,19 +1188,6 @@ public:
 		right((T)rect.right), bottom((T)rect.bottom)
 	{}
 	
-	/*
-		@brief	}Œ`‚ğ’l•ª‚¸‚ç‚·
-		@param	[in]	offset	‚¸‚ç‚·—Ê
-		@return	©•ª©g
-	*/
-	virtual Shape<T>& Offset(const Vec3<T>& offset) override
-	{
-		left += offset.x;
-		right += offset.x;
-		top += offset.y;
-		bottom += offset.y;
-		return *this;
-	}
 
 	template<class T1>
 	Rect<T>& operator = (const Rect<T1>& rt)
@@ -1190,20 +1210,31 @@ public:
 		return rt;
 	}
 
-	/*
-		@brief@‹éŒ`‚ğ‚¸‚ç‚·
-		@param	[in]	ofs_x	…•½•ûŒü‚É‚»‚ê‚¼‚ê‚É‰ÁZ‚·‚é—Ê
-		@param	[in]	ofs_y	‰”’¼•ûŒü‚É‚»‚ê‚¼‚ê‚É‰ÁZ‚·‚é—Ê
-		@return ‚¸‚ç‚µ‚½‚ ‚Æ‚Ì©g(˜A‘±‚µ‚Ä‘‚¯‚é‚æ‚¤‚É)
 
-	Rect<T>& offset(T ofs_x, T ofs_y)
+	/*
+		@brief	}Œ`‚ğ’l•ª‚¸‚ç‚·
+		@param	[in]	offset	‚¸‚ç‚·—Ê
+		@return	©•ª©g
+	*/
+	virtual Shape<T>& Offset(const Vec3<T>& offset) override
 	{
-		left	+= ofs_x;
-		right	+= ofs_x;
-		top		+= ofs_y;
-		bottom	+= ofs_y;
+		left += offset.x;
+		right += offset.x;
+		top += offset.y;
+		bottom += offset.y;
 		return *this;
-	}*/
+	}
+
+	/*
+		@brief			}Œ`‚ğ‰ñ“]‚³‚¹‚é
+		@attention		Rect‚Í‰ñ“]‚µ‚È‚¢B‰ñ“]‚·‚élŠpŒ`‚ğg‚¤ê‡‚ÍPolygon‚Åì‚é‚±‚Æ
+		@param	[in]	angle	‰ñ“]Šp“x(unit:radian)
+		@return			©•ª©g
+	*/
+	virtual Shape<T>& Rotate(float angle) override
+	{
+		return *this; 
+	}
 
 	//================================================================================
 #pragma region Contains
@@ -1685,6 +1716,20 @@ public:
 		center += offset;
 		return *this;
 	}
+
+
+	/*
+		@brief			}Œ`‚ğ‰ñ“]‚³‚¹‚é
+		@attention		^‰~‚È‚Ì‚ÅˆÓ–¡‚È‚µB
+		@param	[in]	angle	‰ñ“]Šp“x(unit:radian)
+		@return			©•ª©g
+	*/
+	virtual Shape<T1>& Rotate(float angle) override
+	{
+		return *this; 
+	}
+
+
 	//================================================================================
 #pragma region Contains
 	/*

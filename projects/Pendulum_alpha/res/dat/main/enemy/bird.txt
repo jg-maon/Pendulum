@@ -13,7 +13,7 @@
 Circle	0	0	halfWidth
 
 ポリゴン	頂点数	相対座標X1 相対座標Y1	X2 Y2……
-//Polygon	4	-1	   -1		-1 1	1 1	1 -1	
+Polygon	3	-10 -10		10 -10		5 10	
 
 四角(そのうちPolygonに吸収)	左	上	右	下座標
 //Rect	-halfWidth	-halfHeight	halfWidth	halfHeight

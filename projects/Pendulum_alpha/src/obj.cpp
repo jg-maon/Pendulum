@@ -34,6 +34,10 @@ bool Base::FindName(const std::string& name) const
 	return (pos != std::string::npos);
 }
 
+const std::string& Base::getName() const
+{
+	return name_;
+}
 
 void Base::kill()
 {
@@ -174,22 +178,25 @@ Base::Collisions IColObject::GetCollisionAreas() const
 	Base::Collisions cols;
 	for (const auto& col : collisions_)
 	{
-		const auto& id = *(col.get());
-		if (typeid(id) == typeid(Circlef))
+		const auto& id = typeid(*(col.get()));
+		if (id == typeid(Circlef))
 		{
 			cols.push_back(ShapefPtr(new Circlef(*std::dynamic_pointer_cast<Circlef>(col))));
 		}
-		else if (typeid(id) == typeid(Rectf))
+		else if (id == typeid(Rectf))
 		{
 			cols.push_back(ShapefPtr(new Rectf(*std::dynamic_pointer_cast<Rectf>(col))));
 		}
-		else if (typeid(id) == typeid(Polyf))
+		else if (id == typeid(Polyf))
 		{
 			cols.push_back(ShapefPtr(new Polyf(*std::dynamic_pointer_cast<Polyf>(col))));
 		}
 	}
 	for(auto& col : cols)
 	{
+		// ‰æ‘œ‚ÌŠp“x‚É‡‚í‚¹‚Ä‰ñ“]
+		col->Rotate(math::Calc_DegreeToRad(obj_.angle));
+		// ‰æ‘œ‚Ìƒ[ƒ‹ƒhÀ•WŒn‚ÉˆÚ“®
 		col->Offset(obj_.pos);
 	}
 	return cols;

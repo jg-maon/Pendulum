@@ -105,7 +105,7 @@ void CCollision::step()
 					for (const auto& col : enemyCollisions)
 					{
 						// “–‚½‚è”»’è“à‚Ì‚İ
-						if (!(col->Contains(plpos, mouse))) continue;
+						if (!(col->Contains(mouse))) continue;
 						mymath::Linef line(plpos, col->IntersectionPoint2Nearest(plpos, mouse));
 						// “G‚Æ‚Ì’¼ü‹——£‚ÉActionPolygon‚ª‚È‚¢ê‡‚Ì‚İUŒ‚—LŒø
 						bool atkFlag = true;

@@ -49,6 +49,7 @@ void CGameManager::init()
 	objs_.clear();
 	addObjs_.clear();
 	clear_ = false;
+	fileMng_.Load("res/dat/path.ini");
 }
 
 void CGameManager::step()

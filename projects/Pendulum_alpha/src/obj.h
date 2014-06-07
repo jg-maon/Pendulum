@@ -57,6 +57,7 @@ public:
 	virtual ~Base() = 0;
 	bool isDestroy() const;
 	bool FindName(const std::string& name) const;
+	const std::string& getName() const;
 	virtual void step() = 0;
 	virtual void draw() = 0;
 	virtual void kill();
