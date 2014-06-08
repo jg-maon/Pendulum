@@ -98,7 +98,7 @@ bool CSceneStageSelect::update()
 	const float cameraMoveSp = static_cast<float>(fieldRect_.right - fieldRect_.left) / 1.5f;
 
 	// カメラ移動開始ライン(ウィンドウからの距離)
-	const POINT border = { 40, 40 };
+	const POINT border = { 100, 100 };
 	if (mouseNC.x < border.x)
 	{
 		// ←

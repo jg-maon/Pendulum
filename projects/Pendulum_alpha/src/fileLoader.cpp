@@ -6,6 +6,7 @@ using namespace gplib;
 
 #include "bird.h"
 
+#include <string>
 #include <fstream>
 
 CFileLoader::CFileLoader(const std::string& iniFile) :
@@ -160,34 +161,100 @@ void CFileLoader::LoadFont(ifstream& resF, FontTable& fontTable)
 #pragma endregion // リソースファイル読み込み
 //=======================================================
 
-
-
-
-
-void CFileLoader::LoadEnemiesData(const std::string& enemyFile, std::vector<EnemyPtr>& enemies)
+//=======================================================
+#pragma region 敵テーブル読み込み
+void CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& enemies)
 {
+	using common::FindChunk;
+	using common::SeekSet;
+	std::ifstream eneF(fileName);
+	if (eneF.fail())
+	{
+		debug::Dbg_BoxToMessage("CFileLoader::LoadBird path:%s", fileName.c_str());
+		return;
+	}
+	// 情報ロード用
+	CBird tmp;
+	// ファイルから情報を抜き取る際のタグ検索用
+	bool success;
+	// success が一度でもfalseになったら他処理スキップ
+	// if (success){
+	// 	ロード
+	// }
+	// else {
+	// 	return;
+	// }みたいな感じ
+
+	//-----------------------------------------------
+	// 画像管理名
+	if (success = FindChunk(SeekSet(eneF), "#Img"))
+	{
+		eneF >> tmp.obj().resname;
+	}
+	// 画像サイズ
+	if (success && (success = FindChunk(SeekSet(eneF), "#Size")))
+	{
+		eneF >> tmp.obj().size.x;
+		eneF >> tmp.obj().size.y;
+	}
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#Collision")))
+	{
+		tmp.LoadCollisions(eneF);
+	}
+	// 攻撃
+	if (success && (success = FindChunk(SeekSet(eneF), "#Attack")))
+	{
+		tmp.LoadAttack(eneF);
+	}
+
+	if (success)
+	{
+		//-----------------------------------------------
+		// 全ての情報が正しく読み込めた際のみここに入る
+		// コピーコンストラクタを用いオリジナル作成
+		enemies.push_back(EnemyPtr(new CBird(tmp)));
+	}
+}
+
+#pragma endregion	// 敵テーブル読み込み
+//=======================================================
+
+
+
+void CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
+{
+	using common::FindChunk;
+	using common::SeekSet;
+	//========================================================
+	// パスファイルから敵DBファイルパスの読み込み
+	std::ifstream iniF(iniFile_);
+	std::string enemyFile;
+	if (iniF.fail() || (!FindChunk(iniF, "#EnemyFile")))
+	{
+		debug::Dbg_BoxToMessage("CFileLoader::LoadEnemiesData [iniF]Error path:%s", iniFile_.c_str());
+		return;
+	}
+	//========================================================
+	// DBファイルを開く
 	std::ifstream f(enemyFile);
 	if (f.fail())
 	{
 		debug::Dbg_BoxToMessage("CFileLoader::LoadEnemiesData path:%s", enemyFile.c_str());
 		return;
 	}
-	struct TempEnemy : public IEnemy
-	{
-		TempEnemy() :IEnemy("TempEnemy"){}
-	};
-	//==================================================
-	// 画像系情報
-	
 
-	//==================================================
+	// 敵テーブル初期化
+	enemies.clear();
 
-	std::string buf;
-	if (buf == "Bird")
+	//========================================================
+	// 敵情報読み込み開始
+	if (FindChunk(SeekSet(f),"#Bird"))
 	{
-		CBird tmp;
-		//tmp.a
-		enemies.push_back(EnemyPtr(new CBird(tmp)));
+		std::string buf;
+		f >> buf;
+		LoadBird(buf, enemies);
 	}
+	//========================================================
 
 }

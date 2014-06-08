@@ -40,9 +40,8 @@ public:
 		@retval	true	İ’è¬Œ÷
 		@retval	false	İ’è¸”s
 	*/
-	template<class ENEMY>	void GetEnemyData(ENEMY& enemy) const
+	template<class ENEMY>	bool GetEnemyData(ENEMY& enemy) const
 	{
-		if (enemiesData_.empty())	LoadEnemiesData();
 		bool ret = false;
 		const std::string& name = enemy.getName();
 		for (const auto& data : enemiesData_)

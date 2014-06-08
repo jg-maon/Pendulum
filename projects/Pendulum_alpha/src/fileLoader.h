@@ -59,6 +59,19 @@ private:
 	void LoadFont(std::ifstream& resF, FontTable& fontTable);
 #pragma endregion	// リソースファイル読み込み関連
 	//---------------------------------
+
+	//---------------------------------
+#pragma region 敵テーブル読み込み
+	/*
+		@brief	CBirdロード
+		@param	[in]	fileName	敵ファイルパス
+		@param	[out]	enemies		ロードした敵情報を格納する配列
+		@return	なし
+	*/
+	void LoadBird(const std::string& fileName, std::vector<EnemyPtr>& enemies);
+#pragma endregion	// 敵テーブル読み込み
+	//---------------------------------
+
 public:
 	/*
 		@brief	各ファイル読み込み
@@ -76,11 +89,10 @@ public:
 
 	/*
 		@brief	敵情報をファイルからロードする
-		@param	[in]	enemyFile	敵情報一覧ファイル名
 		@param	[out]	enemies		ロードした敵情報を格納する配列
 		@return	なし
 	*/
-	void LoadEnemiesData(const std::string& enemyFile, std::vector<EnemyPtr>& enemies);
+	void LoadEnemiesData(std::vector<EnemyPtr>& enemies);
 };
 
 

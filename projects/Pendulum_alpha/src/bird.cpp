@@ -28,21 +28,26 @@ void (CBird::*CBird::StateStep_[])() =
 	&CBird::DestroyStep,
 };
 
-CBird::CBird(const mymath::Vec3f& pos):
-	IEnemy("E_Bird") 
-	,startPos_(pos)
+CBird::CBird() :
+IEnemy("E_Bird")
 {
-	obj_.pos = pos;
-	init();
 }
-CBird::CBird(float x, float y, float z):
-	IEnemy("E_Bird")
-	,startPos_(mymath::Vec3f(x,y,z))
+
+CBird::CBird(const mymath::Vec3f& pos) :
+IEnemy("E_Bird")
+, startPos_(pos)
 {
+	init();
+	obj_.pos = pos;
+}
+CBird::CBird(float x, float y, float z) :
+IEnemy("E_Bird")
+, startPos_(mymath::Vec3f(x, y, z))
+{
+	init();
 	obj_.pos.x = x;
 	obj_.pos.y = y;
 	obj_.pos.z = z;
-	init();
 }
 
 CBird::~CBird()
@@ -54,27 +59,9 @@ CBird::~CBird()
 void CBird::init()
 {
 	using common::FindChunk;
-	std::ifstream f("res/dat/main/enemy/bird.txt");
-	if (f.fail())
-	{
-		debug::Dbg_BoxToMessage("CBird::init");
-		return;
-	}
-	std::string buf;
-	if(FindChunk(f, "#Img"))
-	{
-		f >> obj_.resname;
-	}
-	if(FindChunk(f, "#Size"))
-	{
-		LoadValue(f, obj_, obj_.size.x);
-		LoadValue(f, obj_, obj_.size.y);
-	}
-	if(FindChunk(f, "#Collision")) 
-		LoadCollisions(f);
-	if(FindChunk(f,"#Attack"))
-		LoadAttack(f);
-	//obj_.img = birdIMG;
+	
+	gm()->GetEnemyData(*this);
+
 	elapsedTime_ = 0.f;
 	nextActTime_ = 0.f;
 	state_ = State::WAIT;

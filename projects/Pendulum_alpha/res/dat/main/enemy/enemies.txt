@@ -1,0 +1,1 @@
+#Bird	res/dat/main/enemy/bird.txt

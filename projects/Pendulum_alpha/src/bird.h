@@ -85,7 +85,22 @@ private:
 	void CreateAttack();
 	
 public:
-	CBird(const mymath::Vec3f& pos = mymath::Vec3f());
+	/*
+		@brief	空オブジェクト生成
+				DB初期化時に呼ばれる
+	*/
+	CBird();
+	/*
+		@brief	座標指定したオブジェクト生成
+		@param	[in]	pos	座標
+	*/
+	CBird(const mymath::Vec3f& pos);
+	/*
+		@brief	座標指定したオブジェクト生成
+		@param	[in]	x	X座標
+		@param	[in]	y	Y座標
+		@param	[in]	z	奥行き(デフォルト:0.5f)
+	*/
 	CBird(float x, float y, float z = 0.5f);
 	~CBird();
 	virtual void step() override;

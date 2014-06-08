@@ -115,19 +115,19 @@ public:
 	virtual void draw() = 0;
 	virtual void kill();
 	virtual void hit(const ObjPtr& rival);
-	const charabase::CharBase& obj() const;
+	charabase::CharBase& obj();
 };
 
 /*
-@brief		ファイルから数値を格納
-halfWidth、halfHeight対応
-@attension	ifstreamのcurrentPositionに注意
-@param		[in/out]	f		入力ファイル
-@param		[in]		obj		半分のサイズ用
-@param		[out]		value	結果格納用
-@return		EOFか
-@retval		true		EOF
-@retval		false		EOFでない
+	@brief		ファイルから数値を格納
+	halfWidth、halfHeight対応
+	@attension	ifstreamのcurrentPositionに注意
+	@param		[in/out]	f		入力ファイル
+	@param		[in]		obj		半分のサイズ用
+	@param		[out]		value	結果格納用
+	@return		EOFか
+	@retval		true		EOF
+	@retval		false		EOFでない
 */
 template<class T>	bool IObject::LoadValue(std::ifstream& f, const charabase::CharBase& obj, T& value)
 {

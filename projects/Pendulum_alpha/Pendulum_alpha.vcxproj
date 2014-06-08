@@ -186,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\dat\main\enemy\bird.txt" />
+    <Text Include="res\dat\main\enemy\enemies.txt" />
     <Text Include="res\dat\main\enemy\enemyTable01.txt" />
     <Text Include="res\dat\main\enemy\enemyTable02.txt" />
     <Text Include="res\dat\main\stage\stage01.txt" />

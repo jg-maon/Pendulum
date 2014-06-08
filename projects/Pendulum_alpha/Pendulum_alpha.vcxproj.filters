@@ -120,6 +120,9 @@
     <Filter Include="ソース ファイル\FileManager\Loader">
       <UniqueIdentifier>{26d86dae-6fc7-4f56-ab7b-89d8cf6e4c44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Main\Enemy">
+      <UniqueIdentifier>{ef6626fa-1c6d-403d-b320-141c58da6bf7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -420,9 +423,6 @@
     <Text Include="res\dat\resdata.dat">
       <Filter>リソース ファイル</Filter>
     </Text>
-    <Text Include="res\dat\main\enemy\bird.txt">
-      <Filter>リソース ファイル\Main</Filter>
-    </Text>
     <Text Include="res\dat\main\enemy\enemyTable01.txt">
       <Filter>リソース ファイル\Main</Filter>
     </Text>
@@ -437,6 +437,12 @@
     </Text>
     <Text Include="res\dat\main\stage\stage02.txt">
       <Filter>リソース ファイル\Main</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\bird.txt">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\enemies.txt">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
