@@ -115,7 +115,8 @@ public:
 	virtual void draw() = 0;
 	virtual void kill();
 	virtual void hit(const ObjPtr& rival);
-	charabase::CharBase& obj();
+	const charabase::CharBase& obj() const;
+	void obj(const charabase::CharBase& o);
 };
 
 /*

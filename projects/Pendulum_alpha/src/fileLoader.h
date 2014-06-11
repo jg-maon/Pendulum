@@ -5,6 +5,10 @@
 #include "enemyBase.hpp"
 #endif
 
+#ifndef DEF_PLAYER_H
+class CPlayer;
+#endif
+
 #include <vector>
 
 /*
@@ -21,7 +25,7 @@ class CFileLoader
 		std::string path;
 	};
 
-	const std::string iniFile_;
+	const std::string iniFile_;		// 各種設定記述ファイルパス
 private:
 	//---------------------------------
 #pragma region リソースファイル読み込み関連
@@ -66,11 +70,14 @@ private:
 		@brief	CBirdロード
 		@param	[in]	fileName	敵ファイルパス
 		@param	[out]	enemies		ロードした敵情報を格納する配列
-		@return	なし
+		@return	情報を設定できたか
+		@retval	true	設定成功
+		@retval	false	設定失敗
 	*/
-	void LoadBird(const std::string& fileName, std::vector<EnemyPtr>& enemies);
+	bool LoadBird(const std::string& fileName, std::vector<EnemyPtr>& enemies);
 #pragma endregion	// 敵テーブル読み込み
 	//---------------------------------
+
 
 public:
 	/*
@@ -86,6 +93,14 @@ public:
 	*/
 	CFileLoader(const std::string& iniFile, FontTable& fontTable);
 
+	/*
+		@brief	プレイヤー読み込み
+		@param	[out]	player		プレイヤー
+		@return	情報を設定できたか
+		@retval	true	設定成功
+		@retval	false	設定失敗
+	*/
+	bool LoadPlayerData(CPlayer& player);
 
 	/*
 		@brief	敵情報をファイルからロードする
@@ -93,6 +108,8 @@ public:
 		@return	なし
 	*/
 	void LoadEnemiesData(std::vector<EnemyPtr>& enemies);
+
+
 };
 
 

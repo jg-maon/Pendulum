@@ -37,6 +37,17 @@ public:
 	virtual void step() = 0{prePos_ = obj_.pos;}
 	virtual void draw() = 0{}
 	virtual void hit(const ObjPtr& rival){__super::hit(rival);}
+
+
+	/*
+		@brief	ダメージ加算
+		@param	[in]	dam	ダメージ量
+		@return 死亡したか
+		@retval	true	死亡
+		@retval	false	残存
+	*/
+	virtual bool ApplyDamage(int dam) = 0{ return true; }
+
 	/*
 		@brief	当たり判定領域の取得
 		@return	当たり判定領域

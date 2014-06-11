@@ -40,7 +40,7 @@ void OnCreateSetup()
 	ifstream iniF("res/dat/path.ini");
 	if (iniF.fail())
 	{
-		gplib::debug::Dbg_BoxToMessage("huh?OnCreateSetup");
+		gplib::debug::BToM("huh?OnCreateSetup");
 		return;
 	}
 	//====================================
@@ -87,7 +87,7 @@ void LoadRes(ifstream& iniF)
 	ifstream resF(buf);
 	if (resF.fail())
 	{
-		gplib::debug::Dbg_BoxToMessage("OnCreateSetup_resourceFile_NotFound");
+		gplib::debug::BToM("OnCreateSetup_resourceFile_NotFound");
 		return;
 	}
 	

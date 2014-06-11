@@ -187,7 +187,7 @@ void CStageMng::LoadStage(const std::string& stageName)
 	ifstream f(file);
 	if (f.fail())
 	{
-		debug::Dbg_BoxToMessage("CStageMng::LoadStage path=%s", file.c_str());
+		debug::BToM("CStageMng::LoadStage path=%s", file.c_str());
 		return;
 	}
 	stageName_ = stageName;

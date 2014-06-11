@@ -1,8 +1,8 @@
 #ifndef DEF_FILEMNG_H
 #define DEF_FILEMNG_H
 
-#ifndef DEF_ENEMYBASE_HPP
-#include "enemyBase.hpp"
+#ifndef DEF_OBJ_H
+#include "obj.h"
 #endif
 
 #include <vector>
@@ -17,8 +17,8 @@ private:
 	// フォント用
 	std::unordered_map<std::string, int> fontTable_;
 
-	// 敵データ
-	std::vector<EnemyPtr> enemiesData_;
+	// データ一覧
+	std::vector<ObjPtr> dataTable_;
 
 private:
 
@@ -34,21 +34,22 @@ public:
 	void Load(const std::string& iniFile);
 
 	/*
-		@brief	敵情報の設定
-		@param	[in/out]	enemy	格納する敵クラスオブジェクト
-		@return	敵情報を設定できたか
+		@brief	情報の取得
+		@param	[in/out]	obj	格納するクラスオブジェクト
+								型情報でキャストを行う
+		@return	情報を設定できたか
 		@retval	true	設定成功
 		@retval	false	設定失敗
 	*/
-	template<class ENEMY>	bool GetEnemyData(ENEMY& enemy) const
+	template<class OBJ>	bool GetData(OBJ& obj) const
 	{
 		bool ret = false;
-		const std::string& name = enemy.getName();
-		for (const auto& data : enemiesData_)
+		const std::string& name = obj.getName();
+		for (auto& data : dataTable_)
 		{
 			if (name == data->getName())
 			{
-				enemy = *data;
+				obj = *(std::dynamic_pointer_cast<OBJ>(data));
 				//return true;
 				ret = true;
 				break;

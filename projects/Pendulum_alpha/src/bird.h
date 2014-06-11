@@ -7,7 +7,16 @@
 
 class CBird : public IEnemy
 {
-	typedef IEnemy super;
+public:
+	struct LoadInfo
+	{
+		float SEARCH_RANGE;		// 索敵範囲(現在座標からどれだけ策敵するか)
+		float CHASE_RANGE;		// 追跡範囲(初期座標からどれだけ追跡するか)
+		float ATTACK_RANGE;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
+		float RETURN_RANGE;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
+		float MOVE_SPEED;		// 移動速度
+	};
+private:
 	enum class State
 	{
 		WAIT,				// 待機
@@ -25,15 +34,18 @@ private:
 	static const float RETURN_RANGE;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
 	
 	static const float MOVE_SPEED;			// 移動速度
-
+	
 	static void (CBird::*StateStep_[])();	// 状態によるstep処理
+
+	LoadInfo loadInfo_;
+
 	
 	State state_;					// 行動状態
 
 	float elapsedTime_;				// 経過時間
 	float nextActTime_;				// 次に行動を起こす時間
 		
-	const mymath::Vec3f startPos_;			// 初期座標(追跡後元に戻る場所)
+	/*const*/ mymath::Vec3f startPos_;			// 初期座標(追跡後元に戻る場所)
 
 private:
 
@@ -122,7 +134,14 @@ public:
 		@return	当たり判定領域
 	*/
 	virtual Collisions GetCollisionAreas() override;
-		
+	
+
+	/*
+		@brief	情報初期化
+		@param	[in]	info	ロードしてきた情報一覧
+		@return	なし
+	*/
+	void SetInfo(const LoadInfo& info);
 };
 
 #endif

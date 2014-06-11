@@ -6,6 +6,8 @@ using namespace gplib;
 
 #include "bird.h"
 
+#include "player.h"
+
 #include <string>
 #include <fstream>
 
@@ -15,7 +17,7 @@ iniFile_(iniFile)
 	std::ifstream iniF(iniFile);
 	if (iniF.fail())
 	{
-		gplib::debug::Dbg_BoxToMessage("CFileLoader::CFileLoader iniFpath:%s", iniFile.c_str());
+		gplib::debug::BToM("CFileLoader::CFileLoader iniFpath:%s", iniFile.c_str());
 	}
 	else
 	{
@@ -33,7 +35,7 @@ iniFile_(iniFile)
 	std::ifstream iniF(iniFile);
 	if (iniF.fail())
 	{
-		gplib::debug::Dbg_BoxToMessage("CFileLoader::CFileLoader iniFpath:%s", iniFile.c_str());
+		gplib::debug::BToM("CFileLoader::CFileLoader iniFpath:%s", iniFile.c_str());
 	}
 	else
 	{
@@ -55,7 +57,7 @@ void CFileLoader::LoadRes(const std::string& resFile, FontTable& fontTable)
 	ifstream resF(resFile);
 	if (resF.fail())
 	{
-		gplib::debug::Dbg_BoxToMessage("CFileLoader::LoadRes path:%s", resFile.c_str());
+		gplib::debug::BToM("CFileLoader::LoadRes path:%s", resFile.c_str());
 		return;
 	}
 
@@ -163,18 +165,19 @@ void CFileLoader::LoadFont(ifstream& resF, FontTable& fontTable)
 
 //=======================================================
 #pragma region 敵テーブル読み込み
-void CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& enemies)
+bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& enemies)
 {
 	using common::FindChunk;
 	using common::SeekSet;
 	std::ifstream eneF(fileName);
 	if (eneF.fail())
 	{
-		debug::Dbg_BoxToMessage("CFileLoader::LoadBird path:%s", fileName.c_str());
-		return;
+		debug::BToM("CFileLoader::LoadBird path:%s", fileName.c_str());
+		return false;
 	}
 	// 情報ロード用
 	CBird tmp;
+	charabase::CharBase cb;
 	// ファイルから情報を抜き取る際のタグ検索用
 	bool success;
 	// success が一度でもfalseになったら他処理スキップ
@@ -189,13 +192,13 @@ void CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	// 画像管理名
 	if (success = FindChunk(SeekSet(eneF), "#Img"))
 	{
-		eneF >> tmp.obj().resname;
+		eneF >> cb.resname;
 	}
 	// 画像サイズ
 	if (success && (success = FindChunk(SeekSet(eneF), "#Size")))
 	{
-		eneF >> tmp.obj().size.x;
-		eneF >> tmp.obj().size.y;
+		eneF >> cb.size.x;
+		eneF >> cb.size.y;
 	}
 	// 当たり判定
 	if (success && (success = FindChunk(SeekSet(eneF), "#Collision")))
@@ -212,12 +215,90 @@ void CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	{
 		//-----------------------------------------------
 		// 全ての情報が正しく読み込めた際のみここに入る
+		// 画像情報設定
+		tmp.obj(cb);
 		// コピーコンストラクタを用いオリジナル作成
 		enemies.push_back(EnemyPtr(new CBird(tmp)));
 	}
+
+	return success;
 }
 
 #pragma endregion	// 敵テーブル読み込み
+//=======================================================
+
+
+
+
+//=======================================================
+bool CFileLoader::LoadPlayerData(CPlayer& player)
+{
+	using common::FindChunk;
+	using common::SeekSet;
+	//========================================================
+	// パスファイルから敵DBファイルパスの読み込み
+	std::ifstream iniF(iniFile_);
+	std::string playerFile;
+	if (iniF.fail() || (!FindChunk(iniF, "#PlayerFile")))
+	{
+		debug::BToM("CFileLoader::LoadPlayerData [iniF]Error path:%s", iniFile_.c_str());
+		return false;
+	}
+	iniF >> playerFile;
+	//========================================================
+	// DBファイルを開く
+	std::ifstream f(playerFile);
+	if (f.fail())
+	{
+		debug::BToM("CFileLoader::LoadPlayerData [f]Error path:%s", playerFile.c_str());
+		return false;
+	}
+
+	// 情報ロード用
+	CPlayer tmp;
+	charabase::CharBase cb;
+	CPlayer::LoadInfo info;
+	// ファイルから情報を抜き取る際のタグ検索用
+	bool success;
+	// success が一度でもfalseになったら他処理スキップ
+	// if (success){
+	// 	ロード
+	// }
+	// else {
+	// 	return;
+	// }みたいな感じ
+
+	//-----------------------------------------------
+	// 画像管理名
+	if (success = FindChunk(SeekSet(f), "#Img"))
+	{
+		f >> cb.resname;
+	}
+	// 画像サイズ
+	if (success && (success = FindChunk(SeekSet(f), "#Size")))
+	{
+		f >> cb.size.x;
+		f >> cb.size.y;
+	}
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(f), "#Collision")))
+	{
+		tmp.LoadCollisions(f);
+	}
+
+	if (success)
+	{
+		//-----------------------------------------------
+		// 全ての情報が正しく読み込めた際のみここに入る
+		// 画像情報設定
+		tmp.obj(cb);
+		// パラメータ
+		tmp.SetInfo(info);
+		// 代入を用いオリジナル複製
+		player = tmp;
+	}
+	return success;
+}
 //=======================================================
 
 
@@ -232,15 +313,16 @@ void CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 	std::string enemyFile;
 	if (iniF.fail() || (!FindChunk(iniF, "#EnemyFile")))
 	{
-		debug::Dbg_BoxToMessage("CFileLoader::LoadEnemiesData [iniF]Error path:%s", iniFile_.c_str());
+		debug::BToM("CFileLoader::LoadEnemiesData [iniF]Error path:%s", iniFile_.c_str());
 		return;
 	}
+	iniF >> enemyFile;
 	//========================================================
 	// DBファイルを開く
 	std::ifstream f(enemyFile);
 	if (f.fail())
 	{
-		debug::Dbg_BoxToMessage("CFileLoader::LoadEnemiesData path:%s", enemyFile.c_str());
+		debug::BToM("CFileLoader::LoadEnemiesData [f]Error path:%s", enemyFile.c_str());
 		return;
 	}
 

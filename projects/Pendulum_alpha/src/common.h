@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#define array_size(x) (sizeof((x)) / sizeof((x)[0]))
+#define arrayof(x) (sizeof((x)) / sizeof((x)[0]))
 
 namespace common
 {

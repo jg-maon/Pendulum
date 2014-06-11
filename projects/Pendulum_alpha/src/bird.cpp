@@ -60,7 +60,7 @@ void CBird::init()
 {
 	using common::FindChunk;
 	
-	gm()->GetEnemyData(*this);
+	gm()->GetData(*this);
 
 	elapsedTime_ = 0.f;
 	nextActTime_ = 0.f;
@@ -269,3 +269,8 @@ Base::Collisions CBird::GetCollisionAreas()
 	return Base::Collisions();
 }
 
+void CBird::SetInfo(const LoadInfo& info)
+{
+
+	loadInfo_ = info;
+}

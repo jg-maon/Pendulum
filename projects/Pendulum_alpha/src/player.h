@@ -21,6 +21,19 @@
 
 class CPlayer : public ICharacter
 {
+public:
+	struct LoadInfo
+	{
+		float MAX_G;		// 最大重力速度
+		float GRAVITY_ACC;	// 重力加速度
+		float TENSION;		// フックの張力(初速)
+		float DOWN_TENSION;// 張力減速率
+		float DOWNSP;		// 移動減速率(1-DOWNSP)
+		float MAX_VX;		// 水平方向の最大速度(ゲームとして成り立つバランス調整用)
+		float MAX_VY;		// 鉛直方向の最大速度(ゲームとして成り立つバランス調整用)
+		float CHAIN_TIME[2];	// Chain猶予時間
+		int MAX_CHAIN;			// 最高Chain数
+	};
 private:
 	enum MotionType		// モーション番号
 	{
@@ -40,6 +53,7 @@ private:
 	static const float CHAIN_TIME[2];	// Chain猶予時間
 	static const int MAX_CHAIN;			// 最高Chain数
 	
+	LoadInfo loadInfo_;			// ファイルから取得する可変値
 
 	float gravity_;				// 重力
 	bool gravityF_;				// 重力処理をするか(壁に刺さってる時などの処理用)
@@ -75,8 +89,6 @@ private:
 
 public:
 	//const bool& isHanging;		// ぶら下がり中(ActionPoint判定するか)
-	const bool& isAttacking;	// 攻撃中
-	const int& power;			// 攻撃力
 private:
 	/*
 		@brief	情報の初期化
@@ -96,6 +108,12 @@ private:
 	*/
 	void move();
 public:
+	/*
+		@brief	空オブジェクト生成
+				DB初期化時に呼ばれる
+	
+	*/
+	CPlayer();
 	/*
 		@param	[in]	stage	ステージ情報
 		@param	[in]	pos		初期座標
@@ -126,6 +144,21 @@ public:
 	static ObjPtr GetPtr();
 
 	/*
+		@brief	攻撃待機中フラグの取得
+		@return	攻撃待機中フラグ
+		@retval	true	攻撃待機中
+		@retval	false	攻撃待機中でない
+	*/
+	bool isAttacking() const;
+
+	/*
+		@brief	プレイヤー情報初期化
+		@param	[in]	info	ロードしてきた情報一覧
+		@return	なし
+	*/
+	void SetInfo(const LoadInfo& info);
+
+	/*
 		@brief	フックの支点の設定
 		@param	[in]	pos	支点座標
 		@return	なし
@@ -135,9 +168,11 @@ public:
 	/*
 		@brief	ダメージ加算
 		@param	[in]	dam	ダメージ量
-		@return なし
+		@return 死亡したか
+		@retval	true	死亡
+		@retval	false	残存
 	*/
-	void ApplyDamage(int dam);
+	bool ApplyDamage(int dam) override;
 	
 	/*
 		@brief	攻撃
@@ -157,6 +192,7 @@ public:
 		@return	当たり判定領域
 	*/
 	//virtual Collisions GetCollisionAreas() override;
+
 
 };
 

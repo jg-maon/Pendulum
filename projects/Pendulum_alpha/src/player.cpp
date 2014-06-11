@@ -28,6 +28,8 @@
 #include "stageMng.h"
 #endif
 
+#include "common.h"
+
 const float CPlayer::GRAVITY_ACC = 25.f;	// 最大重力速度
 const float CPlayer::MAX_G = 100.f;			// 重力加速度
 const float CPlayer::TENSION = 1500.f;		// フックの張力(初速)
@@ -42,11 +44,14 @@ const int CPlayer::MAX_CHAIN = 999;		// 最高Chain数
 
 #pragma region CPlayer methods
 
+CPlayer::CPlayer():
+ICharacter("Player")
+{
+}
+
 CPlayer::CPlayer(const mymath::Vec3f& pos):
 	ICharacter("Player")
 //	,isHanging(isHanging_)
-	,isAttacking(isAttacking_)
-	,power(power_)
 {
 	obj_.pos = pos;
 	init();
@@ -54,8 +59,6 @@ CPlayer::CPlayer(const mymath::Vec3f& pos):
 CPlayer::CPlayer(float x, float y, float z):
 	ICharacter("Player")
 //	,isHanging(isHanging_)
-	,isAttacking(isAttacking_)
-	,power(power_)
 {
 	obj_.pos.x = x;
 	obj_.pos.y = y;
@@ -69,7 +72,10 @@ CPlayer::~CPlayer()
 
 void CPlayer::init()
 {
+	gm()->GetData(*this);
+	
 	obj_.add = 0.f;
+
 	obj_.resname = "img_player";
 	obj_.size(128,128);
 	prePos_ = obj_.pos;
@@ -637,7 +643,7 @@ void CPlayer::hit(const ObjPtr& rival)
 		mymath::Vec3f intersection;
 		intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
 		obj_.pos = intersection;
-		obj_.pos -= dist.Normalize();
+		obj_.pos -= dist.Normalize() * 1.5f;
 		// 刺さってるのでフラグを折る
 		gravityF_ = false;
 		//isHanging_ = false;
@@ -665,6 +671,28 @@ ObjPtr CPlayer::GetPtr()
 	return pl[0];
 }
 
+bool CPlayer::isAttacking() const
+{
+	return isAttacking_;
+}
+
+
+void CPlayer::SetInfo(const LoadInfo& info)
+{
+	//MAX_G = info.MAX_G;
+	//GRAVITY_ACC = info.GRAVITY_ACC;
+	//TENSION = info.TENSION;
+	//DOWN_TENSION = info.DOWN_TENSION;
+	//DOWNSP = info.DOWNSP;
+	//MAX_VX = info.MAX_VX;
+	//MAX_VY = info.MAX_VY;
+	//for (int i = 0; i < arrayof(info.CHAIN_TIME); ++i)
+	//	CHAIN_TIME[i] = info.CHAIN_TIME[i];
+	//MAX_CHAIN = info.MAX_CHAIN;
+
+	loadInfo_ = info;
+}
+
 
 void CPlayer::SetHangPoint(const mymath::Vec3f& pos)
 {
@@ -672,11 +700,15 @@ void CPlayer::SetHangPoint(const mymath::Vec3f& pos)
 }
 
 
-void CPlayer::ApplyDamage(int dam)
+bool CPlayer::ApplyDamage(int dam)
 {
 	health_ -= dam;
-	if(health_ < 0)
+	if (health_ <= 0)
+	{
 		health_ = 0;
+		return true;
+	}
+	return false;
 }
 
 void CPlayer::ApplyAttack(const mymath::Vec3f& pos)

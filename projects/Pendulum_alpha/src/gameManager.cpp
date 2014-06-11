@@ -15,6 +15,7 @@ showCursor_(false)
 {
 	ShowCursor(showCursor_ == true);
 	init();
+	fileMng_.Load("res/dat/path.ini");
 	cursor_ = charabase::CharPtr(new charabase::CharBase(
 		mymath::Vec3f(), mymath::Vec3f(),
 		"img_cursor",
@@ -49,7 +50,6 @@ void CGameManager::init()
 	objs_.clear();
 	addObjs_.clear();
 	clear_ = false;
-	fileMng_.Load("res/dat/path.ini");
 }
 
 void CGameManager::step()

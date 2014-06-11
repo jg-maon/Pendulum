@@ -26,7 +26,7 @@ IScene("img_stageSelect", "bgm_stageSelect")
 	back_->pos.z = 1.f;
 	if (f.fail())
 	{
-		debug::Dbg_BoxToMessage("CSceneStageSelect::CSceneStageSelect path:%s", settingFile.c_str());
+		debug::BToM("CSceneStageSelect::CSceneStageSelect path:%s", settingFile.c_str());
 		fieldRect_.top = fieldRect_.left = 0;
 		fieldRect_.right = system::WINW;
 		fieldRect_.bottom = system::WINH;

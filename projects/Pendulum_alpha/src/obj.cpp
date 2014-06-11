@@ -92,9 +92,14 @@ void IObject::hit(const ObjPtr& rival)
 {
 }
 
-charabase::CharBase& IObject::obj()
+const charabase::CharBase& IObject::obj() const
 {
 	return obj_;
+}
+
+void IObject::obj(const charabase::CharBase& o)
+{
+	obj_ = o;
 }
 
 #pragma endregion // IObject methods
@@ -137,7 +142,7 @@ bool IColObject::LoadCollisions(std::ifstream& f)
 	collisions_.clear();
 	while (!f.eof() && buf != "}")
 	{
-		if (buf == "Circle")
+		if (buf == "#Circle")
 		{
 			mymath::Circlef c;
 			if (LoadValue(f, obj_, c.center.x)) return true;
@@ -145,7 +150,7 @@ bool IColObject::LoadCollisions(std::ifstream& f)
 			if (LoadValue(f, obj_, c.radius)) return true;
 			collisions_.push_back(mymath::ShapefPtr(new mymath::Circlef(c)));
 		}
-		else if (buf == "Polygon")
+		else if (buf == "#Polygon")
 		{
 			int vNum;	// ’¸“_”
 			f >> vNum;
@@ -158,7 +163,7 @@ bool IColObject::LoadCollisions(std::ifstream& f)
 			collisions_.push_back(mymath::ShapefPtr(new mymath::Polyf(p)));
 			return f.eof();
 		}
-		else if (buf == "Rect")
+		else if (buf == "#Rect")
 		{
 			mymath::Rectf r;
 			if (LoadValue(f, obj_, r.left))return true;

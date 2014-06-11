@@ -48,6 +48,7 @@ private:
 	charabase::CharPtr cursor_;			// カーソル
 	//charabase::Anim cursorAnim_;		// カーソルアニメーション用
 
+	
 	CFileMng fileMng_;					// ファイルマネージャ
 
 private:
@@ -161,16 +162,16 @@ public:
 	mymath::Vec3f GetPlayerPos() const;
 
 	/*
-		@brief	敵情報の設定
-				GetEnemyData(*this);
-		@param	[in/out]	enemy	格納する敵クラスオブジェクト
-		@return	敵情報を設定できたか
+		@brief	情報の取得
+				gm()->GetData(*this);
+		@param	[in/out]	obj	格納するクラスオブジェクト
+		@return	情報を設定できたか
 		@retval	true	設定成功
 		@retval	false	設定失敗
 	*/
-	template<class ENEMY>	void GetEnemyData(ENEMY& enemy) const
+	template<class OBJ>	bool GetData(OBJ& obj) const
 	{
-		return fileMng_.GetEnemyData(enemy);
+		return fileMng_.GetData(obj);
 	}
 
 };

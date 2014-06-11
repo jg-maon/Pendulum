@@ -55,7 +55,7 @@ void CEnemyMng::LoadEnemiesInfo(const std::string& fileName)
 	std::ifstream f(file);
 	if (f.fail())
 	{
-		debug::Dbg_BoxToMessage("CEnemyMng::LoadEnemiesInfo path:%s", file.c_str());
+		debug::BToM("CEnemyMng::LoadEnemiesInfo path:%s", file.c_str());
 		return;
 	}
 	enemies_.clear();

@@ -86,7 +86,7 @@ void CCollision::step()
 		
 		//-----------------------------------------
 		// UŒ‚
-		if(pl->isAttacking)
+		if(pl->isAttacking())
 		{
 			POINT m = camera::GetCursorPosition();
 			mymath::Vec3f mouse(static_cast<float>(m.x),
@@ -126,7 +126,7 @@ void CCollision::step()
 						{
 							// ƒ_ƒ[ƒW
 							pl->ApplyAttack(enemy->obj().pos);
-							if (enemy->ApplyDamage(pl->power))
+							if (enemy->ApplyDamage(pl->getPower()))
 							{
 								//-----------------------------------------
 								// “Gkill

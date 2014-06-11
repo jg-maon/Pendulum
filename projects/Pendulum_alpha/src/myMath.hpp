@@ -747,13 +747,13 @@ public:
 		D3DXVECTOR3 vec;
 		for (auto& point : points)
 		{
-			vec.x = point.x;
-			vec.y = point.y;
-			vec.z = point.z;
+			vec.x = static_cast<float>(point.x);
+			vec.y = static_cast<float>(point.y);
+			vec.z = static_cast<float>(point.z);
 			D3DXVec3TransformCoord(&vec, &vec, &mt);
-			point.x = vec.x;
-			point.y = vec.y;
-			point.z = vec.z;
+			point.x = static_cast<T>(vec.x);
+			point.y = static_cast<T>(vec.y);
+			point.z = static_cast<T>(vec.z);
 
 			//point = Vec3<T>::Rotate(angle) * point;
 		}

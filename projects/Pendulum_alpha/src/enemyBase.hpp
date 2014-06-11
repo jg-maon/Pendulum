@@ -21,6 +21,8 @@
 #include "nWayShot.h"
 #endif
 
+#include <memory>
+
 /*
 	@brief		敵基本クラス
 	@attention	名前は必ず"E_"から始めること
@@ -54,7 +56,7 @@ public:
 		@retval	true	死亡
 		@retval	false	残存
 	*/
-	virtual bool ApplyDamage(int dam) = 0{}
+	virtual bool ApplyDamage(int dam) = 0{ return true; }
 
 	/*
 		@brief	攻撃の当たり判定領域の取得
