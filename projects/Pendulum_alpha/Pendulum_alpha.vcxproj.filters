@@ -30,9 +30,6 @@
     <Filter Include="ソース ファイル\GameOver">
       <UniqueIdentifier>{c0e7dfd1-6bde-43a0-9b47-1b99d652ee43}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Obj">
-      <UniqueIdentifier>{c82f6ad0-e58f-4c88-b325-99f3bc36082b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\CharBase">
       <UniqueIdentifier>{22994bfb-79b5-461d-bb0c-387ac62b6a02}</UniqueIdentifier>
     </Filter>
@@ -128,6 +125,9 @@
     </Filter>
     <Filter Include="リソース ファイル\Main\E_Table">
       <UniqueIdentifier>{2804bd9f-f1d3-4b06-ac7f-9a406c82d7d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Obj">
+      <UniqueIdentifier>{c82f6ad0-e58f-4c88-b325-99f3bc36082b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

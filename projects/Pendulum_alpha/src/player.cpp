@@ -53,17 +53,17 @@ CPlayer::CPlayer(const mymath::Vec3f& pos):
 	ICharacter("Player")
 //	,isHanging(isHanging_)
 {
-	obj_.pos = pos;
 	init();
+	obj_.pos = pos;
 }
 CPlayer::CPlayer(float x, float y, float z):
 	ICharacter("Player")
 //	,isHanging(isHanging_)
 {
+	init();
 	obj_.pos.x = x;
 	obj_.pos.y = y;
 	obj_.pos.z = z;
-	init();
 }
 
 CPlayer::~CPlayer()
@@ -76,8 +76,6 @@ void CPlayer::init()
 	
 	obj_.add = 0.f;
 
-	obj_.resname = "img_player";
-	obj_.size(128,128);
 	prePos_ = obj_.pos;
 	isHanging_ = false;
 	tensionAcc_ = 0.f;
@@ -113,14 +111,6 @@ void CPlayer::init()
 	chainCnt_ = 0;
 	
 	//----------------------------------
-	collisions_.clear();
-	mymath::Rectf rc;
-	rc.left		= -5.f;
-	rc.top		= -5.f;
-	rc.right	= +5.f;
-	rc.bottom	= +5.f;
-	collisions_.push_back(mymath::ShapefPtr(new mymath::Rectf(rc)));
-	
 	
 	//----------------------------------
 	// ÉJÉÅÉâà⁄ìÆ
