@@ -148,9 +148,9 @@ void CCollision::step()
 
 
 		auto& plCols = player->GetCollisionAreas();
-		for (auto& plcol : plCols)
+		for (auto& pc : plCols)
 		{
-			auto& pc = *std::dynamic_pointer_cast<mymath::Rectf>(plcol);
+			//auto& pc = *std::dynamic_pointer_cast<mymath::Rectf>(plcol);
 
 			//-----------------------------------------
 			// ƒvƒŒƒCƒ„[ vs “GUŒ‚
@@ -170,7 +170,7 @@ void CCollision::step()
 						if (col->Contains(pc))
 						{
 							// ”ñƒ_ƒ
-							pl->ApplyDamage(enemy->getAttack()->GetForce());
+							pl->hit(enemy);
 							break;
 							// UŒ‚Ží—Þ•Êˆ—
 							//if(enemy->attack->findName("Atk_NWayShot"))
@@ -191,7 +191,7 @@ void CCollision::step()
 					if (atkcol->Contains(pc))
 					{
 						auto& s = std::dynamic_pointer_cast<CShot>(shot);
-						pl->ApplyDamage(s->GetForce());
+						pl->hit(s);
 						s->kill();
 						break;
 					}

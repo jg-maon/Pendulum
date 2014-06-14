@@ -36,19 +36,19 @@ IEnemy("E_Bird")
 
 CBird::CBird(const mymath::Vec3f& pos) :
 IEnemy("E_Bird")
-, startPos_(pos)
 {
 	init();
 	obj_.pos = pos;
+	startPos_ = obj_.pos;
 }
 CBird::CBird(float x, float y, float z) :
 IEnemy("E_Bird")
-, startPos_(mymath::Vec3f(x, y, z))
 {
 	init();
 	obj_.pos.x = x;
 	obj_.pos.y = y;
 	obj_.pos.z = z;
+	startPos_ = obj_.pos;
 }
 
 CBird::~CBird()
@@ -240,8 +240,7 @@ void CBird::hit(const ObjPtr& rival)
 		mymath::Vec3f intersection;
 		intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
 		obj_.pos = intersection;
-		obj_.pos -= dist.Normalize();
-		
+		obj_.pos -= dist.Normalize() * 1.5f;
 	}
 }
 

@@ -91,7 +91,11 @@ void CPlayer::init()
 	attackRange_->g = 0.f;
 	attackRange_->b = 0.f;
 	isAttacking_ = false;
-	
+
+	//invincible_ = false;
+	invincibleTime_ = 0.f;
+	invincibleAnim_ = 0.f;
+
 	//----------------------------------
 	chainState_ = ChainState::HIDE;
 	chainTime_ = 0.f;
@@ -157,10 +161,9 @@ void CPlayer::key()
 		const auto& sm = CStageMng::GetPtr();
 		for(const auto& act : sm->actionPoints)
 		{
-			mymath::Vec3f tmp;
-			if(act->Contains(tmp,obj_.pos, mouse))
+			if(act->Contains(obj_.pos, mouse))
 			{
-				hangPoint_ = tmp;
+				hangPoint_ = act->IntersectionPoint2Nearest(obj_.pos, mouse);
 				gravityF_ = true;
 				tensionAcc_ = loadInfo_.TENSION;
 				isHanging_ = true;
@@ -392,9 +395,37 @@ void CPlayer::step()
 
 	// 移動処理
 	move();
+
+	//----------------------------------------
+	// 無敵
+	if (invincibleTime_ > 0.f)
+	{
+		// 点滅アニメ
+		invincibleAnim_ += system::ONEFRAME_TIME;
+		if (invincibleAnim_ >= loadInfo_.INV_TIME / 10.f)
+		{
+			invincibleAnim_ = 0.f;
+			if (obj_.alpha > 200.f)	
+				obj_.alpha = 150.f;		// 消す
+			else
+				obj_.alpha = 220.f;		// 出す
+		}
+		// 時間減少
+		invincibleTime_ -= system::ONEFRAME_TIME;
+		if (invincibleTime_ < 0.f)
+		{
+			// 無敵終了
+			obj_.alpha = 255.f;
+		}
+	}
+
 	//----------------------------------------
 	// 振り向き
-	obj_.scale.x = (velocity.x > 0.f) ? 1.f : -1.f;
+	//obj_.scale.x = (velocity.x > 0.f) ? 1.f : -1.f;
+	if (obj_.scale.x > 0.f && velocity.x < 0.f)
+		obj_.scale.x = -obj_.scale.x;
+	else if (obj_.scale.x < 0.f && velocity.x > 0.f)
+		obj_.scale.x = -obj_.scale.x;
 
 	// Chain文字
 #pragma region Chain文字
@@ -646,8 +677,11 @@ void CPlayer::hit(const ObjPtr& rival)
 		{
 			health_ = 0;
 			// ゲームオーバー
-			//kill();
-			
+			//kill();	
+		}
+		else
+		{
+			invincibleTime_ = loadInfo_.INV_TIME;
 		}
 	}
 }
@@ -666,6 +700,10 @@ bool CPlayer::isAttacking() const
 	return isAttacking_;
 }
 
+bool CPlayer::isInvincible() const
+{
+	return invincibleTime_ > 0.f;
+}
 
 void CPlayer::SetInfo(const LoadInfo& info)
 {
@@ -691,9 +729,10 @@ void CPlayer::SetHangPoint(const mymath::Vec3f& pos)
 	hangPoint_ = pos;
 }
 
-
+/*
 bool CPlayer::ApplyDamage(int dam)
 {
+	isHanging_ = false;
 	health_ -= dam;
 	if (health_ <= 0)
 	{
@@ -702,6 +741,7 @@ bool CPlayer::ApplyDamage(int dam)
 	}
 	return false;
 }
+//*/
 
 void CPlayer::ApplyAttack(const mymath::Vec3f& pos)
 {
@@ -756,20 +796,16 @@ void CPlayer::KilledEnemy()
 		}
 	}
 }
-//
-//Base::Collisions CPlayer::GetCollisionAreas()
-//{
-//	collisions_.clear();
-//
-//	mymath::Rectf rc;
-//	rc.left		= obj_.pos.x - 5.f;
-//	rc.top		= obj_.pos.y - 5.f;
-//	rc.right	= obj_.pos.x + 5.f;
-//	rc.bottom	= obj_.pos.y + 5.f;
-//	collisions_.push_back(mymath::ShapefPtr(new mymath::Rectf(rc)));
-//	
-//	return collisions_;
-//}
+
+Base::Collisions CPlayer::GetCollisionAreas()
+{
+	if (isInvincible())
+	{
+		// 無敵処理中は当たり判定を消す
+		return Base::Collisions();
+	}
+	return __super::GetCollisionAreas();
+}
 
 
 #pragma endregion // CPlayer methods

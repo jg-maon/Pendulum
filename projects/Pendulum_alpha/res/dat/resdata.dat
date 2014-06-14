@@ -46,14 +46,14 @@
 	se_explosion		res/snd/se/explosion.wav
 }
 
-//＿フォント＿管理名(font_でスタート)＿フォント名(全角スペースは'＿'を使う)＿サイズ
+//＿フォント＿管理名(font_でスタート)＿フォント名(スペースは'＿'、'_'を使う)＿サイズ
 #Font
 {
-	font_MSGOSICK30	MS＿ゴシック		30
-	font_MSGOSICK20	MS＿ゴシック		20
-	font_MSGOSICK10	MS＿ゴシック		10
+	font_MSGOSICK30	MS_ゴシック		30
+	font_MSGOSICK20	MS_ゴシック		20
+	font_MSGOSICK10	MS_ゴシック		10
 	font_POP30		HG創英角ﾎﾟｯﾌﾟ体	30
 	font_POP25		HG創英角ﾎﾟｯﾌﾟ体	25
 	font_POP12		HG創英角ﾎﾟｯﾌﾟ体	12
-	font_MSG15		MS＿ゴシック		15
+	font_MSG15		MS_ゴシック		15
 }

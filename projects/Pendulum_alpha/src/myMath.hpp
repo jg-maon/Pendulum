@@ -535,6 +535,38 @@ public:
 		@retval	false	していない
 	*/
 	virtual bool Contains(const Circle<T, T>& circ, bool fullContain = false, bool intersectOnly = false) const{ return false; }
+	
+	/*
+		@brief			頭形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+		完全内包と境界線交差は内包が優先される
+		@param	[in]	shape			判定する円
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
+		@retval	true	している
+		@retval	false	していない
+	*/
+	bool Contains(const std::shared_ptr<Shape<T>>& shape, bool fullContain = false, bool intersectOnly = false) const
+	{
+		const auto& id = typeid(*shape);
+		if (id == typeid(Circle<T,T>))
+		{
+			return Contains(*std::dynamic_pointer_cast<Circle<T,T>>(shape));
+		}
+		else if (id == typeid(Rect<T>))
+		{
+			return Contains(*std::dynamic_pointer_cast<Rect<T>>(shape));
+		}
+		else if (id == typeid(Polygon<T>))
+		{
+			return Contains(*std::dynamic_pointer_cast<Polygon<T>>(shape));
+		}
+		return false;
+	}
+
+
+
 #pragma endregion // Contains
 	//================================================================================
 
@@ -594,15 +626,14 @@ public:
 #pragma endregion // Intersection
 	//================================================================================
 
-#ifdef DEF_SHAPE_DRAW
 	/*
 		@brief	図形の描画
 		@param	[in]	color	線の色
 		@param	[in]	size	線の太さ
 		@return	なし
 	*/
-	virtual void draw(D3DCOLOR color = -1, int size = 1) const = 0{};
-#endif
+	virtual void draw(DWORD color = -1, int size = 1) const{};
+
 
 };
 typedef	Shape<int>		Shapei;

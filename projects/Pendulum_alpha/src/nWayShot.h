@@ -1,6 +1,11 @@
 #ifndef DEF_NWAYSHOT_H
 #define DEF_NWAYSHOT_H
 
+#ifdef _DEBUG
+#define DEF_SHAPE_DRAW
+#endif
+
+
 #ifndef DEF_ATTACKBASE_HPP
 #include "attackBase.hpp"
 #endif
@@ -61,6 +66,14 @@ public:
 	virtual void draw() override
 	{
 		obj_.draw();
+#ifdef DEF_SHAPE_DRAW
+		const auto& cols = GetCollisionAreas();
+		for (const auto& col : cols)
+		{
+			col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
+			col->draw();
+		}
+#endif
 	}
 	virtual void hit(const ObjPtr& rival) override
 	{

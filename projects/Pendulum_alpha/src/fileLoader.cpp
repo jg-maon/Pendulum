@@ -148,7 +148,8 @@ void CFileLoader::LoadFont(ifstream& resF, FontTable& fontTable)
 		int size;
 		data.resname = buf;
 		resF >> data.path >> std::dec >> size;
-		data.path = common::StrReplace(data.path, "ÅQ", "");
+		data.path = common::StrReplace(data.path, "ÅQ", "Å@");
+		data.path = common::StrReplace(data.path, "_", " ");
 		font::Draw_CreateFont(i, size, data.path.c_str());
 		fontTable.insert(std::unordered_map<std::string, int>::value_type(data.resname, i));
 		i++;
@@ -359,6 +360,10 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	if (success && (success = FindChunk(SeekSet(f), "#ChainTime")))
 	{
 		f >> lf.CHAIN_TIME[0] >> lf.CHAIN_TIME[1];
+	}
+	if (success && (success = FindChunk(SeekSet(f), "#InvincibleTime")))
+	{
+		f >> lf.INV_TIME;
 	}
 
 	if (success)

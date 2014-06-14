@@ -24,3 +24,4 @@
 
 #ChainTime	1.0	2.0
 //#MaxChain	999
+#InvincibleTime	1.0

@@ -37,14 +37,6 @@ public:
 	virtual void hit(const ObjPtr& rival){__super::hit(rival);}
 
 
-	/*
-		@brief	ダメージ加算
-		@param	[in]	dam	ダメージ量
-		@return 死亡したか
-		@retval	true	死亡
-		@retval	false	残存
-	*/
-	virtual bool ApplyDamage(int dam) = 0{ return true; }
 
 	/*
 		@brief	当たり判定領域の取得

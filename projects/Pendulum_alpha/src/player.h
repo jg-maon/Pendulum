@@ -32,6 +32,8 @@ public:
 		float MAX_VX;			// 水平方向の最大速度(ゲームとして成り立つバランス調整用)
 		float MAX_VY;			// 鉛直方向の最大速度(ゲームとして成り立つバランス調整用)
 		float CHAIN_TIME[2];	// Chain猶予時間
+		
+		float INV_TIME;			// 無敵時間
 	};
 private:
 	enum MotionType		// モーション番号
@@ -56,18 +58,23 @@ private:
 
 	static const float CHAIN_TIME[2];	// Chain猶予時間
 	//*/
-	LoadInfo loadInfo_;			// ファイルから取得する可変値
-
-	float gravity_;				// 重力
-	bool gravityF_;				// 重力処理をするか(壁に刺さってる時などの処理用)
-	float tensionAcc_;			// 張力の加速度
-	float hangAcc_;				// ぶら下がっている時の振り子運動の加速度
 	
-	bool isHanging_;			// ぶら下がっているか
+	LoadInfo loadInfo_;					// ファイルから取得する可変値
+
+	float gravity_;						// 重力
+	bool gravityF_;						// 重力処理をするか(壁に刺さってる時などの処理用)
+	float tensionAcc_;					// 張力の加速度
+	float hangAcc_;						// ぶら下がっている時の振り子運動の加速度
+	
+	bool isHanging_;					// ぶら下がっているか
 	mymath::Vec3f hangPoint_;			// ぶら下がっている支点
 		
-	charabase::CharPtr attackRange_;		// 攻撃範囲
-	bool isAttacking_;			// 攻撃中か
+	charabase::CharPtr attackRange_;	// 攻撃範囲
+	bool isAttacking_;					// 攻撃中か
+
+	//bool invincible_;					// 無敵中か
+	float invincibleTime_;				// 無敵時間
+	float invincibleAnim_;				// 無敵点滅アニメーション時間
 
 	enum class ChainState				// Chain文字画像表示状態
 	{
@@ -90,8 +97,6 @@ private:
 
 	//--------------------------------------------------
 
-public:
-	//const bool& isHanging;		// ぶら下がり中(ActionPoint判定するか)
 private:
 	/*
 		@brief	情報の初期化
@@ -155,6 +160,14 @@ public:
 	bool isAttacking() const;
 
 	/*
+		@brief	無敵中か取得
+		@return	無敵中か
+		@retval	true	無敵中
+		@retval	false	無敵中でない
+	*/
+	bool isInvincible() const;
+
+	/*
 		@brief	プレイヤー情報初期化
 		@param	[in]	info	ロードしてきた情報一覧
 		@return	なし
@@ -175,7 +188,7 @@ public:
 		@retval	true	死亡
 		@retval	false	残存
 	*/
-	bool ApplyDamage(int dam) override;
+	//bool ApplyDamage(int dam) override;
 	
 	/*
 		@brief	攻撃
@@ -194,7 +207,7 @@ public:
 		@brief	当たり判定領域の取得
 		@return	当たり判定領域
 	*/
-	//virtual Collisions GetCollisionAreas() override;
+	virtual Collisions GetCollisionAreas() override;
 
 
 };
