@@ -36,19 +36,19 @@ IEnemy("E_Bird")
 
 CBird::CBird(const mymath::Vec3f& pos) :
 IEnemy("E_Bird")
-, startPos_(pos)
 {
-	init();
+	gm()->GetData(*this);
 	obj_.pos = pos;
+	init();
 }
 CBird::CBird(float x, float y, float z) :
 IEnemy("E_Bird")
-, startPos_(mymath::Vec3f(x, y, z))
 {
-	init();
+	gm()->GetData(*this);
 	obj_.pos.x = x;
 	obj_.pos.y = y;
 	obj_.pos.z = z;
+	init();
 }
 
 CBird::~CBird()
@@ -60,8 +60,8 @@ CBird::~CBird()
 void CBird::init()
 {
 	using common::FindChunk;
-	
-	gm()->GetData(*this);
+
+	startPos_ = obj_.pos;
 
 	elapsedTime_ = 0.f;
 	nextActTime_ = 0.f;

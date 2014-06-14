@@ -24,7 +24,7 @@ bool Anim::step()
 	if ((cnt += speed) >= 1.f)
 	{
 		cnt = 0.f;
-		if (++no >= max)
+		if (++no > max)
 		{
 			no = 0;
 			return true;

@@ -13,8 +13,12 @@
 #include "MyMath.hpp
 #endif
 
-#ifndef DEF_NWAYSHOT_T
+#ifndef DEF_NWAYSHOT_H
 #include "nWayShot.h"
+#endif
+
+#ifndef DEF_NWAYSING_H
+#include "nWaySing.h"
 #endif
 
 #include <memory>
@@ -91,6 +95,28 @@ public:
 				shot.LoadCollisions(f);
 				attack_ = AttackPtr(new CNWayShot(shot));
 			}
+		}
+		else if (buf == "NWaySing")
+		{
+			f >> buf;
+			if (buf != "{") return f.eof();
+			else
+			{
+				charabase::CharBase sing_info;
+				f >> buf;	// Imgラベル読み飛ばし
+				f >> sing_info.resname;
+
+				f >> buf;	// Widthラベル読み飛ばし
+				LoadValue(f, obj_, sing_info.size.x);
+				f >> buf;	// Heightラベル読み飛ばし
+				LoadValue(f, obj_, sing_info.size.y);
+
+				CSing sing(sing_info);
+				f >> buf;	// 当たり判定ラベル読み飛ばし
+				sing.LoadCollisions(f);
+				attack_ = AttackPtr(new CNWaySing(sing));
+			}
+
 		}
 		
 		return f.eof();

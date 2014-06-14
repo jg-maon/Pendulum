@@ -5,7 +5,15 @@
 #include "Obj.h"
 #endif
 
+#ifndef DEF_ENEMYBASE_HPP
 #include "enemyBase.hpp"
+#endif
+
+//==================================
+// “G
+#include "bird.h"
+#include "fairy.h"
+//==================================
 
 class CEnemyMng : public Base
 {

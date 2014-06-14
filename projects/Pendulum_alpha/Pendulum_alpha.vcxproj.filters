@@ -129,6 +129,12 @@
     <Filter Include="ソース ファイル\Obj">
       <UniqueIdentifier>{c82f6ad0-e58f-4c88-b325-99f3bc36082b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy\Fairy">
+      <UniqueIdentifier>{3f616823-932b-492f-8036-31d5e80f3875}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack\nWaySing">
+      <UniqueIdentifier>{0edc79da-6b5d-4980-be6b-2315d4fd00f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -308,6 +314,12 @@
     <ClInclude Include="src\fileLoader.h">
       <Filter>ソース ファイル\FileManager\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="src\fairy.h">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Fairy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nWaySing.h">
+      <Filter>ソース ファイル\InGame\Attack\nWaySing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -424,6 +436,12 @@
     <ClCompile Include="src\fileLoader.cpp">
       <Filter>ソース ファイル\FileManager\Loader</Filter>
     </ClCompile>
+    <ClCompile Include="src\fairy.cpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Fairy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nWaySing.cpp">
+      <Filter>ソース ファイル\InGame\Attack\nWaySing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\dat\resdata.dat">
@@ -452,6 +470,9 @@
     </Text>
     <Text Include="res\dat\main\player.txt">
       <Filter>リソース ファイル\Main</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\fairy.txt">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

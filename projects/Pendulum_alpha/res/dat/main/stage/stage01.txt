@@ -22,7 +22,7 @@ enemyTable01.txt
 3583	3142	101
 }
 
-ActionPolygon
+#ActionPolygon
 {
 4
 1070	1734

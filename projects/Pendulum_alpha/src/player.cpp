@@ -634,8 +634,8 @@ void CPlayer::hit(const ObjPtr& rival)
 		intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
 		obj_.pos = intersection;
 		obj_.pos -= dist.Normalize() * 1.5f;
-		// Žh‚³‚Á‚Ä‚é‚Ì‚Åƒtƒ‰ƒO‚ðÜ‚é
-		gravityF_ = false;
+		
+		//gravityF_ = false;
 		//isHanging_ = false;
 	}
 	else if(rival->FindName("Atk_"))

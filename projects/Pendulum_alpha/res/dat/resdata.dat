@@ -27,7 +27,9 @@
 	img_player		res/gra/main/character/player.png				0xff00ff00
 	img_bird		res/gra/main/character/enemy/bird/bird.png		0xff000000
 	img_birdShot	res/gra/main/character/enemy/bird/birdShot.png	0xff000000
-
+	
+	img_fairy		res/gra/main/character/enemy/fairy/fairy.png	0xff000000
+	img_fairySing	res/gra/main/character/enemy/fairy/fairySing.png	0xff000000
 
 }
 
