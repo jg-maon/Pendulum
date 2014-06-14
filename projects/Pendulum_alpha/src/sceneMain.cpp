@@ -27,7 +27,7 @@ CSceneMain::~CSceneMain()
 // 描画
 void CSceneMain::draw()
 {
-	//Draw_FontText(100,200,0.5f,"メイン画面",-1,0);
+	// 何もしない(ステージマネージャーのdrawに任せ
 }
 
 // 処理

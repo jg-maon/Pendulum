@@ -189,6 +189,7 @@
     <Text Include="res\dat\main\enemy\enemies.txt" />
     <Text Include="res\dat\main\enemy\enemyTable01.txt" />
     <Text Include="res\dat\main\enemy\enemyTable02.txt" />
+    <Text Include="res\dat\main\player.txt" />
     <Text Include="res\dat\main\stage\stage01.txt" />
     <Text Include="res\dat\main\stage\stage02.txt" />
     <Text Include="res\dat\main\stage\stage03.txt" />

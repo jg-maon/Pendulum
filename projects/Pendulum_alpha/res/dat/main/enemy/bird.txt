@@ -1,7 +1,5 @@
 読み込み画像	画像管理名
 #Img		img_bird
-		
-		
 
 画像サイズ	幅	高さ	※整数のみ
 #Size		128	128
@@ -13,7 +11,7 @@
 #Circle	0	0	halfWidth
 
 ポリゴン	頂点数	相対座標X1 相対座標Y1	X2 Y2……
-#Polygon	3	-10 -10		10 -10		5 10	
+//#Polygon	3	-10 -10		10 -10		5 10	
 
 四角(そのうちPolygonに吸収)	左	上	右	下座標
 //#Rect	-halfWidth	-halfHeight	halfWidth	halfHeight
@@ -33,3 +31,14 @@
 }
 
 }
+
+
+//==================================================
+
+#SearchRange	500.0
+#ChaseRange		300.0		
+#AttackRange	100.0
+#ReturnRange	3.0
+#MoveSpeed		100.0
+
+

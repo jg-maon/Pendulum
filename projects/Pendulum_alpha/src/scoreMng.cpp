@@ -5,12 +5,13 @@
 #include <algorithm>	// sort
 #include <functional>	// greater
 
-std::string CScoreMng::rankingFile;
+#include "gameManager.h"
 
 CScoreMng::CScoreMng():
 Base("ScoreMng")
 , score_(0)
 {
+	std::string rankingFile = gm()->fm().GetFile("#RankingFile");
 	// ƒ‰ƒ“ƒLƒ“ƒOî•ñ“Ç‚Ýž‚Ý
 	ranking_.clear();
 	ranking_.reserve(RANK_NUM + 1);
@@ -57,6 +58,7 @@ int CScoreMng::score() const
 
 void CScoreMng::RegisterRanking(const std::string& name)
 {
+	std::string rankingFile = gm()->fm().GetFile("#RankingFile");
 	Ranking tmp = { name, score_ };
 	ranking_.push_back(tmp);
 

@@ -2,10 +2,6 @@
 #include "../../../lib/gplib.h"
 #include "common.h"
 
-#include "scoreMng.h"
-#include "enemyMng.h"
-#include "stageMng.h"
-#include "sceneStageSelect.h"
 
 
 #include <unordered_map>		// Fontテーブル用
@@ -37,6 +33,7 @@ void LoadFont(ifstream&);
 // OnCreateより呼ばれるsetting準備
 void OnCreateSetup()
 {
+	/*
 	ifstream iniF("res/dat/path.ini");
 	if (iniF.fail())
 	{
@@ -50,31 +47,7 @@ void OnCreateSetup()
 	{
 		LoadRes(iniF);
 	}
-	//------------------------------
-	// ランキングファイルパス読み込み
-	if (common::FindChunk(common::SeekSet(iniF), "#RankingFile"))
-	{
-		iniF >> CScoreMng::rankingFile;
-	}
-	//------------------------------
-	// ステージファイルパス読み込み
-	if (common::FindChunk(common::SeekSet(iniF), "#StageFile"))
-	{
-		iniF >> CStageMng::stageFile;
-	}
-	//------------------------------
-	// 敵テーブルファイルパス読み込み
-	if (common::FindChunk(common::SeekSet(iniF), "#EnemyTableFile"))
-	{
-		iniF >> CEnemyMng::enemyTableFile;
-	}
-
-	//------------------------------
-	// ステージセレクトファイルパス読み込み
-	if (common::FindChunk(common::SeekSet(iniF), "#StageSelectFile"))
-	{
-		iniF >> CSceneStageSelect::settingFile;
-	}
+	//*/
 }
 
 #pragma region リソースファイル読み込み

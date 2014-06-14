@@ -1,6 +1,5 @@
 #include "fileMng.h"
 
-#include "fileLoader.h"
 
 #include "player.h"
 #include "enemyBase.hpp"
@@ -8,24 +7,26 @@
 
 #include <fstream>
 
-CFileMng::CFileMng()
+CFileMng::CFileMng(const std::string& iniFile):
+iniFile_(iniFile)
+, fileLoader_(iniFile_)
 {
 	fontTable_.clear();
 	dataTable_.clear();
+	fileLoader_.Load(fontTable_);
 }
 
-void CFileMng::Load(const std::string& iniFile)
+void CFileMng::Load()
 {
 	//fontTable_.clear
-	CFileLoader fl(iniFile, fontTable_);
 
 	// プレイヤー
-	std::shared_ptr<CPlayer> player;
-	fl.LoadPlayerData(*player);
+	auto player = std::shared_ptr<CPlayer>(new CPlayer());
+	fileLoader_.LoadPlayerData(*player);
 	
 	// 敵
 	std::vector<EnemyPtr> enemies;
-	fl.LoadEnemiesData(enemies);
+	fileLoader_.LoadEnemiesData(enemies);
 
 	//=====================================
 	// 配列代入
@@ -37,4 +38,10 @@ void CFileMng::Load(const std::string& iniFile)
 	// 敵
 	for (auto& enemy : enemies)
 		dataTable_.push_back(enemy);
+}
+
+
+std::string CFileMng::GetFile(const std::string& tag) const
+{
+	return fileLoader_.GetFile(tag);
 }

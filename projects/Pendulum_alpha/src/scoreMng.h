@@ -53,8 +53,6 @@ private:
 		}
 	};
 	std::vector<Ranking> ranking_;		// ランキング
-public:
-	static std::string rankingFile;		// ランキングファイルパス名
 
 public:
 	/*

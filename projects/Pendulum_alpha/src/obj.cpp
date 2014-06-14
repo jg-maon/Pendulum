@@ -112,7 +112,6 @@ void IObject::obj(const charabase::CharBase& o)
 
 IColObject::IColObject(const std::string& name):
 	IObject(name)
-	,collisions(collisions_)
 {
 }
 
@@ -212,6 +211,10 @@ void IColObject::SetCollisionAreas(const Base::Collisions& collisions)
 	collisions_ = collisions;
 }
 
+void IColObject::SetCollisionAreas(const IColObject& obj)
+{
+	collisions_ = obj.collisions_;
+}
 #pragma endregion // IColObject methods
 
 

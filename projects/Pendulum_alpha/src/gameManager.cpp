@@ -11,11 +11,12 @@ mymath::Recti* CGameManager::winRect_ = nullptr;
 
 CGameManager::CGameManager() :
 showCursor_(false)
+, fileMng_("res/dat/path.ini")
 //, cursorAnim_(360.f,10.f)
 {
 	ShowCursor(showCursor_ == true);
 	init();
-	fileMng_.Load("res/dat/path.ini");
+	fileMng_.Load();
 	cursor_ = charabase::CharPtr(new charabase::CharBase(
 		mymath::Vec3f(), mymath::Vec3f(),
 		"img_cursor",
@@ -282,6 +283,11 @@ mymath::Vec3f CGameManager::GetPlayerPos() const
 		}
 	}
 	return v;
+}
+
+CFileMng& CGameManager::fm()
+{
+	return fileMng_;
 }
 
 

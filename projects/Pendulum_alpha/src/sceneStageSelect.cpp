@@ -11,7 +11,6 @@
 #include <iomanip>
 #include <sstream>
 
-std::string CSceneStageSelect::settingFile;
 
 //======================================
 // CSceneStageSelect methods
@@ -20,6 +19,7 @@ std::string CSceneStageSelect::settingFile;
 CSceneStageSelect::CSceneStageSelect() :
 IScene("img_stageSelect", "bgm_stageSelect")
 {
+	std::string settingFile = gm()->fm().GetFile("#StageSelectFile");
 	std::ifstream f(settingFile);
 	back_ = charabase::CharPtr(new charabase::CharBase());
 	back_->resname = BACK_RESNAME;

@@ -11,7 +11,6 @@
 #include <sstream>
 #include <fstream>
 
-std::string CStageMng::stageFile;
 
 using std::ifstream;
 using common::FindChunk;
@@ -183,7 +182,8 @@ void CStageMng::draw()
 
 void CStageMng::LoadStage(const std::string& stageName)
 {
-	std::string file = common::StrReplace(stageFile, "STAGENAME", stageName);
+
+	std::string file = common::StrReplace(gm()->fm().GetFile("#StageFile"), "STAGENAME", stageName);
 	ifstream f(file);
 	if (f.fail())
 	{

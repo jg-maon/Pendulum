@@ -168,9 +168,7 @@ template<class T>	bool IObject::LoadValue(std::ifstream& f, const charabase::Cha
 class IColObject : public IObject
 {
 protected:
-	Collisions collisions_;		// 当たり判定領域
-public:
-	const Collisions& collisions;	// 画像当たり判定領域
+	Collisions collisions_;		// 画像当たり判定領域
 protected:
 	/*
 		@brief	当たり判定領域の削除
@@ -197,17 +195,25 @@ public:
 	bool LoadCollisions(std::ifstream& f);
 
 	/*
-		@brief	当たり判定領域の取得
-		@return	当たり判定領域
+		@brief	ワールド座標の当たり判定領域の取得
+		@return	ワールド座標の当たり判定領域
 	*/
 	virtual Collisions GetCollisionAreas() const;
 
 	/*
-		@brief	当たり判定領域の代入
-		@param	[in]	collisions	新しい当たり判定領域
+		@brief	ローカル座標の当たり判定領域の代入
+		@param	[in]	collisions	新しいローカル当たり判定領域
 		@return	なし
 	*/
 	void SetCollisionAreas(const Collisions& collisions);
+
+	/*
+		@brief	ローカル座標の当たり判定領域の代入
+		@param	[in]	obj	新しい当たり判定領域を持ったオブジェクト
+		@return	なし
+	*/
+	void SetCollisionAreas(const IColObject& obj);
+
 };
 
 

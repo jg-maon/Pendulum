@@ -1,0 +1,26 @@
+
+#Img	img_player
+
+#Size	128		128
+
+#Collision
+{
+
+#Rect	-5	-5	5	5
+
+}
+
+
+
+//===========================================================-
+
+#GravityAcc		25.0
+#MaxGravity		100.0
+#Tension		1500.0
+#DownTension	0.85
+#DownSpeed		0.92
+#MaxVelocityX	2500.0
+#MaxVelocityY	1500.0
+
+#ChainTime	1.0	2.0
+//#MaxChain	999

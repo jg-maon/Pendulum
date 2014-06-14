@@ -13,10 +13,6 @@
 #include "MyMath.hpp
 #endif
 
-#ifndef DEF_DEFINE_H
-#include "define.h"
-#endif
-
 #ifndef DEF_NWAYSHOT_T
 #include "nWayShot.h"
 #endif
@@ -31,8 +27,6 @@ class IEnemy : public ICharacter
 {
 protected:
 	AttackPtr attack_;							// UŒ‚è’i
-public:
-	const AttackPtr& attack;
 protected:
 	
 public:
@@ -44,7 +38,6 @@ public:
 	*/
 	IEnemy(const std::string& name):
 		ICharacter(name)
-		,attack(attack_)
 	{}
 	virtual ~IEnemy() = 0{}
 	virtual void step() = 0{}
@@ -102,6 +95,12 @@ public:
 		
 		return f.eof();
 	}
+
+	/*
+		@brief	UŒ‚è’i‚Ìæ“¾
+		@return	UŒ‚è’i
+	*/
+	const AttackPtr& getAttack() const{ return attack_; }
 
 };
 typedef std::shared_ptr<IEnemy> EnemyPtr;

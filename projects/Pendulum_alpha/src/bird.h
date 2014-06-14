@@ -28,13 +28,12 @@ private:
 	};
 
 private:
-	static const float SEARCH_RANGE;		// 索敵範囲(現在座標からどれだけ策敵するか)
+	/*static const float SEARCH_RANGE;		// 索敵範囲(現在座標からどれだけ策敵するか)
 	static const float CHASE_RANGE;			// 追跡範囲(初期座標からどれだけ追跡するか)
 	static const float ATTACK_RANGE;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
 	static const float RETURN_RANGE;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
-	
 	static const float MOVE_SPEED;			// 移動速度
-	
+	//*/
 	static void (CBird::*StateStep_[])();	// 状態によるstep処理
 
 	LoadInfo loadInfo_;
@@ -46,7 +45,16 @@ private:
 	float nextActTime_;				// 次に行動を起こす時間
 		
 	/*const*/ mymath::Vec3f startPos_;			// 初期座標(追跡後元に戻る場所)
-
+public:
+	/*CBird& operator=(const CBird& obj)
+	{
+		if (this != &obj) return *this;
+		loadInfo_ = obj.loadInfo_;
+		state_ = obj.state_;
+		elapsedTime_ = obj.elapsedTime_;
+		nextActTime_ = obj.nextActTime_;
+	}
+	//*/
 private:
 
 	/*

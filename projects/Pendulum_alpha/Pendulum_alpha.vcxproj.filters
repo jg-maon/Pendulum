@@ -123,6 +123,12 @@
     <Filter Include="リソース ファイル\Main\Enemy">
       <UniqueIdentifier>{ef6626fa-1c6d-403d-b320-141c58da6bf7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Main\Stage">
+      <UniqueIdentifier>{e7164ffd-9661-4c9f-9097-2b7c48edcaf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main\E_Table">
+      <UniqueIdentifier>{2804bd9f-f1d3-4b06-ac7f-9a406c82d7d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -423,26 +429,29 @@
     <Text Include="res\dat\resdata.dat">
       <Filter>リソース ファイル</Filter>
     </Text>
-    <Text Include="res\dat\main\enemy\enemyTable01.txt">
-      <Filter>リソース ファイル\Main</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\enemyTable02.txt">
-      <Filter>リソース ファイル\Main</Filter>
-    </Text>
-    <Text Include="res\dat\main\stage\stage01.txt">
-      <Filter>リソース ファイル\Main</Filter>
-    </Text>
-    <Text Include="res\dat\main\stage\stage03.txt">
-      <Filter>リソース ファイル\Main</Filter>
-    </Text>
-    <Text Include="res\dat\main\stage\stage02.txt">
-      <Filter>リソース ファイル\Main</Filter>
-    </Text>
     <Text Include="res\dat\main\enemy\bird.txt">
       <Filter>リソース ファイル\Main\Enemy</Filter>
     </Text>
     <Text Include="res\dat\main\enemy\enemies.txt">
       <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage01.txt">
+      <Filter>リソース ファイル\Main\Stage</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage02.txt">
+      <Filter>リソース ファイル\Main\Stage</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage03.txt">
+      <Filter>リソース ファイル\Main\Stage</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\enemyTable02.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\enemyTable01.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\player.txt">
+      <Filter>リソース ファイル\Main</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

@@ -30,17 +30,17 @@
 
 #include "common.h"
 
+/*
 const float CPlayer::GRAVITY_ACC = 25.f;	// 最大重力速度
 const float CPlayer::MAX_G = 100.f;			// 重力加速度
 const float CPlayer::TENSION = 1500.f;		// フックの張力(初速)
 const float CPlayer::DOWN_TENSION = 0.85f;	// 張力減速率
-const float CPlayer::DOWNSP = 0.92f;		// 移動減速率(1-DOWNSP)
-const float CPlayer::MAX_VY = 1500.f;		// 水平方向の最大速度(ゲームとして成り立つバランス調整用)
+const float CPlayer::DOWN_SPEED = 0.92f;		// 移動減速率(1-DOWN_SPEED)
 const float CPlayer::MAX_VX = 2500.f;		// 鉛直方向の最大速度(ゲームとして成り立つバランス調整用)
+const float CPlayer::MAX_VY = 1500.f;		// 水平方向の最大速度(ゲームとして成り立つバランス調整用)
 
 const float CPlayer::CHAIN_TIME[2] = {1.0f,2.0f};	// Chain猶予時間[0]:1体目から2体目まで [1]:それ以降
-const int CPlayer::MAX_CHAIN = 999;		// 最高Chain数
-
+//*/
 
 #pragma region CPlayer methods
 
@@ -161,7 +161,7 @@ void CPlayer::key()
 	#ifdef D_ACT_TEST
 		hangPoint_ = mouse;
 		gravityF_ = true;
-		tensionAcc_ = TENSION;
+		tensionAcc_ = loadInfo_.TENSION;
 		isHanging_ = true;
 	#else
 		const auto& sm = CStageMng::GetPtr();
@@ -172,7 +172,7 @@ void CPlayer::key()
 			{
 				hangPoint_ = tmp;
 				gravityF_ = true;
-				tensionAcc_ = TENSION;
+				tensionAcc_ = loadInfo_.TENSION;
 				isHanging_ = true;
 				
 				break;
@@ -273,7 +273,7 @@ void CPlayer::move()
 #ifndef D_MOVE_TEST
 		obj_.Move();
 #endif
-		velocity *= DOWNSP;
+		velocity *= loadInfo_.DOWN_SPEED;
 	}
 #ifdef D_LOG_TEST
 	POINT p = { (LONG)obj_.pos.x,
@@ -296,10 +296,10 @@ void CPlayer::move()
 	if(gravityF_)
 	{
 		obj_.src.y = MotionType::FALL;
-		gravity_ += GRAVITY_ACC;
-		if(gravity_ >= MAX_G)
+		gravity_ += loadInfo_.GRAVITY_ACC;
+		if(gravity_ >= loadInfo_.MAX_G)
 		{
-			gravity_ = MAX_G;
+			gravity_ = loadInfo_.MAX_G;
 		}
 		velocity.y += gravity_;
 	}
@@ -315,7 +315,7 @@ void CPlayer::move()
 		float angle = std::atan2f(dist.y,dist.x);
 		mymath::Vec3f tensionForce = mymath::Vec3f::Rotate(angle) * tensionAcc_;
 		velocity += tensionForce;
-		tensionAcc_ *= DOWN_TENSION;
+		tensionAcc_ *= loadInfo_.DOWN_TENSION;
 #ifdef _DEBUG
 		if(mymath::PYTHA(velocity.x,velocity.y) > mymath::PYTHA(vel_log.x,vel_log.y))
 			vel_log = velocity;
@@ -327,10 +327,10 @@ void CPlayer::move()
 			hangAcc_ = 0.f;
 			obj_.velocity = 0.f;
 			}*/
-			hangAcc_ += GRAVITY_ACC;
-			if (hangAcc_ > MAX_G)
+			hangAcc_ += loadInfo_.GRAVITY_ACC;
+			if (hangAcc_ > loadInfo_.MAX_G)
 			{
-				hangAcc_ = MAX_G;
+				hangAcc_ = loadInfo_.MAX_G;
 			}
 
 			if (mymath::PYTHA(dist.x, dist.y) > mymath::POW2(min_radius))
@@ -373,13 +373,13 @@ void CPlayer::move()
 	}
 	//----------------------------------------
 	// 移動速度制限
-	if(velocity.x >= MAX_VX)
+	if(velocity.x >= loadInfo_.MAX_VX)
 	{
-		velocity.x = MAX_VX;
+		velocity.x = loadInfo_.MAX_VX;
 	}
-	if(velocity.y >= MAX_VY)
+	if(velocity.y >= loadInfo_.MAX_VY)
 	{
-		velocity.y = MAX_VY;
+		velocity.y = loadInfo_.MAX_VY;
 	}
 	// ステージ座標制限
 	{
@@ -639,7 +639,7 @@ void CPlayer::hit(const ObjPtr& rival)
 	{
 		// めり込み補正,通過補正
 		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);
-		mymath::Vec3f dist = obj_.pos - prePos;
+		mymath::Vec3f dist = obj_.pos - prePos_;
 		mymath::Vec3f intersection;
 		intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
 		obj_.pos = intersection;
@@ -679,16 +679,18 @@ bool CPlayer::isAttacking() const
 
 void CPlayer::SetInfo(const LoadInfo& info)
 {
-	//MAX_G = info.MAX_G;
-	//GRAVITY_ACC = info.GRAVITY_ACC;
-	//TENSION = info.TENSION;
-	//DOWN_TENSION = info.DOWN_TENSION;
-	//DOWNSP = info.DOWNSP;
-	//MAX_VX = info.MAX_VX;
-	//MAX_VY = info.MAX_VY;
-	//for (int i = 0; i < arrayof(info.CHAIN_TIME); ++i)
-	//	CHAIN_TIME[i] = info.CHAIN_TIME[i];
-	//MAX_CHAIN = info.MAX_CHAIN;
+	/*
+	MAX_G = info.MAX_G;
+	GRAVITY_ACC = info.GRAVITY_ACC;
+	TENSION = info.TENSION;
+	DOWN_TENSION = info.DOWN_TENSION;
+	DOWN_SPEED = info.DOWN_SPEED;
+	MAX_VX = info.MAX_VX;
+	MAX_VY = info.MAX_VY;
+	for (int i = 0; i < arrayof(info.CHAIN_TIME); ++i)
+		CHAIN_TIME[i] = info.CHAIN_TIME[i];
+	MAX_CHAIN = info.MAX_CHAIN;
+	//*/
 
 	loadInfo_ = info;
 }
@@ -735,12 +737,12 @@ void CPlayer::KilledEnemy()
 	if(chainTime_ > 0.f)
 	{
 		// Chain中
-		chainTime_ = CHAIN_TIME[1];
+		chainTime_ = loadInfo_.CHAIN_TIME[1];
 	}
 	else
 	{
 		// 初期Kill
-		chainTime_ = CHAIN_TIME[0];
+		chainTime_ = loadInfo_.CHAIN_TIME[0];
 	}
 	chainCnt_++;
 	if(chainCnt_ > MAX_CHAIN)

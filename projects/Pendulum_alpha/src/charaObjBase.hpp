@@ -17,15 +17,13 @@ protected:
 	int power_;					// 攻撃力
 
 	mymath::Vec3f prePos_;				// 1フレーム前の座標
-public:
-	const mymath::Vec3f& prePos;		// 1フレーム前座標
+
 public:
 	ICharacter(const std::string& name):
 		IColObject(name)
 		,health_(1)
 		,power_(0)
 		,prePos_(obj_.pos)
-		,prePos(prePos_)
 	{}
 	~ICharacter() = 0{}
 	/*
@@ -59,6 +57,12 @@ public:
 		@return	補正後の攻撃力
 	*/
 	virtual int getPower() const {return power_;}
+
+	/*
+		@brief	1フレーム前座標の取得
+		@return	1フレーム前の座標
+	*/
+	const mymath::Vec3f& prePos() const{ return prePos_; }
 };
 
 #endif

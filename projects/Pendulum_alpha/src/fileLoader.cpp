@@ -8,34 +8,29 @@ using namespace gplib;
 
 #include "player.h"
 
+
+#include "scoreMng.h"
+#include "enemyMng.h"
+#include "stageMng.h"
+#include "sceneStageSelect.h"
+
 #include <string>
 #include <fstream>
+
+#include "fileLoader.h"
+
 
 CFileLoader::CFileLoader(const std::string& iniFile) :
 iniFile_(iniFile)
 {
-	std::ifstream iniF(iniFile);
-	if (iniF.fail())
-	{
-		gplib::debug::BToM("CFileLoader::CFileLoader iniFpath:%s", iniFile.c_str());
-	}
-	else
-	{
-		if (common::FindChunk(iniF, "#ResourceFile"))
-		{
-			std::string resFile;
-			iniF >> resFile;
-			LoadRes(resFile, FontTable());
-		}
-	}
+	
 }
-CFileLoader::CFileLoader(const std::string& iniFile, FontTable& fontTable) :
-iniFile_(iniFile)
+void CFileLoader::Load(FontTable& fontTable)
 {
-	std::ifstream iniF(iniFile);
+	std::ifstream iniF(iniFile_);
 	if (iniF.fail())
 	{
-		gplib::debug::BToM("CFileLoader::CFileLoader iniFpath:%s", iniFile.c_str());
+		gplib::debug::BToM("CFileLoader::CFileLoader iniFpath:%s", iniFile_.c_str());
 	}
 	else
 	{
@@ -177,6 +172,7 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	}
 	// 情報ロード用
 	CBird tmp;
+	CBird::LoadInfo lf;
 	charabase::CharBase cb;
 	// ファイルから情報を抜き取る際のタグ検索用
 	bool success;
@@ -189,6 +185,8 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	// }みたいな感じ
 
 	//-----------------------------------------------
+	// 画像情報
+	//-----------------------------------------------
 	// 画像管理名
 	if (success = FindChunk(SeekSet(eneF), "#Img"))
 	{
@@ -200,6 +198,15 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 		eneF >> cb.size.x;
 		eneF >> cb.size.y;
 	}
+	//-----------------------------------------------
+	if (success)
+	{
+		// 画像情報設定
+		tmp.obj(cb);
+	}
+	//-----------------------------------------------
+	// クラス情報
+	//-----------------------------------------------
 	// 当たり判定
 	if (success && (success = FindChunk(SeekSet(eneF), "#Collision")))
 	{
@@ -210,13 +217,37 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	{
 		tmp.LoadAttack(eneF);
 	}
+	//-------------------------------------
+	// 範囲系
+	if (success && (success = FindChunk(SeekSet(eneF), "#SearchRange")))
+	{
+		eneF >> lf.SEARCH_RANGE;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#ChaseRange")))
+	{
+		eneF >> lf.CHASE_RANGE;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#AttackRange")))
+	{
+		eneF >> lf.ATTACK_RANGE;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#ReturnRange")))
+	{
+		eneF >> lf.RETURN_RANGE;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#MoveSpeed")))
+	{
+		eneF >> lf.MOVE_SPEED;
+	}
+	//-------------------------------------
 
 	if (success)
 	{
 		//-----------------------------------------------
 		// 全ての情報が正しく読み込めた際のみここに入る
-		// 画像情報設定
-		tmp.obj(cb);
+		// パラメータ
+		tmp.SetInfo(lf);
+
 		// コピーコンストラクタを用いオリジナル作成
 		enemies.push_back(EnemyPtr(new CBird(tmp)));
 	}
@@ -226,9 +257,6 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 
 #pragma endregion	// 敵テーブル読み込み
 //=======================================================
-
-
-
 
 //=======================================================
 bool CFileLoader::LoadPlayerData(CPlayer& player)
@@ -257,7 +285,7 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	// 情報ロード用
 	CPlayer tmp;
 	charabase::CharBase cb;
-	CPlayer::LoadInfo info;
+	CPlayer::LoadInfo lf;
 	// ファイルから情報を抜き取る際のタグ検索用
 	bool success;
 	// success が一度でもfalseになったら他処理スキップ
@@ -268,6 +296,9 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	// 	return;
 	// }みたいな感じ
 
+	//-----------------------------------------------
+	//-----------------------------------------------
+	// 画像情報
 	//-----------------------------------------------
 	// 画像管理名
 	if (success = FindChunk(SeekSet(f), "#Img"))
@@ -280,20 +311,62 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 		f >> cb.size.x;
 		f >> cb.size.y;
 	}
+
+	if (success)
+	{
+		// 画像情報設定
+		tmp.obj(cb);
+	}
+	//-----------------------------------------------
+	// クラス情報
+	//-----------------------------------------------
 	// 当たり判定
 	if (success && (success = FindChunk(SeekSet(f), "#Collision")))
 	{
 		tmp.LoadCollisions(f);
 	}
 
+	//------------------------------------------
+	// LoadInfo
+	if (success && (success = FindChunk(SeekSet(f), "#GravityAcc")))
+	{
+		f >> lf.GRAVITY_ACC;
+	}
+	if (success && (success = FindChunk(SeekSet(f), "#MaxGravity")))
+	{
+		f >> lf.MAX_G;
+	}
+	if (success && (success = FindChunk(SeekSet(f), "#Tension")))
+	{
+		f >> lf.TENSION;
+	}
+	if (success && (success = FindChunk(SeekSet(f), "#DownTension")))
+	{
+		f >> lf.DOWN_TENSION;
+	}
+	if (success && (success = FindChunk(SeekSet(f), "#DownSpeed")))
+	{
+		f >> lf.DOWN_SPEED;
+	}
+	if (success && (success = FindChunk(SeekSet(f), "#MaxVelocityX")))
+	{
+		f >> lf.MAX_VX;
+	}
+	if (success && (success = FindChunk(SeekSet(f), "#MaxVelocityY")))
+	{
+		f >> lf.MAX_VY;
+	}
+	if (success && (success = FindChunk(SeekSet(f), "#ChainTime")))
+	{
+		f >> lf.CHAIN_TIME[0] >> lf.CHAIN_TIME[1];
+	}
+
 	if (success)
 	{
 		//-----------------------------------------------
 		// 全ての情報が正しく読み込めた際のみここに入る
-		// 画像情報設定
-		tmp.obj(cb);
 		// パラメータ
-		tmp.SetInfo(info);
+		tmp.SetInfo(lf);
 		// 代入を用いオリジナル複製
 		player = tmp;
 	}
@@ -301,8 +374,7 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 }
 //=======================================================
 
-
-
+//=======================================================
 void CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 {
 	using common::FindChunk;
@@ -339,4 +411,25 @@ void CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 	}
 	//========================================================
 
+}
+
+//=======================================================
+
+std::string CFileLoader::GetFile(const std::string& tag) const
+{
+	std::ifstream iniF(iniFile_);
+	if (iniF.fail())
+	{
+		gplib::debug::BToM("CFileLoader::GetFile iniFpath:%s", iniFile_.c_str());
+	}
+	else
+	{
+		if (common::FindChunk(iniF, tag))
+		{
+			std::string fileName;
+			iniF >> fileName;
+			return fileName;
+		}
+	}
+	return "";
 }

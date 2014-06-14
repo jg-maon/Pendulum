@@ -13,8 +13,6 @@ private:
 	std::vector<EnemyPtr> temp_;
 	std::vector<EnemyPtr> enemies_;
 
-public:
-	static std::string enemyTableFile;				// 敵テーブルファイルパス
 
 public:
 	CEnemyMng();

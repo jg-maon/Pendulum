@@ -56,41 +56,41 @@ CCollision::CCollision() :
 void CCollision::step()
 {
 	auto& player = CPlayer::GetPtr();
-	
+
 	const auto& em = CEnemyMng::GetPtr();
-	
+
 	auto& atk_shots = gm()->GetObjects("Atk_Shot");
 	const auto& sm = *std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
 	//-----------------------------------------------------
 	// ÉvÉåÉCÉÑÅ[
-	if(player != nullptr)
+	if (player != nullptr)
 	{
 		auto& pl = std::dynamic_pointer_cast<CPlayer>(player);
 		const mymath::Vec3f& plpos = pl->obj().pos;
 		//-----------------------------------------
 		// ÉvÉåÉCÉÑÅ[ vs ActionPoint
-		for(auto& actp : sm.actionPoints)
+		for (auto& actp : sm.actionPoints)
 		{
-			if(actp->Contains(pl->prePos,plpos))
+			if (actp->Contains(pl->prePos(), plpos))
 			{
 				// åç∑
 				pl->hit(actp);
 			}
-			else if(actp->Contains(plpos))
+			else if (actp->Contains(plpos))
 			{
 				// ì‡ïÔ
 				//pl->hit(actp);
 			}
 		}
-		
-		
+
+
 		//-----------------------------------------
 		// çUåÇ
-		if(pl->isAttacking())
+		if (pl->isAttacking())
 		{
 			POINT m = camera::GetCursorPosition();
 			mymath::Vec3f mouse(static_cast<float>(m.x),
-								static_cast<float>(m.y));
+				static_cast<float>(m.y));
 			//-----------------------------------------
 			// çUåÇ vs ìG
 			if (em != nullptr)
@@ -105,7 +105,7 @@ void CCollision::step()
 					for (const auto& col : enemyCollisions)
 					{
 						// ìñÇΩÇËîªíËì‡ÇÃÇ›
-						if (!(col->Contains(mouse))) continue;
+						if (!(col->Contains(mouse) && col->Contains(plpos, mouse))) continue;
 						mymath::Linef line(plpos, col->IntersectionPoint2Nearest(plpos, mouse));
 						// ìGÇ∆ÇÃíºê¸ãóó£Ç…ActionPolygonÇ™Ç»Ç¢èÍçáÇÃÇ›çUåÇóLå¯
 						bool atkFlag = true;
@@ -146,7 +146,7 @@ void CCollision::step()
 			}
 		}
 
-		
+
 		auto& plCols = player->GetCollisionAreas();
 		for (auto& plcol : plCols)
 		{
@@ -170,7 +170,7 @@ void CCollision::step()
 						if (col->Contains(pc))
 						{
 							// îÒÉ_ÉÅ
-							pl->ApplyDamage(enemy->attack->GetForce());
+							pl->ApplyDamage(enemy->getAttack()->GetForce());
 							break;
 							// çUåÇéÌóﬁï èàóù
 							//if(enemy->attack->findName("Atk_NWayShot"))
@@ -199,7 +199,7 @@ void CCollision::step()
 			}
 		}
 	}
-	
+
 	//-----------------------------------------------------
 	// ìG
 	if (em != nullptr)
@@ -213,7 +213,7 @@ void CCollision::step()
 			// ìG vs ActionPoint
 			for (auto& actp : sm.actionPoints)
 			{
-				if (actp->Contains(en->prePos, enpos))
+				if (actp->Contains(en->prePos(), enpos))
 				{
 					// åç∑
 					en->hit(actp);
@@ -226,22 +226,22 @@ void CCollision::step()
 			}
 		}
 	}
-	
+
 	//-----------------------------------------------------
 	// âìãóó£çUåÇ
-	for(auto& shot : atk_shots)
+	for (auto& shot : atk_shots)
 	{
 		auto& atkCols = shot->GetCollisionAreas();
-		for(auto& atkcol : atkCols)
+		for (auto& atkcol : atkCols)
 		{
 			//-----------------------------------------
 			// ìGçUåÇ vs Polygon
-			for(auto& act : sm.actionPoints)
+			for (auto& act : sm.actionPoints)
 			{
 				// ActionoPolygonÇÃÇ›
-				if(!act->FindName("ActionPolygon")) continue;
+				if (!act->FindName("ActionPolygon")) continue;
 				// ì‡ïÔîªíË	
-				if(act->Contains(atkcol))
+				if (act->Contains(atkcol))
 				{
 					// çUåÇéÌóﬁï èàóù
 					shot->kill();
@@ -282,12 +282,12 @@ void CCollision::draw()
 {
 #ifdef D_POLY_TEST
 	Draw_Line(	(int)line.sta.x,
-				(int)line.sta.y,
-				(int)line.end.x,
-				(int)line.end.y,
-				line.sta.z,
-				-1,
-				1);
+		(int)line.sta.y,
+		(int)line.end.x,
+		(int)line.end.y,
+		line.sta.z,
+		-1,
+		1);
 	auto& actPolys = GetObjects("ActionPolygon");
 	if(!actPolys.empty())
 	{
@@ -300,10 +300,10 @@ void CCollision::draw()
 				for(auto& point : points)
 				{
 					Draw_BoxCenter(int(point.x), int(point.y),
-									5,5,0.f,
-									ARGB(255,0,0,0),
-									ARGB(255,0,0,0),
-									0,true);
+						5,5,0.f,
+						ARGB(255,0,0,0),
+						ARGB(255,0,0,0),
+						0,true);
 				}
 			}
 		}
@@ -320,28 +320,28 @@ void CCollision::draw()
 			{
 				size_t end = (sta+1) % vertexes.size();
 				Draw_Line(	int(vertexes[sta].x),
-							int(vertexes[sta].y),
-							int(vertexes[end].x),
-							int(vertexes[end].y),
-							vertexes[sta].z,
-							ARGB(255,255,255,0),
-							1);
+					int(vertexes[sta].y),
+					int(vertexes[end].x),
+					int(vertexes[end].y),
+					vertexes[sta].z,
+					ARGB(255,255,255,0),
+					1);
 			}
 		}
 		// èIì_Ç∆É}ÉEÉXÇåãÇ‘
 		mymath::Vec3f sta = vertexes.back();
 		POINT mouse = GetCursorPosition();
 		Draw_Line(	int(sta.x),
-					int(sta.y),
-					mouse.x,
-					mouse.y,
-					sta.z,
-					ARGB(255,0,255,255),
-					1);
+			int(sta.y),
+			mouse.x,
+			mouse.y,
+			sta.z,
+			ARGB(255,0,255,255),
+			1);
 	}
 #endif
 #ifdef D_CIRCLE_TEST
-	
+
 	auto& actCircles = GetObjects("ActionCircle");
 	if(!actCircles.empty())
 	{
@@ -354,10 +354,10 @@ void CCollision::draw()
 			if(ap->Contains(point, p))
 			{
 				Draw_BoxCenter(int(point.x), int(point.y),
-								5,5,0.f,
-								-1,//ARGB(255,0,0,0),
-								-1,//ARGB(255,0,0,0),
-								0,true);
+					5,5,0.f,
+					-1,//ARGB(255,0,0,0),
+					-1,//ARGB(255,0,0,0),
+					0,true);
 			}
 		}
 		// É}ÉEÉXÇ≈ê∂ê¨ÇµÇΩê¸ï™Ç∆ÇÃìñÇΩÇËîªíË
@@ -382,10 +382,10 @@ void CCollision::draw()
 							//for(auto& point : points)
 							{
 								Draw_BoxCenter(int(point.x), int(point.y),
-												5,5,0.f,
-												-1,//ARGB(255,0,0,0),
-												-1,//ARGB(255,0,0,0),
-												0,true);
+									5,5,0.f,
+									-1,//ARGB(255,0,0,0),
+									-1,//ARGB(255,0,0,0),
+									0,true);
 							}
 						}
 					}

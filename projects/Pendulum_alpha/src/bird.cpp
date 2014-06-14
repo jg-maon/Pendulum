@@ -12,12 +12,13 @@
 
 #include "actionPoint.h"
 
-
+/*
 const float CBird::SEARCH_RANGE = 500.0f;
 const float CBird::CHASE_RANGE = 300.0f;
 const float CBird::ATTACK_RANGE = 100.f;
 const float CBird::RETURN_RANGE = 3.f;
 const float CBird::MOVE_SPEED = 100.f;
+//*/
 
 void (CBird::*CBird::StateStep_[])() =
 {
@@ -104,7 +105,10 @@ void CBird::draw()
 #ifdef DEF_SHAPE_DRAW
 	const auto& cols = GetCollisionAreas();
 	for (const auto& col : cols)
+	{
+		col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
 		col->draw();
+	}
 #endif
 }
 
@@ -119,7 +123,7 @@ void CBird::ChaseStep()
 	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
 	const mymath::Vec3f dist = plPos - obj_.pos;
 	float angle = std::atan2f(dist.y, dist.x);
-	obj_.add = mymath::Vec3f::Rotate(angle) * MOVE_SPEED;
+	obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.MOVE_SPEED;
 	obj_.Move();
 }
 
@@ -127,10 +131,10 @@ void CBird::ReturnStep()
 {
 	mymath::Vec3f dist = startPos_ - obj_.pos;
 	
-	if(mymath::PYTHA(dist.x,dist.y) > mymath::POW2(RETURN_RANGE))
+	if(mymath::PYTHA(dist.x,dist.y) > mymath::POW2(loadInfo_.RETURN_RANGE))
 	{
 		float angle = std::atan2f(dist.y,dist.x);
-		obj_.add = mymath::Vec3f::Rotate(angle) * MOVE_SPEED;
+		obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.MOVE_SPEED;
 	}
 	else
 	{
@@ -178,15 +182,15 @@ void CBird::DecideState()
 	// ‰ŠúˆÊ’u‚©‚ç‚ÌƒxƒNƒgƒ‹ start -> now
 	Vdist = obj_.pos - startPos_;
 	const float staDist = mymath::PYTHA(Vdist.x, Vdist.y);
-	if (plyDist < mymath::POW2(ATTACK_RANGE) || state_ == State::ATTACK)
+	if (plyDist < mymath::POW2(loadInfo_.ATTACK_RANGE) || state_ == State::ATTACK)
 	{
 		// UŒ‚”ÍˆÍ“à or UŒ‚’†
 		state_ = State::ATTACK;
 	}
-	else if (plyDist < mymath::POW2(SEARCH_RANGE))
+	else if (plyDist < mymath::POW2(loadInfo_.SEARCH_RANGE))
 	{
 		// UŒ‚”ÍˆÍŠO õ“G”ÍˆÍ“à
-		if (staDist < mymath::POW2(CHASE_RANGE))
+		if (staDist < mymath::POW2(loadInfo_.CHASE_RANGE))
 		{
 			// ’ÇÕ‰Â”\”ÍˆÍ“à
 			state_ = State::CHASE;
@@ -197,7 +201,7 @@ void CBird::DecideState()
 			state_ = State::ATTACK;
 		}
 	}
-	else if (staDist > mymath::POW2(RETURN_RANGE))
+	else if (staDist > mymath::POW2(loadInfo_.RETURN_RANGE))
 	{
 		// õ“G”ÍˆÍŠO
 		state_ = State::RETURN;
@@ -232,7 +236,7 @@ void CBird::hit(const ObjPtr& rival)
 	{
 		// ‚ß‚è‚İ•â³,’Ê‰ß•â³
 		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);
-		mymath::Vec3f dist = obj_.pos - prePos;
+		mymath::Vec3f dist = obj_.pos - prePos_;
 		mymath::Vec3f intersection;
 		intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
 		obj_.pos = intersection;

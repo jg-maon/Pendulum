@@ -19,8 +19,6 @@ private:
 
 	std::string stageName_;			// プレイするステージ名
 
-public:
-	static std::string settingFile;				// ステージセレクトファイルパス名
 private:
 	/*
 		@brief	情報読み込み

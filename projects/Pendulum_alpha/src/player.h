@@ -24,15 +24,14 @@ class CPlayer : public ICharacter
 public:
 	struct LoadInfo
 	{
-		float MAX_G;		// 最大重力速度
-		float GRAVITY_ACC;	// 重力加速度
-		float TENSION;		// フックの張力(初速)
-		float DOWN_TENSION;// 張力減速率
-		float DOWNSP;		// 移動減速率(1-DOWNSP)
-		float MAX_VX;		// 水平方向の最大速度(ゲームとして成り立つバランス調整用)
-		float MAX_VY;		// 鉛直方向の最大速度(ゲームとして成り立つバランス調整用)
+		float MAX_G;			// 最大重力速度
+		float GRAVITY_ACC;		// 重力加速度
+		float TENSION;			// フックの張力(初速)
+		float DOWN_TENSION;		// 張力減速率
+		float DOWN_SPEED;		// 移動減速率(1-DOWN_SPEED)
+		float MAX_VX;			// 水平方向の最大速度(ゲームとして成り立つバランス調整用)
+		float MAX_VY;			// 鉛直方向の最大速度(ゲームとして成り立つバランス調整用)
 		float CHAIN_TIME[2];	// Chain猶予時間
-		int MAX_CHAIN;			// 最高Chain数
 	};
 private:
 	enum MotionType		// モーション番号
@@ -41,18 +40,22 @@ private:
 		HANG,			// 立体機動中
 		ATTACK,			// 攻撃中
 	};
+	enum
+	{
+		MAX_CHAIN = 999,			// 最高Chain数
+	};
 private:
+	/*
 	static const float MAX_G;		// 最大重力速度
 	static const float GRAVITY_ACC;	// 重力加速度
 	static const float TENSION;		// フックの張力(初速)
 	static const float DOWN_TENSION;// 張力減速率
-	static const float DOWNSP;		// 移動減速率(1-DOWNSP)
+	static const float DOWN_SPEED;	// 移動減速率(1-DOWN_SPEED)
 	static const float MAX_VX;		// 水平方向の最大速度(ゲームとして成り立つバランス調整用)
 	static const float MAX_VY;		// 鉛直方向の最大速度(ゲームとして成り立つバランス調整用)
 
 	static const float CHAIN_TIME[2];	// Chain猶予時間
-	static const int MAX_CHAIN;			// 最高Chain数
-	
+	//*/
 	LoadInfo loadInfo_;			// ファイルから取得する可変値
 
 	float gravity_;				// 重力

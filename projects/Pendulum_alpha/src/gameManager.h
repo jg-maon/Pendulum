@@ -162,6 +162,12 @@ public:
 	mymath::Vec3f GetPlayerPos() const;
 
 	/*
+		@brief	ファイルマネージャの取得
+		@return	ファイルマネージャ
+	*/
+	CFileMng& fm();
+
+	/*
 		@brief	情報の取得
 				gm()->GetData(*this);
 		@param	[in/out]	obj	格納するクラスオブジェクト

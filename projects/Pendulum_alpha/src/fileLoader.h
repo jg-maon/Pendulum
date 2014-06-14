@@ -17,6 +17,7 @@ class CPlayer;
 */
 class CFileLoader
 {
+public:
 	typedef std::unordered_map<std::string, int> FontTable;
 	// リソースファイル用
 	struct ResData
@@ -24,8 +25,9 @@ class CFileLoader
 		std::string resname;
 		std::string path;
 	};
-
+private:
 	const std::string iniFile_;		// 各種設定記述ファイルパス
+
 private:
 	//---------------------------------
 #pragma region リソースファイル読み込み関連
@@ -80,6 +82,7 @@ private:
 
 
 public:
+
 	/*
 		@brief	各ファイル読み込み
 		@param	[in]	iniFile	設定ファイルパス
@@ -88,10 +91,10 @@ public:
 
 	/*
 		@brief	各ファイル読み込み
-		@param	[in]	iniFile		設定ファイルパス
 		@param	[out]	fontTable	フォント管理テーブル
+		return	なし
 	*/
-	CFileLoader(const std::string& iniFile, FontTable& fontTable);
+	void Load(FontTable& fontTable);
 
 	/*
 		@brief	プレイヤー読み込み
@@ -110,6 +113,13 @@ public:
 	void LoadEnemiesData(std::vector<EnemyPtr>& enemies);
 
 
+	/*
+		@brief	ファイルパス取得
+			GetFile("#File");
+		@param	[in]	tag	取得ファイル識別名(#タグ)
+		@return ファイルパス
+	*/
+	std::string GetFile(const std::string& tag) const;
 };
 
 
