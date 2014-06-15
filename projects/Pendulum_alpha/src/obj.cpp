@@ -48,7 +48,7 @@ void Base::hit(const std::shared_ptr<Base>& rival)
 {
 }
 
-Base::Collisions Base::GetCollisionAreas()
+Base::Collisions Base::GetCollisionAreas() const
 {
 	return Collisions();
 }
@@ -90,6 +90,10 @@ void IObject::kill()
 
 void IObject::hit(const ObjPtr& rival)
 {
+}
+Base::Collisions IObject::GetCollisionAreas() const
+{
+	return Collisions();
 }
 
 const charabase::CharBase& IObject::obj() const

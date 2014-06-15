@@ -56,6 +56,12 @@ public:
 	virtual bool ApplyDamage(int dam) = 0{ return true; }
 
 	/*
+		@brief	“–‚½‚è”»’è—Ìˆæ‚Ìæ“¾
+		@return	“–‚½‚è”»’è—Ìˆæ
+	*/
+	virtual Collisions GetCollisionAreas() const { return __super::GetCollisionAreas(); }
+
+	/*
 		@brief	UŒ‚‚Ì“–‚½‚è”»’è—Ìˆæ‚Ìæ“¾
 		@return	UŒ‚‚Ì“–‚½‚è”»’è—Ìˆæ
 	*/

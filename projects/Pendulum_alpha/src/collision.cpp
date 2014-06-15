@@ -59,7 +59,7 @@ void CCollision::step()
 
 	const auto& em = CEnemyMng::GetPtr();
 
-	auto& atk_shots = gm()->GetObjects("Atk_Shot");
+	auto& atk_shots = gm()->GetObjects("Atk_Shot,Atk_Sing", ',');
 	const auto& sm = *std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
 	//-----------------------------------------------------
 	// ƒvƒŒƒCƒ„[
@@ -188,11 +188,12 @@ void CCollision::step()
 				auto& atkCols = shot->GetCollisionAreas();
 				for (auto& atkcol : atkCols)
 				{
-					if (atkcol->Contains(pc))
+					if (pc->Contains(atkcol))
 					{
-						auto& s = std::dynamic_pointer_cast<CShot>(shot);
-						pl->hit(s);
-						s->kill();
+						//auto& s = std::dynamic_pointer_cast<CShot>(shot);
+						//s->hit(pl);
+						pl->hit(shot);
+						shot->hit(pl);
 						break;
 					}
 				}

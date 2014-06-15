@@ -45,3 +45,8 @@ std::string CFileMng::GetFile(const std::string& tag) const
 {
 	return fileLoader_.GetFile(tag);
 }
+
+int CFileMng::GetFontID(const std::string& resname) const
+{
+	return fontTable_.at(resname);
+}

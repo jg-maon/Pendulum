@@ -62,7 +62,7 @@ public:
 	virtual void draw() = 0;
 	virtual void kill();
 	virtual void hit(const std::shared_ptr<Base>& rival);
-	virtual Collisions GetCollisionAreas();
+	virtual Collisions GetCollisionAreas() const;
 };
 typedef std::shared_ptr<Base> ObjPtr;
 
@@ -115,6 +115,7 @@ public:
 	virtual void draw() = 0;
 	virtual void kill();
 	virtual void hit(const ObjPtr& rival);
+	virtual Collisions GetCollisionAreas() const;
 	const charabase::CharBase& obj() const;
 	void obj(const charabase::CharBase& o);
 };
@@ -198,7 +199,7 @@ public:
 		@brief	ワールド座標の当たり判定領域の取得
 		@return	ワールド座標の当たり判定領域
 	*/
-	virtual Collisions GetCollisionAreas() const;
+	virtual Collisions GetCollisionAreas() const override;
 
 	/*
 		@brief	ローカル座標の当たり判定領域の代入

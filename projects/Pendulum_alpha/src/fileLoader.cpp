@@ -152,7 +152,7 @@ void CFileLoader::LoadFont(ifstream& resF, FontTable& fontTable)
 		data.path = common::StrReplace(data.path, "ÅQ", "Å@");
 		data.path = common::StrReplace(data.path, "_", " ");
 		font::Draw_CreateFont(i, size, data.path.c_str());
-		fontTable.insert(std::unordered_map<std::string, int>::value_type(data.resname, i));
+		fontTable.insert(FontTable::value_type(data.resname, i));
 		i++;
 	}
 }

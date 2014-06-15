@@ -263,7 +263,7 @@ bool CBird::ApplyDamage(int dam)
 	return true;
 }
 
-Base::Collisions CBird::GetCollisionAreas()
+Base::Collisions CBird::GetCollisionAreas() const
 {
 	// 死亡アニメーション中はスキップ
 	if(state_ != State::DESTROY)

@@ -207,7 +207,7 @@ public:
 		@brief	“–‚½‚è”»’è—Ìˆæ‚ÌŽæ“¾
 		@return	“–‚½‚è”»’è—Ìˆæ
 	*/
-	virtual Collisions GetCollisionAreas() override;
+	virtual Collisions GetCollisionAreas() const override;
 
 
 };

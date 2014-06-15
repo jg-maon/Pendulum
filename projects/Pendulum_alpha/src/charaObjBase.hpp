@@ -42,7 +42,7 @@ public:
 		@brief	“–‚½‚è”»’è—Ìˆæ‚Ìæ“¾
 		@return	“–‚½‚è”»’è—Ìˆæ
 	*/
-	virtual Collisions GetCollisionAreas(){return __super::GetCollisionAreas();}
+	virtual Collisions GetCollisionAreas() const {return __super::GetCollisionAreas();}
 
 	/*
 		@brief	UŒ‚—Í‚Ìæ“¾

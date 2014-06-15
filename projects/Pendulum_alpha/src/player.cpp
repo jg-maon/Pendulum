@@ -797,7 +797,7 @@ void CPlayer::KilledEnemy()
 	}
 }
 
-Base::Collisions CPlayer::GetCollisionAreas()
+Base::Collisions CPlayer::GetCollisionAreas() const
 {
 	if (isInvincible())
 	{

@@ -9,6 +9,8 @@
 class CPlayer;
 #endif
 
+#include <unordered_map>
+#include <string>
 #include <vector>
 
 /*

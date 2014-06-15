@@ -282,7 +282,7 @@ bool CFairy::ApplyDamage(int dam)
 	return true;
 }
 
-Base::Collisions CFairy::GetCollisionAreas()
+Base::Collisions CFairy::GetCollisionAreas() const
 {
 	// 死亡アニメーション中はスキップ
 	if (state_ != State::DESTROY)

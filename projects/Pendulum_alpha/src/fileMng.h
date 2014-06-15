@@ -52,6 +52,16 @@ public:
 	*/
 	std::string GetFile(const std::string& tag) const;
 
+
+	/*
+		@brief	GPライブラリ用フォントID取得
+			Draw_FontText(x,y,z,srt,color,size, GetFontID("font_MSG15"));
+		@param	[in]	resname	フォント管理名
+		@return フォント番号
+	*/
+	int GetFontID(const std::string& resname) const;
+
+
 	/*
 		@brief	情報の取得
 			GetData(this);
