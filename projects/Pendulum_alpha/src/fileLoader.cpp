@@ -5,6 +5,7 @@ using namespace gplib;
 #include "common.h"
 
 #include "bird.h"
+#include "fairy.h"
 
 #include "player.h"
 
@@ -256,6 +257,102 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	return success;
 }
 
+
+bool CFileLoader::LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& enemies)
+{
+	using common::FindChunk;
+	using common::SeekSet;
+	std::ifstream eneF(fileName);
+	if (eneF.fail())
+	{
+		debug::BToM("CFileLoader::LoadFairy path:%s", fileName.c_str());
+		return false;
+	}
+	// 情報ロード用
+	CFairy tmp;
+	CFairy::LoadInfo lf;
+	charabase::CharBase cb;
+	// ファイルから情報を抜き取る際のタグ検索用
+	bool success;
+	// success が一度でもfalseになったら他処理スキップ
+	// if (success){
+	// 	ロード
+	// }
+	// else {
+	// 	return;
+	// }みたいな感じ
+
+	//-----------------------------------------------
+	// 画像情報
+	//-----------------------------------------------
+	// 画像管理名
+	if (success = FindChunk(SeekSet(eneF), "#Img"))
+	{
+		eneF >> cb.resname;
+	}
+	// 画像サイズ
+	if (success && (success = FindChunk(SeekSet(eneF), "#Size")))
+	{
+		eneF >> cb.size.x;
+		eneF >> cb.size.y;
+	}
+	//-----------------------------------------------
+	if (success)
+	{
+		// 画像情報設定
+		tmp.obj(cb);
+	}
+	//-----------------------------------------------
+	// クラス情報
+	//-----------------------------------------------
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#Collision")))
+	{
+		tmp.LoadCollisions(eneF);
+	}
+	// 攻撃
+	if (success && (success = FindChunk(SeekSet(eneF), "#Attack")))
+	{
+		tmp.LoadAttack(eneF);
+	}
+	//-------------------------------------
+	// 範囲系
+	if (success && (success = FindChunk(SeekSet(eneF), "#SearchRange")))
+	{
+		eneF >> lf.SEARCH_RANGE;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#ChaseRange")))
+	{
+		eneF >> lf.CHASE_RANGE;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#AttackRange")))
+	{
+		eneF >> lf.ATTACK_RANGE;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#ReturnRange")))
+	{
+		eneF >> lf.RETURN_RANGE;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#MoveSpeed")))
+	{
+		eneF >> lf.MOVE_SPEED;
+	}
+	//-------------------------------------
+
+	if (success)
+	{
+		//-----------------------------------------------
+		// 全ての情報が正しく読み込めた際のみここに入る
+		// パラメータ
+		tmp.SetInfo(lf);
+
+		// コピーコンストラクタを用いオリジナル作成
+		enemies.push_back(EnemyPtr(new CFairy(tmp)));
+	}
+
+	return success;
+}
+
 #pragma endregion	// 敵テーブル読み込み
 //=======================================================
 
@@ -413,6 +510,12 @@ void CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 		std::string buf;
 		f >> buf;
 		LoadBird(buf, enemies);
+	}
+	if (FindChunk(SeekSet(f), "#Fairy"))
+	{
+		std::string buf;
+		f >> buf;
+		LoadFairy(buf, enemies);
 	}
 	//========================================================
 

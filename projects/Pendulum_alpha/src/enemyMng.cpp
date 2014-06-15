@@ -7,10 +7,6 @@
 #include <fstream>
 #include <sstream>
 
-//---------------------------------
-// 敵
-#include "bird.h"
-//---------------------------------
 
 
 CEnemyMng::CEnemyMng():
@@ -81,8 +77,31 @@ void CEnemyMng::LoadEnemiesInfo(const std::string& fileName)
 				enemies_.push_back(EnemyPtr(new CBird(pos[0], pos[1])));
 			}
 		}
-		f.clear();
-		f.seekg(0);
+		common::SeekSet(f);
+	}
+
+	// 妖精
+	if (common::FindChunk(f, "#Fairy"))
+	{
+		std::string label;
+		f >> label;
+		if (label == "{")
+		{
+			while (!f.eof())
+			{
+				float pos[2];	// [0]:x [1]:y
+				for (auto& p : pos)
+				{
+					f >> label;
+					// エラーチェック
+					if (label == "}" || f.eof())break;
+					p = static_cast<float>(std::atof(label.c_str()));
+				}
+				if (label == "}") break;
+				enemies_.push_back(EnemyPtr(new CFairy(pos[0], pos[1])));
+			}
+		}
+		common::SeekSet(f);
 	}
 
 	// 別敵
@@ -97,6 +116,7 @@ void CEnemyMng::LoadEnemiesInfo(const std::string& fileName)
 				f >> label;
 			}
 		}
+		common::SeekSet(f);
 	}
 
 }
