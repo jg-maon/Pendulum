@@ -135,6 +135,12 @@
     <Filter Include="ソース ファイル\InGame\Attack\nWaySing">
       <UniqueIdentifier>{0edc79da-6b5d-4980-be6b-2315d4fd00f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage">
+      <UniqueIdentifier>{162b492a-b16d-4fec-a2ab-1d9c15a6f518}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage\Stage1">
+      <UniqueIdentifier>{4f0ab01e-58e1-479e-890c-ba9bbc228493}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -320,6 +326,12 @@
     <ClInclude Include="src\nWaySing.h">
       <Filter>ソース ファイル\InGame\Attack\nWaySing</Filter>
     </ClInclude>
+    <ClInclude Include="src\stageBase.hpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stage1.h">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -441,6 +453,9 @@
     </ClCompile>
     <ClCompile Include="src\nWaySing.cpp">
       <Filter>ソース ファイル\InGame\Attack\nWaySing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stage1.cpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

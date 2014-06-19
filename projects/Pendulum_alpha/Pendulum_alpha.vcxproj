@@ -144,6 +144,8 @@
     <ClInclude Include="src\sceneTitle.h" />
     <ClInclude Include="src\scoreMng.h" />
     <ClInclude Include="src\setting.h" />
+    <ClInclude Include="src\stage1.h" />
+    <ClInclude Include="src\stageBase.hpp" />
     <ClInclude Include="src\stageMng.h" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +188,7 @@
     <ClCompile Include="src\sceneTitle.cpp" />
     <ClCompile Include="src\scoreMng.cpp" />
     <ClCompile Include="src\setting.cpp" />
+    <ClCompile Include="src\stage1.cpp" />
     <ClCompile Include="src\stageMng.cpp" />
   </ItemGroup>
   <ItemGroup>

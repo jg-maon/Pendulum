@@ -17,8 +17,6 @@ using common::FindChunk;
 
 CStageMng::CStageMng():
 	Base("StageMng")
-	,actionPoints(actionPoints_)
-	,rect(stageRect_)
 {
 }
 

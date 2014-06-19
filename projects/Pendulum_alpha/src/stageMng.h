@@ -5,8 +5,8 @@
 #include "obj.h"
 #endif
 
-#ifndef DEF_ACTIONPOINT_H
-#include "actionPoint.h"
+#ifndef DEF_STAGEBASE_HPP
+#include "stageBase.hpp"
 #endif
 
 #ifndef DEF_MYMATH_HPP
@@ -17,62 +17,13 @@
 class CStageMng : public Base
 {
 private:
-	mymath::Recti stageRect_;			// ステージの大きさ
-	std::vector<std::string> backgroundIMG_;			// 背景画像
-	std::vector<ActPtPtr> actionPoints_;
+	
+	typedef std::shared_ptr<IStage> StagePtr;
+	std::vector<StagePtr> stages_;
+
 	std::string stageName_;		// ステージ名
-public:
-	const std::vector<ActPtPtr>& actionPoints;
-	const mymath::Recti& rect;
 
 
-private:
-	/*
-		@brief		ステージサイズの読み込み
-		@attension	fはオープン済み
-		@param	[in/out]	f	ファイル
-		@return	EOFか
-		@retval	true	EOF
-		@retval	false	EOFでない
-	*/
-	bool LoadSize(std::ifstream& f);
-	/*
-		@brief		プレイヤーの読み込み
-		@attension	fはオープン済み
-		@param	[in/out]	f	ファイル
-		@return	EOFか
-		@retval	true	EOF
-		@retval	false	EOFでない
-	*/
-	bool LoadPlayer(std::ifstream& f);
-	/*
-		@brief		敵情報の読み込み
-		@attension	fはオープン済み
-		@param	[in/out]	f	ファイル
-		@return	EOFか
-		@retval	true	EOF
-		@retval	false	EOFでない
-	*/
-	bool LoadEnemies(std::ifstream& f);
-
-	/*
-		@brief		ActionCircleの読み込み
-		@attension	fはオープン済み
-		@param	[in/out]	f	ファイル
-		@return	EOFか
-		@retval	true	EOF
-		@retval	false	EOFでない
-	*/
-	bool LoadActionCircles(std::ifstream& f);
-	/*
-		@brief		ActionPolygonの読み込み
-		@attension	fはオープン済み
-		@param	[in/out]	f	ファイル
-		@return	EOFか
-		@retval	true	EOF
-		@retval	false	EOFでない
-	*/
-	bool LoadActionPolygons(std::ifstream& f);
 
 public:
 	CStageMng();
@@ -85,6 +36,19 @@ public:
 		@return	なし
 	*/
 	void LoadStage(const std::string& stageName);
+
+	/*
+		@brief	現在のステージサイズの取得
+		@return	ステージRect
+	*/
+	const mymath::Recti& getStageRect() const;
+
+	/*
+		@brief	指定したステージのサイズの取得
+		@param	[in]	stage	ステージ番号
+		@return	ステージRect
+	*/
+	const mymath::Recti& getStageRect(int stage) const;
 
 	static const std::shared_ptr<CStageMng> GetPtr();
 };
