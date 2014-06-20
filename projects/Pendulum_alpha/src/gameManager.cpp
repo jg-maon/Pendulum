@@ -2,6 +2,11 @@
 #include "GameManager.h"
 #include "gameover.h"
 
+#include "stageMng.h"
+#include "scoreMng.h"
+#include "Collision.h"
+
+
 #include	<algorithm>
 #include	<functional>
 #include	<sstream>
@@ -10,13 +15,14 @@
 mymath::Recti* CGameManager::winRect_ = nullptr;
 
 CGameManager::CGameManager() :
-showCursor_(false)
+Base("GameManager")
+, showCursor_(false)
 , fileMng_("res/dat/path.ini")
 //, cursorAnim_(360.f,10.f)
 {
 	ShowCursor(showCursor_ == true);
 	init();
-	fileMng_.Load();
+	
 	cursor_ = charabase::CharPtr(new charabase::CharBase(
 		mymath::Vec3f(), mymath::Vec3f(),
 		"img_cursor",
@@ -30,6 +36,19 @@ CGameManager::~CGameManager()
 	objs_.clear();
 	addObjs_.clear();
 }
+
+void CGameManager::start()
+{
+	__super::start();
+
+	fileMng_.Load();
+
+	AddObject2(ObjPtr(new CStageMng()));
+	AddObject2(ObjPtr(new CScoreMng()));
+	AddObject2(ObjPtr(new CCollision()));
+
+}
+
 
 void CGameManager::MargeObjects()
 {
@@ -91,9 +110,11 @@ void CGameManager::step()
 	if (getClear()) return;
 
 	//ŠeŽíXV
-	for (const auto& s : objs_)
+	for (const auto& obj : objs_)
 	{
-		s->step();
+		const auto& status = obj->getStatus();
+		if (status == Status::run || status == Status::update)
+			obj->step();
 	}
 
 	MargeObjects();
@@ -109,7 +130,9 @@ void CGameManager::draw()
 	graph::Draw_EndRenderMode();
 	for (const auto& obj : objs_)
 	{
-		obj->draw();
+		const auto& status = obj->getStatus();
+		if (status == Status::run || status == Status::disp)
+			obj->draw();
 	}
 }
 
@@ -291,9 +314,9 @@ CFileMng& CGameManager::fm()
 }
 
 
-extern CGameManager* gm;
 
 void InsertObject(const ObjPtr& obj)
 {
+	extern CGameManager* gm;
 	gm->AddObject(obj);
 }

@@ -34,6 +34,7 @@
 CCollision::CCollision() :
 	IObject("Collision")
 {
+	status_ = Status::idle;
 #ifdef D_CIRCLE_TEST
 	std::tuple<int,int,float> acs[] =
 	{
@@ -58,9 +59,12 @@ void CCollision::step()
 	auto& player = CPlayer::GetPtr();
 
 	const auto& em = CEnemyMng::GetPtr();
+	auto& enemies = std::dynamic_pointer_cast<CEnemyMng>(em)->getEnemies();
 
 	auto& atk_shots = gm()->GetObjects("Atk_Shot,Atk_Sing", ',');
-	const auto& sm = *std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
+	const auto& sm = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
+	
+	const auto& actionPoints = sm->getActionPoints();
 	//-----------------------------------------------------
 	// ƒvƒŒƒCƒ„[
 	if (player != nullptr)
@@ -69,7 +73,7 @@ void CCollision::step()
 		const mymath::Vec3f& plpos = pl->obj().pos;
 		//-----------------------------------------
 		// ƒvƒŒƒCƒ„[ vs ActionPoint
-		for (auto& actp : sm.actionPoints)
+		for (auto& actp : actionPoints)
 		{
 			if (actp->Contains(pl->prePos(), plpos))
 			{
@@ -95,7 +99,6 @@ void CCollision::step()
 			// UŒ‚ vs “G
 			if (em != nullptr)
 			{
-				auto& enemies = std::dynamic_pointer_cast<CEnemyMng>(em)->GetEnemies();
 				for (auto& enemy : enemies)
 				{
 					const mymath::Vec3f& enpos = enemy->obj().pos;
@@ -109,7 +112,7 @@ void CCollision::step()
 						mymath::Linef line(plpos, col->IntersectionPoint2Nearest(plpos, mouse));
 						// “G‚Æ‚Ì’¼ü‹——£‚ÉActionPolygon‚ª‚È‚¢ê‡‚Ì‚İUŒ‚—LŒø
 						bool atkFlag = true;
-						for (const auto& actp : sm.actionPoints)
+						for (const auto& actp : actionPoints)
 						{
 							// ActioinPolygonˆÈŠO”rœ
 							if (!actp->FindName("ActionPolygon"))continue;
@@ -156,7 +159,6 @@ void CCollision::step()
 			// ƒvƒŒƒCƒ„[ vs “GUŒ‚
 			if (em != nullptr)
 			{
-				auto& enemies = std::dynamic_pointer_cast<CEnemyMng>(em)->GetEnemies();
 				for (auto& enemy : enemies)
 				{
 					const mymath::Vec3f& enpos = enemy->obj().pos;
@@ -205,14 +207,13 @@ void CCollision::step()
 	// “G
 	if (em != nullptr)
 	{
-		auto& enemies = std::dynamic_pointer_cast<CEnemyMng>(em)->GetEnemies();
 		for (auto& enemy : enemies)
 		{
 			auto& en = std::dynamic_pointer_cast<IEnemy>(enemy);
 			const mymath::Vec3f& enpos = en->obj().pos;
 			//-----------------------------------------
 			// “G vs ActionPoint
-			for (auto& actp : sm.actionPoints)
+			for (auto& actp : actionPoints)
 			{
 				if (actp->Contains(en->prePos(), enpos))
 				{
@@ -237,7 +238,7 @@ void CCollision::step()
 		{
 			//-----------------------------------------
 			// “GUŒ‚ vs Polygon
-			for (auto& act : sm.actionPoints)
+			for (auto& act : actionPoints)
 			{
 				// ActionoPolygon‚Ì‚İ
 				if (!act->FindName("ActionPolygon")) continue;

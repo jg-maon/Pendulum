@@ -42,6 +42,7 @@
 class IStage : public Base
 {
 protected:
+	mymath::Recti cameraRect_;					// カメラの可動範囲
 	mymath::Recti stageRect_;					// ステージの大きさ
 	std::vector<std::string> backgroundIMG_;	// 背景画像
 	std::vector<ActPtPtr> actionPoints_;
@@ -49,21 +50,23 @@ protected:
 public:
 	const std::vector<ActPtPtr>& actionPoints;
 	const mymath::Recti& rect;
-
+	const mymath::Recti& cameraRect;
 
 
 private:
 #pragma region private methods
 	/*
-		@brief		ステージサイズの読み込み
+		@brief		ステージサイズ,カメラ可動範囲の読み込み
 		@attension	fはオープン済み
-		@param	[in/out]	f	ファイル
+		@param	[in/out]	f	ステージファイル
 		@return	EOFか
 		@retval	true	EOF
 		@retval	false	EOFでない
 	*/
-	bool LoadSize(std::ifstream& f)
+	bool LoadRect(std::ifstream& f)
 	{
+		//--------------------------------------
+		// ステージ
 		if (common::FindChunk(common::SeekSet(f), "#Left"))
 		{
 			f >> stageRect_.left;
@@ -80,12 +83,30 @@ private:
 		{
 			f >> stageRect_.bottom;
 		}
+		//--------------------------------------
+		// ステージ
+		if (common::FindChunk(common::SeekSet(f), "#CameraLeft"))
+		{
+			f >> cameraRect_.left;
+		}
+		if (common::FindChunk(common::SeekSet(f), "#CameraTop"))
+		{
+			f >> cameraRect_.top;
+		}
+		if (common::FindChunk(common::SeekSet(f), "#CameraRight"))
+		{
+			f >> cameraRect_.right;
+		}
+		if (common::FindChunk(common::SeekSet(f), "#CameraBottom"))
+		{
+			f >> cameraRect_.bottom;
+		}
 		return f.eof();
 	}
 	/*
 		@brief		プレイヤーの読み込み
 		@attension	fはオープン済み
-		@param	[in/out]	f	ファイル
+		@param	[in/out]	f	ステージファイル
 		@return	EOFか
 		@retval	true	EOF
 		@retval	false	EOFでない
@@ -112,7 +133,7 @@ private:
 	/*
 		@brief		敵情報の読み込み
 		@attension	fはオープン済み
-		@param	[in/out]	f	ファイル
+		@param	[in/out]	f	ステージファイル
 		@return	EOFか
 		@retval	true	EOF
 		@retval	false	EOFでない
@@ -121,8 +142,8 @@ private:
 	{
 		if (common::FindChunk(common::SeekSet(f), "#Enemy"))
 		{
-			std::string label;
-			f >> label;
+			std::string tableFile;
+			f >> tableFile;
 			auto& ems = gm()->GetObjects("EnemyMng");
 			ObjPtr em;
 			if (ems.empty())
@@ -135,7 +156,7 @@ private:
 			{
 				em = ems[0];
 			}
-			std::dynamic_pointer_cast<CEnemyMng>(em)->LoadEnemiesInfo(label);
+			std::dynamic_pointer_cast<CEnemyMng>(em)->LoadEnemyTable(tableFile);
 		}
 		return f.eof();
 	}
@@ -143,7 +164,7 @@ private:
 	/*
 		@brief		ActionCircleの読み込み
 		@attension	fはオープン済み
-		@param	[in/out]	f	ファイル
+		@param	[in/out]	f	ステージファイル
 		@return	EOFか
 		@retval	true	EOF
 		@retval	false	EOFでない
@@ -177,7 +198,7 @@ private:
 	/*
 		@brief		ActionPolygonの読み込み
 		@attension	fはオープン済み
-		@param	[in/out]	f	ファイル
+		@param	[in/out]	f	ステージファイル
 		@return	EOFか
 		@retval	true	EOF
 		@retval	false	EOFでない
@@ -218,15 +239,60 @@ private:
 
 #pragma endregion	// private methods
 
+protected:
+#pragma region protected methods
+	/*
+		@brief	各種ファイルロード処理
+		@param	[in/out]	f	ステージファイル
+		@attension	fはオープン済み
+		@return	なし
+	*/
+	void load(std::ifstream& f)
+	{
+		// 先に登録されているオブジェクトを消してから読み込む
+		auto& objs = gm()->GetObjects("Player,Action", ',');
+		for (auto& obj : objs)
+			obj->kill();
+
+
+		LoadRect(f);
+		LoadPlayer(f);
+		LoadEnemies(f);
+		LoadActionCircles(f);
+		LoadActionPolygons(f);
+
+	}
+#pragma endregion	// protected methods
 public:
 #pragma region public methods
 	IStage(const std::string& name) :
 		Base(name)
 		, actionPoints(actionPoints_)
 		, rect(stageRect_)
-	{}
+		, cameraRect(cameraRect_)
+	{
+		
+
+	}
 	virtual void step()override = 0{}
 	virtual void draw()override = 0{}
+
+	/*
+		@brief	ステージ読み込み(初期化)
+		@param	[in/out]	f	ステージファイル
+		@attension	fはオープン済み
+		@return	なし
+	*/
+	virtual void init(std::ifstream& f)
+	{
+		// 先に登録されているオブジェクトを消してから読み込む
+		auto& objs = gm()->GetObjects("Player", ',');
+		for (auto& obj : objs)
+			obj->kill();
+
+		LoadPlayer(f);
+		LoadEnemies(f);
+	}
 
 #pragma endregion	// public methods
 };

@@ -19,10 +19,10 @@ class CStageMng : public Base
 private:
 	
 	typedef std::shared_ptr<IStage> StagePtr;
-	std::vector<StagePtr> stages_;
+	typedef std::unordered_map<std::string, StagePtr> StageMap;
+	StageMap stages_;
 
-	std::string stageName_;		// ステージ名
-
+	std::string nowStage_;		// ステージ名
 
 
 public:
@@ -31,11 +31,20 @@ public:
 	virtual void draw() override;
 
 	/*
+		@brief	ステージマネージャーオブジェクトを取得
+		@return	ポインタ
+		@retval	nullptr	ステージマネージャーオブジェクトが作られていない場合
+		@retval	マネージャーのポインタ
+	*/
+	static const std::shared_ptr<CStageMng> GetPtr();
+
+	/*
 		@brief	ステージのロード
 		@param	[in]	stageName	ステージ名(ファイル名)
 		@return	なし
 	*/
 	void LoadStage(const std::string& stageName);
+
 
 	/*
 		@brief	現在のステージサイズの取得
@@ -45,12 +54,30 @@ public:
 
 	/*
 		@brief	指定したステージのサイズの取得
-		@param	[in]	stage	ステージ番号
+		@param	[in]	stage	ステージ名
 		@return	ステージRect
 	*/
-	const mymath::Recti& getStageRect(int stage) const;
+	const mymath::Recti& getStageRect(const std::string& stage) const;
 
-	static const std::shared_ptr<CStageMng> GetPtr();
+	/*
+		@brief	現在のステージのカメラ可動範囲の取得
+		@return	カメラ可動範囲
+	*/
+	const mymath::Recti& getCameraRect() const;
+
+	/*
+		@brief	指定したステージのカメラ可動範囲の取得
+		@param	[in]	stage	ステージ名
+		@return	カメラ可動範囲
+	*/
+	const mymath::Recti& getCameraRect(const std::string& stage) const;
+
+
+	/*
+		@brief	アクションポイントの取得
+		@return	アクションポイント
+	*/
+	const std::vector<ActPtPtr>& getActionPoints() const;
 };
 
 #endif

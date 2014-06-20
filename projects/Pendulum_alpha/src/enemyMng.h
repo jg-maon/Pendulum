@@ -18,8 +18,8 @@
 class CEnemyMng : public Base
 {
 private:
-	std::vector<EnemyPtr> temp_;
-	std::vector<EnemyPtr> enemies_;
+	std::vector<EnemyPtr> temp_;			// 敵テーブル追加用
+	std::vector<EnemyPtr> enemies_;			// 敵テーブル
 
 
 public:
@@ -35,12 +35,12 @@ public:
 	static ObjPtr GetPtr();
 	
 	/*
-		@brief	敵情報をファイルから読み込む
+		@brief	敵配置テーブルをファイルから読み込む
 		@attention	ファイル書式のエラーチェックが簡易的
-		@param	[in]	fileName	ファイル名
+		@param	[in]	fileName	テーブルファイルパス
 		@return	なし
 	*/
-	void LoadEnemiesInfo(const std::string& fileName);
+	void LoadEnemyTable(const std::string& fileName);
 
 
 	/*
@@ -49,11 +49,12 @@ public:
 		@return	なし
 	*/
 	void CreateEnemy(const EnemyPtr& enemy);
+
 	/*
 		@brief	敵取得
 		@return	敵オブジェクト
 	*/
-	std::vector<EnemyPtr> GetEnemies();
+	std::vector<EnemyPtr>& getEnemies();
 
 };
 #endif

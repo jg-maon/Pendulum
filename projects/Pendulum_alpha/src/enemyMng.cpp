@@ -12,6 +12,7 @@
 CEnemyMng::CEnemyMng():
 	Base("EnemyMng")
 {
+	status_ = Status::idle;
 }
 
 
@@ -44,44 +45,20 @@ ObjPtr CEnemyMng::GetPtr()
 	return em[0];
 }
 
-void CEnemyMng::LoadEnemiesInfo(const std::string& fileName)
+void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 {
-	std::string file = common::StrReplace(gm()->fm().GetFile("#EnemyTableFile"), "ENEMYTABLE", fileName);
-	std::ifstream f(file);
+	std::ifstream f(fileName);
 	if (f.fail())
 	{
-		debug::BToM("CEnemyMng::LoadEnemiesInfo path:%s", file.c_str());
+		debug::BToM("CEnemyMng::LoadEnemyTable path:%s", fileName.c_str());
 		return;
 	}
 	enemies_.clear();
 	temp_.clear();
 
+	//---------------------------------------
 	// 鳥
-	if(common::FindChunk(f, "#Bird"))
-	{
-		std::string label;
-		f >> label;
-		if(label == "{")
-		{
-			while(!f.eof())
-			{
-				float pos[2];	// [0]:x [1]:y
-				for(auto& p : pos)
-				{
-					f >> label;
-					// エラーチェック
-					if(label == "}" || f.eof())break;
-					p = static_cast<float>(std::atof(label.c_str()));
-				}
-				if(label == "}") break;
-				enemies_.push_back(EnemyPtr(new CBird(pos[0], pos[1])));
-			}
-		}
-		common::SeekSet(f);
-	}
-
-	// 妖精
-	if (common::FindChunk(f, "#Fairy"))
+	if (common::FindChunk(common::SeekSet(f), "#Bird"))
 	{
 		std::string label;
 		f >> label;
@@ -94,31 +71,64 @@ void CEnemyMng::LoadEnemiesInfo(const std::string& fileName)
 				{
 					f >> label;
 					// エラーチェック
-					if (label == "}" || f.eof())break;
+					if (label == "}" || f.eof()) break;
+					p = static_cast<float>(std::atof(label.c_str()));
+				}
+				if (label == "}") break;
+				enemies_.push_back(EnemyPtr(new CBird(pos[0], pos[1])));
+			}
+		}
+	}
+
+	//---------------------------------------
+	// 妖精
+	if (common::FindChunk(common::SeekSet(f), "#Fairy"))
+	{
+		std::string label;
+		f >> label;
+		if (label == "{")
+		{
+			while (!f.eof())
+			{
+				float pos[2];	// [0]:x [1]:y
+				for (auto& p : pos)
+				{
+					f >> label;
+					// エラーチェック
+					if (label == "}" || f.eof()) break;
 					p = static_cast<float>(std::atof(label.c_str()));
 				}
 				if (label == "}") break;
 				enemies_.push_back(EnemyPtr(new CFairy(pos[0], pos[1])));
 			}
 		}
-		common::SeekSet(f);
 	}
 
+	//---------------------------------------
 	// 別敵
-	if(common::FindChunk(f, "#enemyName"))
+	/*
+	if (common::FindChunk(common::SeekSet(f), "#enemyName"))
 	{
 		std::string label;
 		f >> label;
-		if(label == "{")
+		if (label == "{")
 		{
-			while(!f.eof())
+			while (!f.eof())
 			{
-				f >> label;
+				float pos[2];	// [0]:x [1]:y
+				for (auto& p : pos)
+				{
+					f >> label;
+					// エラーチェック
+					if (label == "}" || f.eof()) break;
+					p = static_cast<float>(std::atof(label.c_str()));
+				}
+				if (label == "}") break;
+				enemies_.push_back(EnemyPtr(new CFairy(pos[0], pos[1])));
 			}
 		}
-		common::SeekSet(f);
 	}
-
+	//*/
 }
 
 void CEnemyMng::CreateEnemy(const EnemyPtr& enemy)
@@ -126,7 +136,7 @@ void CEnemyMng::CreateEnemy(const EnemyPtr& enemy)
 	temp_.push_back(enemy);
 }
 
-std::vector<EnemyPtr> CEnemyMng::GetEnemies()
+std::vector<EnemyPtr>& CEnemyMng::getEnemies()
 {
 	return enemies_;
 }

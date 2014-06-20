@@ -3,11 +3,17 @@
 #Right	5000
 #Bottom	5000
 
+#CameraLeft		0
+#CameraTop		200
+#CameraRight	5000
+#CameraBottom	4600
+
+
 #Player
 1483	1929
 
 #Enemy
-enemyTable01.txt
+res/dat/main/enemy/enemyTable01.txt
 
 #ActionCircle
 {

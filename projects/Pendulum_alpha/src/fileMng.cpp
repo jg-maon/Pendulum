@@ -10,6 +10,7 @@
 CFileMng::CFileMng(const std::string& iniFile):
 iniFile_(iniFile)
 , fileLoader_(iniFile_)
+, iniFile(iniFile_)
 {
 	fontTable_.clear();
 	dataTable_.clear();
@@ -50,3 +51,11 @@ int CFileMng::GetFontID(const std::string& resname) const
 {
 	return fontTable_.at(resname);
 }
+
+
+/*
+const std::string& CFileMng::getIniFile() const
+{
+	return iniFile_;
+}
+//*/

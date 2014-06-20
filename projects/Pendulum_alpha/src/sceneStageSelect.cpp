@@ -7,7 +7,7 @@
 #include "common.h"
 
 #include "stageMng.h"
-#include "scoreMng.h"
+
 #include <iomanip>
 #include <sstream>
 
@@ -37,9 +37,9 @@ IScene("img_stageSelect", "bgm_stageSelect")
 	}
 	descHeight_ = 0.f;
 
-	gm()->init();
-	InsertObject(ObjPtr(new CStageMng()));
-	InsertObject(ObjPtr(new CScoreMng()));
+	//gm()->init();
+	//InsertObject(ObjPtr(new CStageMng()));
+	//InsertObject(ObjPtr(new CScoreMng()));
 }
 CSceneStageSelect::~CSceneStageSelect()
 {
@@ -180,7 +180,7 @@ bool CSceneStageSelect::update()
 				//stageName_ = common::StrReplace(stage.first->resname, "img_ss", "stage");
 
 				std::stringstream ss;
-				ss << "stage" << std::setw(2) << std::setfill('0') << (i + 1);
+				ss << "Stage" << std::setw(2) << std::setfill('0') << (i + 1);
 				stageName_ = ss.str();
 				return true;
 			}

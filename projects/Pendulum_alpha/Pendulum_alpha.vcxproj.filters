@@ -489,6 +489,12 @@
     <Text Include="res\dat\main\enemy\fairy.txt">
       <Filter>リソース ファイル\Main\Enemy</Filter>
     </Text>
+    <Text Include="res\dat\main\stage\stages.txt">
+      <Filter>リソース ファイル\Main\Stage</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage04.txt">
+      <Filter>リソース ファイル\Main\Stage</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\dat\path.ini">

@@ -28,6 +28,12 @@ bool Base::isDestroy() const
 {
 	return status_ == Status::destroy;
 }
+
+Base::Status Base::getStatus() const
+{
+	return status_;
+}
+
 bool Base::FindName(const std::string& name) const
 {
 	std::string::size_type pos = name_.find(name);
@@ -42,6 +48,14 @@ const std::string& Base::getName() const
 void Base::kill()
 {
 	status_ = Status::destroy;
+}
+void Base::start()
+{
+	status_ = Status::run;
+}
+void Base::stop()
+{
+	status_ = Status::idle;
 }
 
 void Base::hit(const std::shared_ptr<Base>& rival)

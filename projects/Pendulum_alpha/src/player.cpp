@@ -47,6 +47,7 @@ const float CPlayer::CHAIN_TIME[2] = {1.0f,2.0f};	// Chain猶予時間[0]:1体目から2
 CPlayer::CPlayer():
 ICharacter("Player")
 {
+	status_ = Status::idle;
 }
 
 CPlayer::CPlayer(const mymath::Vec3f& pos):
@@ -120,12 +121,15 @@ void CPlayer::init()
 	// カメラ移動
 	{
 		mymath::Vec3f& pos = obj_.pos;
+		/*
 		mymath::Vec3f cameraPos;
 		//const auto& sm = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
 		const auto& sm = CStageMng::GetPtr();
-		cameraPos.x = clamp(pos.x, (sm->rect.left + system::WINW)/2.f, sm->rect.right);
-		cameraPos.y = clamp(pos.y, (sm->rect.top  + system::WINH)/2.f, sm->rect.bottom);
-		camera::SetLookAt(cameraPos.x, cameraPos.y);
+		const auto& cameraRect = sm->getCameraRect();
+		cameraPos.x = clamp(pos.x, (cameraRect.left + system::WINW)/2.f, cameraRect.right);
+		cameraPos.y = clamp(pos.y, (cameraRect.top  + system::WINH)/2.f, cameraRect.bottom);
+		//*/
+		camera::SetLookAt(pos.x, pos.y);
 	}
 }
 
@@ -377,8 +381,9 @@ void CPlayer::move()
 	// ステージ座標制限
 	{
 		const auto& sm = CStageMng::GetPtr();
-		pos.x = clamp(pos.x, sm->rect.left, sm->rect.right);
-		pos.y = clamp(pos.y, sm->rect.top,	sm->rect.bottom);
+		const auto& stageRect = sm->getCameraRect();
+		pos.x = clamp(pos.x, stageRect.left, stageRect.right);
+		pos.y = clamp(pos.y, stageRect.top,	stageRect.bottom);
 	}
 	attackRange_->pos = attackRange_->pos.TmpReplace(mymath::Vec3f::X | mymath::Vec3f::Y, pos);
 
@@ -508,8 +513,9 @@ void CPlayer::step()
 	{
 		mymath::Vec3f cameraPos;
 		const auto& sm = CStageMng::GetPtr();
-		cameraPos.x = clamp(pos.x, (sm->rect.left + system::WINW)/2.f, sm->rect.right);
-		cameraPos.y = clamp(pos.y, (sm->rect.top  + system::WINH)/2.f, sm->rect.bottom);
+		const auto& cameraRect = sm->getCameraRect();
+		cameraPos.x = clamp(pos.x, (cameraRect.left + system::WINW)/2.f, cameraRect.right);
+		cameraPos.y = clamp(pos.y, (cameraRect.top  + system::WINH)/2.f, cameraRect.bottom);
 		camera::SetLookAt(cameraPos.x, cameraPos.y);
 	}
 }

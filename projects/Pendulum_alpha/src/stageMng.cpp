@@ -2,6 +2,8 @@
 
 #include "define.h"
 
+#include "stage1.h"
+
 #include "setting.h"
 #include "common.h"
 
@@ -14,215 +16,86 @@
 
 using std::ifstream;
 using common::FindChunk;
+using common::SeekSet;
 
 CStageMng::CStageMng():
 	Base("StageMng")
 {
-}
+	// メインゲームになるまで待機
+	status_ = Status::idle;
+	//----------------------------------------------------
+	// ステージのロード
+	std::string stages = gm()->fm().GetFile("#StageFile");
+	ifstream stageF(stages);
+	if (stageF.fail())
+	{
+		debug::BToM("CStageMng::CStageMng [stageF] path:%s", stages.c_str());
+		return;
+	}
+	
+	std::string path;		// ステージファイルパス
+	if (!FindChunk(stageF, "#StagePath"))
+	{
+		debug::BToM("CStageMng::Loadstage #StagePath not found");
+		return;
+	}
+	stageF >> path;
 
-bool CStageMng::LoadSize(std::ifstream& f)
-{
-	if(FindChunk(f,"#Left"))
+	for (int i = 1; i <= 4; ++i)
 	{
-		f >> stageRect_.left;
-	}
-	if(FindChunk(f,"#Top"))
-	{
-		f >> stageRect_.top;
-	}
-	if(FindChunk(f,"#Right"))
-	{
-		f >> stageRect_.right;
-	}
-	if(FindChunk(f,"#Bottom"))
-	{
-		f >> stageRect_.bottom;
-	}
-	return f.eof();
-}
-
-bool CStageMng::LoadPlayer(ifstream& f)
-{
-	if(FindChunk(f,"#Player"))
-	{
-		float pos[2];	// [0]:x [1]:y
-		for(auto& p : pos)
+		std::stringstream tag;
+		tag << "#Stage" << std::setw(2) << std::setfill('0') << i;
+		if (FindChunk(SeekSet(stageF), tag.str()))
 		{
-			std::string label;
-			f >> label;
-			p = static_cast<float>(std::atof(label.c_str()));
-		}
-		InsertObject(ObjPtr(new CPlayer(pos[0], pos[1])));
-	}
+			std::string stage;
+			stageF >> stage;
+			stage = path + stage;		// ステージファイル名にパスを結合
+			ifstream f(stage);			// ステージファイル
+			if (f.fail())
+			{
+				debug::BToM("CStageMng::CStageMng [%s] path:%s", tag.str().c_str(), stage.c_str());
+				return;
+			}
+			switch (i)
+			{
+			case 1:
+				stages_.insert(StageMap::value_type("Stage01", StagePtr(new CStage1(f))));
+				break;
 
-	return f.eof();
-}
+			case 2:
+				stages_.insert(StageMap::value_type("Stage02", StagePtr(new CStage1(f))));
+				break;
 
-bool CStageMng::LoadEnemies(ifstream& f)
-{
-	if(FindChunk(f,"#Enemy"))
-	{
-		std::string label;
-		f >> label;
-		auto& ems = gm()->GetObjects("EnemyMng");
-		ObjPtr em;
-		if(ems.empty())
-		{
-			// EnemyMngがない場合、新規に追加する
-			em = ObjPtr(new CEnemyMng());
-			gm()->AddObject(em);
+			case 3:
+				stages_.insert(StageMap::value_type("Stage03", StagePtr(new CStage1(f))));
+				break;
+
+			case 4:
+				stages_.insert(StageMap::value_type("Stage04", StagePtr(new CStage1(f))));
+				break;
+
+			}
 		}
 		else
 		{
-			em = ems[0];
-		}
-		std::dynamic_pointer_cast<CEnemyMng>(em)->LoadEnemiesInfo(label);
-	}
-	return f.eof();
-}
-
-bool CStageMng::LoadActionCircles(ifstream& f)
-{
-	if(FindChunk(f,"#ActionCircle"))
-	{
-		std::string label;
-		f >> label;
-		if(label != "{" || f.eof()) return f.eof();
-		while(!f.eof())
-		{
-			std::vector<float> info;
-			for(int i=0; i<3; ++i)
-			{
-				f >> label;
-				if(label == "}" || f.eof())return f.eof();
-				info.push_back(static_cast<float>(std::atof(label.c_str())));
-			}
-			if(info.size() == 3)
-			{
-				actionPoints_.push_back(ActPtPtr(
-					new CActionCircle(info[0], info[1], info[2])
-										));
-			}
+			debug::BToM("CStageMng::CStageMng %s tag not found", tag.str().c_str());
+			return;
 		}
 	}
-	return f.eof();
-}
 
-bool CStageMng::LoadActionPolygons(ifstream& f)
-{
-	if(FindChunk(f,"#ActionPolygon"))
-	{
-		std::string label;
-		f >> label;
-		if(label != "{" || f.eof()) return f.eof();
-		while(!f.eof())
-		{
-			f >> label;
-			if(label == "}")break;
-			int num = std::atoi(label.c_str());
-			std::vector<mymath::Vec3f> info(num);
-			for(int i=0; i<num; ++i)
-			{
-				mymath::Vec3f pos;
-				f >> label;
-				if(label == "}" || f.eof()) return f.eof();
-				pos.x = static_cast<float>(std::atof(label.c_str()));
-				f >> label;
-				if(label == "}" || f.eof()) return f.eof();
-				pos.y = static_cast<float>(std::atof(label.c_str()));
-				pos.z = 0.5f;
-				info[i] = pos;
-			}
-			//info.push_back(info[0]);	// 閉路にする
-			actionPoints_.push_back(ActPtPtr(
-				new CActionPolygon(info)));
-			
-		}
-	}
-	return f.eof();
-}
 
+}
 
 
 
 void CStageMng::step()
 {
-	for(auto& ap : actionPoints_)
-		ap->step();
-	// 多重スクロールとか
-	/*
-#ifdef _DEBUG
-	if(input::CheckPush(input::KEY_F1))
-	{
-		std::stringstream file;
-		file << "res/dat/stage/" << stageName_ << ".txt";
-		ifstream f(file.str());
-		if(f.is_open())
-		{
-			LoadEnemies(f);
-		}
-	}
-#endif
-	*/
-
+	stages_[nowStage_]->step();
 }
 
 void CStageMng::draw()
 {
-	for(auto& ap : actionPoints_)
-		ap->draw();
-	graph::Draw_Graphics(
-		0,0,1.f,
-		"img_stage01",0,0,1280,800,0,0,
-		(rect.right-rect.left)/1280.f,
-		(rect.bottom-rect.top)/800.f);
-}
-
-void CStageMng::LoadStage(const std::string& stageName)
-{
-
-	std::string file = common::StrReplace(gm()->fm().GetFile("#StageFile"), "STAGENAME", stageName);
-	ifstream f(file);
-	if (f.fail())
-	{
-		debug::BToM("CStageMng::LoadStage path=%s", file.c_str());
-		return;
-	}
-	stageName_ = stageName;
-
-	// 先に登録されているオブジェクトを消してから読み込む
-	auto& objs = gm()->GetObjects("Player,EnemyMng,Action", ',');
-	for (auto& obj : objs)
-		obj->kill();
-	actionPoints_.clear();
-
-
-	if(LoadSize(f))
-	{
-		f.clear();
-		f.seekg(0);
-	}
-	if(LoadPlayer(f))
-	{
-		f.clear();
-		f.seekg(0);
-	}
-	if(LoadEnemies(f))
-	{
-		f.clear();
-		f.seekg(0);
-	}
-	if(LoadActionCircles(f))
-	{
-		f.clear();
-		f.seekg(0);
-	}
-	if(LoadActionPolygons(f))
-	{
-		f.clear();
-		f.seekg(0);
-	}
-	
+	stages_[nowStage_]->draw();
 }
 
 
@@ -232,3 +105,80 @@ const std::shared_ptr<CStageMng> CStageMng::GetPtr()
 	const auto& sm = gm->GetObj(typeid(CStageMng));
 	return std::dynamic_pointer_cast<CStageMng>(sm);
 }
+
+void CStageMng::LoadStage(const std::string& stageName)
+{
+
+	nowStage_ = stageName;
+
+	std::string stages = gm()->fm().GetFile("#StageFile");
+	ifstream stageF(stages);
+	if (stageF.fail())
+	{
+		debug::BToM("CStageMng::Loadstage [stageF] path:%s", stages.c_str());
+		return;
+	}
+
+
+	std::string path;		// ステージファイルパス
+	if (!FindChunk(stageF, "#StagePath"))
+	{
+		debug::BToM("CStageMng::Loadstage #StagePath not found");
+		return;
+	}
+	stageF >> path;
+
+	// 現在のステージファイルからタグの生成
+	std::stringstream tag;
+	tag << "#" << nowStage_;
+
+	if (FindChunk(SeekSet(stageF), tag.str()))
+	{
+		std::string stage;
+		stageF >> stage;
+		stage = path + stage;		// ステージファイル名にパスを結合
+		ifstream f(stage);			// ステージファイル
+		if (f.fail())
+		{
+			debug::BToM("CStageMng::LoadStage [%s] path:%s", tag.str().c_str(), stage.c_str());
+			return;
+		}
+		stages_[nowStage_]->init(f);
+	}
+	else
+	{
+		debug::BToM("CStageMng::Loadstage %s not found", tag.str().c_str());
+		return;
+	}
+	
+}
+
+
+
+const mymath::Recti& CStageMng::getStageRect() const
+{
+	return stages_.at(nowStage_)->rect;
+}
+
+
+const mymath::Recti& CStageMng::getStageRect(const std::string& stage) const
+{
+	return stages_.at(stage)->rect;
+}
+
+const mymath::Recti& CStageMng::getCameraRect() const
+{
+	return stages_.at(nowStage_)->cameraRect;
+}
+
+const mymath::Recti& CStageMng::getCameraRect(const std::string& stage) const
+{
+	return stages_.at(stage)->cameraRect;
+}
+
+
+const std::vector<ActPtPtr>& CStageMng::getActionPoints() const
+{
+	return stages_.at(nowStage_)->actionPoints;
+}
+

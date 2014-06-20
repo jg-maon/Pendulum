@@ -25,6 +25,8 @@ private:
 	{
 		std::string name;		// 名前
 		int score;				// スコア
+
+
 		// 空要素
 		static Ranking empty()
 		{

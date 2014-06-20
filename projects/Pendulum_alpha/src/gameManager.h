@@ -25,7 +25,7 @@ using namespace gplib;
 //-------------------------------------------------
 //ゲームの管理を行う。
 //Objectを継承しているクラスは全て管理される。
-class CGameManager
+class CGameManager : public Base
 {
 private:
 	static mymath::Recti* winRect_;		// ウィンドウサイズ
@@ -68,16 +68,19 @@ public:
 		@return	なし
 	*/
 	void init();
+
+	void start() override;
+
 	/*
 		@brief	全オブジェクトの更新処理
 		@return	なし
 	*/
-	void step();
+	void step() override;
 	/*
 		@brief	全オブジェクトの描画
 		@return	なし
 	*/
-	void draw();
+	void draw() override;
 
 	/*
 		@brief		オブジェクトの追加

@@ -40,7 +40,11 @@ class Base
 public:
 	enum class Status
 	{
-		run, destroy
+		run,		// step,drawを実行
+		idle,		// step,drawを実行しない
+		update,		// stepのみ実行
+		disp,		// drawのみ実行
+		destroy,	// 削除
 	};
 	typedef std::vector<mymath::ShapefPtr> Collisions;
 private:
@@ -50,17 +54,45 @@ protected:
 	std::string name_;
 	Status status_;
 protected:
+	/*
+		@brief	ゲームマネージャの取得
+		@return	ゲームマネージャ
+	*/
 	CGameManager* gm() const;
+	/*
+		@brief	ゲームマネージャの設定
+		@param	[in]	gm	ゲームマネージャ
+		@return	なし
+	*/
 	void gm(CGameManager* gm);
 public:
+	/*
+		@brief	オブジェクトの生成
+		@param	[in]	name	識別名
+	*/
 	Base(const std::string& name);
+	/*
+		@brief	インターフェース化するための純粋仮想関数
+	*/
 	virtual ~Base() = 0;
+	/*
+		@brief	オブジェクトが消去対象か取得
+		@return	オブジェクトの消去対象状態
+		@retval	true	消去対象
+		@retval	false	消去対象でない
+	*/
 	bool isDestroy() const;
+	Status getStatus() const;
+	/*
+		
+	*/
 	bool FindName(const std::string& name) const;
 	const std::string& getName() const;
 	virtual void step() = 0;
 	virtual void draw() = 0;
 	virtual void kill();
+	virtual void start();
+	virtual void stop();
 	virtual void hit(const std::shared_ptr<Base>& rival);
 	virtual Collisions GetCollisionAreas() const;
 };

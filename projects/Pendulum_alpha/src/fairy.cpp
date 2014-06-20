@@ -173,7 +173,6 @@ void CFairy::DestroyStep()
 		state_ = State::WAIT;
 		kill();
 	}
-	return;
 }
 
 void CFairy::DecideState()

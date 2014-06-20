@@ -1,7 +1,7 @@
 #include "sceneMain.h"
 #include "define.h"
 
-#include "Collision.h"		// Collision検出用
+//#include "Collision.h"		// Collision検出用
 #include "enemyMng.h"
 #include "setting.h"
 
@@ -18,7 +18,13 @@
 CSceneMain::CSceneMain():
 IScene("","bgm_main")
 {
-	InsertObject(ObjPtr(new CCollision()));
+	//InsertObject(ObjPtr(new CCollision()));
+
+	// メイン内で使うオブジェクトを始動させる
+	auto& objs = gm()->GetObjects("StageMng Collision Player EnemyMng", ' ');
+	for (auto& obj : objs)
+		obj->start();
+
 }
 CSceneMain::~CSceneMain()
 {
@@ -43,6 +49,10 @@ bool CSceneMain::update()
 
 IScene* CSceneMain::NextScene()
 {
+	// メイン内で使うオブジェクトを停止させる
+	auto& objs = gm()->GetObjects("StageMng Collision", ' ');
+	for (auto& obj : objs)
+		obj->stop();
 	return new CSceneEnd();
 }
 

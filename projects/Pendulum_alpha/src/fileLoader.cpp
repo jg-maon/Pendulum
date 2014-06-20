@@ -509,13 +509,19 @@ void CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 	{
 		std::string buf;
 		f >> buf;
-		LoadBird(buf, enemies);
+		if (!LoadBird(buf, enemies))
+		{
+			return;
+		}
 	}
 	if (FindChunk(SeekSet(f), "#Fairy"))
 	{
 		std::string buf;
 		f >> buf;
-		LoadFairy(buf, enemies);
+		if (!LoadFairy(buf, enemies))
+		{
+			return;
+		}
 	}
 	//========================================================
 

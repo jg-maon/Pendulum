@@ -115,6 +115,7 @@ void InitGame()
 		TempObject to(gm);
 		TempScene ts(gm);
 	}
+	gm->start();
 
 
 	// ƒV[ƒ“‰Šú‰»

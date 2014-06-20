@@ -165,7 +165,6 @@ void CBird::DestroyStep()
 		state_ = State::WAIT;
 		kill();
 	}
-	return;
 }
 
 void CBird::DecideState()

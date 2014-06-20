@@ -8,7 +8,6 @@
 #CameraRight	16000
 #CameraBottom	8600
 
-
 #Player
 1500	4500
 

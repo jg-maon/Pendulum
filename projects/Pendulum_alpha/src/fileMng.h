@@ -28,7 +28,13 @@ private:
 	// データ一覧
 	std::vector<ObjPtr> dataTable_;
 
+
+public:
+	const std::string& iniFile;		// iniファイルパス
+
+
 private:
+
 
 public:
 
@@ -60,6 +66,12 @@ public:
 		@return フォント番号
 	*/
 	int GetFontID(const std::string& resname) const;
+
+	/*
+		@brief	iniファイルのパスを取得
+		@return	iniファイルパス
+	*/
+	//const std::string& getIniFile() const;
 
 
 	/*
