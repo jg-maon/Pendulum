@@ -80,8 +80,8 @@ public:
 			int w=0,int h=0,							// 画像サイズ
 			float sx=1.0f,float sy=1.0f,				// 拡大率
 			float deg=0.f,								// 回転角
-			int srcX=0,									// 横要素番号(列)
-			int srcY=0);								// 縦要素番号(行)
+			int srcX=0,									// 横要素番号(列), 抽出始点X座標
+			int srcY=0);								// 縦要素番号(行), 抽出始点Y座標
 
 	CharBase(float x=0.f,float y=0.f,float z=0.f,		// 座標
 			float adx=0.f,float ady=0.f,				// 移動量
@@ -89,8 +89,8 @@ public:
 			int w=0,int h=0,							// 画像サイズ
 			float sx=1.0f,float sy=1.0f,				// 拡大率
 			float deg=0.f,								// 回転角
-			int srcX = 0,								// 横要素番号(列)
-			int srcY = 0);								// 縦要素番号(行)
+			int srcX = 0,								// 横要素番号(列), 抽出始点X座標
+			int srcY = 0);								// 縦要素番号(行), 抽出始点Y座標
 
 
 	/*
@@ -117,26 +117,44 @@ public:
 	enum MODE{Center,LeftTop};
 	/*
 		@brief	判定矩形の取得
-		@param	[in] mode	座標を中心とするか、左上とするか
+		@param	[in]	mode	座標を中心とするか、左上とするか(デフォルト:Center)
 		@return	判定矩形
 	*/
 	mymath::Rectf GetRect(MODE mode = Center) const;
 	/*
 		@brief	画像の描画
-		@param	[in] mode	座標を中心とするか、左上とするか
+		@param	[in]	mode		座標を中心とするか、左上とするか(デフォルト:Center)
+		@param	[in]	turnFlag	反転描画するか(デフォルト:false)
 		@return	なし
 	*/
-	void draw(MODE mode = Center) const;
+	void draw(MODE mode = Center, bool turnFlag = false) const;
 	/*
 		@brief	画像の描画 カメラ座標に影響されない
-		@param	[in] mode	座標を中心とするか、左上とするか
+		@param	[in]	mode		座標を中心とするか、左上とするか(デフォルト:Center)
+		@param	[in]	turnFlag	反転描画するか(デフォルト:false)
 		@return	なし
 	*/
-	void drawNC(MODE mode = Center) const;
+	void drawNC(MODE mode = Center, bool turnFlag = false) const;
+	/*
+		@brief	画像の描画
+				画像の抽出方法が座標管理になる
+		@param	[in]	mode		座標を中心とするか、左上とするか(デフォルト:Center)
+		@param	[in]	turnFlag	反転描画するか(デフォルト:false)
+		@return	なし
+	*/
+	void draw2(MODE mode = Center, bool turnFlag = false) const;
+	/*
+		@brief	画像の描画 カメラ座標に影響されない
+				画像の抽出方法が座標管理になる
+		@param	[in]	mode		座標を中心とするか、左上とするか(デフォルト:Center)
+		@param	[in]	turnFlag	反転描画するか(デフォルト:false)
+		@return	なし
+	*/
+	void draw2NC(MODE mode = Center, bool turnFlag = false) const;
 
 	/*
 		@brief	移動
-		@param	[in] b3D	3D移動するか
+		@param	[in] b3D	3D移動するか(デフォルト:false)
 		@return	なし
 	*/
 	void Move(bool b3D = false);					// 移動

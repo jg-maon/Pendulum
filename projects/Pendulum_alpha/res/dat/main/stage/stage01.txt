@@ -13,7 +13,7 @@
 4680	2877
 
 #Enemy
-res/dat/main/enemy/enemyTable01.txt
+res/dat/main/enemy/debugTable01.txt
 
 #ActionCircle
 {

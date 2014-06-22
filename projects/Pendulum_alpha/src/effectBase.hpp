@@ -11,7 +11,11 @@
 class IEffect : public IObject
 {
 public:
-	IEffect(const std::string& name):IObject(name){}
+	IEffect(const std::string& name) :
+		IObject(name)
+	{
+		status_ = Status::run;
+	}
 	virtual void step() = 0{}
 	virtual void draw() = 0{}
 };

@@ -10,6 +10,7 @@
 	img_alphabet	res/gra/ui/abc.png				0xff000000
 	img_circle		res/gra/circle_x96.png			0xff000000
 	img_explosion	res/gra/effect/explosion.png	0xff000000
+	img_slash		res/gra/effect/slash.png	0xff000000
 		
 	img_title		res/gra/title/bg.jpg			0xff00ff00
 

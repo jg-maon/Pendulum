@@ -4,10 +4,10 @@
 #endif
 
 #if defined(D_POLY_TEST) | defined(D_CIRCLE_TEST)
-	std::vector<mymath::Vec3f> vertexes;
-	#ifdef D_POLY_TEST
-	mymath::Linef line(0.f,0.f,0.5f, 500.f,1000.f,0.5f);
-	#endif
+std::vector<mymath::Vec3f> vertexes;
+#ifdef D_POLY_TEST
+mymath::Linef line(0.f,0.f,0.5f, 500.f,1000.f,0.5f);
+#endif
 #endif
 
 
@@ -27,33 +27,35 @@
 #include "nWayShot.h"
 
 #include "effectExplosion.h"
+#include "effectSlash.h"
 
 #include <memory>
 
 
 CCollision::CCollision() :
-	IObject("Collision")
+IObject("Collision")
 {
 	status_ = Status::idle;
 #ifdef D_CIRCLE_TEST
-	std::tuple<int,int,float> acs[] =
+	std::tuple<int, int, float> acs[] =
 	{
-		std::tuple<int,int,float>(100,100,50.f),
-		std::tuple<int,int,float>(200,200,50.f),
-		std::tuple<int,int,float>(300,300,10.f),
-		std::tuple<int,int,float>(400,500,100.f),
-		std::tuple<int,int,float>(200,100,50.f),
-		std::tuple<int,int,float>(100,200,20.f),
-		std::tuple<int,int,float>(1000,1000,150.f),
+		std::tuple<int, int, float>(100, 100, 50.f),
+		std::tuple<int, int, float>(200, 200, 50.f),
+		std::tuple<int, int, float>(300, 300, 10.f),
+		std::tuple<int, int, float>(400, 500, 100.f),
+		std::tuple<int, int, float>(200, 100, 50.f),
+		std::tuple<int, int, float>(100, 200, 20.f),
+		std::tuple<int, int, float>(1000, 1000, 150.f),
 	};
-	for(auto& ac : acs)
-		InsertObject(ObjPtr(new CActionCircle(
-							static_cast<float>(std::get<0>(ac)),
-							static_cast<float>(std::get<1>(ac)),
-							std::get<2>(ac))));
-									
+	for (auto& ac : acs)
+		gm()->AddObject(ObjPtr(new CActionCircle(
+		static_cast<float>(std::get<0>(ac)),
+		static_cast<float>(std::get<1>(ac)),
+		std::get<2>(ac))));
+
 #endif
 }
+
 void CCollision::step()
 {
 	auto& player = CPlayer::GetPtr();
@@ -63,7 +65,7 @@ void CCollision::step()
 
 	auto& atk_shots = gm()->GetObjects("Atk_Shot,Atk_Sing", ',');
 	const auto& sm = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
-	
+
 	const auto& actionPoints = sm->getActionPoints();
 	//-----------------------------------------------------
 	// プレイヤー
@@ -127,8 +129,10 @@ void CCollision::step()
 						// 攻撃処理
 						if (atkFlag)
 						{
+							auto& epos = enemy->obj().pos;
 							// ダメージ
-							pl->ApplyAttack(enemy->obj().pos);
+							pl->ApplyAttack(epos);
+							gm()->AddObject(ObjPtr(new CEffectSlash(epos)));
 							if (enemy->ApplyDamage(pl->getPower()))
 							{
 								//-----------------------------------------
@@ -137,7 +141,7 @@ void CCollision::step()
 
 								// 爆散エフェクト
 								for (int i = 0; i < 3; ++i)
-									gm()->AddObject(ObjPtr(new CEffectExplosion(enemy->obj().pos)));
+									gm()->AddObject(ObjPtr(new CEffectExplosion(epos)));
 								// SE
 								//DSound_SetFrequency(SE::EXPLODE, 1000);
 								se::DSound_Play("se_explosion");
@@ -175,7 +179,7 @@ void CCollision::step()
 							pl->hit(enemy);
 							break;
 							// 攻撃種類別処理
-							//if(enemy->attack->findName("Atk_NWayShot"))
+							//if (enemy->attack->findName("Atk_NWayShot"))
 							//{
 							//	
 							//}
@@ -249,29 +253,29 @@ void CCollision::step()
 					shot->kill();
 				}
 				// 通過判定
-				//else if(
+				//else if (
 			}
 		}
 	}
 
 #if defined(D_POLY_TEST) | defined(D_CIRCLE_TEST)
-	if(CheckPush(KEY_MOUSE_LBTN))
+	if (CheckPush(KEY_MOUSE_LBTN))
 	{
 		POINT mouse = GetCursorPosition();
 		mymath::Vec3f p((float)mouse.x,(float)mouse.y,0.f);
 		vertexes.push_back(p);
 	}
-	if(CheckPush(KEY_MOUSE_RBTN))
+	if (CheckPush(KEY_MOUSE_RBTN))
 	{
 		InsertObject(ObjPtr(new CActionPolygon(vertexes)));
 		vertexes.clear();
 	}
-	if(CheckPush(KEY_SPACE))
+	if (CheckPush(KEY_SPACE))
 	{
 		vertexes.clear();
 		for(auto& obj : objs)
 		{
-			if(obj->findName("ActionPolygon"))
+			if (obj->findName("ActionPolygon"))
 			{
 				obj->kill();
 			}
@@ -283,7 +287,7 @@ void CCollision::step()
 void CCollision::draw()
 {
 #ifdef D_POLY_TEST
-	Draw_Line(	(int)line.sta.x,
+	Draw_Line((int)line.sta.x,
 		(int)line.sta.y,
 		(int)line.end.x,
 		(int)line.end.y,
@@ -291,103 +295,103 @@ void CCollision::draw()
 		-1,
 		1);
 	auto& actPolys = GetObjects("ActionPolygon");
-	if(!actPolys.empty())
+	if (!actPolys.empty())
 	{
-		for(auto& act : actPolys)
+		for (auto& act : actPolys)
 		{
 			CActionPolygon* ap = (CActionPolygon*)act.get();
 			std::vector<mymath::Vec3f> points;
-			if(ap->Contains(points, line))
+			if (ap->Contains(points, line))
 			{
-				for(auto& point : points)
+				for (auto& point : points)
 				{
 					Draw_BoxCenter(int(point.x), int(point.y),
-						5,5,0.f,
-						ARGB(255,0,0,0),
-						ARGB(255,0,0,0),
-						0,true);
+						5, 5, 0.f,
+						ARGB(255, 0, 0, 0),
+						ARGB(255, 0, 0, 0),
+						0, true);
 				}
 			}
 		}
 	}
 #endif
 #if defined(D_POLY_TEST) | defined(D_CIRCLE_TEST)
-	if(!vertexes.empty())
+	if (!vertexes.empty())
 	{
 		// 登録中の線分
-		if(vertexes.size() >= 2)
+		if (vertexes.size() >= 2)
 		{
 			//Draw_
-			for(size_t sta = 0; sta < vertexes.size()-1; ++sta)
+			for (size_t sta = 0; sta < vertexes.size() - 1; ++sta)
 			{
-				size_t end = (sta+1) % vertexes.size();
-				Draw_Line(	int(vertexes[sta].x),
+				size_t end = (sta + 1) % vertexes.size();
+				Draw_Line(int(vertexes[sta].x),
 					int(vertexes[sta].y),
 					int(vertexes[end].x),
 					int(vertexes[end].y),
 					vertexes[sta].z,
-					ARGB(255,255,255,0),
+					ARGB(255, 255, 255, 0),
 					1);
 			}
 		}
 		// 終点とマウスを結ぶ
 		mymath::Vec3f sta = vertexes.back();
 		POINT mouse = GetCursorPosition();
-		Draw_Line(	int(sta.x),
+		Draw_Line(int(sta.x),
 			int(sta.y),
 			mouse.x,
 			mouse.y,
 			sta.z,
-			ARGB(255,0,255,255),
+			ARGB(255, 0, 255, 255),
 			1);
 	}
 #endif
 #ifdef D_CIRCLE_TEST
 
 	auto& actCircles = GetObjects("ActionCircle");
-	if(!actCircles.empty())
+	if (!actCircles.empty())
 	{
 		POINT mouse = GetCursorPosition();
-		mymath::Vec3f p((float)mouse.x,(float)mouse.y);
-		for(auto& act : actCircles)
+		mymath::Vec3f p((float)mouse.x, (float)mouse.y);
+		for (auto& act : actCircles)
 		{
 			CActionCircle* ap = (CActionCircle*)act.get();
 			mymath::Vec3f point;
-			if(ap->Contains(point, p))
+			if (ap->Contains(point, p))
 			{
 				Draw_BoxCenter(int(point.x), int(point.y),
-					5,5,0.f,
+					5, 5, 0.f,
 					-1,//ARGB(255,0,0,0),
 					-1,//ARGB(255,0,0,0),
-					0,true);
+					0, true);
 			}
 		}
 		// マウスで生成した線分との当たり判定
 		auto& mousePolys = GetObjects("ActionPolygon");
-		if(!mousePolys.empty())
+		if (!mousePolys.empty())
 		{
-			for(auto& mousePoly : mousePolys)
+			for (auto& mousePoly : mousePolys)
 			{
 				std::vector<mymath::Vec3f> vers = ((CActionPolygon*)mousePoly.get())->vertexes;
-				if(vers.size() >= 2)
-				for(size_t sta = 0; sta < vers.size(); ++sta)
+				if (vers.size() >= 2)
+				for (size_t sta = 0; sta < vers.size(); ++sta)
 				{
-					size_t end = (sta+1) % vers.size();
-					for(auto& act : actCircles)
+					size_t end = (sta + 1) % vers.size();
+					for (auto& act : actCircles)
 					{
 						CActionCircle* ap = (CActionCircle*)act.get();
 						std::vector<mymath::Vec3f> points;
-						//if(ap->Contains(points, vers[sta], vers[end]))
+						//if (ap->Contains(points, vers[sta], vers[end]))
 						mymath::Vec3f point;
-						if(ap->Contains(point, vers[sta], vers[end]))
+						if (ap->Contains(point, vers[sta], vers[end]))
 						{
 							//for(auto& point : points)
 							{
 								Draw_BoxCenter(int(point.x), int(point.y),
-									5,5,0.f,
-									-1,//ARGB(255,0,0,0),
-									-1,//ARGB(255,0,0,0),
-									0,true);
+								5, 5, 0.f,
+								-1,//ARGB(255,0,0,0),
+								-1,//ARGB(255,0,0,0),
+								0, true);
 							}
 						}
 					}

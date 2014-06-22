@@ -15,6 +15,8 @@ public:
 		float ATTACK_RANGE;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
 		float RETURN_RANGE;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
 		float MOVE_SPEED;		// 移動速度
+
+		float shotInterval;		// 攻撃間隔
 	};
 private:
 	enum class State
@@ -59,9 +61,10 @@ private:
 
 	/*
 		@brief	情報の初期化
+		@param	[in]	pos	初期座標
 		@return	なし
 	*/
-	void init();
+	void init(const mymath::Vec3f& pos);
 
 	/*
 		@brief	待機
@@ -123,9 +126,23 @@ public:
 	*/
 	CBird(float x, float y, float z = 0.5f);
 	~CBird();
+	/*
+		@brief	更新処理
+		@return	なし
+	*/
 	virtual void step() override;
+	
+	/*
+		@brief	描画処理
+		@return	なし
+	*/
 	virtual void draw() override;
 	
+	/*
+		@brief	オブジェクト同士の重なり処理
+		@param	[in]	rival	重なっている相手オブジェクト
+		@return	なし
+	*/
 	virtual void hit(const ObjPtr& rival) override;
 
 	/*

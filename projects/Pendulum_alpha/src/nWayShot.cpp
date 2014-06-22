@@ -47,7 +47,7 @@ void CNWayShot::CreateAttack(const mymath::Vec3f& pos, int n, float angle, float
 		shot_info.SetCollisionAreas(shot_);
 
 		// “o˜^
-		InsertObject(ObjPtr(new CShot(shot_info)));
+		gm()->AddObject(ObjPtr(new CShot(shot_info)));
 	}
 
 }

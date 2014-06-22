@@ -3,6 +3,9 @@
 #include "define.h"
 
 #include "stage1.h"
+#include "stage2.h"
+#include "stage3.h"
+#include "stage4.h"
 
 #include "setting.h"
 #include "common.h"
@@ -18,8 +21,8 @@ using std::ifstream;
 using common::FindChunk;
 using common::SeekSet;
 
-CStageMng::CStageMng():
-	Base("StageMng")
+CStageMng::CStageMng() :
+Base("StageMng")
 {
 	// メインゲームになるまで待機
 	status_ = Status::idle;
@@ -32,7 +35,7 @@ CStageMng::CStageMng():
 		debug::BToM("CStageMng::CStageMng [stageF] path:%s", stages.c_str());
 		return;
 	}
-	
+
 	std::string path;		// ステージファイルパス
 	if (!FindChunk(stageF, "#StagePath"))
 	{
@@ -63,15 +66,15 @@ CStageMng::CStageMng():
 				break;
 
 			case 2:
-				stages_.insert(StageMap::value_type("Stage02", StagePtr(new CStage1(f))));
+				stages_.insert(StageMap::value_type("Stage02", StagePtr(new CStage2(f))));
 				break;
 
 			case 3:
-				stages_.insert(StageMap::value_type("Stage03", StagePtr(new CStage1(f))));
+				stages_.insert(StageMap::value_type("Stage03", StagePtr(new CStage3(f))));
 				break;
 
 			case 4:
-				stages_.insert(StageMap::value_type("Stage04", StagePtr(new CStage1(f))));
+				stages_.insert(StageMap::value_type("Stage04", StagePtr(new CStage4(f))));
 				break;
 
 			}
@@ -143,6 +146,7 @@ void CStageMng::LoadStage(const std::string& stageName)
 			debug::BToM("CStageMng::LoadStage [%s] path:%s", tag.str().c_str(), stage.c_str());
 			return;
 		}
+		// ステージ初期化
 		stages_[nowStage_]->init(f);
 	}
 	else

@@ -37,29 +37,27 @@ IEnemy("E_Bird")
 CBird::CBird(const mymath::Vec3f& pos) :
 IEnemy("E_Bird")
 {
-	gm()->GetData(*this);
-	obj_.pos = pos;
-	init();
+	init(pos);
 }
 CBird::CBird(float x, float y, float z) :
 IEnemy("E_Bird")
 {
-	gm()->GetData(*this);
-	obj_.pos.x = x;
-	obj_.pos.y = y;
-	obj_.pos.z = z;
-	init();
+	init(mymath::Vec3f(x, y, z));
 }
 
 CBird::~CBird()
 {
-	
+
 }
 
 
-void CBird::init()
+void CBird::init(const mymath::Vec3f& pos)
 {
 	using common::FindChunk;
+
+	gm()->GetData(*this);
+
+	obj_.pos = pos;
 
 	startPos_ = obj_.pos;
 
@@ -84,10 +82,10 @@ void CBird::step()
 	// プレイヤーを向く
 	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
 
-	if (obj_.pos.x < plPos.x)
-		obj_.scale.x = 1.f;
-	else
-		obj_.scale.x = -1.f;
+	if (obj_.pos.x < plPos.x && turnFlag_)
+		turnFlag_ ^= 1;
+	else if (obj_.pos.x > plPos.x && !turnFlag_)
+		turnFlag_ ^= 1;
 
 	(this->*StateStep_[static_cast<int>(state_)])();
 
@@ -100,7 +98,7 @@ void CBird::draw()
 	mymath::Rectf rect = camera::GetScreenRect();
 	if (rect.Contains(obj_.GetRect()))
 	{
-		obj_.draw();
+		obj_.draw(charabase::CharBase::MODE::Center, turnFlag_);
 	}
 #ifdef DEF_SHAPE_DRAW
 	const auto& cols = GetCollisionAreas();
@@ -130,10 +128,10 @@ void CBird::ChaseStep()
 void CBird::ReturnStep()
 {
 	mymath::Vec3f dist = startPos_ - obj_.pos;
-	
-	if(mymath::PYTHA(dist.x,dist.y) > mymath::POW2(loadInfo_.RETURN_RANGE))
+
+	if (mymath::PYTHA(dist.x, dist.y) > mymath::POW2(loadInfo_.RETURN_RANGE))
 	{
-		float angle = std::atan2f(dist.y,dist.x);
+		float angle = std::atan2f(dist.y, dist.x);
 		obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.MOVE_SPEED;
 	}
 	else
@@ -147,11 +145,11 @@ void CBird::ReturnStep()
 void CBird::AttackStep()
 {
 	// 攻撃
-	if(elapsedTime_ > nextActTime_)
+	if (elapsedTime_ > nextActTime_)
 	{
 		CreateAttack();
 		state_ = State::WAIT;
-		nextActTime_ = elapsedTime_ + 2.f;		// 連続間隔
+		nextActTime_ = elapsedTime_ + loadInfo_.shotInterval;		// 連続間隔
 	}
 }
 
@@ -159,7 +157,7 @@ void CBird::DestroyStep()
 {
 	// 0.5秒
 	obj_.alpha -= 255.f / 0.5f * system::FrameTime;
-	if(obj_.alpha < 0.f)
+	if (obj_.alpha < 0.f)
 	{
 		obj_.alpha = 0.f;
 		state_ = State::WAIT;
@@ -222,16 +220,16 @@ void CBird::CreateAttack()
 	const float SP = 70.f;			// 初速度
 	const float ACC = 5.f;			// 加速度
 	std::dynamic_pointer_cast<CNWayShot>(attack_)->CreateAttack(
-				mypos,
-				5,
-				angle,INTERVAL,
-				SP,ACC);
+		mypos,
+		5,
+		angle, INTERVAL,
+		SP, ACC);
 }
 
 
 void CBird::hit(const ObjPtr& rival)
 {
-	if(rival->FindName("ActionPolygon"))
+	if (rival->FindName("ActionPolygon"))
 	{
 		// めり込み補正,通過補正
 		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);
@@ -240,7 +238,7 @@ void CBird::hit(const ObjPtr& rival)
 		intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
 		obj_.pos = intersection;
 		obj_.pos -= dist.Normalize();
-		
+
 	}
 }
 
@@ -249,7 +247,7 @@ void CBird::hit(const ObjPtr& rival)
 bool CBird::ApplyDamage(int dam)
 {
 	// 死亡アニメーション中はスキップ
-	if(state_ == State::DESTROY) return true;
+	if (state_ == State::DESTROY) return true;
 	// ダメージが入ったら即死
 	state_ = State::DESTROY;
 
@@ -258,14 +256,14 @@ bool CBird::ApplyDamage(int dam)
 	//InsertObject(ObjPtr(new CEffectExplosion(obj_.pos)));
 	//// SE
 	//DSound_Play(SE::EXPLODE);
-	
+
 	return true;
 }
 
 Base::Collisions CBird::GetCollisionAreas() const
 {
 	// 死亡アニメーション中はスキップ
-	if(state_ != State::DESTROY)
+	if (state_ != State::DESTROY)
 	{
 		return __super::GetCollisionAreas();
 	}

@@ -22,7 +22,7 @@ Base("GameManager")
 {
 	ShowCursor(showCursor_ == true);
 	init();
-	
+
 	cursor_ = charabase::CharPtr(new charabase::CharBase(
 		mymath::Vec3f(), mymath::Vec3f(),
 		"img_cursor",
@@ -43,10 +43,16 @@ void CGameManager::start()
 
 	fileMng_.Load();
 
-	AddObject2(ObjPtr(new CStageMng()));
-	AddObject2(ObjPtr(new CScoreMng()));
-	AddObject2(ObjPtr(new CCollision()));
+	if (!GetObj(typeid(CStageMng)).get())
+		AddObject2(ObjPtr(new CStageMng()));
 
+	if (!GetObj(typeid(CScoreMng)).get())
+		AddObject2(ObjPtr(new CScoreMng()));
+
+	if (!GetObj(typeid(CCollision)).get())
+		AddObject2(ObjPtr(new CCollision()));
+
+	objs_ = objs_;
 }
 
 
@@ -69,7 +75,7 @@ void CGameManager::init()
 {
 	objs_.clear();
 	addObjs_.clear();
-	clear_ = false;
+	//clear_ = false;
 }
 
 void CGameManager::step()
@@ -102,12 +108,12 @@ void CGameManager::step()
 	else if (cursorPos.y + halfHeight > rt.bottom)
 		cursorPos.y = rt.bottom - halfHeight;
 	//=======================================================
-	
+
 	//ゲームオーバー時、クリア時に判定処理は行わない。
 	if (gameover::isGameOver()) return;
 
-	ClearToChangeScreen(CLEARSCREEN);
-	if (getClear()) return;
+	//ClearToChangeScreen(CLEARSCREEN);
+	//if (getClear()) return;
 
 	//各種更新
 	for (const auto& obj : objs_)
@@ -134,6 +140,19 @@ void CGameManager::draw()
 		if (status == Status::run || status == Status::disp)
 			obj->draw();
 	}
+}
+
+void CGameManager::AllStop()
+{
+	// 現在登録中
+	for (auto& obj : objs_)
+		obj->stop();
+
+	//*
+	// 追加予定
+	for (auto& obj : addObjs_)
+		obj->stop();
+	//*/
 }
 
 void CGameManager::AddObject(const ObjPtr& obj)
@@ -238,20 +257,20 @@ void CGameManager::ClearObjects()
 	/*
 	// 追加予定
 	for (auto& obj : addObjs_)
-		obj->kill();
-	*/
+	obj->kill();
+	//*/
 }
 
 
 
-
+/*
 void CGameManager::setClear(bool clear)
 {
-	clear_ = clear; 
+	clear_ = clear;
 }
 bool CGameManager::getClear() const
 {
-	return clear_; 
+	return clear_;
 }
 
 
@@ -273,7 +292,7 @@ void CGameManager::ClearToChangeScreen(int next)
 		}
 	}
 }
-
+//*/
 
 const mymath::Recti* CGameManager::winRect() const
 {
@@ -314,9 +333,10 @@ CFileMng& CGameManager::fm()
 }
 
 
-
+/*
 void InsertObject(const ObjPtr& obj)
 {
-	extern CGameManager* gm;
-	gm->AddObject(obj);
+extern CGameManager* gm;
+gm->AddObject(obj);
 }
+//*/

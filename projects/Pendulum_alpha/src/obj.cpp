@@ -6,9 +6,9 @@ CGameManager* Base::gm_ = nullptr;
 
 #pragma region Base methods
 
-Base::Base(const std::string& name)	:
-	name_(name)
-	,status_(Status::run)
+Base::Base(const std::string& name) :
+name_(name)
+, status_(Status::idle)
 {
 }
 Base::~Base()
@@ -75,8 +75,9 @@ Base::Collisions Base::GetCollisionAreas() const
 
 #pragma region IObject methods
 
-IObject::IObject(const std::string& name):
-	Base(name)
+IObject::IObject(const std::string& name) :
+Base(name)
+, turnFlag_(false)
 {
 }
 
@@ -87,8 +88,8 @@ IObject::~IObject()
 bool IObject::InScreen(int border) const
 {
 	RECT rt = camera::GetScreenRect();
-	if (	obj_.pos.x < rt.left - border  || obj_.pos.y < rt.top - border
-		||	obj_.pos.x > rt.right + border || obj_.pos.y > rt.bottom + border)
+	if (obj_.pos.x < rt.left - border || obj_.pos.y < rt.top - border
+		|| obj_.pos.x > rt.right + border || obj_.pos.y > rt.bottom + border)
 	{
 		return false;
 	}
@@ -128,8 +129,8 @@ void IObject::obj(const charabase::CharBase& o)
 
 #pragma region IColObject methods
 
-IColObject::IColObject(const std::string& name):
-	IObject(name)
+IColObject::IColObject(const std::string& name) :
+IObject(name)
 {
 }
 
@@ -216,6 +217,9 @@ Base::Collisions IColObject::GetCollisionAreas() const
 	}
 	for(auto& col : cols)
 	{
+		// ‰æ‘œ‚É‡‚í‚¹‚Ä”½“]
+		if (turnFlag_)
+			col->ReverseX();
 		// ‰æ‘œ‚ÌŠp“x‚É‡‚í‚¹‚Ä‰ñ“]
 		col->Rotate(math::Calc_DegreeToRad(obj_.angle));
 		// ‰æ‘œ‚Ìƒ[ƒ‹ƒhÀ•WŒn‚ÉˆÚ“®

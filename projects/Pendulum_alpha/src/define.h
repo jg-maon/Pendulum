@@ -24,9 +24,10 @@ enum{ TITLESCREEN, STAGESELECTSCREEN, STAGE1SCREEN, ENDSCREEN, CLEARSCREEN };
 //======================================================================================//
 //ä÷êîíËã`
 //======================================================================================//
+/*
 const int STRAIGHT = 0;		//Ç‹Ç¡Ç∑ÇÆï`âÊ
 const int WORDBREAK = 1;	//\nÇ≈â¸çsÇ∑ÇÈÅB
 void Draw_TextToBmp(int x, int y, const std::string& msg, int size, int type = STRAIGHT);
-
+//*/
 
 #endif

@@ -103,12 +103,38 @@ public:
 		z = static_cast<T>(0);
 	}
 
+	template<class T1>
+	Vec3(const mymath::Vec3<T1>& v)
+	{
+		x = static_cast<T>(v.x);
+		y = static_cast<T>(v.y);
+		z = static_cast<T>(v.z);
+	}
+
 	//Vec3(const Vec3<T>& v){ *this = v; }
 
 	// 代入、初期化系
 	Vec3<T>&	operator()(T xx, T yy = 0, T zz = 0){ x = xx; y = yy; z = zz; return *this; }
 	Vec3<T>&	operator=(T v){ x = v; y = v; z = v; return *this; }
 	Vec3<T>&	operator=(const POINT& p){	x = static_cast<T>(p.x); y = static_cast<T>(p.y); return *this;	}
+
+	// キャスト代入
+	template<class T1>
+	Vec3<T>& operator = (const mymath::Vec3<T1>& v)
+	{
+		x = static_cast<T>(v.x);
+		y = static_cast<T>(v.y);
+		z = static_cast<T>(v.z);
+		return *this;
+	}
+	// キャスト
+	template<class T1>
+	operator Vec3<T1>()
+	{
+		return Vec3<T1>(static_cast<T>(x),
+			static_cast<T>(y),
+			static_cast<T>(z));
+	}
 
 
 	// 単項
@@ -151,23 +177,7 @@ public:
 	// friend関数による比較
 	friend bool		operator==(T v, Vec3<T>& obj){ return (obj.x == v && obj.y == v && obj.z == v); }
 	friend bool		operator!=(T v, Vec3<T>& obj){ return (obj.x != v || obj.y != v || obj.z != v); }
-	
-	// キャスト
-	template<class T1>
-	Vec3<T>& operator = (const Vec3<T1>& v)
-	{
-		x = static_cast<T>(v.x);
-		y = static_cast<T>(v.y);
-		z = static_cast<T>(v.z);
-		return *this;
-	}
-	template<class T1>
-	operator Vec3<T1>()
-	{
-		return Vec3<T1>(static_cast<T>(x),
-			static_cast<T>(y),
-			static_cast<T>(z));
-	}
+
 
 #pragma region member methods
 
@@ -367,7 +377,7 @@ public:
 
 	/*
 		@brief	交点の取得
-			if(Intersect(line))
+			if (Intersect(line))
 				point = IntersectionPoint2(line);
 		@attention	交差していることが前提
 		@param	[in]	line	線分
@@ -406,7 +416,7 @@ public:
 	}
 	/*
 		@brief	交点の取得
-			if(Intersect(p1,p2))
+			if (Intersect(p1,p2))
 				point = IntersectionPoint2(p1,p2);
 		@attention	交差していることが前提
 		@param	[in]	_sta	始点
@@ -444,6 +454,17 @@ template<typename T> class Shape
 private:
 public:
 	virtual ~Shape() = 0{}
+
+	/*
+		@brief			図形を水平反転させる
+		@return			自分自身
+	*/
+	virtual Shape<T>& ReverseX() = 0{ return *this; }
+	/*
+		@brief			図形を垂直反転させる
+		@return			自分自身
+	*/
+	virtual Shape<T>& ReverseY() = 0{ return *this; }
 
 	/*
 		@brief			図形を値分ずらす
@@ -574,7 +595,7 @@ public:
 #pragma region Intersection
 	/*
 		@brief	内包している点から一番近い交点の取得
-			if(Contains(p))
+			if (Contains(p))
 				point = IntersectionPoint2(p);
 		@attention	交差していることが前提
 		@param	[in]	point	内包している点
@@ -584,7 +605,7 @@ public:
 	
 	/*
 		@brief	線分との交点の取得
-			if(Contains(line))
+			if (Contains(line))
 				points = IntersectionPoint2(line);
 		@attention	交差していることが前提
 		@param	[in]	line(sta,end)	比較線分
@@ -594,7 +615,7 @@ public:
 	
 	/*
 		@brief	線分との交点の取得
-			if(Contains(pos,next))
+			if (Contains(pos,next))
 				points = IntersectionPoint2(pos,next);
 		@attention	交差していることが前提
 		@param	[in]	sta	比較線分の始点
@@ -605,7 +626,7 @@ public:
 	
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
-			if(Contains(line))
+			if (Contains(line))
 				point = IntersectionPoint2Nearest(line);
 		@attention	交差していることが前提
 		@param	[in]	line(sta,end)	比較線分
@@ -615,7 +636,7 @@ public:
 	
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
-			if(Contains(pos,next))
+			if (Contains(pos,next))
 				point = IntersectionPoint2Nearest(pos,next);
 		@attention	交差していることが前提
 		@param	[in]	sta	比較線分の始点
@@ -750,7 +771,27 @@ public:
 	{
 		return points.size();
 	}
-
+	
+	/*
+		@brief			図形を水平反転させる
+		@return			自分自身
+	*/
+	virtual Shape<T>& ReverseX() override
+	{
+		for (auto& point : points)
+			point.x = -point.x;
+		return *this;
+	}
+	/*
+		@brief			図形を垂直反転させる
+		@return			自分自身
+	*/
+	virtual Shape<T>& ReverseY() override
+	{
+		for (auto& point : points)
+			point.y = -point.y;
+		return *this;
+	}
 
 	/*
 		@brief	図形を値分ずらす
@@ -1023,7 +1064,7 @@ public:
 #pragma region Intersection
 	/*
 		@brief	内包している点から一番近い交点の取得
-			if(Contains(p))
+			if (Contains(p))
 				point = IntersectionPoint2(p);
 		@attention	交差していることが前提
 		@param	[in]	point	内包している点
@@ -1060,7 +1101,7 @@ public:
 
 	/*
 		@brief	線分との交点の取得
-			if(Contains(line))
+			if (Contains(line))
 				points = IntersectionPoint2(line);
 		@attention	交差していることが前提
 		@param	[in]	line(sta,end)	比較線分
@@ -1080,7 +1121,7 @@ public:
 	}
 	/*
 		@brief	線分との交点の取得
-			if(Contains(pos,next))
+			if (Contains(pos,next))
 				points = IntersectionPoint2(pos,next);
 		@attention	交差していることが前提
 		@param	[in]	sta	比較線分の始点
@@ -1104,7 +1145,7 @@ public:
 
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
-			if(Contains(line))
+			if (Contains(line))
 				point = IntersectionPoint2Nearest(line);
 		@attention	交差していることが前提
 		@param	[in]	line(sta,end)	比較線分
@@ -1133,7 +1174,7 @@ public:
 	}
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
-			if(Contains(pos,next))
+			if (Contains(pos,next))
 				point = IntersectionPoint2Nearest(pos,next);
 		@attention	交差していることが前提
 		@param	[in]	sta	比較線分の始点
@@ -1240,7 +1281,27 @@ public:
 
 		return rt;
 	}
-
+	
+	/*
+		@brief			図形を水平反転させる
+		@return			自分自身
+	*/
+	virtual Shape<T>& ReverseX() override
+	{
+		left = -left;
+		right = -right;
+		return *this;
+	}
+	/*
+		@brief			図形を垂直反転させる
+		@return			自分自身
+	*/
+	virtual Shape<T>& ReverseY() override
+	{
+		top = -top;
+		bottom = -bottom;
+		return *this;
+	}
 
 	/*
 		@brief	図形を値分ずらす
@@ -1514,7 +1575,7 @@ public:
 #pragma region Intersection
 	/*
 		@brief	内包している点から一番近い交点の取得
-			if(Contains(p))
+			if (Contains(p))
 				point = IntersectionPoint2(p);
 		@attention	交差していることが前提
 		@param	[in]	point	内包している点
@@ -1562,7 +1623,7 @@ public:
 
 	/*
 		@brief	線分との交点の取得
-			if(Contains(line))
+			if (Contains(line))
 				points = IntersectionPoint2(line);
 		@attention	交差していることが前提
 		@param	[in]	line(sta,end)	比較線分
@@ -1587,7 +1648,7 @@ public:
 	}
 	/*
 		@brief	線分との交点の取得
-			if(Contains(pos,next))
+			if (Contains(pos,next))
 				points = IntersectionPoint2(pos,next);
 		@attention	交差していることが前提
 		@param	[in]	sta	比較線分の始点
@@ -1616,7 +1677,7 @@ public:
 
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
-			if(Contains(line))
+			if (Contains(line))
 				point = IntersectionPoint2Nearest(line);
 		@attention	交差していることが前提
 		@param	[in]	line(sta,end)	比較線分
@@ -1650,7 +1711,7 @@ public:
 	}
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
-			if(Contains(pos,next))
+			if (Contains(pos,next))
 				point = IntersectionPoint2Nearest(pos,next);
 		@attention	交差していることが前提
 		@param	[in]	sta	比較線分の始点
@@ -1737,6 +1798,26 @@ public:
 		center(c), radius(r)
 	{}
 
+	
+	/*
+		@brief			図形を水平反転させる
+		@attention		真円なので意味なし。
+		@return			自分自身
+	*/
+	virtual Shape<T1>& ReverseX() override
+	{
+		return *this;
+	}
+	/*
+		@brief			図形を垂直反転させる
+		@attention		真円なので意味なし。
+		@return			自分自身
+	*/
+	virtual Shape<T1>& ReverseY() override
+	{
+		return *this;
+	}
+
 	/*
 		@brief	図形を値分ずらす
 		@param	[in]	offset	ずらす量
@@ -1747,7 +1828,6 @@ public:
 		center += offset;
 		return *this;
 	}
-
 
 	/*
 		@brief			図形を回転させる
@@ -1990,7 +2070,7 @@ public:
 #pragma region Intersection
 	/*
 		@brief	内包している点から一番近い交点の取得
-			if(Contains(p))
+			if (Contains(p))
 				point = IntersectionPoint2(p);
 		@attention	交差していることが前提
 		@param	[in]	point	内包している点
@@ -2006,7 +2086,7 @@ public:
 
 	/*
 		@brief	線分との交点の取得
-			if(Contains(line))
+			if (Contains(line))
 				points = IntersectionPoint2(line);
 		@attention	交差していることが前提
 		@param	[in]	line(sta,end)	比較線分
@@ -2080,7 +2160,7 @@ public:
 	}
 	/*
 		@brief	線分との交点の取得
-			if(Contains(pos,next))
+			if (Contains(pos,next))
 				points = IntersectionPoint2(pos,next);
 		@attention	交差していることが前提
 		@param	[in]	sta	比較線分の始点
@@ -2157,7 +2237,7 @@ public:
 
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
-			if(Contains(line))
+			if (Contains(line))
 				point = IntersectionPoint2Nearest(line);
 		@attention	交差していることが前提
 		@param	[in]	line(sta,end)	比較線分
@@ -2242,7 +2322,7 @@ public:
 
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
-			if(Contains(pos,next))
+			if (Contains(pos,next))
 				point = IntersectionPoint2Nearest(pos,next);
 		@attention	交差していることが前提
 		@param	[in]	sta	比較線分の始点
@@ -2366,10 +2446,12 @@ public:
 	*/
 	virtual void draw(D3DCOLOR color = -1, int size = 1) const override
 	{
-		for(int i=0; i<360; ++i)
+		const float resolution = 120.f;
+		const int add = static_cast<int>(360.f / resolution);
+		for (int i = 0; i<360; i += add)
 		{
 			float rad = static_cast<float>(i)* 2.0f * PI / 360.0f;
-			float ra2 = static_cast<float>(i + 1)	* 2.0f * PI / 360.0f;
+			float ra2 = static_cast<float>(i + add) * 2.0f * PI / 360.0f;
 			POINT sta = { LONG(std::cosf(rad) * radius + center.x), LONG(-std::sinf(rad) * radius + center.y) };
 			POINT end = { LONG(std::cosf(ra2) * radius + center.x), LONG(-std::sinf(ra2) * radius + center.y) };
 			graph::Draw_Line(

@@ -7,7 +7,7 @@
 
 #include "gameManager.h"
 
-CScoreMng::CScoreMng():
+CScoreMng::CScoreMng() :
 Base("ScoreMng")
 , score_(0)
 {
@@ -77,5 +77,5 @@ void CScoreMng::RegisterRanking(const std::string& name)
 	}
 
 
-	
+
 }

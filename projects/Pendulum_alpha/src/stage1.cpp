@@ -21,15 +21,16 @@ void CStage1::draw()
 {
 	for (auto& ap : actionPoints_)
 		ap->draw();
-	graph::Draw_Graphics(
-		0, 0, 1.f,
+	graph::Draw_GraphicsLeftTop(
+		cameraRect_.left, cameraRect_.top, 1.f,
 		"img_stage01", 0, 0, 1280, 800, 0, 0,
-		(rect.right - rect.left) / 1280.f,
-		(rect.bottom - rect.top) / 800.f);
+		(cameraRect_.right - cameraRect_.left) / 1280.f,
+		(cameraRect_.bottom - cameraRect_.top) / 800.f);
 
 }
 
 void CStage1::init(std::ifstream& f)
 {
-	
+	__super::init(f);
+
 }

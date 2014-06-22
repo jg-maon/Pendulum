@@ -148,6 +148,7 @@ void system::OnDestroy()
 	TerminateGame();
 }
 
+/*
 //----------------------
 //ï∂éöï\é¶
 void Draw_TextToBmp(int x, int y, const string& msg, int size, int type)
@@ -180,6 +181,7 @@ void Draw_TextToBmp(int x, int y, const string& msg, int size, int type)
 		}
 	}
 }
+//*/
 //======================================================================================//
 //WINDOWÅ@ÉÅÉCÉì
 //======================================================================================//

@@ -41,6 +41,7 @@ private:
 		FALL,			// 落下(通常時)
 		HANG,			// 立体機動中
 		ATTACK,			// 攻撃中
+
 	};
 	enum
 	{
@@ -98,11 +99,6 @@ private:
 	//--------------------------------------------------
 
 private:
-	/*
-		@brief	情報の初期化
-		@return	なし
-	*/
-	void init();
 
 	/*
 		@brief	キー入力
@@ -115,6 +111,12 @@ private:
 		@return なし
 	*/
 	void move();
+
+	/*
+		@brief	フックを外す
+		@return	なし
+	*/
+	void UnHang();
 public:
 	/*
 		@brief	空オブジェクト生成
@@ -134,13 +136,31 @@ public:
 		@param	[in]	z		初期座標
 	*/
 	CPlayer(float x, float y, float z = 0.5f);
+	
+	/*
+		@brief	情報の初期化
+		@param	[in]	pos		初期座標
+	*/
+	void init(const mymath::Vec3f& pos);
 
 	~CPlayer();
-
+	/*
+		@brief	更新処理
+		@return	なし
+	*/
 	virtual void step() override;
 	
+	/*
+		@brief	描画処理
+		@return	なし
+	*/
 	virtual void draw() override;
 	
+	/*
+		@brief	オブジェクト同士の重なり処理
+		@param	[in]	rival	重なっている相手オブジェクト
+		@return	なし
+	*/
 	virtual void hit(const ObjPtr& rival) override;
 
 	/*

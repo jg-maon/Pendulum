@@ -34,10 +34,13 @@ private:
 	std::vector<ObjPtr>	objs_;
 	//追加予定のオブジェクトを管理
 	std::vector<ObjPtr>	addObjs_;
+
+	/*
 	//ゲームクリア状態を発動する。
 	bool clear_;
 	float count_;
-	
+	//*/
+
 	bool showCursor_;					// true:カーソルの表示
 
 	enum CursorSize
@@ -69,6 +72,10 @@ public:
 	*/
 	void init();
 
+	/*
+		@brief	ゲームマネージャ初期化、起動
+		@return	なし
+	*/
 	void start() override;
 
 	/*
@@ -81,6 +88,12 @@ public:
 		@return	なし
 	*/
 	void draw() override;
+
+	/*
+		@brief	全オブジェクトを待機状態にする
+		@return	なし
+	*/
+	void AllStop();
 
 	/*
 		@brief		オブジェクトの追加
@@ -96,7 +109,11 @@ public:
 	*/
 	void AddObject2(const ObjPtr& obj);
 
-	//指定のクラスを見つけ出して返す
+	/*
+		@brief	指定のクラスを見つけ出して返す
+		@param	[in]	objinfo	クラスのID(typeid)
+		@return	オブジェクト
+	*/
 	ObjPtr GetObj(const type_info& objinfo);
 
 	/*
@@ -128,11 +145,12 @@ public:
 	void ClearObjects();
 
 
-
+	/*
 	void setClear(bool clear);
 	bool getClear() const;
 	void StartClear();
 	void ClearToChangeScreen(int next);
+	//*/
 
 	/*
 		@brief	ウィンドウサイズの取得
@@ -185,7 +203,7 @@ public:
 
 };
 
-extern void InsertObject(const ObjPtr& obj);
+//extern void InsertObject(const ObjPtr& obj);
 
 
 #endif

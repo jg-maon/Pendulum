@@ -207,7 +207,8 @@ IScene* CSceneStageSelect::NextScene()
 	else
 	{
 		ObjPtr stage(new CStageMng());
-		InsertObject(stage);
+		//InsertObject(stage);
+		gm()->AddObject(stage);
 		std::dynamic_pointer_cast<CStageMng>(stage)->LoadStage(stageName_);
 	}
 	return new CSceneMain();

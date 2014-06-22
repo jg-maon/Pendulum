@@ -39,18 +39,12 @@ IEnemy("E_Fairy")
 CFairy::CFairy(const mymath::Vec3f& pos) :
 IEnemy("E_Fairy")
 {
-	gm()->GetData(*this);
-	obj_.pos = pos;
-	init();
+	init(pos);
 }
 CFairy::CFairy(float x, float y, float z) :
 IEnemy("E_Fairy")
 {
-	gm()->GetData(*this);
-	obj_.pos.x = x;
-	obj_.pos.y = y;
-	obj_.pos.z = z;
-	init();
+	init(mymath::Vec3f(x, y, z));
 }
 
 CFairy::~CFairy()
@@ -59,9 +53,13 @@ CFairy::~CFairy()
 }
 
 
-void CFairy::init()
+void CFairy::init(const mymath::Vec3f& pos)
 {
 	using common::FindChunk;
+
+	gm()->GetData(*this);
+
+	obj_.pos = pos;
 
 	startPos_ = obj_.pos;
 
@@ -87,10 +85,11 @@ void CFairy::step()
 	// プレイヤーを向く
 	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
 
-	if (obj_.pos.x < plPos.x)
-		obj_.scale.x = 1.f;
-	else
-		obj_.scale.x = -1.f;
+	if (obj_.pos.x < plPos.x && turnFlag_)
+		turnFlag_ ^= 1;
+	else if (obj_.pos.x > plPos.x && !turnFlag_)
+		turnFlag_ ^= 1;
+
 
 	// アニメーション
 	int animTable[] = { 0, 1, 2, 1, };
@@ -108,7 +107,7 @@ void CFairy::draw()
 	mymath::Rectf rect = camera::GetScreenRect();
 	if (rect.Contains(obj_.GetRect()))
 	{
-		obj_.draw();
+		obj_.draw(charabase::CharBase::MODE::Center, turnFlag_);
 	}
 #ifdef DEF_SHAPE_DRAW
 	const auto& cols = GetCollisionAreas();

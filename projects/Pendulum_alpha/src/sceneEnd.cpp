@@ -12,13 +12,10 @@
 CSceneEnd::CSceneEnd():
 IScene("img_end", "bgm_end")
 {
-	// スコアマネージャのみコピーを作り避難させておく
-	auto scoreManager = std::dynamic_pointer_cast<CScoreMng>(gm()->GetObj(typeid(CScoreMng)));
-	scoreManager->score(100);
-	// メインゲーム内のオブジェクト消去
-	gm()->init();
-	// 再度必要なオブジェクトの追加
-	InsertObject(ObjPtr(new CScoreMng(*scoreManager)));
+	// 必要なオブジェクトの始動
+	auto& objs = gm()->GetObjects("ScoreMng");
+	for (auto& obj : objs)
+		obj->start();
 
 	state_ = CSceneEnd::State::NAME;
 

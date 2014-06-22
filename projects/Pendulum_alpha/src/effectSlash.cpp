@@ -1,33 +1,34 @@
-#include "effectExplosion.h"
+#include "effectSlash.h"
 #include "setting.h"
 
 #include "common.h"
 
 #include "define.h"
 
-CEffectExplosion::CEffectExplosion(const mymath::Vec3f& pos, float scale):
-	IEffect("EffectExplosion")
+CEffectSlash::CEffectSlash(const mymath::Vec3f& pos, float scale):
+	IEffect("EffectSlash")
 	,animCnt_(0.f)
 {
 	obj_.pos = pos;
 	obj_.scale = scale;
 
-	obj_.resname = "img_explosion";
+	obj_.resname = "img_slash";
 	obj_.size(500, 500);
 	
+
 	/*
 	addAngle_ = math::GetRandom(-3600.f, 3600.f) / 10.f;
 	obj_.angle = math::GetRandom(0.f, 3600.f) / 10.f;
 
 	obj_.alpha = 200.f;
 	obj_.scale = math::GetRandom(0.9f,1.2f);
-	//*/
+	*/
 }
 
-void CEffectExplosion::step()
+void CEffectSlash::step()
 {
-	const int animRow = 3;
-	const float animMax = 12.f;
+	const int animRow = 8;
+	const float animMax = 8.f;
 	const float animTime = 0.5f;	// 0.5•b
 
 	animCnt_ += animMax / animTime * system::FrameTime;
@@ -51,10 +52,10 @@ void CEffectExplosion::step()
 	}
 }
 
-void CEffectExplosion::draw()
+void CEffectSlash::draw()
 {
 	graph:: Draw_SetRenderMode(ADD);
-	for(int i=0; i<2; ++i)
+	//for(int i=0; i<1; ++i)
 		obj_.draw();
 	graph::Draw_EndRenderMode();
 }

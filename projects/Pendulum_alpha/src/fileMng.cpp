@@ -21,6 +21,8 @@ void CFileMng::Load()
 {
 	//fontTable_.clear
 
+	dataTable_.clear();
+
 	// ƒvƒŒƒCƒ„[
 	auto player = std::shared_ptr<CPlayer>(new CPlayer());
 	fileLoader_.LoadPlayerData(*player);

@@ -124,6 +124,7 @@
     <ClInclude Include="src\easing.h" />
     <ClInclude Include="src\effectBase.hpp" />
     <ClInclude Include="src\effectExplosion.h" />
+    <ClInclude Include="src\effectSlash.h" />
     <ClInclude Include="src\enemyBase.hpp" />
     <ClInclude Include="src\enemyMng.h" />
     <ClInclude Include="src\fade.h" />
@@ -145,6 +146,9 @@
     <ClInclude Include="src\scoreMng.h" />
     <ClInclude Include="src\setting.h" />
     <ClInclude Include="src\stage1.h" />
+    <ClInclude Include="src\stage2.h" />
+    <ClInclude Include="src\stage3.h" />
+    <ClInclude Include="src\stage4.h" />
     <ClInclude Include="src\stageBase.hpp" />
     <ClInclude Include="src\stageMng.h" />
   </ItemGroup>
@@ -170,6 +174,7 @@
     <ClCompile Include="src\common.cpp" />
     <ClCompile Include="src\easing.cpp" />
     <ClCompile Include="src\effectExplosion.cpp" />
+    <ClCompile Include="src\effectSlash.cpp" />
     <ClCompile Include="src\enemyMng.cpp" />
     <ClCompile Include="src\fade.cpp" />
     <ClCompile Include="src\fairy.cpp" />
@@ -189,13 +194,19 @@
     <ClCompile Include="src\scoreMng.cpp" />
     <ClCompile Include="src\setting.cpp" />
     <ClCompile Include="src\stage1.cpp" />
+    <ClCompile Include="src\stage2.cpp" />
+    <ClCompile Include="src\stage3.cpp" />
+    <ClCompile Include="src\stage4.cpp" />
     <ClCompile Include="src\stageMng.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\dat\main\enemy\bird.txt" />
+    <Text Include="res\dat\main\enemy\debugTable01.txt" />
     <Text Include="res\dat\main\enemy\enemies.txt" />
     <Text Include="res\dat\main\enemy\enemyTable01.txt" />
     <Text Include="res\dat\main\enemy\enemyTable02.txt" />
+    <Text Include="res\dat\main\enemy\enemyTable03.txt" />
+    <Text Include="res\dat\main\enemy\enemyTable04.txt" />
     <Text Include="res\dat\main\enemy\fairy.txt" />
     <Text Include="res\dat\main\player.txt" />
     <Text Include="res\dat\main\stage\stage01.txt" />

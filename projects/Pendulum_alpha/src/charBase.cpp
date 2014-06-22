@@ -47,8 +47,8 @@ CharBase::CharBase(const mymath::Vec3f& _pos,		// 座標
 	int w, int h,							// 画像サイズ
 	float sx, float sy,						// 拡大率
 	float deg,								// 回転角
-	int srcX,								// 横要素番号(列)
-	int srcY								// 縦要素番号(行)
+	int srcX,								// 横要素番号(列), 抽出始点X座標
+	int srcY								// 縦要素番号(行), 抽出始点Y座標
 	) :
 	pos(_pos)
 	, add(_add)
@@ -68,8 +68,8 @@ CharBase::CharBase(float x, float y, float z,		// 座標
 	int w, int h,									// 画像サイズ
 	float sx, float sy,								// 拡大率
 	float deg,										// 回転角
-	int srcX,										// 横要素番号(列)
-	int srcY										// 縦要素番号(行)
+	int srcX,										// 横要素番号(列), 抽出始点X座標
+	int srcY										// 縦要素番号(行), 抽出始点Y座標
 	) :
 	pos(x, y, z)
 	, add(adx, ady)
@@ -121,8 +121,9 @@ mymath::Rectf CharBase::GetRect(MODE mode) const
 	}
 }
 
-void CharBase::draw(MODE mode) const
+void CharBase::draw(MODE mode, bool turnFlag) const
 {
+	float sx = (turnFlag) ? -scale.x : scale.x;
 	if(mode == MODE::Center)
 	{
 		graph::Draw_Graphics(
@@ -132,13 +133,13 @@ void CharBase::draw(MODE mode) const
 					size.y * src.y,
 					size.x, size.y,
 					static_cast<int>(angle), nullptr,
-					scale.x, scale.y,
+					sx, scale.y,
 					static_cast<u_char>(alpha),
 					static_cast<u_char>(r),
 					static_cast<u_char>(g),
 					static_cast<u_char>(b));
 	}
-	else
+	else if (mode == MODE::LeftTop)
 	{
 		graph::Draw_GraphicsLeftTop(
 					pos.x, pos.y, pos.z,
@@ -147,44 +148,116 @@ void CharBase::draw(MODE mode) const
 					size.y * src.y,
 					size.x, size.y,
 					static_cast<int>(angle), nullptr,
-					scale.x, scale.y,
+					sx, scale.y,
 					static_cast<u_char>(alpha),
 					static_cast<u_char>(r),
 					static_cast<u_char>(g),
 					static_cast<u_char>(b));
 	}
 }
-void CharBase::drawNC(MODE mode) const
+
+void CharBase::drawNC(MODE mode, bool turnFlag) const
 {
+	float sx = (turnFlag) ? -scale.x : scale.x;
 	if (mode == MODE::Center)
 	{
 		graph::Draw_GraphicsNC(
-					pos.x, pos.y, pos.z,
-					resname,
-					size.x * src.x,
-					size.y * src.y,
-					size.x, size.y,
-					static_cast<int>(angle), nullptr,
-					scale.x, scale.y,
-					static_cast<u_char>(alpha),
-					static_cast<u_char>(r),
-					static_cast<u_char>(g),
-					static_cast<u_char>(b));
+			pos.x, pos.y, pos.z,
+			resname,
+			size.x * src.x,
+			size.y * src.y,
+			size.x, size.y,
+			static_cast<int>(angle), nullptr,
+			sx, scale.y,
+			static_cast<u_char>(alpha),
+			static_cast<u_char>(r),
+			static_cast<u_char>(g),
+			static_cast<u_char>(b));
 	}
-	else
+	else if (mode == MODE::LeftTop)
 	{
 		graph::Draw_GraphicsLeftTopNC(
-					pos.x, pos.y, pos.z,
-					resname,
-					size.x * src.x,
-					size.y * src.y,
-					size.x, size.y,
-					static_cast<int>(angle), nullptr,
-					scale.x, scale.y,
-					static_cast<u_char>(alpha),
-					static_cast<u_char>(r),
-					static_cast<u_char>(g),
-					static_cast<u_char>(b));
+			pos.x, pos.y, pos.z,
+			resname,
+			size.x * src.x,
+			size.y * src.y,
+			size.x, size.y,
+			static_cast<int>(angle), nullptr,
+			sx, scale.y,
+			static_cast<u_char>(alpha),
+			static_cast<u_char>(r),
+			static_cast<u_char>(g),
+			static_cast<u_char>(b));
+	}
+}
+
+void CharBase::draw2(MODE mode, bool turnFlag) const
+{
+	float sx = (turnFlag) ? -scale.x : scale.x;
+	if (mode == MODE::Center)
+	{
+		graph::Draw_Graphics(
+			pos.x, pos.y, pos.z,
+			resname,
+			src.x,
+			src.y,
+			size.x, size.y,
+			static_cast<int>(angle), nullptr,
+			sx, scale.y,
+			static_cast<u_char>(alpha),
+			static_cast<u_char>(r),
+			static_cast<u_char>(g),
+			static_cast<u_char>(b));
+	}
+	else if (mode == MODE::LeftTop)
+	{
+		graph::Draw_GraphicsLeftTop(
+			pos.x, pos.y, pos.z,
+			resname,
+			src.x,
+			src.y,
+			size.x, size.y,
+			static_cast<int>(angle), nullptr,
+			sx, scale.y,
+			static_cast<u_char>(alpha),
+			static_cast<u_char>(r),
+			static_cast<u_char>(g),
+			static_cast<u_char>(b));
+	}
+}
+
+void CharBase::draw2NC(MODE mode, bool turnFlag) const
+{
+	float sx = (turnFlag) ? -scale.x : scale.x;
+	if (mode == MODE::Center)
+	{
+		graph::Draw_GraphicsNC(
+			pos.x, pos.y, pos.z,
+			resname,
+			src.x,
+			src.y,
+			size.x, size.y,
+			static_cast<int>(angle), nullptr,
+			sx, scale.y,
+			static_cast<u_char>(alpha),
+			static_cast<u_char>(r),
+			static_cast<u_char>(g),
+			static_cast<u_char>(b));
+	}
+	else if (mode == MODE::LeftTop)
+	{
+		graph::Draw_GraphicsLeftTopNC(
+			pos.x, pos.y, pos.z,
+			resname,
+			src.x,
+			src.y,
+			size.x, size.y,
+			static_cast<int>(angle), nullptr,
+			sx, scale.y,
+			static_cast<u_char>(alpha),
+			static_cast<u_char>(r),
+			static_cast<u_char>(g),
+			static_cast<u_char>(b));
 	}
 }
 

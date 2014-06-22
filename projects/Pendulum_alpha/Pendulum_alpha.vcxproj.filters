@@ -138,8 +138,20 @@
     <Filter Include="ソース ファイル\InGame\StageManager\Stage">
       <UniqueIdentifier>{162b492a-b16d-4fec-a2ab-1d9c15a6f518}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage\Stage4">
+      <UniqueIdentifier>{22b79630-2730-4b97-9eb3-7de30465b7d1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ソース ファイル\InGame\StageManager\Stage\Stage1">
       <UniqueIdentifier>{4f0ab01e-58e1-479e-890c-ba9bbc228493}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage\Stage2">
+      <UniqueIdentifier>{0c6a1c5c-ff9e-4c95-9a1d-81a6e8625fa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage\Stage3">
+      <UniqueIdentifier>{4b9f0902-f3fd-459c-9a57-0eb785c4da48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Effect\Slash">
+      <UniqueIdentifier>{8bbc50b3-d29c-406b-8f22-9d96fffdd3b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -332,6 +344,18 @@
     <ClInclude Include="src\stage1.h">
       <Filter>ソース ファイル\InGame\StageManager\Stage\Stage1</Filter>
     </ClInclude>
+    <ClInclude Include="src\stage2.h">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stage3.h">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage3</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stage4.h">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage4</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effectSlash.h">
+      <Filter>ソース ファイル\InGame\Effect\Slash</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -457,6 +481,18 @@
     <ClCompile Include="src\stage1.cpp">
       <Filter>ソース ファイル\InGame\StageManager\Stage\Stage1</Filter>
     </ClCompile>
+    <ClCompile Include="src\stage2.cpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stage3.cpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stage4.cpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage4</Filter>
+    </ClCompile>
+    <ClCompile Include="src\effectSlash.cpp">
+      <Filter>ソース ファイル\InGame\Effect\Slash</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\dat\resdata.dat">
@@ -494,6 +530,15 @@
     </Text>
     <Text Include="res\dat\main\stage\stage04.txt">
       <Filter>リソース ファイル\Main\Stage</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\enemyTable04.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\enemyTable03.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\debugTable01.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

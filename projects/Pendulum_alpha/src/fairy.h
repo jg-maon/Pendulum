@@ -60,9 +60,10 @@ private:
 
 	/*
 		@brief	情報の初期化
+		@param	[in]	pos	初期座標
 		@return	なし
 	*/
-	void init();
+	void init(const mymath::Vec3f& pos);
 
 	/*
 		@brief	待機
@@ -124,9 +125,23 @@ public:
 	*/
 	CFairy(float x, float y, float z = 0.5f);
 	~CFairy();
+	/*
+		@brief	更新処理
+		@return	なし
+	*/
 	virtual void step() override;
+	
+	/*
+		@brief	描画処理
+		@return	なし
+	*/
 	virtual void draw() override;
-
+	
+	/*
+		@brief	オブジェクト同士の重なり処理
+		@param	[in]	rival	重なっている相手オブジェクト
+		@return	なし
+	*/
 	virtual void hit(const ObjPtr& rival) override;
 
 	/*

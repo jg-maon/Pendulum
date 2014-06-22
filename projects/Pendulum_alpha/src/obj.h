@@ -82,22 +82,67 @@ public:
 		@retval	false	消去対象でない
 	*/
 	bool isDestroy() const;
-	Status getStatus() const;
+	
 	/*
-		
+		@brief	状態の取得
+		@return	オブジェクトの状態
+	*/
+	Status getStatus() const;
+	
+	/*
+		@brief	オブジェクト名の検索
+		@return	指定した名前がオブジェクト名に含まれているか
+		@retval	true	含まれている
+		@retval	false	含まれていない
 	*/
 	bool FindName(const std::string& name) const;
+	/*
+		@brief	オブジェクトの識別名を取得
+		@return	オブジェクト識別名
+	*/
 	const std::string& getName() const;
+	/*
+		@brief	更新処理
+		@return	なし
+	*/
 	virtual void step() = 0;
+	/*
+		@brief	描画処理
+		@return	なし
+	*/
 	virtual void draw() = 0;
+	/*
+		@brief	オブジェクトを消す
+		@return	なし
+	*/
 	virtual void kill();
+	/*
+		@brief	オブジェクトを始動させる
+		@return	なし
+	*/
 	virtual void start();
+	/*
+		@brief	オブジェクトを停止させる
+		@return	なし
+	*/
 	virtual void stop();
+	/*
+		@brief	オブジェクト同士の重なり処理
+		@param	[in]	rival	重なっている相手オブジェクト
+		@return	なし
+	*/
 	virtual void hit(const std::shared_ptr<Base>& rival);
+	/*
+		@brief	ワールド座標の当たり判定領域の取得
+		@return	ワールド座標の当たり判定領域
+	*/
 	virtual Collisions GetCollisionAreas() const;
 };
 typedef std::shared_ptr<Base> ObjPtr;
 
+/*
+	@brief	Base::gm初期化用オブジェクト
+*/
 class TempObject : public Base
 {
 public:
@@ -118,6 +163,7 @@ public:
 class IObject : public Base
 {
 protected:
+	bool turnFlag_;				// 反転描画するか
 	charabase::CharBase obj_;
 protected:
 	/*
@@ -141,14 +187,51 @@ protected:
 	*/
 	template<class T>	bool LoadValue(std::ifstream& f, const charabase::CharBase& obj, T& value);
 public:
+	/*
+		@brief	オブジェクトの生成
+		@param	[in]	name	識別名
+	*/
 	IObject(const std::string& name);
+	/*
+		@brief	インターフェース化するための純粋仮想関数
+	*/
 	virtual ~IObject() = 0;
+	
+	/*
+		@brief	更新処理
+		@return	なし
+	*/
 	virtual void step() = 0;
+	/*
+		@brief	描画処理
+		@return	なし
+	*/
 	virtual void draw() = 0;
+	/*
+		@brief	オブジェクトを消す
+		@return	なし
+	*/
 	virtual void kill();
-	virtual void hit(const ObjPtr& rival);
+	/*
+		@brief	オブジェクト同士の重なり処理
+		@param	[in]	rival	重なっている相手オブジェクト
+		@return	なし
+	*/
+	virtual void hit(const std::shared_ptr<Base>& rival);
+	/*
+		@brief	ワールド座標の当たり判定領域の取得
+		@return	ワールド座標の当たり判定領域
+	*/
 	virtual Collisions GetCollisionAreas() const;
+	/*
+		@brief	画像オブジェクトの取得
+		@return	画像オブジェクト
+	*/
 	const charabase::CharBase& obj() const;
+	/*
+		@brief	画像オブジェクトの設定
+		@return	なし
+	*/
 	void obj(const charabase::CharBase& o);
 };
 
@@ -209,11 +292,32 @@ protected:
 	*/
 	void ClearCollisions();
 public:
+	/*
+		@brief	オブジェクトの生成
+		@param	[in]	name	識別名
+	*/
 	IColObject(const std::string& name);
+	/*
+		@brief	インターフェース化するための純粋仮想関数
+	*/
 	virtual ~IColObject() = 0;
+	/*
+		@brief	更新処理
+		@return	なし
+	*/
 	virtual void step() = 0;
+	/*
+		@brief	描画処理
+		@return	なし
+	*/
 	virtual void draw() = 0;
-	virtual void hit(const ObjPtr& rival);
+
+	/*
+		@brief	オブジェクト同士の重なり処理
+		@param	[in]	rival	重なっている相手オブジェクト
+		@return	なし
+	*/
+	virtual void hit(const std::shared_ptr<Base>& rival);
 	
 	/*
 		@brief	当たり判定の格納

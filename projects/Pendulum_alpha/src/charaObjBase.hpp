@@ -16,15 +16,22 @@ protected:
 	int health_;				// 体力
 	int power_;					// 攻撃力
 
-	mymath::Vec3f prePos_;				// 1フレーム前の座標
+	mymath::Vec3f prePos_;		// 1フレーム前の座標
 
 public:
-	ICharacter(const std::string& name):
+	/*
+		@brief	オブジェクトの生成
+		@param	[in]	name	識別名
+	*/
+	ICharacter(const std::string& name) :
 		IColObject(name)
-		,health_(1)
-		,power_(0)
-		,prePos_(obj_.pos)
+		, health_(1)
+		, power_(0)
+		, prePos_(obj_.pos)
 	{}
+	/*
+		@brief	インターフェース化するための純粋仮想関数
+	*/
 	~ICharacter() = 0{}
 	/*
 		@brief		派生後共通処理
@@ -32,15 +39,22 @@ public:
 		@attension	派生後のstep内で呼び出すこと
 		@return		なし
 	*/
-	virtual void step() = 0{prePos_ = obj_.pos;}
+	virtual void step() = 0{ prePos_ = obj_.pos; }
+	/*
+		@brief	描画処理
+		@return	なし
+	*/
 	virtual void draw() = 0{}
-	virtual void hit(const ObjPtr& rival){__super::hit(rival);}
-
-
+	/*
+		@brief	オブジェクト同士の重なり処理
+		@param	[in]	rival	重なっている相手オブジェクト
+		@return	なし
+	*/
+	virtual void hit(const ObjPtr& rival){ __super::hit(rival); }
 
 	/*
-		@brief	当たり判定領域の取得
-		@return	当たり判定領域
+		@brief	ワールド座標の当たり判定領域の取得
+		@return	ワールド座標の当たり判定領域
 	*/
 	virtual Collisions GetCollisionAreas() const {return __super::GetCollisionAreas();}
 

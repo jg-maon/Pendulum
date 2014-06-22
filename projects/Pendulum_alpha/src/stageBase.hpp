@@ -41,7 +41,14 @@
 */
 class IStage : public Base
 {
+public:
+	enum class Phase
+	{
+		Normal,			// 雑魚ステージ
+		Boss,			// ボスステージ
+	};
 protected:
+	IStage::Phase phase_;
 	mymath::Recti cameraRect_;					// カメラの可動範囲
 	mymath::Recti stageRect_;					// ステージの大きさ
 	std::vector<std::string> backgroundIMG_;	// 背景画像
@@ -124,7 +131,17 @@ private:
 				p = static_cast<float>(std::atof(label.c_str()));
 			}
 			// プレイヤーオブジェクトを追加
-			InsertObject(ObjPtr(new CPlayer(pos[0], pos[1])));
+			auto& pl = gm()->GetObj(typeid(CPlayer));
+			if (!pl.get())
+			{
+				gm()->AddObject(ObjPtr(new CPlayer(pos[0], pos[1])));
+			}
+			else
+			{
+				// 多重登録防止
+				auto& p = std::dynamic_pointer_cast<CPlayer>(pl);
+				p->init(mymath::Vec3f(pos[0], pos[1], p->obj().pos.z));
+			}
 			
 		}
 
@@ -249,15 +266,16 @@ protected:
 	*/
 	void load(std::ifstream& f)
 	{
+		/*
 		// 先に登録されているオブジェクトを消してから読み込む
 		auto& objs = gm()->GetObjects("Player,Action", ',');
 		for (auto& obj : objs)
 			obj->kill();
-
-
-		LoadRect(f);
 		LoadPlayer(f);
 		LoadEnemies(f);
+		//*/
+
+		LoadRect(f);
 		LoadActionCircles(f);
 		LoadActionPolygons(f);
 
@@ -285,11 +303,12 @@ public:
 	*/
 	virtual void init(std::ifstream& f)
 	{
+		/*
 		// 先に登録されているオブジェクトを消してから読み込む
-		auto& objs = gm()->GetObjects("Player", ',');
+		auto& objs = gm()->GetObjects("Player");
 		for (auto& obj : objs)
 			obj->kill();
-
+		//*/
 		LoadPlayer(f);
 		LoadEnemies(f);
 	}

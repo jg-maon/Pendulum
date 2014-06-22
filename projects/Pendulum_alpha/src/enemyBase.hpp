@@ -43,8 +43,19 @@ public:
 	IEnemy(const std::string& name):
 		ICharacter(name)
 	{}
+	/*
+		@brief	インターフェース化するための純粋仮想関数
+	*/
 	virtual ~IEnemy() = 0{}
-	virtual void step() = 0{}
+	/*
+		@brief	更新処理
+		@return	なし
+	*/
+	virtual void step() = 0{ __super::step(); }
+	/*
+		@brief	描画処理
+		@return	なし
+	*/
 	virtual void draw() = 0{}
 	/*
 		@brief	ダメージ加算
@@ -56,8 +67,8 @@ public:
 	virtual bool ApplyDamage(int dam) = 0{ return true; }
 
 	/*
-		@brief	当たり判定領域の取得
-		@return	当たり判定領域
+		@brief	ワールド座標の当たり判定領域の取得
+		@return	ワールド座標の当たり判定領域
 	*/
 	virtual Collisions GetCollisionAreas() const { return __super::GetCollisionAreas(); }
 
@@ -70,7 +81,7 @@ public:
 	/*
 		@brief	攻撃手段情報の格納
 		@attension	ifstreamのcurrentPositionに注意
-					if(FindChunk(f,"#Attack"))
+					if (FindChunk(f,"#Attack"))
 						LoadAttack(f);
 		@param	[in/out]	f	オープン済みファイル
 		@return		EOFか
@@ -81,10 +92,10 @@ public:
 	{
 		std::string buf;
 		f >> buf;
-		if(buf == "NWayShot")
+		if (buf == "NWayShot")
 		{
 			f >> buf;
-			if(buf != "{") return f.eof();
+			if (buf != "{") return f.eof();
 			else
 			{
 				charabase::CharBase shot_info;

@@ -24,7 +24,7 @@ void CNWaySing::CreateAttack(const mymath::Vec3f& pos, int n, float angle, float
 	// 弾数に合わせて等間隔に配置する
 	int interval = 360 / n;
 
-	for (int i = 0; i<n; ++i)
+	for (int i = 0; i < n; ++i)
 	{
 		charabase::CharBase sing(sing_.obj());	// 座標、角度、画像、初速度
 		// 座標
@@ -50,7 +50,7 @@ void CNWaySing::CreateAttack(const mymath::Vec3f& pos, int n, float angle, float
 		sing_info.SetCollisionAreas(sing_);
 
 		// 登録
-		InsertObject(ObjPtr(new CSing(sing_info)));
+		gm()->AddObject(ObjPtr(new CSing(sing_info)));
 	}
 
 }
