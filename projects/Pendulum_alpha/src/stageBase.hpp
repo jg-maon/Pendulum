@@ -42,13 +42,21 @@
 class IStage : public Base
 {
 public:
-	enum class Phase
+	enum class Phase	// ステージフェーズ
 	{
-		Normal,			// 雑魚ステージ
-		Boss,			// ボスステージ
+		CLEAR_ANNOUNCE,	// クリア条件表示
+		NORMAL,			// 雑魚ステージ
+		BOSS,			// ボスステージ
+		RESULT,			// リザルト画面へ
+	};
+	enum class ClearType	// クリア条件
+	{
+		GOAL,			// ゴール
+		ANNIHILATION,	// 殲滅
 	};
 protected:
-	IStage::Phase phase_;
+	IStage::Phase phase_;						// ステージフェーズ
+	IStage::ClearType clearType_;				// クリア条件
 	mymath::Recti cameraRect_;					// カメラの可動範囲
 	mymath::Recti stageRect_;					// ステージの大きさ
 	std::vector<std::string> backgroundIMG_;	// 背景画像
@@ -278,13 +286,38 @@ protected:
 		LoadRect(f);
 		LoadActionCircles(f);
 		LoadActionPolygons(f);
-
 	}
+
+	/*
+		@brief	クリア条件表示更新処理
+		@return	クリア条件表示終了
+		@retval	true	クリア条件表示終了
+		@retval	false	クリア条件表示継続
+	*/
+//	virtual bool UpdateClearAnnounce() = 0{ return true; };
+
+	/*
+		@brief	雑魚ステージ更新処理
+		@return	ステージ終了
+		@retval	true	ステージ終了
+		@retval	false	ステージ継続
+	*/
+//	virtual bool UpdateNormal() = 0{ return true; }
+
+	/*
+		@brief	ボスステージ更新処理
+		@return	ステージ終了
+		@retval	true	ステージ終了
+		@retval	false	ステージ継続
+	*/
+//	virtual bool UpdateBoss() = 0{ return true; }
+
 #pragma endregion	// protected methods
 public:
 #pragma region public methods
 	IStage(const std::string& name) :
 		Base(name)
+		, phase_(IStage::Phase::CLEAR_ANNOUNCE)
 		, actionPoints(actionPoints_)
 		, rect(stageRect_)
 		, cameraRect(cameraRect_)
@@ -292,8 +325,69 @@ public:
 		
 
 	}
-	virtual void step()override = 0{}
-	virtual void draw()override = 0{}
+	/*
+		@brief	ステージ共通更新処理
+		@return	なし
+	*/
+	virtual void step() override
+	{
+		/*
+		switch (phase_)
+		{
+		case IStage::Phase::CLEAR_ANNOUNCE:
+			if (UpdateClearAnnounce())
+			{
+				phase_ = IStage::Phase::NORMAL;
+			}
+			/*
+			switch (clearType_)
+			{
+			case IStage::ClearType::GOAL:
+				break;
+			case IStage::ClearType::ANNIHILATION:
+				break;
+			default:
+				break;
+			}
+			//*//*
+			break;
+		case IStage::Phase::NORMAL:
+			for (auto& ap : actionPoints_)
+				ap->step();
+			if (UpdateNormal())
+			{
+				phase_ = IStage::Phase::BOSS;
+			}
+			break;
+		case IStage::Phase::BOSS:
+			for (auto& ap : actionPoints_)
+				ap->step();
+			if (UpdateBoss())
+			{
+				phase_ = IStage::Phase::RESULT;
+			}
+			break;
+		default:
+			break;
+		}
+		//*/
+		for (auto& ap : actionPoints_)
+			ap->step();
+
+		if (input::CheckPush(input::KEY_BTN0))
+		{
+			phase_ = IStage::Phase::RESULT;
+		}
+	}
+	/*
+		@brief	ステージ共通描画処理
+		@return	なし
+	*/
+	virtual void draw() override
+	{
+		for (auto& ap : actionPoints_)
+			ap->draw();
+	}
 
 	/*
 		@brief	ステージ読み込み(初期化)
@@ -311,6 +405,17 @@ public:
 		//*/
 		LoadPlayer(f);
 		LoadEnemies(f);
+	}
+
+	/*
+		@brief	ステージが終了したか取得
+		@return	ステージ終了フラグ
+		@retval	true	ステージ終了
+		@retval	false	ステージプレイ継続
+	*/
+	bool isEndStage() const
+	{
+		return phase_ == IStage::Phase::RESULT;
 	}
 
 #pragma endregion	// public methods

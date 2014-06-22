@@ -15,6 +15,11 @@
 #Enemy
 res/dat/main/enemy/debugTable01.txt
 
+
+#StageClear
+Goal	3000	2000	200
+//Annihilation
+
 #ActionCircle
 {
 1066	1119	263

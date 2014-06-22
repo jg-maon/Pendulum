@@ -7,6 +7,8 @@
 #include "scoreMng.h"
 #include "Fade.h"
 
+#include "stageMng.h"
+
 #include "sceneEnd.h"		// シーン遷移
 
 
@@ -39,8 +41,10 @@ void CSceneMain::draw()
 // 処理
 bool CSceneMain::update()
 {
+	const auto& sm = CStageMng::GetPtr();
+
 	// 何かアクションを起こしてシーンが切り替わるとき
-	if (input::CheckPush(input::KEY_BTN0))
+	if (sm->isEndStage())
 	{
 		return true;
 	}

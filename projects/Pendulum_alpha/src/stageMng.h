@@ -39,6 +39,14 @@ public:
 	static const std::shared_ptr<CStageMng> GetPtr();
 
 	/*
+		@brief	ステージが終了したか取得
+		@return	ステージ終了フラグ
+		@retval	true	ステージ終了
+		@retval	false	ステージプレイ継続
+	*/
+	bool isEndStage() const;
+
+	/*
 		@brief	ステージのロード
 		@param	[in]	stageName	ステージ名(ファイル名)
 		@return	なし

@@ -109,6 +109,11 @@ const std::shared_ptr<CStageMng> CStageMng::GetPtr()
 	return std::dynamic_pointer_cast<CStageMng>(sm);
 }
 
+bool CStageMng::isEndStage() const
+{
+	return stages_.at(nowStage_)->isEndStage();
+}
+
 void CStageMng::LoadStage(const std::string& stageName)
 {
 
