@@ -22,6 +22,10 @@
 #MaxVelocityX	2500.0
 #MaxVelocityY	1500.0
 
-#ChainTime	1.0	2.0
+#ChainTime1		1.0
+#ChainTime2		2.0
 //#MaxChain	999
 #InvincibleTime	1.0
+
+#Health			100
+#Power			5

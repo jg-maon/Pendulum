@@ -62,7 +62,7 @@ void CStage1::LoadClear(std::ifstream& f, mymath::ShapefPtr& area)
 			area = mymath::ShapefPtr(new mymath::Circlef(info[0], info[1], 0.5f, info[2]));
 			auto& circle = std::dynamic_pointer_cast<mymath::Circlef>(area);
 			goalObj_.pos = circle->center;
-			goalObj_.size = circle->radius;
+			goalObj_.size = static_cast<int>(circle->radius);
 		}
 		else if (info.size() == 4)
 		{

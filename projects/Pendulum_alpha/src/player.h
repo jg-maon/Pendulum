@@ -34,6 +34,9 @@ public:
 		float CHAIN_TIME[2];	// Chain—P—\ŠÔ
 		
 		float INV_TIME;			// –³“GŠÔ
+		
+		int health;				// ‰ŠúHP
+		int power;				// ‰ŠúUŒ‚—Í
 	};
 private:
 	enum MotionType		// ƒ‚[ƒVƒ‡ƒ“”Ô†

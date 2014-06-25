@@ -109,8 +109,8 @@ void CPlayer::init(const mymath::Vec3f& pos)
 	numberAnimTime_ = 0.f;
 
 	//----------------------------------
-	health_ = 100;
-	power_ = 5;
+	health_ = loadInfo_.health;
+	power_ = loadInfo_.power;
 	chainCnt_ = 0;
 
 	//----------------------------------
@@ -536,6 +536,8 @@ void CPlayer::step()
 	}
 }
 
+
+
 void CPlayer::draw()
 {
 	const mymath::Vec3f& pos = obj_.pos;
@@ -666,6 +668,8 @@ void CPlayer::draw()
 			0x7fffffff, 2);
 	}
 
+	//-----------------------------------------------------------
+	// Chain
 	if (chainState_ != ChainState::HIDE)
 	{
 		// ChainíÜ
@@ -689,6 +693,37 @@ void CPlayer::draw()
 		}
 	}
 
+	//-----------------------------------------------------------
+	// ëÃóÕÉQÅ[ÉW
+	{
+		enum
+		{
+			draw_x = 30,
+			draw_y = 30,
+			width = 400,
+			height = 45,
+		};
+		//------------------------
+		// òg
+		graph::Draw_Box(
+			draw_x, draw_y,
+			draw_x + width,
+			draw_y + height, 0.8f,
+			ARGB(200, 10, 10, 10), ARGB(255, 0, 0, 0),
+			1, true);
+		//------------------------
+		// íÜ
+		// ëÃóÕÇ…âûÇ∂ÇƒïùÇåvéZ
+		float w = static_cast<float>(health_) / static_cast<float>(loadInfo_.health) * width;
+		graph::Draw_Box(
+			draw_x, draw_y,
+			draw_x + w,
+			draw_y + height, 0.8f,
+			ARGB(255, 100, 250, 250), ARGB(255, 0, 0, 0),
+			1, true);
+
+	}
+	//-----------------------------------------------------------
 	obj_.draw(charabase::CharBase::MODE::Center, turnFlag_);
 }
 

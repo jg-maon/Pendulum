@@ -451,6 +451,45 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 
 	//------------------------------------------
 	// LoadInfo
+	struct LoadValue
+	{
+		char* tag;				// #ƒ^ƒO
+		void* value;			// Ši”[‚·‚é’l
+		const type_info& inf;	// Œ^î•ñ
+	};
+
+	//*
+	LoadValue loadValues[] = {
+		{ "#GravityAcc", &(lf.GRAVITY_ACC), typeid(float) },
+		{ "#MaxGravity", &(lf.MAX_G), typeid(float) },
+		{ "#Tension", &(lf.TENSION), typeid(float) },
+		{ "#DownTension", &(lf.DOWN_TENSION), typeid(float) },
+		{ "#DownSpeed", &(lf.DOWN_SPEED), typeid(float) },
+		{ "#MaxVelocityX", &(lf.MAX_VX), typeid(float) },
+		{ "#MaxVelocityY", &(lf.MAX_VY), typeid(float) },
+		{ "#ChainTime1", &(lf.CHAIN_TIME[0]), typeid(float) },
+		{ "#ChainTime2", &(lf.CHAIN_TIME[1]), typeid(float) },
+		{ "#InvincibleTime", &(lf.INV_TIME), typeid(float) },
+		{ "#Health", &(lf.health), typeid(int) },
+		{ "#Power", &(lf.power), typeid(int) },
+		//{ "#MaxVelocityX", &(lf.MAX_VX) , typeid(float)},
+	};
+	for (auto& lv : loadValues)
+	{
+		success = FindChunk(SeekSet(f), lv.tag);
+		if (success)
+		{
+			if (lv.inf == typeid(int))
+				f >> *((int*)(lv).value);
+			else if (lv.inf == typeid(float))
+				f >> *((int*)(lv).value);
+			//else if (lv.inf == typeid(ttt))
+			//	f >> *((ttt*)(lv).value);
+		}
+		else break;
+	}
+	//*/
+	/*
 	if (success && (success = FindChunk(SeekSet(f), "#GravityAcc")))
 	{
 		f >> lf.GRAVITY_ACC;
@@ -487,6 +526,15 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	{
 		f >> lf.INV_TIME;
 	}
+	if (success && (success = FindChunk(SeekSet(f), "#Health")))
+	{
+		f >> lf.health;
+	}
+	if (success && (success = FindChunk(SeekSet(f), "#Power")))
+	{
+		f >> lf.power;
+	}
+	//*/
 
 	if (success)
 	{
