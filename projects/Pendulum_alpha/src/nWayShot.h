@@ -28,6 +28,8 @@ private:
 private:
 	void init()
 	{
+		force_ = 10;
+		start();
 		cnt_ = 0;
 		collisions_.push_back(mymath::ShapefPtr(new mymath::Circlef(0.f, 0.f, obj_.pos.z, obj_.HalfHeight())));
 	}

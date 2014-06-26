@@ -705,7 +705,7 @@ void CPlayer::draw()
 		};
 		//------------------------
 		// ˜g
-		graph::Draw_Box(
+		graph::Draw_BoxNC(
 			draw_x, draw_y,
 			draw_x + width,
 			draw_y + height, 0.8f,
@@ -715,9 +715,9 @@ void CPlayer::draw()
 		// ’†
 		// ‘Ì—Í‚É‰‚¶‚Ä•‚ğŒvZ
 		float w = static_cast<float>(health_) / static_cast<float>(loadInfo_.health) * width;
-		graph::Draw_Box(
+		graph::Draw_BoxNC(
 			draw_x, draw_y,
-			draw_x + w,
+			draw_x + static_cast<int>(w),
 			draw_y + height, 0.8f,
 			ARGB(255, 100, 250, 250), ARGB(255, 0, 0, 0),
 			1, true);

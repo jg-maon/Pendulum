@@ -43,6 +43,7 @@ void CNWayShot::CreateAttack(const mymath::Vec3f& pos, int n, float angle, float
 		mymath::Vec3f a(acc *  c,
 			acc * -s);	// 加速度
 		CShot shot_info(shot, a);	// 追加用
+		shot_info.start();
 		// 当たり判定領域のコピー
 		shot_info.SetCollisionAreas(shot_);
 

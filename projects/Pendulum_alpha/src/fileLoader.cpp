@@ -482,7 +482,7 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 			if (lv.inf == typeid(int))
 				f >> *((int*)(lv).value);
 			else if (lv.inf == typeid(float))
-				f >> *((int*)(lv).value);
+				f >> *((float*)(lv).value);
 			//else if (lv.inf == typeid(ttt))
 			//	f >> *((ttt*)(lv).value);
 		}

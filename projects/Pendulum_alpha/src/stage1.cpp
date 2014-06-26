@@ -69,8 +69,8 @@ void CStage1::LoadClear(std::ifstream& f, mymath::ShapefPtr& area)
 			// X Y W H
 			area = mymath::ShapefPtr(new mymath::Rectf(info[0], info[1], info[2], info[3]));
 			auto& rect = std::dynamic_pointer_cast<mymath::Rectf>(area);
-			goalObj_.size.x = rect->right - rect->left;
-			goalObj_.size.y = rect->bottom - rect->top;
+			goalObj_.size.x = static_cast<int>(rect->right - rect->left);
+			goalObj_.size.y = static_cast<int>(rect->bottom - rect->top);
 			goalObj_.pos.x = rect->left + goalObj_.HalfWidth();
 			goalObj_.pos.y = rect->top + goalObj_.HalfHeight();
 		}
