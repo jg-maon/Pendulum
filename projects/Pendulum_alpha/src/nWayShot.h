@@ -68,8 +68,8 @@ public:
 	virtual void draw() override
 	{
 		obj_.draw();
-#ifdef DEF_SHAPE_DRAW
-		const auto& cols = GetCollisionAreas();
+#if defined(DEF_SHAPE_DRAW) && defined(_DEBUG)
+		const auto& cols = GetDamageAreas();
 		for (const auto& col : cols)
 		{
 			col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));

@@ -11,9 +11,11 @@
 #define DEF_SHAPE_DRAW
 
 #include "player.h"
+
 #ifndef DEF_DEFINE_H
 #include "define.h"
 #endif
+
 #ifndef DEF_ATTACKBASE_HPP
 #include "attackBase.hpp"
 #endif
@@ -194,6 +196,7 @@ void CPlayer::key()
 #endif
 #ifdef D_ATK_TEST
 	atk_range.center = obj_.pos;
+	atk_range.radius = loadInfo_.attackRadius;
 #endif
 	if (CheckPress(KEY_MOUSE_LBTN))
 	{
@@ -376,7 +379,11 @@ void CPlayer::move()
 	}
 	// ステージ座標制限
 	{
-		const mymath::Vec3f size = obj_.size / 2;
+		auto& col = std::dynamic_pointer_cast<mymath::Rectf>(stageCollisions_[0]);
+		mymath::Vec3f size;
+		size.x = col->right - col->left;
+		size.y = col->bottom - col->top;
+		//const mymath::Vec3f size = obj_.size / 2;
 		const auto& sm = CStageMng::GetPtr();
 		const auto& stageRect = sm->getStageRect();
 		pos.x = clamp(pos.x, stageRect.left + size.x, stageRect.right - size.x);
@@ -559,11 +566,6 @@ void CPlayer::draw()
 
 #ifdef _DEBUG
 	static const std::string emply_string;
-	const auto& cols = GetCollisionAreas();
-	for (const auto& col : cols)
-	{
-		col->draw(0xff00ff00, 1);
-	}
 	mymath::Recti rc = obj_.GetRect();
 
 	//rc.offset((int)obj_.pos.x, (int)obj_.pos.y);
@@ -872,14 +874,14 @@ void CPlayer::KilledEnemy()
 	}
 }
 
-Base::Collisions CPlayer::GetCollisionAreas() const
+Base::Collisions CPlayer::GetDamageAreas() const
 {
 	if (isInvincible())
 	{
 		// 無敵処理中は当たり判定を消す
 		return Base::Collisions();
 	}
-	return __super::GetCollisionAreas();
+	return __super::GetDamageAreas();
 }
 
 #pragma endregion // CPlayer methods

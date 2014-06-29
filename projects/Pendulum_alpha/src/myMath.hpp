@@ -6,6 +6,8 @@
 
 #include <wtypes.h>	//  RECT用
 
+#define DEF_SHAPE_DRAW
+
 #if defined(DEF_SHAPE_DRAW) || defined(USE_CIRCLE_EXT)
 #include "../../../lib/gplib.h"
 #endif
@@ -649,11 +651,14 @@ public:
 
 	/*
 		@brief	図形の描画
-		@param	[in]	color	線の色
-		@param	[in]	size	線の太さ
+		@param	[in]	color	線の色(デフォルト:白) 
+		@param	[in]	size	線の太さ(デフォルト:1)
+		@param	[in]	fill	塗りつぶし(Rectのみ)(デフォルト:true)
 		@return	なし
 	*/
-	virtual void draw(DWORD color = -1, int size = 1) const{};
+	virtual void draw(DWORD color = -1, int size = 1, bool fill = true) const
+	{
+	}
 
 
 };
@@ -1207,13 +1212,15 @@ public:
 	//================================================================================
 
 #ifdef DEF_SHAPE_DRAW
+	
 	/*
 		@brief	図形の描画
-		@param	[in]	color	線の色
-		@param	[in]	size	線の太さ
+		@param	[in]	color	線の色(デフォルト:白) 
+		@param	[in]	size	線の太さ(デフォルト:1)
+		@param	[in]	fill	塗りつぶし(Rectのみ)(デフォルト:true)
 		@return	なし
 	*/
-	virtual void draw(D3DCOLOR color = -1, int size = 1) const override
+	virtual void draw(DWORD color = -1, int size = 1, bool fill = true) const override
 	{
 		for (size_t i = 0; i < points.size(); ++i)
 		{
@@ -1749,13 +1756,15 @@ public:
 	//================================================================================
 
 #ifdef DEF_SHAPE_DRAW
+	
 	/*
 		@brief	図形の描画
-		@param	[in]	color	線の色
-		@param	[in]	size	線の太さ
+		@param	[in]	color	線の色(デフォルト:白) 
+		@param	[in]	size	線の太さ(デフォルト:1)
+		@param	[in]	fill	塗りつぶし(Rectのみ)(デフォルト:true)
 		@return	なし
 	*/
-	virtual void draw(D3DCOLOR color = -1, int size = 1) const override
+	virtual void draw(DWORD color = -1, int size = 1, bool fill = true) const override
 	{
 		graph::Draw_Box(
 			static_cast<int>(left),
@@ -1763,7 +1772,7 @@ public:
 			static_cast<int>(right),
 			static_cast<int>(bottom),
 			0.0f,
-			color, color, size, true);
+			color, color, size, fill);
 
 	}
 #endif
@@ -2438,13 +2447,15 @@ public:
 #endif
 
 #ifdef DEF_SHAPE_DRAW
+	
 	/*
 		@brief	図形の描画
-		@param	[in]	color	線の色
-		@param	[in]	size	線の太さ
+		@param	[in]	color	線の色(デフォルト:白) 
+		@param	[in]	size	線の太さ(デフォルト:1)
+		@param	[in]	fill	塗りつぶし(Rectのみ)(デフォルト:true)
 		@return	なし
 	*/
-	virtual void draw(D3DCOLOR color = -1, int size = 1) const override
+	virtual void draw(DWORD color = -1, int size = 1, bool fill = true) const override
 	{
 		const float resolution = 120.f;
 		const int add = static_cast<int>(360.f / resolution);

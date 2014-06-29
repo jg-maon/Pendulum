@@ -11,9 +11,17 @@
 //#Rect	-halfWidth	-halfHeight	halfWidth	halfHeight
 }
 
+ステージ当たり判定＿#Collisionと同じ書式
+#StageCollision
+{
+
+#Rect	-20	-60	20	60
+
+}
 
 
-攻撃	攻撃方法{攻撃方法別値}
+
+攻撃＿＿攻撃方法{攻撃方法別値}＿＿NWaySingの書式は固定で以下の通り
 #Attack NWaySing
 {
 ショット画像管理名	img_fairySing

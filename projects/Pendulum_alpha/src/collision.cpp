@@ -1,9 +1,16 @@
 #ifdef _DEBUG
 //#define D_CIRCLE_TEST
 //#define D_POLY_TEST
+#define D_COLLISION_DRAW	// 当たり判定描画
+#define D_STAGECOL_DRAW		// ステージ当たり判定描画
 #endif
 
-#if defined(D_POLY_TEST) | defined(D_CIRCLE_TEST)
+#if defined(D_COLLISION_DRAW) || defined(D_STAGECOL_DRAW)
+#define DEF_SHAPE_DRAW
+#endif
+
+
+#if defined(D_POLY_TEST) || defined(D_CIRCLE_TEST)
 std::vector<mymath::Vec3f> vertexes;
 #ifdef D_POLY_TEST
 mymath::Linef line(0.f,0.f,0.5f, 500.f,1000.f,0.5f);
@@ -105,7 +112,7 @@ void CCollision::step()
 				{
 					const mymath::Vec3f& enpos = enemy->obj().pos;
 					mouse.z = enpos.z;
-					const auto& enemyCollisions = enemy->GetCollisionAreas();
+					const auto& enemyCollisions = enemy->GetDamageAreas();
 					// 当たり判定
 					for (const auto& col : enemyCollisions)
 					{
@@ -154,7 +161,7 @@ void CCollision::step()
 		}
 
 
-		auto& plCols = player->GetCollisionAreas();
+		auto& plCols = player->GetDamageAreas();
 		for (auto& pc : plCols)
 		{
 			//auto& pc = *std::dynamic_pointer_cast<mymath::Rectf>(plcol);
@@ -168,7 +175,7 @@ void CCollision::step()
 					const mymath::Vec3f& enpos = enemy->obj().pos;
 					//-----------------------------------------
 					// 敵攻撃 
-					auto& enemyAtks = enemy->GetAttackCollisions();
+					auto& enemyAtks = enemy->GetAttackAreas();
 					int i = 0;
 					for (auto& col : enemyAtks)
 					{
@@ -191,7 +198,7 @@ void CCollision::step()
 			// プレイヤー vs 遠距離攻撃
 			for (auto& shot : atk_shots)
 			{
-				auto& atkCols = shot->GetCollisionAreas();
+				auto& atkCols = shot->GetDamageAreas();
 				for (auto& atkcol : atkCols)
 				{
 					if (pc->Contains(atkcol))
@@ -237,7 +244,7 @@ void CCollision::step()
 	// 遠距離攻撃
 	for (auto& shot : atk_shots)
 	{
-		auto& atkCols = shot->GetCollisionAreas();
+		auto& atkCols = shot->GetDamageAreas();
 		for (auto& atkcol : atkCols)
 		{
 			//-----------------------------------------
@@ -284,8 +291,60 @@ void CCollision::step()
 #endif
 }
 
+
 void CCollision::draw()
 {
+#if defined(D_COLLISION_DRAW) || defined(D_STAGECOL_DRAW)
+	const auto& objs = gm()->GetObjects();
+	for (const auto& obj : objs)
+	{
+		if (obj->FindName("EnemyMng"))
+		{
+			const auto& em = std::dynamic_pointer_cast<CEnemyMng>(obj);
+			const auto& enemies = em->getEnemies();
+			for (const auto& enemy : enemies)
+			{
+				// 食らい領域
+#ifdef D_COLLISION_DRAW
+				const auto& cols = enemy->GetDamageAreas();
+				for (const auto& col : cols)
+				{
+					col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
+					col->draw(0x3fff0000, 1, true);
+				}
+#endif
+				// ステージ領域
+#ifdef D_STAGECOL_DRAW
+				const auto& stac = enemy->GetStageCollisions();
+				for (const auto& col : stac)
+				{
+					col->Offset(mymath::Vec3f(0.f, 0.f, +0.1f));
+					col->draw(0xe000ff00, 1, false);
+				}
+#endif
+			}
+		}
+		// 食らい領域
+#ifdef D_COLLISION_DRAW
+		const auto& cols = obj->GetDamageAreas();
+		for (const auto& col : cols)
+		{
+			col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
+			col->draw(0x3fff0000, 1, true);
+		}
+#endif
+		// ステージ領域
+#ifdef D_STAGECOL_DRAW
+		const auto& stac = obj->GetStageCollisions();
+		for(const auto& col : stac)
+		{
+			col->Offset(mymath::Vec3f(0.f, 0.f, +0.1f));
+			col->draw(0xe000ff00, 1, false);
+		}
+#endif
+	}
+#endif
+
 #ifdef D_POLY_TEST
 	Draw_Line((int)line.sta.x,
 		(int)line.sta.y,
@@ -400,4 +459,5 @@ void CCollision::draw()
 		}
 	}
 #endif
+
 }

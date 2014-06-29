@@ -53,10 +53,10 @@ public:
 	virtual void hit(const ObjPtr& rival){ __super::hit(rival); }
 
 	/*
-		@brief	ワールド座標の当たり判定領域の取得
+		@brief	ワールド座標の食らい判定領域の取得
 		@return	ワールド座標の当たり判定領域
 	*/
-	virtual Collisions GetCollisionAreas() const {return __super::GetCollisionAreas();}
+	virtual Collisions GetDamageAreas() const {return __super::GetDamageAreas();}
 
 	/*
 		@brief	攻撃力の取得

@@ -46,7 +46,8 @@ public:
 		disp,		// drawのみ実行
 		destroy,	// 削除
 	};
-	typedef std::vector<mymath::ShapefPtr> Collisions;
+	typedef std::vector<mymath::ShapefPtr> Collisions;		// 当たり判定領域
+	typedef std::vector<Collisions> MotionCollisions;		// モーション毎の当たり判定領域
 private:
 	//ゲームマネージャを扱うためのクラス
 	static CGameManager* gm_;
@@ -133,10 +134,16 @@ public:
 	*/
 	virtual void hit(const std::shared_ptr<Base>& rival);
 	/*
-		@brief	ワールド座標の当たり判定領域の取得
+		@brief	ワールド座標の食らい判定領域の取得
 		@return	ワールド座標の当たり判定領域
 	*/
-	virtual Collisions GetCollisionAreas() const;
+	virtual Collisions GetDamageAreas() const;
+	/*
+		@brief	ワールド座標のステージ当たり判定領域の取得
+		@return	ワールド座標のステージ当たり判定領域
+	*/
+	virtual Collisions GetStageCollisions() const;
+
 };
 typedef std::shared_ptr<Base> ObjPtr;
 
@@ -219,10 +226,15 @@ public:
 	*/
 	virtual void hit(const std::shared_ptr<Base>& rival);
 	/*
-		@brief	ワールド座標の当たり判定領域の取得
+		@brief	ワールド座標の食らい判定領域の取得
 		@return	ワールド座標の当たり判定領域
 	*/
-	virtual Collisions GetCollisionAreas() const;
+	virtual Collisions GetDamageAreas() const;
+	/*
+		@brief	ワールド座標のステージ当たり判定領域の取得
+		@return	ワールド座標のステージ当たり判定領域
+	*/
+	virtual Collisions GetStageCollisions() const;
 	/*
 		@brief	画像オブジェクトの取得
 		@return	画像オブジェクト
@@ -284,13 +296,39 @@ template<class T>	bool IObject::LoadValue(std::ifstream& f, const charabase::Cha
 class IColObject : public IObject
 {
 protected:
-	Collisions collisions_;		// 画像当たり判定領域
+	Collisions collisions_;			// 食らい判定領域
+	Collisions stageCollisions_;	// ステージとの当たり判定領域
 protected:
 	/*
 		@brief	当たり判定領域の削除
 		@return なし
 	*/
 	void ClearCollisions();
+
+	
+	/*
+		@brief	当たり判定の格納
+		@attension	ifstreamのcurrentPositionに注意
+					if(FindChunk(f,"#Collision"))
+						LoadCollisions(f, collisions_);
+					if(FindChunk(f,"#StageCollision"))
+						LoadCollisions(f, stageCollisions_);
+		@param	[in/out]	f			オープン済みファイル
+		@param	[out]		collisions	判定を格納する配列
+		@return		EOFか
+		@retval		true		EOF
+		@retval		false		EOFでない
+	*/
+	bool LoadCollisions(std::ifstream& f, Collisions& collisions);
+
+
+	/*
+		@brief	ワールド座標に変換した当たり判定領域の取得
+		@param	[in]	collisions	ローカル当たり判定領域
+		@return	ワールド座標の当たり判定領域
+	*/
+	Collisions GetWorldCollisions(const Collisions& collisions) const;
+
 public:
 	/*
 		@brief	オブジェクトの生成
@@ -324,18 +362,36 @@ public:
 		@attension	ifstreamのcurrentPositionに注意
 					if(FindChunk(f,"#Collision"))
 						LoadCollisions(f);
-		@param	[in/out]	f	オープン済みファイル
+		@param	[in/out]	f			オープン済みファイル
 		@return		EOFか
 		@retval		true		EOF
 		@retval		false		EOFでない
 	*/
 	bool LoadCollisions(std::ifstream& f);
+	
+	/*
+		@brief	ステージ当たり判定の格納
+		@attension	ifstreamのcurrentPositionに注意
+					if(FindChunk(f,"#StageCollision"))
+						LoadStageCollisions(f);
+		@param	[in/out]	f			オープン済みファイル
+		@return		EOFか
+		@retval		true		EOF
+		@retval		false		EOFでない
+	*/
+	bool LoadStageCollisions(std::ifstream& f);
+
 
 	/*
-		@brief	ワールド座標の当たり判定領域の取得
+		@brief	ワールド座標の食らい判定領域の取得
 		@return	ワールド座標の当たり判定領域
 	*/
-	virtual Collisions GetCollisionAreas() const override;
+	virtual Collisions GetDamageAreas() const override;
+	/*
+		@brief	ワールド座標のステージ当たり判定領域の取得
+		@return	ワールド座標のステージ当たり判定領域
+	*/
+	virtual Collisions GetStageCollisions() const override;
 
 	/*
 		@brief	ローカル座標の当たり判定領域の代入
@@ -350,6 +406,20 @@ public:
 		@return	なし
 	*/
 	void SetCollisionAreas(const IColObject& obj);
+
+	/*
+		@brief	ローカル座標のステージ当たり判定領域の代入
+		@param	[in]	collisions	新しいステージ当たり判定領域
+		@return	なし
+	*/
+	void SetStageCollisions(const Collisions& collisions);
+
+	/*
+		@brief	対象オブジェクトからステージ当たり判定領域をコピーする
+		@param	[in]	obj	コピーする当たり判定領域を持ったオブジェクト
+		@return	なし
+	*/
+	void SetStageCollisions(const IColObject& obj);
 
 };
 

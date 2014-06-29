@@ -1,5 +1,5 @@
 #ifdef _DEBUG
-#define DEF_SHAPE_DRAW
+
 #endif
 
 #include "define.h"
@@ -100,14 +100,6 @@ void CBird::draw()
 	{
 		obj_.draw(charabase::CharBase::MODE::Center, turnFlag_);
 	}
-#ifdef DEF_SHAPE_DRAW
-	const auto& cols = GetCollisionAreas();
-	for (const auto& col : cols)
-	{
-		col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
-		col->draw();
-	}
-#endif
 }
 
 
@@ -260,12 +252,12 @@ bool CBird::ApplyDamage(int dam)
 	return true;
 }
 
-Base::Collisions CBird::GetCollisionAreas() const
+Base::Collisions CBird::GetDamageAreas() const
 {
 	// 死亡アニメーション中はスキップ
 	if (state_ != State::DESTROY)
 	{
-		return __super::GetCollisionAreas();
+		return __super::GetDamageAreas();
 	}
 	return Base::Collisions();
 }

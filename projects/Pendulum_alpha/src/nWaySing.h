@@ -63,6 +63,14 @@ public:
 	virtual void draw() override
 	{
 		obj_.draw();
+#if defined(DEF_SHAPE_DRAW) && defined(_DEBUG)
+		const auto& cols = GetDamageAreas();
+		for (const auto& col : cols)
+		{
+			col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
+			col->draw();
+		}
+#endif
 	}
 	virtual void hit(const ObjPtr& rival) override
 	{

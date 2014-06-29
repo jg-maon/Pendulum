@@ -1,5 +1,5 @@
 #ifdef _DEBUG
-#define DEF_SHAPE_DRAW
+
 #endif
 
 
@@ -109,14 +109,7 @@ void CFairy::draw()
 	{
 		obj_.draw(charabase::CharBase::MODE::Center, turnFlag_);
 	}
-#ifdef DEF_SHAPE_DRAW
-	const auto& cols = GetCollisionAreas();
-	for (const auto& col : cols)
-	{
-		col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
-		col->draw();
-	}
-#endif
+
 }
 
 
@@ -280,12 +273,12 @@ bool CFairy::ApplyDamage(int dam)
 	return true;
 }
 
-Base::Collisions CFairy::GetCollisionAreas() const
+Base::Collisions CFairy::GetDamageAreas() const
 {
 	// 死亡アニメーション中はスキップ
 	if (state_ != State::DESTROY)
 	{
-		return __super::GetCollisionAreas();
+		return __super::GetDamageAreas();
 	}
 	return Base::Collisions();
 }

@@ -10,9 +10,11 @@
 	img_alphabet	res/gra/ui/abc.png				0xff000000
 	img_circle		res/gra/circle_x96.png			0xff000000
 	img_explosion	res/gra/effect/explosion.png	0xff000000
-	img_slash		res/gra/effect/slash.png	0xff000000
+	img_slash		res/gra/effect/slash.png		0xff000000
 		
-	img_title		res/gra/title/bg.jpg			0xff00ff00
+	img_title		res/gra/title/title.png			0xff000000
+	img_logo		res/gra/title/logo.png			0xffffffff
+	img_titleSlash	res/gra/title/slash.png			0xffffffff
 
 	img_stageSelect	res/gra/stageSelect/bg.png		0xff00ff00
 	img_ss01			res/gra/stageSelect/stage01.png			0xff000000
@@ -24,7 +26,7 @@
 	img_ss04			res/gra/stageSelect/stage04.png			0xff000000
 	img_stageDescription04	res/gra/stageSelect/stageDesc04.png	0xff00ff00
 
-	img_stage01		res/gra/main/stages/stage01/bg.jpg	0xff000000
+	img_stage01		res/gra/main/stages/stage01/bg.jpg				0xff000000
 	img_player		res/gra/main/character/player.png				0xff00ff00
 	img_bird		res/gra/main/character/enemy/bird/bird.png		0xff000000
 	img_birdShot	res/gra/main/character/enemy/bird/birdShot.png	0xff000000
@@ -46,8 +48,28 @@
 //＿SE＿管理名(se_でスタート)＿パス
 #Se
 {
-	se_explosion		res/snd/se/explosion.wav
+	se_explosion	res/snd/se/explosion.wav
+	se_enter		res/snd/se/enter.wav
+	se_wind			res/snd/se/drain_2.wav
+	se_slash		res/snd/se/slash.wav
+
+
 }
+	se_slash01		res/snd/se/slash/slash01.wav
+	se_slash02		res/snd/se/slash/slash02.wav
+	se_slash03		res/snd/se/slash/slash03.wav
+	se_slash04		res/snd/se/slash/slash04.wav
+	se_slash05		res/snd/se/slash/slash05.wav
+	se_slash06		res/snd/se/slash/slash06.wav
+	se_slash07		res/snd/se/slash/slash07.wav
+	se_slash08		res/snd/se/slash/slash08.wav
+	se_slash09		res/snd/se/slash/slash09.wav
+	se_slash10		res/snd/se/slash/slash10.wav
+	se_slash11		res/snd/se/slash/slash11.wav
+	se_slash12		res/snd/se/slash/slash12.wav
+	se_slash13		res/snd/se/slash/slash13.wav
+	se_slash14		res/snd/se/slash/slash14.wav
+	se_slash15		res/snd/se/slash/slash15.wav
 
 //＿フォント＿管理名(font_でスタート)＿フォント名(スペースは'＿'、'_'を使う)＿サイズ
 #Font

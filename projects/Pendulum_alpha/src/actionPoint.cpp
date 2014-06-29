@@ -1,9 +1,9 @@
 #ifdef _DEBUG
 
-#define D_CIRCLE_TEST		// CActionCircle“à”»’è‰~‚Ì•`‰æ
-#define D_POLYGON_TEST		// CActionPolygon•`‰æ
 //#define D_CORD_TEST		// À•W•`‰æ
 #endif
+#define D_CIRCLE_TEST		// CActionCircle“à”»’è‰~‚Ì•`‰æ
+#define D_POLYGON_TEST		// CActionPolygon•`‰æ
 
 #ifdef D_CIRCLE_TEST
 #define DEF_SHAPE_DRAW

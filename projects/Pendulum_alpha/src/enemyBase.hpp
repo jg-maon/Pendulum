@@ -67,16 +67,16 @@ public:
 	virtual bool ApplyDamage(int dam) = 0{ return true; }
 
 	/*
-		@brief	ワールド座標の当たり判定領域の取得
+		@brief	ワールド座標の食らい判定領域の取得
 		@return	ワールド座標の当たり判定領域
 	*/
-	virtual Collisions GetCollisionAreas() const { return __super::GetCollisionAreas(); }
+	virtual Collisions GetDamageAreas() const { return __super::GetDamageAreas(); }
 
 	/*
 		@brief	攻撃の当たり判定領域の取得
 		@return	攻撃の当たり判定領域
 	*/
-	virtual Collisions GetAttackCollisions() const {return attack_->GetCollisionAreas();}
+	virtual Collisions GetAttackAreas() const {return attack_->GetDamageAreas();}
 
 	/*
 		@brief	攻撃手段情報の格納

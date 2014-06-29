@@ -37,6 +37,8 @@ public:
 		
 		int health;				// ‰ŠúHP
 		int power;				// ‰ŠúUŒ‚—Í
+
+		float attackRadius;		// UŒ‚”ÍˆÍ
 	};
 private:
 	enum MotionType		// ƒ‚[ƒVƒ‡ƒ“”Ô†
@@ -230,7 +232,7 @@ public:
 		@brief	“–‚½‚è”»’è—Ìˆæ‚Ìæ“¾
 		@return	“–‚½‚è”»’è—Ìˆæ
 	*/
-	virtual Collisions GetCollisionAreas() const override;
+	virtual Collisions GetDamageAreas() const override;
 
 
 };

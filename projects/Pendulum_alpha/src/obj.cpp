@@ -62,10 +62,15 @@ void Base::hit(const std::shared_ptr<Base>& rival)
 {
 }
 
-Base::Collisions Base::GetCollisionAreas() const
+Base::Collisions Base::GetDamageAreas() const
 {
 	return Collisions();
 }
+Base::Collisions Base::GetStageCollisions() const
+{
+	return Collisions();
+}
+
 
 #pragma endregion Base methods
 
@@ -106,7 +111,12 @@ void IObject::kill()
 void IObject::hit(const ObjPtr& rival)
 {
 }
-Base::Collisions IObject::GetCollisionAreas() const
+
+Base::Collisions IObject::GetDamageAreas() const
+{
+	return Collisions();
+}
+Base::Collisions IObject::GetStageCollisions() const
 {
 	return Collisions();
 }
@@ -143,30 +153,46 @@ void IColObject::ClearCollisions()
 	collisions_.clear();
 }
 
-//void IColObject::kill()
-//{
-//	IObject::kill();
-//}
-
-void IColObject::hit(const ObjPtr& rival)
-{
-}
-
-bool IColObject::LoadCollisions(std::ifstream& f)
+//bool IColObject::LoadCollisions(std::ifstream& f, Base::MotionCollisions& collisions)
+bool IColObject::LoadCollisions(std::ifstream& f, Base::Collisions& collisions)
 {
 	std::string buf;
 	f >> buf;
 	if (buf != "{") return f.eof();
-	collisions_.clear();
-	while (!f.eof() && buf != "}")
+	int openNum = 0;	// {ŠK‘w”
+	Collisions temp;
+	collisions.clear();
+	while (!f.eof())
 	{
+		if (buf == "}")
+		{
+			if (openNum)
+			{
+				// ˆê‚ÂŠK‘w‚ðã‚°‚é
+				openNum--;
+				collisions = temp;
+				// “–‚½‚è”»’è‚Ì’Ç‰Á
+				//collisions.push_back(temp);
+			}
+			else
+			{
+				// ‘S•”•Â‚¶‚½‚Ì‚Å“Ç‚Ýž‚Ý‚ðI—¹‚³‚¹‚é
+				break;
+			}
+		}
+		if (buf == "{")
+		{
+			openNum++;
+			temp.clear();
+		}
+
 		if (buf == "#Circle")
 		{
 			mymath::Circlef c;
 			if (LoadValue(f, obj_, c.center.x)) return true;
 			if (LoadValue(f, obj_, c.center.y)) return true;
 			if (LoadValue(f, obj_, c.radius)) return true;
-			collisions_.push_back(mymath::ShapefPtr(new mymath::Circlef(c)));
+			temp.push_back(mymath::ShapefPtr(new mymath::Circlef(c)));
 		}
 		else if (buf == "#Polygon")
 		{
@@ -178,8 +204,8 @@ bool IColObject::LoadCollisions(std::ifstream& f)
 				if (LoadValue(f, obj_, p.points[i].x)) return true;
 				if (LoadValue(f, obj_, p.points[i].y)) return true;
 			}
-			collisions_.push_back(mymath::ShapefPtr(new mymath::Polyf(p)));
-			return f.eof();
+			temp.push_back(mymath::ShapefPtr(new mymath::Polyf(p)));
+			//return f.eof();
 		}
 		else if (buf == "#Rect")
 		{
@@ -188,18 +214,18 @@ bool IColObject::LoadCollisions(std::ifstream& f)
 			if (LoadValue(f, obj_, r.top))return true;
 			if (LoadValue(f, obj_, r.right))return true;
 			if (LoadValue(f, obj_, r.bottom))return true;
-			collisions_.push_back(mymath::ShapefPtr(new mymath::Rectf(r)));
+			temp.push_back(mymath::ShapefPtr(new mymath::Rectf(r)));
 		}
 		f >> buf;
 	}
 	return f.eof();
 }
 
-Base::Collisions IColObject::GetCollisionAreas() const
+Base::Collisions IColObject::GetWorldCollisions(const Base::Collisions& collisions) const
 {
 	using namespace mymath;
 	Base::Collisions cols;
-	for (const auto& col : collisions_)
+	for (const auto& col : collisions)
 	{
 		const auto& id = typeid(*(col.get()));
 		if (id == typeid(Circlef))
@@ -215,7 +241,7 @@ Base::Collisions IColObject::GetCollisionAreas() const
 			cols.push_back(ShapefPtr(new Polyf(*std::dynamic_pointer_cast<Polyf>(col))));
 		}
 	}
-	for(auto& col : cols)
+	for (auto& col : cols)
 	{
 		// ‰æ‘œ‚É‡‚í‚¹‚Ä”½“]
 		if (turnFlag_)
@@ -228,6 +254,36 @@ Base::Collisions IColObject::GetCollisionAreas() const
 	return cols;
 }
 
+
+//void IColObject::kill()
+//{
+//	IObject::kill();
+//}
+
+void IColObject::hit(const ObjPtr& rival)
+{
+}
+
+bool IColObject::LoadCollisions(std::ifstream& f)
+{
+	return this->LoadCollisions(f, collisions_);
+}
+
+bool IColObject::LoadStageCollisions(std::ifstream& f)
+{
+	return this->LoadCollisions(f, stageCollisions_);
+}
+
+Base::Collisions IColObject::GetDamageAreas() const
+{
+	return this->GetWorldCollisions(collisions_);
+}
+
+Base::Collisions IColObject::GetStageCollisions() const
+{
+	return this->GetWorldCollisions(stageCollisions_);
+}
+
 void IColObject::SetCollisionAreas(const Base::Collisions& collisions)
 {
 	collisions_ = collisions;
@@ -236,6 +292,16 @@ void IColObject::SetCollisionAreas(const Base::Collisions& collisions)
 void IColObject::SetCollisionAreas(const IColObject& obj)
 {
 	collisions_ = obj.collisions_;
+}
+
+void IColObject::SetStageCollisions(const Base::Collisions& collisions)
+{
+	stageCollisions_ = collisions;
+}
+
+void IColObject::SetStageCollisions(const IColObject& obj)
+{
+	stageCollisions_ = obj.stageCollisions_;
 }
 #pragma endregion // IColObject methods
 

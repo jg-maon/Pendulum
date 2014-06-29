@@ -217,6 +217,11 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	{
 		tmp.LoadCollisions(eneF);
 	}
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#StageCollision")))
+	{
+		tmp.LoadStageCollisions(eneF);
+	}
 	// 攻撃
 	if (success && (success = FindChunk(SeekSet(eneF), "#Attack")))
 	{
@@ -324,6 +329,11 @@ bool CFileLoader::LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& 
 	if (success && (success = FindChunk(SeekSet(eneF), "#Collision")))
 	{
 		tmp.LoadCollisions(eneF);
+	}
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#StageCollision")))
+	{
+		tmp.LoadStageCollisions(eneF);
 	}
 	// 攻撃
 	if (success && (success = FindChunk(SeekSet(eneF), "#Attack")))
@@ -448,6 +458,11 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	{
 		tmp.LoadCollisions(f);
 	}
+	// ステージ当たり判定
+	if (success && (success = FindChunk(SeekSet(f), "#StageCollision")))
+	{
+		tmp.LoadStageCollisions(f);
+	}
 
 	//------------------------------------------
 	// LoadInfo
@@ -472,6 +487,7 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 		{ "#InvincibleTime", &(lf.INV_TIME), typeid(float) },
 		{ "#Health", &(lf.health), typeid(int) },
 		{ "#Power", &(lf.power), typeid(int) },
+		{ "#AttackRadius", &(lf.attackRadius), typeid(float) },
 		//{ "#MaxVelocityX", &(lf.MAX_VX) , typeid(float)},
 	};
 	for (auto& lv : loadValues)

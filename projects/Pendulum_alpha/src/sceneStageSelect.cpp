@@ -1,3 +1,5 @@
+#define ALPHA_VER		// α発表会バージョン
+
 #include "sceneStageSelect.h"
 #include "define.h"
 
@@ -64,6 +66,7 @@ void CSceneStageSelect::draw()
 
 	// 背景
 	back_->draw(charabase::CharBase::MODE::LeftTop);
+
 	// ステージ
 	for (auto& stage : stages_)
 	{
@@ -176,13 +179,19 @@ bool CSceneStageSelect::update()
 			// ステージ選択
 			if (input::CheckPush(input::KEY_MOUSE_LBTN))
 			{
-				CFade::ChangeColor(255, 255, 255);
-				//stageName_ = common::StrReplace(stage.first->resname, "img_ss", "stage");
+#ifdef ALPHA_VER
+				// α版ではステージ1のみ選択可能とする
+				if (i == 0)
+#endif
+				{
+					CFade::ChangeColor(255, 255, 255);
+					//stageName_ = common::StrReplace(stage.first->resname, "img_ss", "stage");
 
-				std::stringstream ss;
-				ss << "Stage" << std::setw(2) << std::setfill('0') << (i + 1);
-				stageName_ = ss.str();
-				return true;
+					std::stringstream ss;
+					ss << "Stage" << std::setw(2) << std::setfill('0') << (i + 1);
+					stageName_ = ss.str();
+					return true;
+				}
 			}
 		}
 		else
