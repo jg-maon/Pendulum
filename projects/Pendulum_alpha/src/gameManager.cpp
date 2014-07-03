@@ -21,6 +21,7 @@ Base("GameManager")
 //, cursorAnim_(360.f,10.f)
 {
 	ShowCursor(showCursor_ == true);
+
 	init();
 
 	cursor_ = charabase::CharPtr(new charabase::CharBase(
@@ -43,13 +44,27 @@ void CGameManager::start()
 
 	fileMng_.Load();
 
-	if (!GetObj(typeid(CStageMng)).get())
-		AddObject2(ObjPtr(new CStageMng()));
+	AddObject2(ObjPtr(new CCollision()));
 
-	if (!GetObj(typeid(CScoreMng)).get())
-		AddObject2(ObjPtr(new CScoreMng()));
+	if (!GetObj(typeid(CStageMng)))
+	{
+		auto sm = std::make_shared<CStageMng>(new CStageMng());
+		AddObject2(sm);
+#ifdef DEF_GM_PTR
+		SetStageMngPtr(sm);
+#endif
+	}
 
-	if (!GetObj(typeid(CCollision)).get())
+	if (!GetObj(typeid(CScoreMng)))
+	{
+		auto sm = std::make_shared<CScoreMng>(new CScoreMng());
+		AddObject2(sm);
+#ifdef DFE_GM_PTR
+		SetScoreMngPtr(sm);
+#endif
+	}
+
+	if (!GetObj(typeid(CCollision)))
 		AddObject2(ObjPtr(new CCollision()));
 
 	objs_ = objs_;
@@ -262,7 +277,6 @@ void CGameManager::ClearObjects()
 }
 
 
-
 /*
 void CGameManager::setClear(bool clear)
 {
@@ -317,6 +331,14 @@ const mymath::Vec3f& CGameManager::GetCursorPos() const
 
 mymath::Vec3f CGameManager::GetPlayerPos() const
 {
+#ifdef DEF_GM_PTR
+	if (pPlayer_.lock())
+	{
+		// プレイヤーポインタが設定されているならばポインタから座標を取得
+		return pPlayer_.lock()->obj().pos;
+	}
+#endif
+	// オブジェクト配列内から探し出す
 	mymath::Vec3f v = { -1, -1, -1 };
 	for (const auto& s : objs_){
 		if (s->FindName("Player")){
@@ -332,6 +354,44 @@ CFileMng& CGameManager::fm()
 	return fileMng_;
 }
 
+#ifdef DEF_GM_PTR
+//*
+
+void CGameManager::SetPlayerPtr(const std::weak_ptr<CPlayer>& player)
+{
+	pPlayer_ = player;
+	//std::swap(pPlayer_, player);
+	//pPlayer_.swap(player);
+}
+
+void CGameManager::SetEnemyMngPtr(const std::weak_ptr<CEnemyMng>& enemymng)
+{
+	pEnemyMng_ = enemymng;
+}
+
+void CGameManager::SetStageMngPtr(const std::weak_ptr<CStageMng>& stagemng)
+{
+	pStageMng_ = stagemng;
+}
+
+void CGameManager::SetScoreMngPtr(const std::weak_ptr<CScoreMng>& scoremng)
+{
+	pScoreMng_ = scoremng;
+}
+
+
+CStageMng& CGameManager::stageMng()
+{
+	return *pStageMng_.lock();
+}
+
+CScoreMng& CGameManager::scoreMng()
+{
+	return *pScoreMng_.lock();
+}
+
+//*/
+#endif
 
 /*
 void InsertObject(const ObjPtr& obj)

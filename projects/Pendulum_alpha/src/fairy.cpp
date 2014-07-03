@@ -102,7 +102,7 @@ void CFairy::step()
 
 void CFairy::draw()
 {
-	if (attack_ != nullptr)
+	if (attack_.get())
 		attack_->draw();
 	mymath::Rectf rect = camera::GetScreenRect();
 	if (rect.Contains(obj_.GetRect()))
@@ -219,24 +219,27 @@ void CFairy::CreateAttack()
 
 	int dice = gplib::math::GetRandom<int>(0, 9);
 	float angle = gplib::math::GetRandom(0.f, 360.f);
-	
-	const float INTERVAL = 20.f;	// 横間隔
-	const float SP = 70.f;			// 初速度
-	const float ACC = 5.f;			// 加速度
 
-	if (dice < 2) {
+	const float INTERVAL = 20.f;	// 横間隔
+	const float SP = 10.f;			// 初速度
+	const float ACC = 1.f;			// 加速度
+
+	if (dice < 2)
+	{
 		// 2/10の確率で歌攻撃を行う
 		std::dynamic_pointer_cast<CNWaySing>(attack_)->CreateAttack(
 			mypos,
 			5,
 			angle,
 			SP, ACC);
-	} else {
-	// 8/10の確率で敵を引きつける
-	    // HaleEnemy();
-	};
+	}
+	else
+	{
+		// 8/10の確率で敵を引きつける
+		// HaleEnemy();
+	}
 
-	
+
 }
 
 
@@ -246,9 +249,13 @@ void CFairy::hit(const ObjPtr& rival)
 	{
 		// めり込み補正,通過補正
 		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);
+#ifdef DEF_PREPOS
 		mymath::Vec3f dist = obj_.pos - prePos_;
-		mymath::Vec3f intersection;
-		intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
+		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
+#else
+		mymath::Vec3f dist = nextPos() - obj_.pos;
+		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(obj_.pos, nextPos());
+#endif
 		obj_.pos = intersection;
 		obj_.pos -= dist.Normalize();
 

@@ -9,6 +9,7 @@
 #include "fileLoader.h"
 #endif
 
+
 #include <vector>
 
 /*
@@ -18,6 +19,7 @@
 class CFileMng
 {
 private:
+
 	const std::string iniFile_;			// path.iniファイルパス
 
 	CFileLoader fileLoader_;			// ファイルローダー

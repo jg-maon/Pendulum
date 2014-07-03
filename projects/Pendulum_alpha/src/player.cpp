@@ -52,28 +52,22 @@ ICharacter("Player")
 	status_ = Status::idle;
 }
 
-CPlayer::CPlayer(const mymath::Vec3f& pos) :
-ICharacter("Player")
-//	,isHanging(isHanging_)
-{
-	init(pos);
-}
 CPlayer::CPlayer(float x, float y, float z) :
 ICharacter("Player")
 //	,isHanging(isHanging_)
 {
-	init(mymath::Vec3f(x, y, z));
+	init(x, y, z);
 }
 
 CPlayer::~CPlayer()
 {
 }
 
-void CPlayer::init(const mymath::Vec3f& pos)
+void CPlayer::init(float x, float y, float z)
 {
 	gm()->GetData(*this);
 
-	obj_.pos = pos;
+	obj_.pos(x, y, z);
 
 	obj_.add = 0.f;
 
@@ -360,12 +354,11 @@ void CPlayer::move()
 		// ãÛíÜ
 #ifdef D_GRAVITY_TEST
 		if (gravityF)
+#endif
 		{
-#endif
 			tensionAcc_ = 0.f;
-#ifdef D_GRAVITY_TEST
+
 		}
-#endif
 	}
 	//----------------------------------------
 	// à⁄ìÆë¨ìxêßå¿
@@ -735,9 +728,14 @@ void CPlayer::hit(const ObjPtr& rival)
 	{
 		// ÇﬂÇËçûÇ›ï‚ê≥,í âﬂï‚ê≥
 		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);
+#ifdef DEF_PREPOS
 		mymath::Vec3f dist = obj_.pos - prePos_;
-		mymath::Vec3f intersection;
-		intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
+		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
+#else
+		mymath::Vec3f dist = nextPos() - obj_.pos;
+		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(obj_.pos, nextPos());
+#endif
+
 		obj_.pos = intersection;
 		obj_.pos -= dist.Normalize();
 

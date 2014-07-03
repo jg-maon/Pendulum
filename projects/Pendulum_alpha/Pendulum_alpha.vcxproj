@@ -137,6 +137,8 @@
     <ClInclude Include="src\nWayShot.h" />
     <ClInclude Include="src\nWaySing.h" />
     <ClInclude Include="src\obj.h" />
+    <ClInclude Include="src\pickupBase.hpp" />
+    <ClInclude Include="src\pickupJewelry.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\sceneBase.hpp" />
     <ClInclude Include="src\sceneEnd.h" />
@@ -186,6 +188,7 @@
     <ClCompile Include="src\nWayShot.cpp" />
     <ClCompile Include="src\nWaySing.cpp" />
     <ClCompile Include="src\obj.cpp" />
+    <ClCompile Include="src\pickupJewely.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\sceneEnd.cpp" />
     <ClCompile Include="src\sceneMain.cpp" />

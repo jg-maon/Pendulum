@@ -19,7 +19,7 @@ void CNWaySing::draw()
 }
 
 
-void CNWaySing::CreateAttack(const mymath::Vec3f& pos, int n, float angle, float speed, float acc, bool centerFlag)
+void CNWaySing::CreateAttack(const mymath::Vec3f& pos, int n, float angle, float acc, float addAngle)
 {
 	// 弾数に合わせて等間隔に配置する
 	int interval = 360 / n;
@@ -30,7 +30,7 @@ void CNWaySing::CreateAttack(const mymath::Vec3f& pos, int n, float angle, float
 		// 座標
 		sing.pos = pos;
 		// 発射角
-		sing.angle = angle + (interval * ((centerFlag) ? static_cast<float>(i - n / 2) : static_cast<float>(i)));
+		sing.angle = angle + (interval *  static_cast<float>(i));
 		if (sing.angle >= 360.f)
 			sing.angle -= 360.f;
 		else if (sing.angle < 0.f)
@@ -39,18 +39,16 @@ void CNWaySing::CreateAttack(const mymath::Vec3f& pos, int n, float angle, float
 		const float rad = math::Calc_DegreeToRad(sing.angle);
 		const float c = std::cosf(rad);
 		const float s = std::sinf(rad);
-		sing.add.x = speed *  c;
-		sing.add.y = speed * -s;
+		//sing.add.x = speed *  c;
+		//sing.add.y = speed * -s;
 		sing.add.z = 0.f;
 
-		mymath::Vec3f a(acc *  c,
-			acc * -s);	// 加速度
-		CSing sing_info(sing, a);	// 追加用
+		CSing sing_info(sing);	// 追加用
 		// 当たり判定領域のコピー
 		sing_info.SetCollisionAreas(sing_);
 
 		// 登録
-		gm()->AddObject(ObjPtr(new CSing(sing_info)));
+		gm()->AddObject(ObjPtr(new CSing(sing_info, acc, addAngle)));
 	}
 
 }

@@ -5,6 +5,8 @@
 #include "Obj.h"
 #endif
 
+#define DEF_PREPOS
+
 /*
 	@brief	キャラクターオブジェクト基底クラス(プレイヤー、敵、NPC?)
 	@attension	step内でICharacter::stepを呼び出す
@@ -15,8 +17,9 @@ class ICharacter : public IColObject
 protected:
 	int health_;				// 体力
 	int power_;					// 攻撃力
-
+#ifdef DEF_PREPOS
 	mymath::Vec3f prePos_;		// 1フレーム前の座標
+#endif
 
 public:
 	/*
@@ -64,11 +67,23 @@ public:
 	*/
 	virtual int getPower() const {return power_;}
 
+#ifdef DEF_PREPOS
 	/*
 		@brief	1フレーム前座標の取得
 		@return	1フレーム前の座標
 	*/
-	const mymath::Vec3f& prePos() const{ return prePos_; }
+	const mymath::Vec3f& prePos() const { return prePos_; }
+
+#endif
+
+	/*
+		@brief	1フレーム後の座標の取得
+		@return	1フレーム後の座標
+	*/
+	mymath::Vec3f nextPos() const
+	{
+		return obj_.pos + (obj_.add * system::FrameTime);
+	}
 };
 
 #endif

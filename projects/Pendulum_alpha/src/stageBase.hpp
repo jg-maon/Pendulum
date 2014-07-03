@@ -140,16 +140,21 @@ private:
 			}
 			// プレイヤーオブジェクトを追加
 			auto& pl = gm()->GetObj(typeid(CPlayer));
-			if (!pl.get())
+			std::shared_ptr<CPlayer> player;
+			if (!pl)
 			{
-				gm()->AddObject(ObjPtr(new CPlayer(pos[0], pos[1])));
+				player = std::make_shared<CPlayer>(new CPlayer(pos[0], pos[1]));
+				gm()->AddObject(player);
 			}
 			else
 			{
 				// 多重登録防止
-				auto& p = std::dynamic_pointer_cast<CPlayer>(pl);
-				p->init(mymath::Vec3f(pos[0], pos[1], p->obj().pos.z));
+				player = std::dynamic_pointer_cast<CPlayer>(pl);
+				player->init(pos[0], pos[1], player->obj().pos.z);
 			}
+#ifdef DEF_GM_PTR
+			gm()->SetPlayerPtr(player);
+#endif
 			
 		}
 
@@ -169,19 +174,24 @@ private:
 		{
 			std::string tableFile;
 			f >> tableFile;
-			auto& ems = gm()->GetObjects("EnemyMng");
-			ObjPtr em;
-			if (ems.empty())
+			// プレイヤーオブジェクトを追加
+			auto& pEm = gm()->GetObj(typeid(CEnemyMng));
+			std::shared_ptr<CEnemyMng> em;
+			if (!pEm)
 			{
 				// EnemyMngがない場合、新規に追加する
-				em = ObjPtr(new CEnemyMng());
+				em = std::make_shared<CEnemyMng>(new CEnemyMng());
 				gm()->AddObject(em);
 			}
 			else
 			{
-				em = ems[0];
+				// 多重登録防止
+				em = std::dynamic_pointer_cast<CEnemyMng>(pEm);
 			}
-			std::dynamic_pointer_cast<CEnemyMng>(em)->LoadEnemyTable(tableFile);
+			em->LoadEnemyTable(tableFile);
+#ifdef DEF_GM_PTR
+			gm()->SetEnemyMngPtr(em);
+#endif
 		}
 		return f.eof();
 	}
@@ -403,6 +413,7 @@ public:
 		for (auto& obj : objs)
 			obj->kill();
 		//*/
+		phase_ = IStage::Phase::CLEAR_ANNOUNCE;
 		LoadPlayer(f);
 		LoadEnemies(f);
 	}

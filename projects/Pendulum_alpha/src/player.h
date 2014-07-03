@@ -126,16 +126,10 @@ public:
 	/*
 		@brief	空オブジェクト生成
 				DB初期化時に呼ばれる
-	
 	*/
 	CPlayer();
+
 	/*
-		@param	[in]	stage	ステージ情報
-		@param	[in]	pos		初期座標
-	*/
-	CPlayer(const mymath::Vec3f& pos);
-	/*
-		@param	[in]	stage	ステージ情報
 		@param	[in]	x		初期座標
 		@param	[in]	y		初期座標
 		@param	[in]	z		初期座標
@@ -144,9 +138,12 @@ public:
 	
 	/*
 		@brief	情報の初期化
-		@param	[in]	pos		初期座標
+		@param	[in]	x		初期座標
+		@param	[in]	y		初期座標
+		@param	[in]	z		初期座標
+		@return	なし
 	*/
-	void init(const mymath::Vec3f& pos);
+	void init(float x, float y, float z);
 
 	~CPlayer();
 	/*

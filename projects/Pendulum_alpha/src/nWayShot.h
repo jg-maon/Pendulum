@@ -83,6 +83,10 @@ public:
 		{
 			kill();
 		}
+		else if (rival->FindName("ActionPolygon"))
+		{
+			kill();
+		}
 	}
 };
 /*

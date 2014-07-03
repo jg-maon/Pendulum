@@ -80,22 +80,30 @@ void CCollision::step()
 	{
 		auto& pl = std::dynamic_pointer_cast<CPlayer>(player);
 		const mymath::Vec3f& plpos = pl->obj().pos;
-		//-----------------------------------------
-		// プレイヤー vs ActionPoint
-		for (auto& actp : actionPoints)
+		auto& plstageCollisions = pl->GetStageCollisions();
+		//for (auto& stacol : plstageCollisions)
 		{
-			if (actp->Contains(pl->prePos(), plpos))
+			//-----------------------------------------
+			// プレイヤー vs ActionPoint
+			for (auto& actp : actionPoints)
 			{
-				// 交差
-				pl->hit(actp);
-			}
-			else if (actp->Contains(plpos))
-			{
-				// 内包
-				//pl->hit(actp);
+#ifndef DEF_PREPOS
+				const mymath::Vec3f& nextPos = pl->nextPos();
+				if (actp->Contains(plpos, nextPos))
+#else
+				if (actp->Contains(pl->prePos(), plpos))
+#endif
+				{
+					// 交差
+					pl->hit(actp);
+				}
+				//else if (actp->Contains(nextPos))
+				{
+					// 内包
+					//pl->hit(actp);
+				}
 			}
 		}
-
 
 		//-----------------------------------------
 		// 攻撃
@@ -224,17 +232,27 @@ void CCollision::step()
 			const mymath::Vec3f& enpos = en->obj().pos;
 			//-----------------------------------------
 			// 敵 vs ActionPoint
-			for (auto& actp : actionPoints)
+			//auto& enstageCollisions = en->GetStageCollisions();
+			//for (auto& stacol : enstageCollisions)
 			{
-				if (actp->Contains(en->prePos(), enpos))
+				for (auto& actp : actionPoints)
 				{
-					// 交差
-					en->hit(actp);
-				}
-				else if (actp->Contains(enpos))
-				{
-					// 内包
-					//en->hit(actp);
+#ifndef DEF_PREPOS
+					const mymath::Vec3f& nextPos = en->nextPos();
+					if (actp->Contains(enpos, nextPos))
+#else
+					if (actp->Contains(en->prePos(), enpos))
+#endif
+					{
+						// 交差
+						en->hit(actp);
+						//actp->hit(en);
+					}
+					//else if (actp->Contains(nextPos))
+					{
+						// 内包
+						//	en->hit(actp);
+					}
 				}
 			}
 		}
@@ -249,15 +267,16 @@ void CCollision::step()
 		{
 			//-----------------------------------------
 			// 敵攻撃 vs Polygon
-			for (auto& act : actionPoints)
+			for (auto& actp : actionPoints)
 			{
 				// ActionoPolygonのみ
-				if (!act->FindName("ActionPolygon")) continue;
+				if (!actp->FindName("ActionPolygon")) continue;
 				// 内包判定	
-				if (act->Contains(atkcol))
+				if (actp->Contains(atkcol))
 				{
 					// 攻撃種類別処理
-					shot->kill();
+					//shot->kill();
+					shot->hit(actp);
 				}
 				// 通過判定
 				//else if (
@@ -310,7 +329,7 @@ void CCollision::draw()
 				for (const auto& col : cols)
 				{
 					col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
-					col->draw(0x3fff0000, 1, true);
+					col->draw(0xffff0000, 1, false);
 				}
 #endif
 				// ステージ領域
@@ -319,7 +338,7 @@ void CCollision::draw()
 				for (const auto& col : stac)
 				{
 					col->Offset(mymath::Vec3f(0.f, 0.f, +0.1f));
-					col->draw(0xe000ff00, 1, false);
+					col->draw(0xffff00ff, 1, false);
 				}
 #endif
 			}
@@ -330,7 +349,7 @@ void CCollision::draw()
 		for (const auto& col : cols)
 		{
 			col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
-			col->draw(0x3fff0000, 1, true);
+			col->draw(0xffff0000, 1, false);
 		}
 #endif
 		// ステージ領域
@@ -339,7 +358,7 @@ void CCollision::draw()
 		for(const auto& col : stac)
 		{
 			col->Offset(mymath::Vec3f(0.f, 0.f, +0.1f));
-			col->draw(0xe000ff00, 1, false);
+			col->draw(0xffff00ff, 1, false);
 		}
 #endif
 	}

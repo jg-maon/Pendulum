@@ -153,6 +153,12 @@
     <Filter Include="ソース ファイル\InGame\Effect\Slash">
       <UniqueIdentifier>{8bbc50b3-d29c-406b-8f22-9d96fffdd3b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\InGame\Pickup">
+      <UniqueIdentifier>{e1ac40dd-3bf8-44e4-9e8f-10c29fd16a6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Pickup\Jewely">
+      <UniqueIdentifier>{5d47e221-9d93-46db-a616-f9a939b63c1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -356,6 +362,12 @@
     <ClInclude Include="src\effectSlash.h">
       <Filter>ソース ファイル\InGame\Effect\Slash</Filter>
     </ClInclude>
+    <ClInclude Include="src\pickupBase.hpp">
+      <Filter>ソース ファイル\InGame\Pickup</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pickupJewelry.h">
+      <Filter>ソース ファイル\InGame\Pickup\Jewely</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -492,6 +504,9 @@
     </ClCompile>
     <ClCompile Include="src\effectSlash.cpp">
       <Filter>ソース ファイル\InGame\Effect\Slash</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pickupJewely.cpp">
+      <Filter>ソース ファイル\InGame\Pickup\Jewely</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

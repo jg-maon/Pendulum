@@ -12,38 +12,47 @@
 #include <vector>
 
 /*
-	@brief	ショット
+	@brief	音符
 */
 class CSing : public IAttack
 {
 private:
 	int cnt_;
-	mymath::Vec3f	acceleration_;	// 加速度
+	float acceleration_;		// 加速度
+	float	addAngle_;	// 角速度
 
 private:
 	void init()
 	{
-		force_ = 10;
 		start();
+		force_ = 2;
 		cnt_ = 0;
-		collisions_.push_back(mymath::ShapefPtr(new mymath::Circlef(0.f, 0.f, obj_.pos.z, obj_.HalfHeight())));
+		
+		obj_.src(0, 0);
+		//obj_.src(0, math::GetRandom<int>(0, 2));
+
+		//collisions_.push_back(mymath::ShapefPtr(new mymath::Circlef(0.f, 0.f, obj_.pos.z, obj_.HalfHeight())));
+		collisions_.push_back(mymath::ShapefPtr(new mymath::Rectf(obj_.GetRect())));
 	}
 public:
 	/*
 		@brief	初期化
-		@param	[in]	sing			弾の情報
-		@param	[in]	acceleration	加速度
+		@param	[in]	sing		弾の情報
+		@param	[in]	acc			加速度[unit:px/sec](デフォルト:100)
+		@param	[in]	addAngle	角速度[unit:Degree](デフォルト:360) 
 	*/
-	CSing(const CSing& sing, const mymath::Vec3f& acceleration = mymath::Vec3f()) :
+	CSing(const CSing& sing, float acc = 100.f, float addAngle = 360.f) :
 		IAttack("Atk_Sing")
-		, acceleration_(acceleration)
+		, acceleration_(acc)
+		, addAngle_(addAngle)
 	{
 		obj_ = sing.obj();
 		init();
 	}
+
 	/*
 		@brief	初期化
-		@param	[in]	sing			弾の情報
+		@param	[in]	sing		弾の情報
 	*/
 	CSing(const charabase::CharBase& sing) :
 		IAttack("Atk_Sing")
@@ -51,46 +60,56 @@ public:
 		obj_ = sing;
 		init();
 	}
+
 	virtual void step() override
 	{
+		//obj_.add += acceleration_;
+
+		obj_.angle += addAngle_ * system::FrameTime;
+		if (obj_.angle >= 360.f)
+			obj_.angle -= 360.f;
+		else if (obj_.angle < 0.f)
+			obj_.angle += 360.f;
+
+		obj_.add.x += math::ROUND_X(obj_.angle, addAngle_ * cnt_ * system::FrameTime, acceleration_);
+		obj_.add.y += math::ROUND_Y(obj_.angle, addAngle_ * cnt_ * system::FrameTime, acceleration_);
+
 		obj_.Move();
-		obj_.add += acceleration_;
 		if (++cnt_ > 300)
 		{
 			kill();
 		}
 	}
+
 	virtual void draw() override
 	{
 		obj_.draw();
-#if defined(DEF_SHAPE_DRAW) && defined(_DEBUG)
-		const auto& cols = GetDamageAreas();
-		for (const auto& col : cols)
-		{
-			col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
-			col->draw();
-		}
-#endif
 	}
+
 	virtual void hit(const ObjPtr& rival) override
 	{
 		if (rival->FindName("Player"))
 		{
 			kill();
 		}
+		else if (rival->FindName("ActionPolygon"))
+		{
+			kill();
+		}
 	}
 };
+
 /*
-@brief	NWay弾
+	@brief	NWay音符
 */
 class CNWaySing : public IAttack
 {
 private:
-	const CSing sing_;			// 弾の情報
+	const CSing sing_;			// 音符の情報
 public:
 	/*
-	@brief	NWay弾の生成
-	@param	[in]	base		弾の情報(画像情報,当たり判定)
+		@brief	NWay音符の生成
+		@param	[in]	base		音符の情報(画像情報,当たり判定)
 	*/
 	CNWaySing(const CSing& base);
 
@@ -98,17 +117,16 @@ public:
 	virtual void draw() override;
 
 	/*
-		@brief	NWay弾の発射
-		どの位置から 何個 どの角度に どれくらいの間隔で どれくらいの速さで 加速度はどれくらいで どのように散らせるか
-		@param	[in]	pos			弾の初期座標
-		@param	[in]	n			弾数
-		@param	[in]	angle		弾の発射角度(単位:Degree)
-		@param	[in]	speed		弾の速さ(初速度)
-		@param	[in]	acc			弾の加速度
-		@param	[in]	centerFlag	弾を左右にふるか(デフォルト:true)
+		@brief	NWay音符の発射
+				どの位置から 何個 どの角度に どれくらいの間隔で どれくらいの角速度で 加速度はどれくらいで
+		@param	[in]	pos			音符の初期座標
+		@param	[in]	n			音符数
+		@param	[in]	angle		音符の発射角度(単位:Degree)
+		@param	[in]	acc			音符の加速度
+		@param	[in]	addAngle	音符の角速度
 		@return	なし
 	*/
-	void CreateAttack(const mymath::Vec3f& pos, int n, float angle, float speed, float acc, bool centerFlag = true);
+	void CreateAttack(const mymath::Vec3f& pos, int n, float angle, float acc, float addAngle);
 
 
 };

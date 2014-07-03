@@ -93,7 +93,7 @@ void CBird::step()
 
 void CBird::draw()
 {
-	if (attack_ != nullptr)
+	if (attack_.get())
 		attack_->draw();
 	mymath::Rectf rect = camera::GetScreenRect();
 	if (rect.Contains(obj_.GetRect()))
@@ -225,9 +225,13 @@ void CBird::hit(const ObjPtr& rival)
 	{
 		// �߂荞�ݕ␳,�ʉߕ␳
 		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);
+#ifdef DEF_PREPOS
 		mymath::Vec3f dist = obj_.pos - prePos_;
-		mymath::Vec3f intersection;
-		intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
+		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
+#else
+		mymath::Vec3f dist = nextPos() - obj_.pos;
+		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(obj_.pos, nextPos());
+#endif
 		obj_.pos = intersection;
 		obj_.pos -= dist.Normalize();
 

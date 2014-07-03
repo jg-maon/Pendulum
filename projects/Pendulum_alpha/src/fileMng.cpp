@@ -1,6 +1,5 @@
 #include "fileMng.h"
 
-
 #include "player.h"
 #include "enemyBase.hpp"
 
@@ -24,9 +23,9 @@ void CFileMng::Load()
 	dataTable_.clear();
 
 	// ƒvƒŒƒCƒ„[
-	auto player = std::shared_ptr<CPlayer>(new CPlayer());
+	auto player = std::make_shared<CPlayer>(new CPlayer());
 	fileLoader_.LoadPlayerData(*player);
-	
+
 	// “G
 	std::vector<EnemyPtr> enemies;
 	fileLoader_.LoadEnemiesData(enemies);
