@@ -68,6 +68,17 @@ private:
 #pragma endregion	// リソースファイル読み込み関連
 	//---------------------------------
 
+	/*
+		@brief	CharBase読み込み(画像名、サイズ)
+		@attension	fはオープン済み
+		@param	[in/out]	f	情報ファイル
+		@param	[out]		cb	ロードした情報を格納するCharBase
+		@return	情報を設定できたか
+		@retval	true	設定成功
+		@retval	false	設定失敗
+	*/
+	bool LoadCharBase(std::ifstream& f, charabase::CharBase& cb);
+
 	//---------------------------------
 #pragma region 敵テーブル読み込み
 	/*
@@ -91,6 +102,21 @@ private:
 	bool LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& enemies);
 
 #pragma endregion	// 敵テーブル読み込み
+	//---------------------------------
+
+	//---------------------------------
+#pragma region ピックアップアイテムテーブル読み込み
+	/*
+		@brief	CPickupJewelyロード
+		@param	[in]	fileName	ファイルパス
+		@param	[out]	pickups		ロードした情報を格納する配列
+		@return	情報を設定できたか
+		@retval	true	設定成功
+		@retval	false	設定失敗
+	*/
+	bool LoadJewely(const std::string& fileName, std::vector<PickupPtr>& pickups);
+
+#pragma endregion	// ピックアップアイテムテーブル読み込み
 	//---------------------------------
 
 
@@ -121,9 +147,20 @@ public:
 	/*
 		@brief	敵情報をファイルからロードする
 		@param	[out]	enemies		ロードした敵情報を格納する配列
-		@return	なし
+		@return	情報を設定できたか
+		@retval	true	設定成功
+		@retval	false	設定失敗
 	*/
-	void LoadEnemiesData(std::vector<EnemyPtr>& enemies);
+	bool LoadEnemiesData(std::vector<EnemyPtr>& enemies);
+	
+	/*
+		@brief	ピックアップアイテム読み込み
+		@param	[out]	pickups		ロードしたピックアップアイテム情報を格納する配列
+		@return	情報を設定できたか
+		@retval	true	設定成功
+		@retval	false	設定失敗
+	*/
+	bool LoadPickupData(std::vector<PickupPtr>& pickups);
 
 
 	/*

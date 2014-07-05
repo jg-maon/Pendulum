@@ -252,7 +252,7 @@ public:
 		@brief ベクトルv1とv2のなす角
 		@param	[in]	v1	ベクトル
 		@param	[in]	v2	ベクトル
-		@return	なす角
+		@return	なす角 [ unit:radian ]
 	*/
 	static float Angle(const Vec3<T>& v1, const Vec3<T>& v2)
 	{

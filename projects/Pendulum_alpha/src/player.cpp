@@ -142,6 +142,30 @@ mymath::Circlef atk_range(0.f,0.f,0.5f,300.f);
 #endif
 
 
+void CPlayer::MoveCamera()
+{
+	auto& pos = obj_.pos;
+	mymath::Vec3f cameraPos = pos;
+	const auto& sm = CStageMng::GetPtr();
+	const auto& cameraRect = sm->getCameraRect();
+	/*
+	if (pos.x < cameraRect.left + system::WINW / 2)
+	cameraPos.x = cameraRect.left + system::WINW / 2;
+	if (pos.x > cameraRect.right - system::WINW / 2)
+	cameraPos.x = cameraRect.right - system::WINW / 2;
+	if (pos.y  < cameraRect.top + system::WINH / 2)
+	cameraPos.y = cameraRect.top + system::WINH / 2;
+	if (pos.y  > cameraRect.bottom - system::WINH / 2)
+	cameraPos.y = cameraRect.bottom - system::WINH / 2;
+	//*/
+
+	//*
+	cameraPos.x = static_cast<float>(clamp(pos.x, (cameraRect.left + system::WINW / 2), (cameraRect.right - system::WINW / 2)));
+	cameraPos.y = static_cast<float>(clamp(pos.y, (cameraRect.top + system::WINH / 2), (cameraRect.bottom - system::WINH / 2)));
+	//*/
+	camera::SetLookAt(cameraPos.x, cameraPos.y);
+}
+
 void CPlayer::key()
 {
 	using namespace input;
@@ -513,27 +537,7 @@ void CPlayer::step()
 
 	//----------------------------------------
 	// カメラ移動
-	{
-		mymath::Vec3f cameraPos = pos;
-		const auto& sm = CStageMng::GetPtr();
-		const auto& cameraRect = sm->getCameraRect();
-		/*
-		if (pos.x < cameraRect.left + system::WINW / 2)
-		cameraPos.x = cameraRect.left + system::WINW / 2;
-		if (pos.x > cameraRect.right - system::WINW / 2)
-		cameraPos.x = cameraRect.right - system::WINW / 2;
-		if (pos.y  < cameraRect.top + system::WINH / 2)
-		cameraPos.y = cameraRect.top + system::WINH / 2;
-		if (pos.y  > cameraRect.bottom - system::WINH / 2)
-		cameraPos.y = cameraRect.bottom - system::WINH / 2;
-		//*/
-
-		//*
-		cameraPos.x = static_cast<float>(clamp(pos.x, (cameraRect.left + system::WINW / 2), (cameraRect.right - system::WINW / 2)));
-		cameraPos.y = static_cast<float>(clamp(pos.y, (cameraRect.top + system::WINH / 2), (cameraRect.bottom - system::WINH / 2)));
-		//*/
-		camera::SetLookAt(cameraPos.x, cameraPos.y);
-	}
+	MoveCamera();
 }
 
 
@@ -726,6 +730,7 @@ void CPlayer::hit(const ObjPtr& rival)
 {
 	if (rival->FindName("ActionPolygon"))
 	{
+		// 壁
 		// めり込み補正,通過補正
 		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);
 #ifdef DEF_PREPOS
@@ -739,6 +744,7 @@ void CPlayer::hit(const ObjPtr& rival)
 		obj_.pos = intersection;
 		obj_.pos -= dist.Normalize();
 
+		MoveCamera();
 		//gravityF_ = false;
 		//isHanging_ = false;
 	}
@@ -758,6 +764,14 @@ void CPlayer::hit(const ObjPtr& rival)
 		{
 			invincibleTime_ = loadInfo_.INV_TIME;
 		}
+	}
+	else if (rival->FindName("PickupJewely"))
+	{
+		// ピックアップ宝石
+		const auto& jewely = std::dynamic_pointer_cast<CPickupJewely>(rival);
+		// スコア加算
+		auto& sm = std::dynamic_pointer_cast<CScoreMng>(gm()->GetObj(typeid(CScoreMng)));
+		sm->AddScore(jewely->getScore());
 	}
 }
 

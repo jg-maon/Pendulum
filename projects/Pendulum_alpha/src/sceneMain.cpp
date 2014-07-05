@@ -18,15 +18,22 @@
 #pragma region
 // コンストラクタ
 CSceneMain::CSceneMain():
-IScene("","bgm_main")
+IScene()
 {
 	//InsertObject(ObjPtr(new CCollision()));
 
 	// メイン内で使うオブジェクトを始動させる
-	auto& objs = gm()->GetObjects("StageMng Collision Player EnemyMng", ' ');
+	// プレイヤーや敵はStageクラスがやってくれる
+	auto& objs = gm()->GetObjects("StageMng Collision", ' ');
 	for (auto& obj : objs)
 		obj->start();
 
+	// ステージマネージャより、現在ステージのBGM情報を取得
+	auto& sm = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
+	bgmResname_ = sm->getStageBGM();
+	
+
+	start();
 }
 CSceneMain::~CSceneMain()
 {
@@ -54,12 +61,23 @@ bool CSceneMain::update()
 IScene* CSceneMain::NextScene()
 {
 	// メイン内で使ったオブジェクトを停止させる
-	auto& objs = gm()->GetObjects("StageMng Collision Player EnemyMng", ' ');
-	for (auto& obj : objs)
-		obj->stop();
-	// スコアマネージャにスコアを追加
-	auto& sm = std::dynamic_pointer_cast<CScoreMng>(gm()->GetObj(typeid(CScoreMng)));
-	sm->score(100);
+	{
+		auto& objs = gm()->GetObjects("StageMng Collision Player EnemyMng", ' ');
+		for (auto& obj : objs)
+			obj->stop();
+	}
+	// 遠距離攻撃を消去する
+	{
+		auto& objs = gm()->GetObjects("Atk_");
+		for (auto& obj : objs)
+			obj->kill();
+	}
+
+	{
+		// スコアマネージャにスコアを追加
+		auto& sm = std::dynamic_pointer_cast<CScoreMng>(gm()->GetObj(typeid(CScoreMng)));
+		sm->score(100);
+	}
 	return new CSceneEnd();
 }
 

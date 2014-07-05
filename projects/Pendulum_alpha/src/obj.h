@@ -84,11 +84,6 @@ public:
 	*/
 	bool isDestroy() const;
 	
-	/*
-		@brief	状態の取得
-		@return	オブジェクトの状態
-	*/
-	Status getStatus() const;
 	
 	/*
 		@brief	オブジェクト名の検索
@@ -127,6 +122,26 @@ public:
 		@return	なし
 	*/
 	virtual void stop();
+
+	/*
+		@brief	オブジェクトを描画のみに設定する
+		@return	なし
+	*/
+	virtual void SetStatusDisp();
+
+	/*
+		@brief	オブジェクトの状態を変更する
+		@param	[in]	status	状態
+		@return	なし
+	*/
+	//void setStatus(Status status);
+	
+	/*
+		@brief	状態の取得
+		@return	オブジェクトの状態
+	*/
+	Status getStatus() const;
+
 	/*
 		@brief	オブジェクト同士の重なり処理
 		@param	[in]	rival	重なっている相手オブジェクト

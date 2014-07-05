@@ -55,6 +55,8 @@ public:
 		ANNIHILATION,	// 殲滅
 	};
 protected:
+	std::string bgm_;							// BGM
+
 	IStage::Phase phase_;						// ステージフェーズ
 	IStage::ClearType clearType_;				// クリア条件
 	mymath::Recti cameraRect_;					// カメラの可動範囲
@@ -63,6 +65,8 @@ protected:
 	std::vector<ActPtPtr> actionPoints_;
 
 public:
+	const std::string& bgm;
+
 	const std::vector<ActPtPtr>& actionPoints;
 	const mymath::Recti& rect;
 	const mymath::Recti& cameraRect;
@@ -70,6 +74,26 @@ public:
 
 private:
 #pragma region private methods
+
+	/*
+		@brief		ステージシステム環境の読み込み
+		@attension	fはオープン済み
+		@param	[in/out]	f	ステージファイル
+		@return	EOFか
+		@retval	true	EOF
+		@retval	false	EOFでない
+	*/
+	bool LoadEnv(std::ifstream& f)
+	{
+		//--------------------------------------
+		// ステージ
+		if (common::FindChunk(common::SeekSet(f), "#Bgm"))
+		{
+			f >> bgm_;
+		}
+		return f.eof();
+	}
+
 	/*
 		@brief		ステージサイズ,カメラ可動範囲の読み込み
 		@attension	fはオープン済み
@@ -99,7 +123,7 @@ private:
 			f >> stageRect_.bottom;
 		}
 		//--------------------------------------
-		// ステージ
+		// カメラ
 		if (common::FindChunk(common::SeekSet(f), "#CameraLeft"))
 		{
 			f >> cameraRect_.left;
@@ -143,7 +167,7 @@ private:
 			std::shared_ptr<CPlayer> player;
 			if (!pl)
 			{
-				player = std::make_shared<CPlayer>(new CPlayer(pos[0], pos[1]));
+				player = std::shared_ptr<CPlayer>(new CPlayer(pos[0], pos[1]));
 				gm()->AddObject(player);
 			}
 			else
@@ -180,7 +204,7 @@ private:
 			if (!pEm)
 			{
 				// EnemyMngがない場合、新規に追加する
-				em = std::make_shared<CEnemyMng>(new CEnemyMng());
+				em = std::shared_ptr<CEnemyMng>(new CEnemyMng());
 				gm()->AddObject(em);
 			}
 			else
@@ -293,6 +317,7 @@ protected:
 		LoadEnemies(f);
 		//*/
 
+		LoadEnv(f);
 		LoadRect(f);
 		LoadActionCircles(f);
 		LoadActionPolygons(f);
@@ -304,7 +329,7 @@ protected:
 		@retval	true	クリア条件表示終了
 		@retval	false	クリア条件表示継続
 	*/
-//	virtual bool UpdateClearAnnounce() = 0{ return true; };
+	virtual bool UpdateClearAnnounce() = 0{ return true; };
 
 	/*
 		@brief	雑魚ステージ更新処理
@@ -312,7 +337,7 @@ protected:
 		@retval	true	ステージ終了
 		@retval	false	ステージ継続
 	*/
-//	virtual bool UpdateNormal() = 0{ return true; }
+	virtual bool UpdateNormal() = 0{ return true; }
 
 	/*
 		@brief	ボスステージ更新処理
@@ -320,7 +345,7 @@ protected:
 		@retval	true	ステージ終了
 		@retval	false	ステージ継続
 	*/
-//	virtual bool UpdateBoss() = 0{ return true; }
+	virtual bool UpdateBoss() = 0{ return true; }
 
 #pragma endregion	// protected methods
 public:
@@ -328,6 +353,7 @@ public:
 	IStage(const std::string& name) :
 		Base(name)
 		, phase_(IStage::Phase::CLEAR_ANNOUNCE)
+		, bgm(bgm_)
 		, actionPoints(actionPoints_)
 		, rect(stageRect_)
 		, cameraRect(cameraRect_)
@@ -341,7 +367,7 @@ public:
 	*/
 	virtual void step() override
 	{
-		/*
+		//*
 		switch (phase_)
 		{
 		case IStage::Phase::CLEAR_ANNOUNCE:
@@ -359,7 +385,7 @@ public:
 			default:
 				break;
 			}
-			//*//*
+			//*/
 			break;
 		case IStage::Phase::NORMAL:
 			for (auto& ap : actionPoints_)
@@ -377,13 +403,7 @@ public:
 				phase_ = IStage::Phase::RESULT;
 			}
 			break;
-		default:
-			break;
 		}
-		//*/
-		for (auto& ap : actionPoints_)
-			ap->step();
-
 		if (input::CheckPush(input::KEY_BTN0))
 		{
 			phase_ = IStage::Phase::RESULT;
@@ -416,6 +436,9 @@ public:
 		phase_ = IStage::Phase::CLEAR_ANNOUNCE;
 		LoadPlayer(f);
 		LoadEnemies(f);
+
+
+
 	}
 
 	/*

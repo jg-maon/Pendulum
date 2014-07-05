@@ -24,8 +24,39 @@ private:
 
 public:
 	CEnemyMng();
+	/*
+		@brief	更新処理
+		@return	なし
+	*/
 	virtual void step() override;
+	/*
+		@brief	描画処理
+		@return	なし
+	*/
 	virtual void draw() override;
+	
+	/*
+		@brief	オブジェクトを消す
+		@return	なし
+	*/
+	virtual void kill() override;
+	/*
+		@brief	オブジェクトを始動させる
+		@return	なし
+	*/
+	virtual void start() override;
+	/*
+		@brief	オブジェクトを停止させる
+		@return	なし
+	*/
+	virtual void stop() override;
+
+	/*
+		@brief	オブジェクトを描画のみに設定する
+		@return	なし
+	*/
+	virtual void SetStatusDisp() override;
+
 	/*
 		@brief	敵マネージャオブジェクトを取得
 		@return	ポインタ

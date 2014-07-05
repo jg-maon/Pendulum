@@ -37,6 +37,35 @@ void CEnemyMng::draw()
 		enemy->draw();
 }
 
+void CEnemyMng::kill()
+{
+	__super::kill();
+	for (auto& enemy : enemies_)
+		enemy->kill();
+}
+
+void CEnemyMng::start()
+{
+	__super::start();
+	for (auto& enemy : enemies_)
+		enemy->start();
+}
+
+void CEnemyMng::stop()
+{
+	__super::stop();
+	for (auto& enemy : enemies_)
+		enemy->stop();
+
+}
+void CEnemyMng::SetStatusDisp()
+{
+	__super::SetStatusDisp();
+	for (auto& enemy : enemies_)
+		enemy->SetStatusDisp();
+
+}
+
 ObjPtr CEnemyMng::GetPtr()
 {
 	extern CGameManager* gm;

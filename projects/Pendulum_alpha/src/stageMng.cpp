@@ -163,6 +163,11 @@ void CStageMng::LoadStage(const std::string& stageName)
 }
 
 
+const std::string& CStageMng::getStageBGM() const
+{
+	return stages_.at(nowStage_)->bgm;
+}
+
 
 const mymath::Recti& CStageMng::getStageRect() const
 {

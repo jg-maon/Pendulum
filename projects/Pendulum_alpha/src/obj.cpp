@@ -29,11 +29,6 @@ bool Base::isDestroy() const
 	return status_ == Status::destroy;
 }
 
-Base::Status Base::getStatus() const
-{
-	return status_;
-}
-
 bool Base::FindName(const std::string& name) const
 {
 	std::string::size_type pos = name_.find(name);
@@ -57,6 +52,22 @@ void Base::stop()
 {
 	status_ = Status::idle;
 }
+void Base::SetStatusDisp()
+{
+	status_ = Status::disp;
+}
+/*
+void Base::setStatus(Base::Status status)
+{
+	status_ = status;
+}
+//*/
+
+Base::Status Base::getStatus() const
+{
+	return status_;
+}
+
 
 void Base::hit(const std::shared_ptr<Base>& rival)
 {
@@ -166,27 +177,26 @@ bool IColObject::LoadCollisions(std::ifstream& f, Base::Collisions& collisions)
 	{
 		if (buf == "}")
 		{
-			if (openNum)
+			if (!temp.empty())
 			{
-				// ˆê‚ÂŠK‘w‚ğã‚°‚é
-				openNum--;
-				collisions = temp;
 				// “–‚½‚è”»’è‚Ì’Ç‰Á
+				collisions = temp;
 				//collisions.push_back(temp);
+				temp.clear();
 			}
-			else
+			// ˆê‚ÂŠK‘w‚ğã‚°‚é
+			if (--openNum == 0)
 			{
 				// ‘S•”•Â‚¶‚½‚Ì‚Å“Ç‚İ‚İ‚ğI—¹‚³‚¹‚é
 				break;
 			}
 		}
-		if (buf == "{")
+		else if (buf == "{")
 		{
 			openNum++;
-			temp.clear();
 		}
 
-		if (buf == "#Circle")
+		else if (buf == "#Circle")
 		{
 			mymath::Circlef c;
 			if (LoadValue(f, obj_, c.center.x)) return true;

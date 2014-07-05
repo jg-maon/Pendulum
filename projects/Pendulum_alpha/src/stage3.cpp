@@ -30,3 +30,18 @@ void CStage3::init(std::ifstream& f)
 {
 	__super::init(f);
 }
+
+bool CStage3::UpdateClearAnnounce()
+{
+	return true;
+}
+
+bool CStage3::UpdateNormal()
+{
+	return false;
+}
+
+bool CStage3::UpdateBoss()
+{
+	return false;
+}

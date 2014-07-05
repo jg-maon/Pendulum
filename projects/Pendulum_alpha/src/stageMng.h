@@ -53,6 +53,11 @@ public:
 	*/
 	void LoadStage(const std::string& stageName);
 
+	/*
+		@brief	現在のステージのBGM名を取得
+		@return	BGM
+	*/
+	const std::string& getStageBGM() const;
 
 	/*
 		@brief	現在のステージサイズの取得

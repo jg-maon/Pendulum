@@ -14,8 +14,18 @@
 class CStage1 : public IStage
 {
 private:
+	enum class ClearAnnouncePhase
+	{
+		TO_GOAL,			// ゴール表示
+		WAIT,				// ウェイト
+		TO_PLAYER,			// プレイヤー表示
+
+	}caPhase_;
 	mymath::ShapefPtr goalArea_;		// ゴールエリア
 	charabase::CharBase goalObj_;		// ゴールオブジェクト
+
+	float announceTime_;				// クリア条件表示中タイマー
+	//mymath::Vec3f playerPos_;			// プレイヤースタート座標
 private:
 	/*
 		@brief		クリア条件のロード
@@ -25,6 +35,33 @@ private:
 		@return		なし
 	*/
 	void LoadClear(std::ifstream& f, mymath::ShapefPtr& area);
+
+protected:
+	
+	/*
+		@brief	クリア条件表示更新処理
+		@return	クリア条件表示終了
+		@retval	true	クリア条件表示終了
+		@retval	false	クリア条件表示継続
+	*/
+	virtual bool UpdateClearAnnounce() override;
+
+	/*
+		@brief	雑魚ステージ更新処理
+		@return	ステージ終了
+		@retval	true	ステージ終了
+		@retval	false	ステージ継続
+	*/
+	virtual bool UpdateNormal() override;
+
+	/*
+		@brief	ボスステージ更新処理
+		@return	ステージ終了
+		@retval	true	ステージ終了
+		@retval	false	ステージ継続
+	*/
+	virtual bool UpdateBoss() override;
+
 public:
 	/*
 		@brief		ステージのロード

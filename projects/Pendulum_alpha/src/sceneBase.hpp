@@ -28,7 +28,7 @@ private:
 protected:
 
 	const std::string BACK_RESNAME;		// 背景
-	const std::string BGM_RESNAME;		// BGM音源
+	std::string bgmResname_;			// BGM音源
 
 	enum class State		// シーン内部状態
 	{
@@ -38,7 +38,7 @@ protected:
 	};
 	State state_;
 
-	int bgmVolum_;		// BGM音量
+	int bgmVolume_;		// BGM音量
 	//std::string name_;
 
 protected:
@@ -57,6 +57,14 @@ protected:
 	void gm(CGameManager* gm)
 	{
 		gm_ = gm;
+	}
+
+	void start()
+	{
+		bgm::DShow_SetStartPos(bgmResname_);
+		bgm::DShow_VolumeControl(bgmResname_, bgmVolume_);
+		bgm::DShow_Play(bgmResname_);
+		CFade::StartFadeIn();
 	}
 
 
@@ -84,22 +92,21 @@ public:
 	*/
 	IScene(const std::string& back, const std::string& bgm, float fadeInTime = 0.3f, float fadeOutTime = 0.3f) :
 		BACK_RESNAME(back)
-		, BGM_RESNAME(bgm)
+		, bgmResname_(bgm)
 		, FADE_IN_TIME(fadeInTime)
 		, FADE_OUT_TIME(fadeOutTime)
 		, state_(IScene::State::INNING)
-		, bgmVolum_(100)
+		, bgmVolume_(100)
 	{
-		bgm::DShow_SetStartPos(BGM_RESNAME);
-		bgm::DShow_VolumeControl(BGM_RESNAME, bgmVolum_);
-		bgm::DShow_Play(BGM_RESNAME);
-		CFade::StartFadeIn();
+		start();
 	}
 	IScene() :
 		BACK_RESNAME("")
-		, BGM_RESNAME("")
+		, bgmResname_("")
 		, FADE_IN_TIME(0.3f)
 		, FADE_OUT_TIME(0.3f)
+		, state_(IScene::State::INNING)
+		, bgmVolume_(100)
 	{}
 	//IScene(const std::string& name):name_(name){}
 	
@@ -126,10 +133,10 @@ public:
 		case IScene::State::OUTING:
 			//--------------------------------------
 			// BGMフェードアウト
-			bgmVolum_ -= static_cast<int>(100.f / FADE_OUT_TIME * system::FrameTime);
-			if (bgmVolum_ <= 0)
-				bgmVolum_ = 0;
-			bgm::DShow_VolumeControl(BGM_RESNAME, bgmVolum_);
+			bgmVolume_ -= static_cast<int>(100.f / FADE_OUT_TIME * system::FrameTime);
+			if (bgmVolume_ <= 0)
+				bgmVolume_ = 0;
+			bgm::DShow_VolumeControl(bgmResname_, bgmVolume_);
 			//--------------------------------------
 			if (CFade::FadeOut(255.f / FADE_OUT_TIME * system::FrameTime))
 			{

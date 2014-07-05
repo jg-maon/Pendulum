@@ -159,6 +159,9 @@
     <Filter Include="ソース ファイル\InGame\Pickup\Jewely">
       <UniqueIdentifier>{5d47e221-9d93-46db-a616-f9a939b63c1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Main\pickup">
+      <UniqueIdentifier>{5a24c980-0f3e-47ee-b71d-f933a5393d2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -365,7 +368,7 @@
     <ClInclude Include="src\pickupBase.hpp">
       <Filter>ソース ファイル\InGame\Pickup</Filter>
     </ClInclude>
-    <ClInclude Include="src\pickupJewelry.h">
+    <ClInclude Include="src\pickupJewely.h">
       <Filter>ソース ファイル\InGame\Pickup\Jewely</Filter>
     </ClInclude>
   </ItemGroup>
@@ -562,6 +565,12 @@
     </None>
     <None Include="res\dat\stageSelect\setting.dat">
       <Filter>リソース ファイル\StageSelect</Filter>
+    </None>
+    <None Include="res\dat\main\pickup\jewely.dat">
+      <Filter>リソース ファイル\Main\pickup</Filter>
+    </None>
+    <None Include="res\dat\main\pickup\pickups.dat">
+      <Filter>リソース ファイル\Main\pickup</Filter>
     </None>
   </ItemGroup>
 </Project>

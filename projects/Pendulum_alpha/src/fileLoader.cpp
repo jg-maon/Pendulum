@@ -6,9 +6,8 @@ using namespace gplib;
 
 #include "bird.h"
 #include "fairy.h"
-
 #include "player.h"
-
+#include "pickupJewely.h"
 
 #include "scoreMng.h"
 #include "enemyMng.h"
@@ -161,6 +160,33 @@ void CFileLoader::LoadFont(ifstream& resF, FontTable& fontTable)
 //=====================================================================================
 
 //=====================================================================================
+//=====================================================================================
+
+bool CFileLoader::LoadCharBase(std::ifstream& f, charabase::CharBase& cb)
+{
+	// ファイルから情報を抜き取る際のタグ検索用
+	bool success;
+
+	//-----------------------------------------------
+	// 画像情報
+	//-----------------------------------------------
+	// 画像管理名
+	if (success = common::FindChunk(common::SeekSet(f), "#Img"))
+	{
+		f >> cb.resname;
+	}
+	// 画像サイズ
+	if (success && (success = common::FindChunk(common::SeekSet(f), "#Size")))
+	{
+		f >> cb.size.x;
+		f >> cb.size.y;
+	}
+	//-----------------------------------------------
+
+	return success;
+}
+
+//=====================================================================================
 #pragma region 敵テーブル読み込み
 //=====================================================================================
 //=====================================================================================
@@ -192,19 +218,9 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	//-----------------------------------------------
 	// 画像情報
 	//-----------------------------------------------
-	// 画像管理名
-	if (success = FindChunk(SeekSet(eneF), "#Img"))
-	{
-		eneF >> cb.resname;
-	}
-	// 画像サイズ
-	if (success && (success = FindChunk(SeekSet(eneF), "#Size")))
-	{
-		eneF >> cb.size.x;
-		eneF >> cb.size.y;
-	}
+	
 	//-----------------------------------------------
-	if (success)
+	if (success = LoadCharBase(eneF, cb))
 	{
 		// 画像情報設定
 		tmp.obj(cb);
@@ -294,30 +310,11 @@ bool CFileLoader::LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& 
 	charabase::CharBase cb;
 	// ファイルから情報を抜き取る際のタグ検索用
 	bool success;
-	// success が一度でもfalseになったら他処理スキップ
-	// if (success){
-	// 	ロード
-	// }
-	// else {
-	// 	return;
-	// }みたいな感じ
 
 	//-----------------------------------------------
 	// 画像情報
 	//-----------------------------------------------
-	// 画像管理名
-	if (success = FindChunk(SeekSet(eneF), "#Img"))
-	{
-		eneF >> cb.resname;
-	}
-	// 画像サイズ
-	if (success && (success = FindChunk(SeekSet(eneF), "#Size")))
-	{
-		eneF >> cb.size.x;
-		eneF >> cb.size.y;
-	}
-	//-----------------------------------------------
-	if (success)
+	if (success = LoadCharBase(eneF, cb))
 	{
 		// 画像情報設定
 		tmp.obj(cb);
@@ -386,7 +383,65 @@ bool CFileLoader::LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& 
 //=====================================================================================
 //=====================================================================================
 //=====================================================================================
+
+
+#pragma region ピックアップアイテムテーブル読み込み
 //=====================================================================================
+//=====================================================================================
+//=====================================================================================
+bool CFileLoader::LoadJewely(const std::string& fileName, std::vector<PickupPtr>& pickups)
+{
+	using common::FindChunk;
+	using common::SeekSet;
+	std::ifstream f(fileName);
+	if (f.fail())
+	{
+		debug::BToM("CFileLoader::LoadJewely path:%s", fileName.c_str());
+		return false;
+	}
+	// 情報ロード用
+	CPickupJewely tmp;
+	charabase::CharBase cb;
+	// ファイルから情報を抜き取る際のタグ検索用
+	bool success;
+	
+	//-----------------------------------------------
+	// 画像情報
+	//-----------------------------------------------
+	if (success = LoadCharBase(f, cb))
+	{
+		// 画像情報設定
+		tmp.obj(cb);
+	}
+	//-----------------------------------------------
+	// クラス情報
+	//-----------------------------------------------
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(f), "#Collision")))
+	{
+		tmp.LoadCollisions(f);
+	}
+	//-----------------------------------------------
+	if (success)
+	{
+		//-----------------------------------------------
+		// 全ての情報が正しく読み込めた際のみここに入る
+
+		// コピーコンストラクタを用いオリジナル作成
+		pickups.push_back(PickupPtr(new CPickupJewely(tmp)));
+	}
+	else
+	{
+		debug::BToM("CFileLoader::LoadJewelyload failed");
+	}
+
+	return success;
+}
+
+#pragma endregion	// ピックアップアイテムテーブル読み込み
+//=====================================================================================
+
+
 
 //=====================================================================================
 //=====================================================================================
@@ -397,14 +452,14 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	using common::FindChunk;
 	using common::SeekSet;
 	//======================================================================================
-	// パスファイルから敵DBファイルパスの読み込み
+	// パスファイルからプレイヤー情報ファイルパスの読み込み
 	std::ifstream iniF(iniFile_);
-	std::string playerFile;
 	if (iniF.fail() || (!FindChunk(iniF, "#PlayerFile")))
 	{
 		debug::BToM("CFileLoader::LoadPlayerData [iniF]Error path:%s", iniFile_.c_str());
 		return false;
 	}
+	std::string playerFile;
 	iniF >> playerFile;
 	//======================================================================================
 	// DBファイルを開く
@@ -433,19 +488,7 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	//-----------------------------------------------
 	// 画像情報
 	//-----------------------------------------------
-	// 画像管理名
-	if (success = FindChunk(SeekSet(f), "#Img"))
-	{
-		f >> cb.resname;
-	}
-	// 画像サイズ
-	if (success && (success = FindChunk(SeekSet(f), "#Size")))
-	{
-		f >> cb.size.x;
-		f >> cb.size.y;
-	}
-
-	if (success)
+	if (success = LoadCharBase(f, cb))
 	{
 		// 画像情報設定
 		tmp.obj(cb);
@@ -570,19 +613,19 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 //=====================================================================================
 
 //=====================================================================================
-void CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
+bool CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 {
 	using common::FindChunk;
 	using common::SeekSet;
 	//======================================================================================
 	// パスファイルから敵DBファイルパスの読み込み
 	std::ifstream iniF(iniFile_);
-	std::string enemyFile;
 	if (iniF.fail() || (!FindChunk(iniF, "#EnemyFile")))
 	{
 		debug::BToM("CFileLoader::LoadEnemiesData [iniF]Error path:%s", iniFile_.c_str());
-		return;
+		return false;
 	}
+	std::string enemyFile;
 	iniF >> enemyFile;
 	//======================================================================================
 	// DBファイルを開く
@@ -590,7 +633,7 @@ void CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 	if (f.fail())
 	{
 		debug::BToM("CFileLoader::LoadEnemiesData [f]Error path:%s", enemyFile.c_str());
-		return;
+		return false;
 	}
 
 	// 敵テーブル初期化
@@ -598,15 +641,70 @@ void CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 
 	//======================================================================================
 	// 敵情報読み込み開始
-	if (FindChunk(SeekSet(f),"#Bird"))
+	if (FindChunk(SeekSet(f), "#Bird"))
 	{
 		std::string buf;
 		f >> buf;
 		if (!LoadBird(buf, enemies))
 		{
-			return;
+			return false;
 		}
 	}
+	if (FindChunk(SeekSet(f), "#Fairy"))
+	{
+		std::string buf;
+		f >> buf;
+		if (!LoadFairy(buf, enemies))
+		{
+			return false;
+		}
+	}
+	//======================================================================================
+	return true;
+}
+
+//=====================================================================================
+
+//=====================================================================================
+bool CFileLoader::LoadPickupData(std::vector<PickupPtr>& pickups)
+{
+	using common::FindChunk;
+	using common::SeekSet;
+	//======================================================================================
+	// パスファイルからpickupDBファイルパスの読み込み
+	std::ifstream iniF(iniFile_);
+	if (iniF.fail() || (!FindChunk(iniF, "#PickupFile")))
+	{
+		debug::BToM("CFileLoader::LoadPickupData [iniF]Error path:%s", iniFile_.c_str());
+		return false;
+	}
+	std::string pickupFile;
+	iniF >> pickupFile;
+	//======================================================================================
+	// DBファイルを開く
+	std::ifstream f(pickupFile);
+	if (f.fail())
+	{
+		debug::BToM("CFileLoader::LoadPickupData [f]Error path:%s", pickupFile.c_str());
+		return false;
+	}
+
+	// テーブル初期化
+	pickups.clear();
+
+	//======================================================================================
+	// 情報読み込み開始
+	if (FindChunk(SeekSet(f), "#PickupJewely"))
+	{
+		std::string buf;
+		f >> buf;
+		if (!LoadJewely(buf, pickups))
+		{
+			return false;
+		}
+		
+	}
+	/*
 	if (FindChunk(SeekSet(f), "#Fairy"))
 	{
 		std::string buf;
@@ -616,11 +714,12 @@ void CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 			return;
 		}
 	}
+	//*/
 	//======================================================================================
-
+	return true;
 }
-
 //=====================================================================================
+
 
 std::string CFileLoader::GetFile(const std::string& tag) const
 {

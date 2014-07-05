@@ -1,3 +1,5 @@
+#Bgm	bgm_stage01
+
 #Left	0
 #Top	0
 #Right	5000

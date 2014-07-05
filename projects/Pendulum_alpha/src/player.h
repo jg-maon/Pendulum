@@ -106,6 +106,12 @@ private:
 private:
 
 	/*
+		@brief	プレイヤー座標基準のカメラ移動
+		@return	なし
+	*/
+	void MoveCamera();
+
+	/*
 		@brief	キー入力
 		@return	なし
 	*/

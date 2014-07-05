@@ -78,9 +78,16 @@ public:
 	*/
 	void draw() override;
 	
+	/*
+		@brief	スコア加算
+		@param	[in]	add	加算量
+		@return	なし
+	*/
+	void AddScore(int add);
 	
 	/*
 		@brief	スコア上書き
+		@param	[in]	s	スコア
 		@return	なし
 	*/
 	void score(int s);

@@ -1,6 +1,7 @@
 #ifdef _DEBUG
 //#define D_SCALE_TEST	// 拡大、カメラ移動テスト
 //#define D_EFFECT_TEST	// エフェクト生成テスト
+//#define D_PICKUP_TEST	//  ピックアップアイテムテスト
 #endif
 
 //=================================================================================
@@ -23,11 +24,16 @@
 #include "effectSlash.h"
 #endif
 
+#ifdef D_PICKUP_TEST
+#include "pickupJewelry.h"
+#endif
+
 #ifdef _DEBUG
 
 namespace titleDebug
 {
 	mymath::Vec3f pt;
+
 }
 using namespace titleDebug;
 
@@ -47,14 +53,17 @@ const float CSceneTitle::LOGO_A_X = 0.f;
 const float CSceneTitle::LOGO_A_Y = 480.f;			//(WINH*2/3.f)
 const float CSceneTitle::LOGO_A_SIZE = 3.5f;
 const float CSceneTitle::LOGO_A_STARTTIME = 0.5f;
+
 const float CSceneTitle::LOGO_B_X = 1280.f;			//WINW
 const float CSceneTitle::LOGO_B_Y = 480.f;			//WINH
 const float CSceneTitle::LOGO_B_SIZE = 4.f;
 const float CSceneTitle::LOGO_B_STARTTIME = 1.4f;
+
 const float CSceneTitle::LOGO_C_X = 640.f;			//WINW/2
 const float CSceneTitle::LOGO_C_Y = 720.f;			//WINH
 const float CSceneTitle::LOGO_C_SIZE = 5.f;
 const float CSceneTitle::LOGO_C_STARTTIME = 2.3f;
+
 const float CSceneTitle::LOGO_TIME = 0.8f;
 
 //斬撃関連
@@ -69,8 +78,8 @@ const float CSceneTitle::SLASH_NEXT_TIME = 0.3f;
 
 //クリック関連
 const float CSceneTitle::CLICK_ON = 1.f;
-const int CSceneTitle::CLICK_DEG_ALPHA = 5;
-const int CSceneTitle::CLICK_MIN_ALPHA = 50;
+//const int CSceneTitle::CLICK_DEG_ALPHA = 5;
+//const int CSceneTitle::CLICK_MIN_ALPHA = 50;
 
 //表示時間
 const float CSceneTitle::TITLETIME = 20.f;
@@ -122,7 +131,6 @@ CSceneTitle::~CSceneTitle()
 // 描画
 void CSceneTitle::draw()
 {
-	//DSound_
 
 	//-------------------------
 	//Title
@@ -133,6 +141,30 @@ void CSceneTitle::draw()
 
 		//背景
 		__super::draw();
+
+#ifdef D_SCALE_TEST
+		auto& point = camera::GetLookAt();
+		graph::Draw_Line(point.x - 3, point.y, point.x + 3, point.y, 0.f, -1, 1);
+		graph::Draw_Line(point.x, point.y - 3, point.x, point.y + 3, 0.f, -1, 1);
+		std::stringstream ss;
+		ss << "(" << point.x << ", " << point.y << ")";
+		font::Draw_TextXY(point.x, point.y, ss.str(), -1);
+
+
+		graph::Draw_GraphicsLeftTop(0, 0, 0.8f,
+			BACK_RESNAME,
+			0, 0, 1200, 800);
+		graph::Draw_GraphicsLeftTop(0, 0, 9.f,
+			BACK_RESNAME,
+			0, 0, 1200, 800, 0, 0, 2.f, 2.f, 128);
+		graph::Draw_GraphicsLeftTop(0, 0, 0.9f,
+			BACK_RESNAME,
+			0, 0, 1200, 800, 0, 0, 5.f, 5.f, 128);
+		graph::Draw_GraphicsLeftTop(0, 0, 1.f,
+			BACK_RESNAME,
+			0, 0, 1200, 800, 0, 0, 10.f, 6.2f, 128);
+#endif
+
 		//titleBack_.draw(charabase::CharBase::LeftTop);
 
 		//ロゴ
@@ -242,11 +274,57 @@ void CSceneTitle::TitleStep()
 	}
 
 
-	const float demoTime = 20.f;
+	//const float demoTime = 20.f;
 	if (phaseTime_ >= TITLETIME)
 	{
 		ChangePhase();
 	}
+
+
+#ifdef D_PICKUP_TEST
+
+	if (input::CheckPush(input::KEY_BTN0))
+	{
+		gm()->AddObject(ObjPtr(new CPickupJewely(gm()->GetCursorPos())));
+	}
+
+#endif
+
+
+
+#ifdef D_SCALE_TEST
+	using namespace input;
+	struct
+	{
+		input::CODE_KEY code;
+		POINT move;
+	} a[4] =
+	{
+		{ KEY_UP, 0, -3 },
+		{ KEY_DOWN, 0, +3 },
+		{ KEY_LEFT, -3, 0 },
+		{ KEY_RIGHT, +3, 0 },
+	};
+	for (auto& aa : a)
+	{
+		if (input::CheckPress(aa.code))
+		{
+			pt.x += aa.move.x;
+			pt.y += aa.move.y;
+		}
+	}
+	camera::SetLookAt(pt.x, pt.y);
+#endif
+
+
+
+#ifdef D_EFFECT_TEST
+	if (input::CheckPush(input::KEY_BTN0))
+		gm()->AddObject(ObjPtr(new CEffectSlash(gm()->GetCursorPos())));
+	if (input::CheckPush(input::KEY_BTN1))
+		gm()->AddObject(ObjPtr(new CEffectExplosion(gm()->GetCursorPos())));
+#endif
+
 
 }
 
@@ -368,7 +446,7 @@ void CSceneTitle::LogoAnime()
 
 		if (sePlaying_)
 		{
-			se::DSound_Play("se_wind");
+			se::DSound_Play("se_drain");
 			sePlaying_ = false;
 		}
 
@@ -376,7 +454,7 @@ void CSceneTitle::LogoAnime()
 
 		titleAnim_.pos.x = Easing::QuadInOut(phaseTime_ - LOGO_A_STARTTIME, LOGO_A_X, (TITLELOGO_X - LOGO_A_X), LOGO_TIME);
 		titleAnim_.pos.y = Easing::QuadInOut(phaseTime_ - LOGO_A_STARTTIME, LOGO_A_Y, (TITLELOGO_Y - LOGO_A_Y), LOGO_TIME);
-		titleAnim_.alpha -= (200 / LOGO_TIME)*system::FrameTime;		//透明化
+		titleAnim_.alpha -= (200.f / LOGO_TIME)*system::FrameTime;		//透明化
 
 		titleAnim_.scale.x = titleAnim_.scale.y = LogoSize(LOGO_A_SIZE, LOGO_A_Y);
 
@@ -403,14 +481,14 @@ void CSceneTitle::LogoAnime()
 
 		if (sePlaying_)
 		{
-			se::DSound_Play("se_wind");
+			se::DSound_Play("se_drain");
 			sePlaying_ = false;
 		}
 
 		titleAnim_.SetUse(true);
 		titleAnim_.pos.x = Easing::QuadInOut(phaseTime_ - LOGO_B_STARTTIME, LOGO_B_X, (TITLELOGO_X - LOGO_B_X), LOGO_TIME);
 		titleAnim_.pos.y = Easing::QuadInOut(phaseTime_ - LOGO_B_STARTTIME, LOGO_B_Y, (TITLELOGO_Y - LOGO_B_Y), LOGO_TIME);
-		titleAnim_.alpha -= (200 / LOGO_TIME)*system::FrameTime;
+		titleAnim_.alpha -= (200.f / LOGO_TIME)*system::FrameTime;
 
 		titleAnim_.scale.x = titleAnim_.scale.y = LogoSize(LOGO_B_SIZE, LOGO_B_Y);
 
@@ -435,7 +513,7 @@ void CSceneTitle::LogoAnime()
 
 		if (sePlaying_)
 		{
-			se::DSound_Play("se_wind");
+			se::DSound_Play("se_drain");
 			sePlaying_ = false;
 		}
 
@@ -453,8 +531,6 @@ void CSceneTitle::LogoAnime()
 		}
 		break;
 
-	default:
-		break;
 	}
 
 	//titleAnim_.Move();

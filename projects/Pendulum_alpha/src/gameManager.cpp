@@ -44,22 +44,20 @@ void CGameManager::start()
 
 	fileMng_.Load();
 
-	AddObject2(ObjPtr(new CCollision()));
-
 	if (!GetObj(typeid(CStageMng)))
 	{
-		auto sm = std::make_shared<CStageMng>(new CStageMng());
+		auto sm = std::shared_ptr<CStageMng>(new CStageMng());
 		AddObject2(sm);
 #ifdef DEF_GM_PTR
-		SetStageMngPtr(sm);
+		//SetStageMngPtr(sm);
 #endif
 	}
 
 	if (!GetObj(typeid(CScoreMng)))
 	{
-		auto sm = std::make_shared<CScoreMng>(new CScoreMng());
+		auto sm = std::shared_ptr<CScoreMng>(new CScoreMng());
 		AddObject2(sm);
-#ifdef DFE_GM_PTR
+#ifdef DEF_GM_PTR
 		SetScoreMngPtr(sm);
 #endif
 	}
@@ -67,7 +65,6 @@ void CGameManager::start()
 	if (!GetObj(typeid(CCollision)))
 		AddObject2(ObjPtr(new CCollision()));
 
-	objs_ = objs_;
 }
 
 
@@ -369,10 +366,10 @@ void CGameManager::SetEnemyMngPtr(const std::weak_ptr<CEnemyMng>& enemymng)
 	pEnemyMng_ = enemymng;
 }
 
-void CGameManager::SetStageMngPtr(const std::weak_ptr<CStageMng>& stagemng)
-{
-	pStageMng_ = stagemng;
-}
+//void CGameManager::SetStageMngPtr(const std::weak_ptr<CStageMng>& stagemng)
+//{
+//	pStageMng_ = stagemng;
+//}
 
 void CGameManager::SetScoreMngPtr(const std::weak_ptr<CScoreMng>& scoremng)
 {
@@ -380,10 +377,10 @@ void CGameManager::SetScoreMngPtr(const std::weak_ptr<CScoreMng>& scoremng)
 }
 
 
-CStageMng& CGameManager::stageMng()
-{
-	return *pStageMng_.lock();
-}
+//CStageMng& CGameManager::stageMng()
+//{
+//	return *pStageMng_.lock();
+//}
 
 CScoreMng& CGameManager::scoreMng()
 {

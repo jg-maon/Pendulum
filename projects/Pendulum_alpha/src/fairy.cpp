@@ -271,11 +271,14 @@ bool CFairy::ApplyDamage(int dam)
 	// ダメージが入ったら即死
 	state_ = State::DESTROY;
 
-	//
-	//// 爆散エフェクト
-	//InsertObject(ObjPtr(new CEffectExplosion(obj_.pos)));
-	//// SE
-	//DSound_Play(SE::EXPLODE);
+	// 爆散エフェクト
+	for (int i = 0; i < 3; ++i)
+		gm()->AddObject(ObjPtr(new CEffectExplosion(obj_.pos)));
+	// SE
+	se::DSound_Play("se_explosion");
+
+	// ピックアップアイテム
+	gm()->AddObject(ObjPtr(new CPickupJewely(obj_.pos)));
 
 	return true;
 }

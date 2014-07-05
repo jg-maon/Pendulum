@@ -21,6 +21,14 @@
 #include "nWaySing.h"
 #endif
 
+#ifndef DEF_EFFECTEXPLOSION_H
+#include "effectExplosion.h"
+#endif
+
+#ifndef DEF_PICKUPJEWELY_H
+#include "pickupJewely.h"
+#endif
+
 #include <memory>
 
 /*

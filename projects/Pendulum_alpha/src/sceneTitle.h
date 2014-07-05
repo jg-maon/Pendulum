@@ -19,6 +19,9 @@ private:
 	enum
 	{
 		//TITLELOGO_X = system::WINW / 2,
+		CLICK_MIN_ALPHA = 5,
+		CLICK_DEG_ALPHA = 50,
+
 
 	};
 	static const float TITLELOGO_X;			// タイトルX座 標
@@ -46,8 +49,8 @@ private:
 	static const float SLASH_B_DEG;			// 第２斬撃角度
 	static const float SLASH_NEXT_TIME;		// 斬撃待ち時間
 
-	static const int CLICK_MIN_ALPHA;		// クリックα最小値
-	static const int CLICK_DEG_ALPHA;		// クリックα減算地
+	//static const int CLICK_MIN_ALPHA;		// クリックα最小値
+	//static const int CLICK_DEG_ALPHA;		// クリックα減算地
 
 
 	static const float TITLETIME;			// デモプレイに移動するまでの時間

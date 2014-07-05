@@ -138,7 +138,7 @@
     <ClInclude Include="src\nWaySing.h" />
     <ClInclude Include="src\obj.h" />
     <ClInclude Include="src\pickupBase.hpp" />
-    <ClInclude Include="src\pickupJewelry.h" />
+    <ClInclude Include="src\pickupJewely.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\sceneBase.hpp" />
     <ClInclude Include="src\sceneEnd.h" />
@@ -220,6 +220,8 @@
     <Text Include="res\dat\resdata.dat" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\dat\main\pickup\jewely.dat" />
+    <None Include="res\dat\main\pickup\pickups.dat" />
     <None Include="res\dat\path.ini" />
     <None Include="res\dat\stageSelect\setting.dat" />
   </ItemGroup>

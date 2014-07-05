@@ -33,7 +33,6 @@ mymath::Linef line(0.f,0.f,0.5f, 500.f,1000.f,0.5f);
 
 #include "nWayShot.h"
 
-#include "effectExplosion.h"
 #include "effectSlash.h"
 
 #include <memory>
@@ -74,6 +73,9 @@ void CCollision::step()
 	const auto& sm = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
 
 	const auto& actionPoints = sm->getActionPoints();
+
+	const auto& pickups = gm()->GetObjects("Pickup");
+
 	//-----------------------------------------------------
 	// プレイヤー
 	if (player != nullptr)
@@ -81,7 +83,26 @@ void CCollision::step()
 		auto& pl = std::dynamic_pointer_cast<CPlayer>(player);
 		const mymath::Vec3f& plpos = pl->obj().pos;
 		auto& plstageCollisions = pl->GetStageCollisions();
-		//for (auto& stacol : plstageCollisions)
+
+		//-----------------------------------------
+		// ステージ当たり判定
+		for (auto& stacol : plstageCollisions)
+		{
+			//-----------------------------------------------------
+			// プレイヤー vs pickup
+			for (auto& pickup : pickups)
+			{
+				auto& cols = pickup->GetDamageAreas();
+				for (auto& col : cols)
+				{
+					if (stacol->Contains(col))
+					{
+						pl->hit(pickup);
+						pickup->hit(pl);
+					}
+				}
+			}
+		}
 		{
 			//-----------------------------------------
 			// プレイヤー vs ActionPoint
@@ -153,13 +174,6 @@ void CCollision::step()
 								//-----------------------------------------
 								// 敵kill
 								pl->KilledEnemy();
-
-								// 爆散エフェクト
-								for (int i = 0; i < 3; ++i)
-									gm()->AddObject(ObjPtr(new CEffectExplosion(epos)));
-								// SE
-								//DSound_SetFrequency(SE::EXPLODE, 1000);
-								se::DSound_Play("se_explosion");
 							}
 							break;
 						}
@@ -169,6 +183,8 @@ void CCollision::step()
 		}
 
 
+		//-----------------------------------------
+		// 喰らい判定
 		auto& plCols = player->GetDamageAreas();
 		for (auto& pc : plCols)
 		{
@@ -219,6 +235,23 @@ void CCollision::step()
 					}
 				}
 			}
+			
+			/*
+			//-----------------------------------------------------
+			// プレイヤー vs pickup
+			for (auto& pickup : pickups)
+			{
+				auto& cols = pickup->GetDamageAreas();
+				for (auto& col : cols)
+				{
+					if (pc->Contains(col))
+					{
+						pl->hit(pickup);
+						pickup->hit(pl);
+					}
+				}
+			}
+			//*/
 		}
 	}
 
@@ -349,7 +382,7 @@ void CCollision::draw()
 		for (const auto& col : cols)
 		{
 			col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
-			col->draw(0xffff0000, 1, false);
+			col->draw(0xffff0000, 1, true);
 		}
 #endif
 		// ステージ領域

@@ -1,5 +1,7 @@
 #include "stage1.h"
 
+#include "easing.h"
+
 CStage1::CStage1(ifstream& f) :
 IStage("Stage1")
 {
@@ -10,8 +12,6 @@ IStage("Stage1")
 void CStage1::step()
 {
 	__super::step();
-	// 多重スクロールとか
-
 
 }
 
@@ -30,7 +30,16 @@ void CStage1::draw()
 void CStage1::init(std::ifstream& f)
 {
 	__super::init(f);
+	
+	caPhase_ = ClearAnnouncePhase::TO_GOAL;
+	announceTime_ = 0.f;
+	//camera::SetLookAt(goalObj_.pos.x, goalObj_.pos.y);
 
+	// タイトルアニメーション中はプレイヤーと敵の動きを止めておく必要がある
+	auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
+	for (auto& obj : objs)
+		obj->SetStatusDisp();
+	//playerPos_ = gm()->GetPlayerPos();
 }
 
 
@@ -74,9 +83,91 @@ void CStage1::LoadClear(std::ifstream& f, mymath::ShapefPtr& area)
 			goalObj_.pos.x = rect->left + goalObj_.HalfWidth();
 			goalObj_.pos.y = rect->top + goalObj_.HalfHeight();
 		}
+		//goalObj_
 	}
 	else if (label == "Annihilation")
 	{
 		// 殲滅型
 	}
 }
+
+
+
+
+bool CStage1::UpdateClearAnnounce()
+{
+	const mymath::Vec3f& playerPos_ = gm()->GetPlayerPos();
+	mymath::Vec3f cameraPos = camera::GetLookAt();
+
+	announceTime_ += system::FrameTime;
+
+	// 自分→ゴール→自分
+	switch (caPhase_)
+	{
+	case CStage1::ClearAnnouncePhase::TO_GOAL:
+		{
+			const float moveTime = 2.f;		// カメラ移動時間
+			const mymath::Vec3f vec = goalObj_.pos - playerPos_;
+			cameraPos.x = Easing::ExpoIn(announceTime_, playerPos_.x, vec.x, moveTime);
+			cameraPos.y = Easing::ExpoIn(announceTime_, playerPos_.y, vec.y, moveTime);
+			if (announceTime_ >= moveTime)
+			{
+				caPhase_ = ClearAnnouncePhase::WAIT;
+				announceTime_ = 0.f;
+			}
+		}
+
+		break;
+	case CStage1::ClearAnnouncePhase::WAIT:
+		{
+			const float waitTime = 1.f;		// wait時間
+			if (announceTime_ >= waitTime)
+			{
+				caPhase_ = ClearAnnouncePhase::TO_PLAYER;
+				announceTime_ = 0.f;
+			}
+		}
+		break;
+	case CStage1::ClearAnnouncePhase::TO_PLAYER:
+		{
+			const float moveTime = 0.5f;		// カメラ移動時間
+			const mymath::Vec3f vec = playerPos_ - goalObj_.pos;
+			cameraPos.x = Easing::Linear(announceTime_, goalObj_.pos.x, vec.x, moveTime);
+			cameraPos.y = Easing::Linear(announceTime_, goalObj_.pos.y, vec.y, moveTime);
+
+			if (announceTime_ >= moveTime)
+			{
+				// 終了
+				camera::SetLookAt(cameraPos.x, cameraPos.y);
+				caPhase_ = ClearAnnouncePhase::WAIT;
+				// プレイヤーと敵を始動
+				auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
+				for (auto& obj : objs)
+					obj->start();
+				return true;
+			}
+		}
+		break;
+	}
+
+	camera::SetLookAt(cameraPos.x, cameraPos.y);
+
+	return false;
+}
+
+
+bool CStage1::UpdateNormal()
+{
+	return false;
+}
+
+bool CStage1::UpdateBoss()
+{
+	return false;
+}
+
+
+
+
+
+

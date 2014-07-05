@@ -45,6 +45,10 @@ void CScoreMng::draw()
 
 }
 
+void CScoreMng::AddScore(int add)
+{
+	score_ += add;
+}
 
 void CScoreMng::score(int s)
 {

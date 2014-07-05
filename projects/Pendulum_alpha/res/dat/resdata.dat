@@ -11,6 +11,8 @@
 	img_circle		res/gra/circle_x96.png			0xff000000
 	img_explosion	res/gra/effect/explosion.png	0xff000000
 	img_slash		res/gra/effect/slash.png		0xff000000
+
+	img_jewely		res/gra/ui/jewely.png			0x00000000
 		
 	img_title		res/gra/title/title.png			0xff000000
 	img_logo		res/gra/title/logo.png			0xffffffff
@@ -26,35 +28,37 @@
 	img_ss04			res/gra/stageSelect/stage04.png			0xff000000
 	img_stageDescription04	res/gra/stageSelect/stageDesc04.png	0xff00ff00
 
-	img_stage01		res/gra/main/stages/stage01/bg.jpg				0xff000000
-	img_player		res/gra/main/character/player.png				0xff00ff00
-	img_bird		res/gra/main/character/enemy/bird/bird.png		0xff000000
-	img_birdShot	res/gra/main/character/enemy/bird/birdShot.png	0xff000000
-	
-	img_fairy		res/gra/main/character/enemy/fairy/fairy.png	0xff000000
-	img_fairySing	res/gra/main/character/enemy/fairy/fairySing.png	0xff000000
+	img_stage01			res/gra/main/stages/stage01/bg.jpg					0xff000000
+	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xffffffff
+	img_player			res/gra/main/character/player.png					0xff00ff00
+	img_bird			res/gra/main/character/enemy/bird/bird.png			0xff000000
+	img_birdShot		res/gra/main/character/enemy/bird/birdShot.png		0xff000000
+	img_fairy			res/gra/main/character/enemy/fairy/fairy.png		0xff000000
+	img_fairySing		res/gra/main/character/enemy/fairy/fairySing.png	0xff000000
+
 
 }
 
 //＿BGM＿管理名(bgm_でスタート)＿パス
 #Bgm
 {
-	bgm_title		res/snd/bgm/title.mp3
-	bgm_stageSelect	res/snd/bgm/stageSelect.mp3
-	bgm_main		res/snd/bgm/main.mp3
-	bgm_end			res/snd/bgm/end.mp3
+	bgm_title		res/snd/bgm/title.wav
+	bgm_stageSelect	res/snd/bgm/stageSelect.wav
+	bgm_stage01		res/snd/bgm/stage01.wav
+	bgm_end			res/snd/bgm/result.wav
 }
 
 //＿SE＿管理名(se_でスタート)＿パス
 #Se
 {
 	se_explosion	res/snd/se/explosion.wav
-	se_enter		res/snd/se/enter.wav
-	se_wind			res/snd/se/drain_2.wav
+	se_enter		res/snd/se/enter2.wav
+	se_drain		res/snd/se/drain2.wav
 	se_slash		res/snd/se/slash.wav
 
+	
+	se_wind			res/snd/se/wind.wav
 
-}
 	se_slash01		res/snd/se/slash/slash01.wav
 	se_slash02		res/snd/se/slash/slash02.wav
 	se_slash03		res/snd/se/slash/slash03.wav
@@ -70,6 +74,7 @@
 	se_slash13		res/snd/se/slash/slash13.wav
 	se_slash14		res/snd/se/slash/slash14.wav
 	se_slash15		res/snd/se/slash/slash15.wav
+}
 
 //＿フォント＿管理名(font_でスタート)＿フォント名(スペースは'＿'、'_'を使う)＿サイズ
 #Font
