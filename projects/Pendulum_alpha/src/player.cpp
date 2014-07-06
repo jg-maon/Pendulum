@@ -144,8 +144,9 @@ mymath::Circlef atk_range(0.f,0.f,0.5f,300.f);
 
 void CPlayer::MoveCamera()
 {
-	auto& pos = obj_.pos;
-	mymath::Vec3f cameraPos = pos;
+	const auto& pos = obj_.pos;
+	mymath::Vec3f cameraPos = camera::GetLookAt();
+	mymath::Vec3f vec = pos - cameraPos;
 	const auto& sm = CStageMng::GetPtr();
 	const auto& cameraRect = sm->getCameraRect();
 	/*
@@ -158,11 +159,13 @@ void CPlayer::MoveCamera()
 	if (pos.y  > cameraRect.bottom - system::WINH / 2)
 	cameraPos.y = cameraRect.bottom - system::WINH / 2;
 	//*/
-
-	//*
+	
 	cameraPos.x = static_cast<float>(clamp(pos.x, (cameraRect.left + system::WINW / 2), (cameraRect.right - system::WINW / 2)));
 	cameraPos.y = static_cast<float>(clamp(pos.y, (cameraRect.top + system::WINH / 2), (cameraRect.bottom - system::WINH / 2)));
-	//*/
+	
+
+
+
 	camera::SetLookAt(cameraPos.x, cameraPos.y);
 }
 
@@ -719,7 +722,7 @@ void CPlayer::draw()
 			draw_x + static_cast<int>(w),
 			draw_y + height, 0.8f,
 			ARGB(255, 100, 250, 250), ARGB(255, 0, 0, 0),
-			1, true);
+			0, true);
 
 	}
 	//-----------------------------------------------------------

@@ -29,7 +29,7 @@
 	img_stageDescription04	res/gra/stageSelect/stageDesc04.png	0xff00ff00
 
 	img_stage01			res/gra/main/stages/stage01/bg.jpg					0xff000000
-	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xffffffff
+	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xff000000
 	img_player			res/gra/main/character/player.png					0xff00ff00
 	img_bird			res/gra/main/character/enemy/bird/bird.png			0xff000000
 	img_birdShot		res/gra/main/character/enemy/bird/birdShot.png		0xff000000

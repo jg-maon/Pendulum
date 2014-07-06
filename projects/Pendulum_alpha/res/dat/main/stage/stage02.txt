@@ -1,3 +1,14 @@
+#Bgm	bgm_stage02
+
+#ClearAnnounce
+img_clearAnnounce01	-1	-1
+
+
+#StageClear
+Goal	3000	2000	200
+img_goalObj02	1	1
+
+
 #Left	0
 #Top	0
 #Right	5000

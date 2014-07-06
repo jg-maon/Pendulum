@@ -19,10 +19,15 @@ private:
 		TO_GOAL,			// ゴール表示
 		WAIT,				// ウェイト
 		TO_PLAYER,			// プレイヤー表示
+		MSGIN,				// 条件表示
+		MSGOUT,				// 条件非表示
 
 	}caPhase_;
+	mymath::Vec3f caStartPos_;			// クリア条件表示オブジェクト初期座標
+
 	mymath::ShapefPtr goalArea_;		// ゴールエリア
-	charabase::CharBase goalObj_;		// ゴールオブジェクト
+	charabase::CharPtr goalObj_;		// ゴールオブジェクト
+
 
 	float announceTime_;				// クリア条件表示中タイマー
 	//mymath::Vec3f playerPos_;			// プレイヤースタート座標

@@ -1,6 +1,6 @@
 #ifdef _DEBUG
 //#define D_SCALE_TEST	// 拡大、カメラ移動テスト
-//#define D_EFFECT_TEST	// エフェクト生成テスト
+#define D_EFFECT_TEST	// エフェクト生成テスト
 //#define D_PICKUP_TEST	//  ピックアップアイテムテスト
 #endif
 

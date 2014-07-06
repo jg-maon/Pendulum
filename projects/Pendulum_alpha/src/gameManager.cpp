@@ -142,16 +142,16 @@ void CGameManager::step()
 
 void CGameManager::draw()
 {
-	graph::Draw_SetRenderMode(ADD);
-	for (int i = 0; i < 5; ++i)
-		cursor_->draw();
-	graph::Draw_EndRenderMode();
 	for (const auto& obj : objs_)
 	{
 		const auto& status = obj->getStatus();
 		if (status == Status::run || status == Status::disp)
 			obj->draw();
 	}
+	graph::Draw_SetRenderMode(ADD);
+	for (int i = 0; i < 5; ++i)
+		cursor_->draw();
+	graph::Draw_EndRenderMode();
 }
 
 void CGameManager::AllStop()

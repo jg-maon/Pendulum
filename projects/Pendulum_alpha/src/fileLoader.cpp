@@ -179,7 +179,11 @@ bool CFileLoader::LoadCharBase(std::ifstream& f, charabase::CharBase& cb)
 	if (success && (success = common::FindChunk(common::SeekSet(f), "#Size")))
 	{
 		f >> cb.size.x;
+		if (cb.size.x == -1)
+			cb.size.x = graph::Draw_GetImageWidth(cb.resname);
 		f >> cb.size.y;
+		if (cb.size.y == -1)
+			cb.size.y = graph::Draw_GetImageHeight(cb.resname);
 	}
 	//-----------------------------------------------
 

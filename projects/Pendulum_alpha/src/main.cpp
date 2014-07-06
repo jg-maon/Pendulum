@@ -72,18 +72,18 @@ namespace gplib{
 
 void SceneStep()
 {
-	gm->step();
 	IScene *next(scene_->step());
 	if (next != scene_.get())
 	{
 		scene_.reset(next);
 	}
+	gm->step();
 }
 
 void SceneDisp()
 {
-	gm->draw();
 	scene_->draw();
+	gm->draw();
 	CFade::draw();
 	debug::DFPS();
 }

@@ -4,6 +4,7 @@ using namespace mymath;
 using namespace gplib;
 namespace charabase
 {
+//==========================================================
 #pragma region Anim methods
 Anim::Anim(int max, float speed)
 {
@@ -37,8 +38,30 @@ void Anim::stop()
 	speed = 0.f;
 }
 
-#pragma endregion Anim methods
+#pragma endregion	// Anim methods
+//==========================================================
 
+//==========================================================
+#pragma region BaseData methods
+BaseData::BaseData() :
+size(0)
+, resname("")
+{}
+
+void BaseData::ImageSize(BaseData& bd)
+{
+	if (bd.size.x == -1)
+		bd.size.x = graph::Draw_GetImageWidth(bd.resname);
+	if (bd.size.y == -1)
+		bd.size.y = graph::Draw_GetImageHeight(bd.resname);
+}
+
+
+#pragma endregion	// BaseData methods
+
+//==========================================================
+
+//==========================================================
 #pragma region CharBase methods
 
 CharBase::CharBase(const mymath::Vec3f& _pos,		// ç¿ïW
@@ -81,6 +104,26 @@ CharBase::CharBase(float x, float y, float z,		// ç¿ïW
 	, show(true)
 {
 	alpha = r = g = b = 255.f;
+}
+
+CharBase::CharBase(const BaseData& bd):
+pos(0.f,0.f,0.f)
+, add(0.f,0.f,0.f)
+, resname(bd.resname)
+, size(bd.size)
+, scale(1.f, 1.f)
+, angle(0.f)
+, src(0, 0)
+, show(true)
+{
+	alpha = r = g = b = 255.f;
+}
+
+
+void CharBase::SetImgData(const BaseData& bd)
+{
+	resname = bd.resname;
+	size = bd.size;
 }
 
 mymath::Vec3f CharBase::GetSize() const

@@ -68,17 +68,6 @@ private:
 #pragma endregion	// リソースファイル読み込み関連
 	//---------------------------------
 
-	/*
-		@brief	CharBase読み込み(画像名、サイズ)
-		@attension	fはオープン済み
-		@param	[in/out]	f	情報ファイル
-		@param	[out]		cb	ロードした情報を格納するCharBase
-		@return	情報を設定できたか
-		@retval	true	設定成功
-		@retval	false	設定失敗
-	*/
-	bool LoadCharBase(std::ifstream& f, charabase::CharBase& cb);
-
 	//---------------------------------
 #pragma region 敵テーブル読み込み
 	/*
@@ -121,6 +110,18 @@ private:
 
 
 public:
+	
+	/*
+		@brief	CharBase読み込み(画像名、サイズ)
+				サイズに-1指定すると画像名から取得する
+		@attension	fはオープン済み
+		@param	[in/out]	f	情報ファイル
+		@param	[out]		cb	ロードした情報を格納するCharBase
+		@return	情報を設定できたか
+		@retval	true	設定成功
+		@retval	false	設定失敗
+	*/
+	static bool LoadCharBase(std::ifstream& f, charabase::CharBase& cb);
 
 	/*
 		@brief	各ファイル読み込み

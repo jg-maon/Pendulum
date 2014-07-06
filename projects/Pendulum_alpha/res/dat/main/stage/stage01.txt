@@ -1,5 +1,18 @@
 #Bgm	bgm_stage01
 
+#ClearAnnounce
+img_clearAnnounce01	-1	-1
+
+
+//＿ステージクリア条件＿Goal＿X_Y_Radius(or_X_Y_W_H)
+//＿ObjectImageResname＿W_H
+#StageClear
+Goal	3000	2000	200
+img_goalObj01	1	1
+
+//＿ステージクリア条件＿殲滅
+//Annihilation
+
 #Left	0
 #Top	0
 #Right	5000
@@ -17,10 +30,6 @@
 #Enemy
 res/dat/main/enemy/debugTable01.txt
 
-
-#StageClear
-Goal	3000	2000	200
-//Annihilation
 
 #ActionCircle
 {

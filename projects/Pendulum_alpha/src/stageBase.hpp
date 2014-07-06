@@ -57,12 +57,14 @@ public:
 protected:
 	std::string bgm_;							// BGM
 
+	charabase::CharPtr caObj_;					// クリア条件表示用オブジェクト
+
 	IStage::Phase phase_;						// ステージフェーズ
 	IStage::ClearType clearType_;				// クリア条件
 	mymath::Recti cameraRect_;					// カメラの可動範囲
 	mymath::Recti stageRect_;					// ステージの大きさ
 	std::vector<std::string> backgroundIMG_;	// 背景画像
-	std::vector<ActPtPtr> actionPoints_;
+	std::vector<ActPtPtr> actionPoints_;		// 
 
 public:
 	const std::string& bgm;
@@ -91,6 +93,15 @@ private:
 		{
 			f >> bgm_;
 		}
+		//--------------------------------------
+		// クリア条件
+		if (common::FindChunk(common::SeekSet(f), "#ClearAnnounce"))
+		{
+			charabase::BaseData bd;
+			f >> bd;
+			caObj_ = charabase::CharPtr(new charabase::CharBase(bd));
+		}
+
 		return f.eof();
 	}
 

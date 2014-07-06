@@ -58,6 +58,28 @@ public:
 	void stop();
 };
 
+// 画像情報
+class BaseData
+{
+public:
+	std::string resname;			// 使用イメージ名
+	mymath::Vec3i size;				// 1コマ幅高さ
+	BaseData();
+	// ファイルストリームからの管理名とサイズ入力
+	friend std::ifstream& operator >> (std::ifstream& f, BaseData& d)
+	{
+		f >> d.resname >> d.size.x >> d.size.y;
+		ImageSize(d);
+		return f;
+	}
+	/*
+		@brief	画像サイズの調整
+		@return	なし
+	*/
+	static void ImageSize(BaseData& bd);
+};
+
+// 画像オブジェクト
 class CharBase
 {
 public:
@@ -92,6 +114,15 @@ public:
 			int srcX = 0,								// 横要素番号(列), 抽出始点X座標
 			int srcY = 0);								// 縦要素番号(行), 抽出始点Y座標
 
+	// 画像情報以外初期値
+	CharBase(const BaseData& bd);
+
+	/*
+		@brief	画像情報の上書き
+		@param	[in]	bd	画像情報
+		@return	なし
+	*/
+	void SetImgData(const BaseData& bd);
 
 	/*
 		@brief	描画時の(拡大率を適用した)サイズの取得
