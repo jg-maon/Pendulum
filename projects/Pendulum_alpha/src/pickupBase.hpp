@@ -14,7 +14,7 @@ class IPickup : public IColObject
 protected:
 	enum
 	{
-		POP_ANIM_TIME = 3,			// 出現アニメーション時間(当たり判定なし)[unit: /10sec ]
+		POP_ANIM_TIME = 7,			// 出現アニメーション時間(当たり判定なし)[unit: /10sec ]
 		GET_TIME = 10,				// 取得までの時間[unit: /10sec ]
 	};
 	enum class State

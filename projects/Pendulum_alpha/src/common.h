@@ -10,6 +10,13 @@
 
 #define arrayof(x) (sizeof((x)) / sizeof((x)[0]))
 
+// POINT構造体の演算子オーバーロード
+extern bool operator==(const POINT& p1, const POINT& p2);
+
+extern bool operator!=(const POINT& p1, const POINT& p2);
+
+extern POINT operator+(const POINT& p1, const POINT& p2);
+
 namespace common
 {
 // 文字列の置換
@@ -25,13 +32,6 @@ std::ofstream& SeekSet(std::ofstream& f);
 
 //======================================================
 #pragma region 関数のオーバーロード類
-
-// POINT構造体の演算子オーバーロード
-inline bool operator==(const POINT& p1, const POINT& p2);
-
-inline bool operator!=(const POINT& p1, const POINT& p2);
-
-inline POINT operator+(const POINT& p1, const POINT& p2);
 
 // 出力マニピュレータをデフォルトの状態に戻す
 

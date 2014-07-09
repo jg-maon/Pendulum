@@ -24,6 +24,11 @@ class CPlayer : public ICharacter
 public:
 	struct LoadInfo
 	{
+		std::string armImg;			// 腕画像
+		float armX;				// 腕オフセットX
+		float armY;				// 腕オフセットY
+
+
 		float MAX_G;			// 最大重力速度
 		float GRAVITY_ACC;		// 重力加速度
 		float TENSION;			// フックの張力(初速)
@@ -140,7 +145,7 @@ public:
 		@param	[in]	y		初期座標
 		@param	[in]	z		初期座標
 	*/
-	CPlayer(float x, float y, float z = 0.5f);
+	CPlayer(float x, float y, float z = 0.2f);
 	
 	/*
 		@brief	情報の初期化

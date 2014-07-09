@@ -59,7 +59,7 @@ void CFairy::init(const mymath::Vec3f& pos)
 
 	gm()->GetData(*this);
 
-	obj_.pos = pos;
+	prePos_ = obj_.pos = pos;
 
 	startPos_ = obj_.pos;
 
@@ -151,7 +151,7 @@ void CFairy::AttackStep()
 	{
 		CreateAttack();
 		state_ = State::WAIT;
-		nextActTime_ = elapsedTime_ + 2.f;		// òAë±ä‘äu
+		nextActTime_ = elapsedTime_ + loadInfo_.attackInterval;		// òAë±ä‘äu
 	}
 }
 
@@ -217,21 +217,21 @@ void CFairy::CreateAttack()
 
 	const mymath::Vec3f& mypos = obj_.pos;
 
-	int dice = gplib::math::GetRandom<int>(0, 9);
+	int dice = gplib::math::GetRandom<int>(0, 100);
 	float angle = gplib::math::GetRandom(0.f, 360.f);
 
 	const float INTERVAL = 20.f;	// â°ä‘äu
-	const float SP = 10.f;			// èâë¨ìx
-	const float ACC = 1.f;			// â¡ë¨ìx
+	const float ACC = 100.f;			// â¡ë¨ìx
+	const float ADA = 360.f;			// äpë¨ìx
 
-	if (dice < 2)
+	if (dice < loadInfo_.attackRatio)
 	{
 		// 2/10ÇÃämó¶Ç≈âÃçUåÇÇçsÇ§
 		std::dynamic_pointer_cast<CNWaySing>(attack_)->CreateAttack(
 			mypos,
 			5,
 			angle,
-			SP, ACC);
+			ACC, ADA);
 	}
 	else
 	{

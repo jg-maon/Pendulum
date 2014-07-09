@@ -15,6 +15,8 @@ public:
 		float ATTACK_RANGE;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
 		float RETURN_RANGE;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
 		float MOVE_SPEED;		// 移動速度
+		float attackInterval;		// 攻撃間隔
+		int attackRatio;		// 攻撃確立(百分率)
 	};
 private:
 	enum class State
@@ -28,7 +30,8 @@ private:
 	};
 
 private:
-	/*static const float SEARCH_RANGE;		// 索敵範囲(現在座標からどれだけ策敵するか)
+	/*
+	static const float SEARCH_RANGE;		// 索敵範囲(現在座標からどれだけ策敵するか)
 	static const float CHASE_RANGE;			// 追跡範囲(初期座標からどれだけ追跡するか)
 	static const float ATTACK_RANGE;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
 	static const float RETURN_RANGE;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
@@ -47,7 +50,8 @@ private:
 
 	/*const*/ mymath::Vec3f startPos_;			// 初期座標(追跡後元に戻る場所)
 public:
-	/*CFairy& operator=(const CFairy& obj)
+	/*
+	CFairy& operator=(const CFairy& obj)
 	{
 	if (this != &obj) return *this;
 	loadInfo_ = obj.loadInfo_;

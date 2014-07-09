@@ -30,7 +30,8 @@
 
 	img_stage01			res/gra/main/stages/stage01/bg.jpg					0xff000000
 	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xff000000
-	img_player			res/gra/main/character/player.png					0xff00ff00
+	img_player			res/gra/main/character/player/player.png			0xff00ff00
+	img_playerArm		res/gra/main/character/player/arm.png				0x00000000
 	img_bird			res/gra/main/character/enemy/bird/bird.png			0xff000000
 	img_birdShot		res/gra/main/character/enemy/bird/birdShot.png		0xff000000
 	img_fairy			res/gra/main/character/enemy/fairy/fairy.png		0xff000000

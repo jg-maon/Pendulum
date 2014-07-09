@@ -91,14 +91,13 @@ void CStage1::LoadClear(std::ifstream& f, mymath::ShapefPtr& area)
 		else if (info.size() == 4)
 		{
 			// X Y W H
-			area = mymath::ShapefPtr(new mymath::Rectf(info[0], info[1], info[2], info[3]));
-			auto& rect = std::dynamic_pointer_cast<mymath::Rectf>(area);
-			goalObj_->size.x = static_cast<int>(rect->right - rect->left);
-			goalObj_->size.y = static_cast<int>(rect->bottom - rect->top);
-			goalObj_->pos.x = rect->left + goalObj_->HalfWidth();
-			goalObj_->pos.y = rect->top + goalObj_->HalfHeight();
+			area = mymath::ShapefPtr(new mymath::Rectf(info[0], info[1], info[0] + info[2], info[1] + info[3]));
+			goalObj_->size.x = static_cast<int>(info[2]);
+			goalObj_->size.y = static_cast<int>(info[3]);
+			goalObj_->pos.x = info[0] + goalObj_->HalfWidth();
+			goalObj_->pos.y = info[1] + goalObj_->HalfHeight();
 		}
-		goalObj_->pos.z = 0.5f;
+		goalObj_->pos.z = 0.4f;
 		//---------------------------------------------------
 		// ゴールオブジェクト画像
 		charabase::BaseData bd;
@@ -182,11 +181,11 @@ bool CStage1::UpdateClearAnnounce()
 				caObj_->pos.x = static_cast<float>(system::WINW) / 2.f;
 				// アニメーション開始してからの経過時間
 				float t = announceTime_ - moveTime;
-				// rgb(65,81,231)へ向かう
-				float r = 65.f, g = 81.f, b = 231.f;
-				caObj_->r = Easing::QuadIn(t, 255.f, -255.f+r, animTime / 2.f);
-				caObj_->g = Easing::BackIn(t, 255.f, -255.f+g, animTime / 2.f);
-				caObj_->b = Easing::SineInOut(t, 255.f, -255.f+b, animTime / 2.f);
+				// 終了値rgb( r, g, b)へ向かう
+				float r = 100.f, g = 190.f, b = 250.f;
+				caObj_->r = Easing::ElasticOut(t, 255.f, -255.f+r, animTime / 2.f);
+				caObj_->g = Easing::ExpoOut(t, 255.f, -255.f+g, animTime / 2.f);
+				caObj_->b = Easing::BackOut(t, 255.f, -255.f+b, animTime / 2.f);
 
 			}
 			else

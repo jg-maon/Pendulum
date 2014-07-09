@@ -28,6 +28,10 @@ motion02
 
 
 //===========================================================
+#ArmImg			img_playerArm
+#ArmOffsetX		0.0
+#ArmOffsetY		-40.0
+
 #GravityAcc		25.0
 #MaxGravity		100.0
 #Tension		1500.0

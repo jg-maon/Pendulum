@@ -71,11 +71,11 @@ public:
 		else if (obj_.angle < 0.f)
 			obj_.angle += 360.f;
 
-		obj_.add.x += math::ROUND_X(obj_.angle, addAngle_ * cnt_ * system::FrameTime, acceleration_);
-		obj_.add.y += math::ROUND_Y(obj_.angle, addAngle_ * cnt_ * system::FrameTime, acceleration_);
+		obj_.add.x += math::ROUND_X(obj_.angle, (float)cnt_);
+		obj_.add.y += math::ROUND_Y(obj_.angle, (float)cnt_);
 
 		obj_.Move();
-		if (++cnt_ > 300)
+		if (++cnt_ > 60)
 		{
 			kill();
 		}
@@ -98,6 +98,7 @@ public:
 		}
 	}
 };
+
 
 /*
 	@brief	NWay‰¹•„

@@ -16,7 +16,7 @@ public:
 		float RETURN_RANGE;		// ‹AŠÒÅ¬”ÍˆÍ(‚±‚Ì”ÍˆÍ“à‚È‚ç‰ŠúˆÊ’u‚É–ß‚Á‚½‚Æ‚İ‚È‚·)
 		float MOVE_SPEED;		// ˆÚ“®‘¬“x
 
-		float shotInterval;		// UŒ‚ŠÔŠu
+		float attackInterval;		// UŒ‚ŠÔŠu
 	};
 private:
 	enum class State

@@ -49,4 +49,4 @@
 #ReturnRange	3.0
 #MoveSpeed		100.0
 
-#AttackInterval	2.0
+#AttackInterval	10.0

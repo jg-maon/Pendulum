@@ -271,7 +271,7 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	}
 	if (success && (success = FindChunk(SeekSet(eneF), "#AttackInterval")))
 	{
-		eneF >> lf.shotInterval;
+		eneF >> lf.attackInterval;
 	}
 	//-------------------------------------
 
@@ -362,6 +362,14 @@ bool CFileLoader::LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& 
 	if (success && (success = FindChunk(SeekSet(eneF), "#MoveSpeed")))
 	{
 		eneF >> lf.MOVE_SPEED;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#AttackInterval")))
+	{
+		eneF >> lf.attackInterval;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#AttackRatio")))
+	{
+		eneF >> lf.attackRatio;
 	}
 	//-------------------------------------
 
@@ -522,6 +530,9 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 
 	//*
 	LoadValue loadValues[] = {
+		{ "#ArmImg", &(lf.armImg), typeid(std::string) },
+		{ "#ArmOffsetX", &(lf.armX), typeid(float) },
+		{ "#ArmOffsetY", &(lf.armY), typeid(float) },
 		{ "#GravityAcc", &(lf.GRAVITY_ACC), typeid(float) },
 		{ "#MaxGravity", &(lf.MAX_G), typeid(float) },
 		{ "#Tension", &(lf.TENSION), typeid(float) },
@@ -546,6 +557,8 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 				f >> *((int*)(lv).value);
 			else if (lv.inf == typeid(float))
 				f >> *((float*)(lv).value);
+			else if (lv.inf == typeid(std::string))
+				f >> *((std::string*)(lv).value);
 			//else if (lv.inf == typeid(ttt))
 			//	f >> *((ttt*)(lv).value);
 		}

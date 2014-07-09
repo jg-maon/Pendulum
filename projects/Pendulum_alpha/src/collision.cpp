@@ -64,6 +64,8 @@ IObject("Collision")
 
 void CCollision::step()
 {
+	const mymath::Rectf screen = camera::GetScreenRect();
+
 	auto& player = CPlayer::GetPtr();
 
 	const auto& em = CEnemyMng::GetPtr();
@@ -102,17 +104,17 @@ void CCollision::step()
 					}
 				}
 			}
-		}
-		{
 			//-----------------------------------------
 			// ƒvƒŒƒCƒ„[ vs ActionPoint
 			for (auto& actp : actionPoints)
 			{
+				//if(!screen.Contains(actp->obj().pos)) continue;
 #ifndef DEF_PREPOS
 				const mymath::Vec3f& nextPos = pl->nextPos();
+				//mymath::Vec3f dist = nextPos - plpos;
 				if (actp->Contains(plpos, nextPos))
 #else
-				if (actp->Contains(pl->prePos(), plpos))
+				if (actp->Contains(stacol))
 #endif
 				{
 					// Œğ·

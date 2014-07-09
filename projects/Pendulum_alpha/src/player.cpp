@@ -184,7 +184,8 @@ void CPlayer::key()
 		isHanging_ = true;
 #else
 		const auto& sm = CStageMng::GetPtr();
-		for(const auto& act : sm->actionPoints)
+		const auto& aps = sm->getActionPoints();
+		for(const auto& act : aps)
 		{
 			if (act->Contains(obj_.pos, mouse))
 			{
@@ -437,7 +438,7 @@ void CPlayer::step()
 	{
 		// 点滅アニメ
 		invincibleAnim_ += system::ONEFRAME_TIME;
-		if (invincibleAnim_ >= loadInfo_.INV_TIME / 10.f)
+		if (invincibleAnim_ >= loadInfo_.INV_TIME / 20.f)
 		{
 			invincibleAnim_ = 0.f;
 			if (obj_.alpha > 200.f)
@@ -550,9 +551,15 @@ void CPlayer::draw()
 	const mymath::Vec3f& pos = obj_.pos;
 
 #ifdef D_LOG_TEST
+	//charabase::CharBase b = obj_;
 	for(const auto& log : logs)
 	{
-		Draw_BoxCenter(log.x,log.y,4,4,pos.z-0.1f,
+		//b.pos.x = log.x;
+		//b.pos.y = log.y;
+		//b.pos.z = obj_.pos.z - 0.1f;
+		//b.alpha = 120.f;
+		//b.draw();
+		graph::Draw_BoxCenter(log.x,log.y,4,4,pos.z-0.1f,
 			0xffff0000,0xffff0000,1,true);
 	}
 #endif
@@ -662,11 +669,11 @@ void CPlayer::draw()
 	if (isHanging_)
 	{
 		graph::Draw_Line(
-			static_cast<int>(pos.x),
-			static_cast<int>(pos.y),
+			static_cast<int>(pos.x+loadInfo_.armX),
+			static_cast<int>(pos.y+loadInfo_.armY),
 			static_cast<int>(hangPoint_.x),
 			static_cast<int>(hangPoint_.y),
-			pos.z - 0.1f,
+			pos.z - 0.2f,
 			0x7fffffff, 2);
 	}
 
@@ -712,7 +719,7 @@ void CPlayer::draw()
 			draw_x + width,
 			draw_y + height, 0.8f,
 			ARGB(200, 10, 10, 10), ARGB(255, 0, 0, 0),
-			1, true);
+			2, true);
 		//------------------------
 		// 中
 		// 体力に応じて幅を計算
@@ -726,16 +733,43 @@ void CPlayer::draw()
 
 	}
 	//-----------------------------------------------------------
+	// プレイヤー画像
 	obj_.draw(charabase::CharBase::MODE::Center, turnFlag_);
+	//-----------------------------------------
+	// 左腕
+	{
+		float z = pos.z;
+		float angle = (isHanging_) ? math::DegreeOfPoints2(pos.x, pos.y, hangPoint_.x, hangPoint_.y) : 270.f;
+		SIZE s = graph::Draw_GetImageSize2(loadInfo_.armImg);
+		// 回転中心
+		POINT c = { 0, s.cy / 2 };
+		if (turnFlag_)
+		{
+			// 左向きの時は体より手前に描画
+			z -= 0.1f;
+		}
+		else
+		{
+			// 右向きの時は体より奥に描画
+			z += 0.1f;
+		}
+		graph::Draw_GraphicsLeftTop(
+			pos.x + loadInfo_.armX,
+			pos.y + loadInfo_.armY,
+			z, loadInfo_.armImg,
+			0, 0, s.cx, s.cy,
+			angle, &c);
+	}
 }
 
 void CPlayer::hit(const ObjPtr& rival)
 {
-	if (rival->FindName("ActionPolygon"))
+	if (rival->FindName("Polygon"))
 	{
 		// 壁
 		// めり込み補正,通過補正
 		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);
+		/*
 #ifdef DEF_PREPOS
 		mymath::Vec3f dist = obj_.pos - prePos_;
 		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
@@ -743,13 +777,85 @@ void CPlayer::hit(const ObjPtr& rival)
 		mymath::Vec3f dist = nextPos() - obj_.pos;
 		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(obj_.pos, nextPos());
 #endif
-
 		obj_.pos = intersection;
 		obj_.pos -= dist.Normalize();
+		//*/
+
+		// 交点を元に座標補正
+		auto& stacols = GetStageCollisions();
+		auto& vertexes = ap->vertexes;
+		auto it = collisions_.begin();
+		for (auto& col : stacols)
+		{
+			for (size_t i = 0; i < vertexes.size(); ++i)
+			{
+				size_t j = (i + 1) % vertexes.size();
+				if (col->Contains(vertexes[i], vertexes[j], false, true))
+				{
+					auto& colRc = std::dynamic_pointer_cast <mymath::Rectf>(col);
+					auto& rect = std::dynamic_pointer_cast<mymath::Rectf>(*it);
+
+					mymath::Vec3f intersection = colRc->IntersectionPoint2Nearest(vertexes[i], vertexes[j]);
+					//----------------------------------------------
+					// 横方向
+					if (obj_.add.x < 0.f && colRc->left < intersection.x )
+					{
+						// ←へ進んでいた →へ補正
+						obj_.pos.x = intersection.x - rect->left + 1;
+					}
+					if (obj_.add.x > 0.f && intersection.x < colRc->right)
+					{
+						// →へ進んでいた ←へ補正
+						obj_.pos.x = intersection.x - rect->right - 1;
+					}
+					//---------------------------
+					// 縦方向
+					if (obj_.add.y < 0.f &&  colRc->top < intersection.y )
+					{
+						// ↑へ進んでいた ↓へ補正
+						obj_.pos.y = intersection.y - rect->top + 1;
+					}
+					if (obj_.add.y > 0.f && intersection.y < colRc->bottom)
+					{
+						// ↓へ進んでいた ↑へ補正
+						obj_.pos.y = intersection.y - rect->bottom - 1;
+					}
+#ifdef _DEBUG
+					graph::Draw_Line(
+						(int)intersection.x - 3, (int)intersection.y - 3,
+						(int)intersection.x + 3, (int)intersection.y + 3,
+						0.f,
+						0xffffff00, 1);
+					graph::Draw_Line(
+						(int)intersection.x + 3, (int)intersection.y - 3,
+						(int)intersection.x - 3, (int)intersection.y + 3,
+						0.f,
+						0xffffff00, 1);
+#endif
+					//------------------------------------------------
+					// 移動後が別のPolygonにぶつかっていないか判断
+					break;
+					/*
+					auto& sm = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
+					auto& acpts = sm->getActionPoints();
+					for (auto& acpt : acpts)
+					{
+						if (acpt->FindName("Polygon"))
+						{
+							if (acpt->Contains(col))
+							{
+								hit(acpt);
+								break;
+							}
+						}
+					}
+					//*/
+				}
+			}
+			++it;
+		}
 
 		MoveCamera();
-		//gravityF_ = false;
-		//isHanging_ = false;
 	}
 	else if (rival->FindName("Atk_"))
 	{

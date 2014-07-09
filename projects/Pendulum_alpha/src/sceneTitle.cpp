@@ -1,7 +1,7 @@
 #ifdef _DEBUG
 //#define D_SCALE_TEST	// 拡大、カメラ移動テスト
-#define D_EFFECT_TEST	// エフェクト生成テスト
-//#define D_PICKUP_TEST	//  ピックアップアイテムテスト
+//#define D_EFFECT_TEST	// エフェクト生成テスト
+#define D_PICKUP_TEST	//  ピックアップアイテムテスト
 #endif
 
 //=================================================================================
@@ -25,7 +25,7 @@
 #endif
 
 #ifdef D_PICKUP_TEST
-#include "pickupJewelry.h"
+#include "pickupJewely.h"
 #endif
 
 #ifdef _DEBUG
@@ -317,15 +317,6 @@ void CSceneTitle::TitleStep()
 #endif
 
 
-
-#ifdef D_EFFECT_TEST
-	if (input::CheckPush(input::KEY_BTN0))
-		gm()->AddObject(ObjPtr(new CEffectSlash(gm()->GetCursorPos())));
-	if (input::CheckPush(input::KEY_BTN1))
-		gm()->AddObject(ObjPtr(new CEffectExplosion(gm()->GetCursorPos())));
-#endif
-
-
 }
 
 
@@ -420,6 +411,16 @@ bool CSceneTitle::update()
 		}
 		break;
 	}
+
+
+
+#ifdef D_EFFECT_TEST
+	if (input::CheckPush(input::KEY_BTN0))
+		gm()->AddObject(ObjPtr(new CEffectSlash(gm()->GetCursorPos())));
+	if (input::CheckPush(input::KEY_BTN1))
+		gm()->AddObject(ObjPtr(new CEffectExplosion(gm()->GetCursorPos())));
+#endif
+
 
 
 	return false;

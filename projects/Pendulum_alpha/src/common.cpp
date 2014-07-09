@@ -3,6 +3,30 @@
 #include <sstream>
 #include <iomanip>
 
+
+#pragma region POINT構造体の演算子オーバーロード
+bool operator==(const POINT& p1, const POINT& p2)
+{
+	return p1.x == p2.x && p1.y == p2.y;
+}
+
+bool operator!=(const POINT& p1, const POINT& p2)
+{
+	return p1.x != p2.x || p1.y != p2.y;
+}
+
+POINT operator+(const POINT& p1, const POINT& p2)
+{
+	POINT ret = {
+		p1.x + p2.x,
+		p1.y + p2.y };
+	return ret;
+}
+
+#pragma endregion // POINT
+
+
+
 namespace common
 {
 //  文字列を置換する
@@ -50,28 +74,6 @@ std::ofstream& SeekSet(std::ofstream& f)
 
 //======================================================
 #pragma region 関数のオーバーロード類
-
-#pragma region POINT構造体の演算子オーバーロード
-inline bool operator==(const POINT& p1, const POINT& p2)
-{
-	return p1.x == p2.x && p1.y == p2.y;
-}
-
-inline bool operator!=(const POINT& p1, const POINT& p2)
-{
-	return p1.x != p2.x || p1.y != p2.y;
-}
-
-inline POINT operator+(const POINT& p1, const POINT& p2)
-{
-	POINT ret = {
-		p1.x + p2.x,
-		p1.y + p2.y };
-	return ret;
-}
-
-#pragma endregion // POINT
-
 
 #pragma region floatFixed
 inline ostream& operator << (ostream& ost, const floatFixed& fx)

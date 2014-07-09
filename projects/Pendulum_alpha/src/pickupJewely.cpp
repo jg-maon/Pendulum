@@ -29,6 +29,10 @@ void CPickupJewely::init(const mymath::Vec3f& pos, int score, int type)
 	score_ = score;
 	obj_.pos = startPos_ = pos;
 	obj_.src(type, 0);
+
+	obj_.pos.z += -0.1f;
+
+
 }
 
 
@@ -38,7 +42,7 @@ void CPickupJewely::step()
 	{
 	case IPickup::State::POP:
 		time_ += system::FrameTime;
-		obj_.pos.y = Easing::CubicOut(time_, startPos_.y, -30.f, POP_ANIM_TIME / 10.f);
+		obj_.pos.y = Easing::CubicOut(time_, startPos_.y, -60.f, POP_ANIM_TIME / 10.f);
 		if (time_ >= POP_ANIM_TIME / 10.f)
 		{
 			time_ = 0.f;

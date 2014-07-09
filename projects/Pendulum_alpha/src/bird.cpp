@@ -57,7 +57,7 @@ void CBird::init(const mymath::Vec3f& pos)
 
 	gm()->GetData(*this);
 
-	obj_.pos = pos;
+	prePos_ = obj_.pos = pos;
 
 	startPos_ = obj_.pos;
 
@@ -141,7 +141,7 @@ void CBird::AttackStep()
 	{
 		CreateAttack();
 		state_ = State::WAIT;
-		nextActTime_ = elapsedTime_ + loadInfo_.shotInterval;		// ˜A‘±ŠÔŠu
+		nextActTime_ = elapsedTime_ + loadInfo_.attackInterval;		// ˜A‘±ŠÔŠu
 	}
 }
 
