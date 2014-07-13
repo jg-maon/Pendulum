@@ -1,10 +1,15 @@
 #ifndef DEF_STAGE1_H
 #define DEF_STAGE1_H
 
-#ifndef DEF_STAGEBASE_HPP
-#include "stageBase.hpp"
+#ifndef DEF_STAGEBASE_H
+#include "stageBase.h"
 #endif
 
+#ifndef DEF_STAGEMNG_H
+#include "stageMng.h"
+#endif
+
+#include <memory>
 #include <fstream>
 
 /*
@@ -14,6 +19,8 @@
 class CStage1 : public IStage
 {
 private:
+	std::weak_ptr<CStageMng> sm_;		// ステージマネージャへの参照
+
 	enum class ClearAnnouncePhase
 	{
 		TO_GOAL,			// ゴール表示

@@ -36,22 +36,23 @@ void IActionPoint::draw()
 {
 }
 
+
 bool IActionPoint::Contains(const mymath::Vec3f& point) const
 {
 	return false;
 }
 
-bool IActionPoint::Contains(const mymath::Linef& line) const
+bool IActionPoint::Contains(const mymath::Linef& line, bool fullContain, bool intersectOnly) const
 {
 	return false;
 }
 
-bool IActionPoint::Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end) const
+bool IActionPoint::Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain, bool intersectOnly) const
 {
 	return false; 
 }
 
-bool IActionPoint::Contains(const mymath::ShapefPtr& shape) const
+bool IActionPoint::Contains(const mymath::ShapefPtr& shape, bool fullContain, bool intersectOnly) const
 {
 	return false;
 }
@@ -71,10 +72,10 @@ std::vector<mymath::Vec3f> IActionPoint::IntersectionPoint2(const mymath::Vec3f&
 	return std::vector<mymath::Vec3f>();
 }
 
-//std::vector<mymath::Vec3f> IActionPoint::IntersectionPoint2(const mymath::ShapefPtr& shape) const
-//{
-//	return std::vector<mymath::Vec3f>();
-//}
+std::vector<mymath::Vec3f> IActionPoint::IntersectionPoint2(const mymath::ShapefPtr& shape) const
+{
+	return std::vector<mymath::Vec3f>();
+}
 
 mymath::Vec3f IActionPoint::IntersectionPoint2Nearest(const mymath::Linef& line) const
 {
@@ -93,7 +94,7 @@ mymath::Vec3f IActionPoint::IntersectionPoint2Nearest(const mymath::Vec3f& sta, 
 
 CActionCircle::CActionCircle(float x, float y, float r) :
 IActionPoint("ActionCircle", x, y)
-, circle_(x, y, obj_.pos.z, r)
+, circle_(new mymath::Circlef(x, y, obj_.pos.z, r))
 {
 }
 
@@ -106,55 +107,61 @@ void CActionCircle::draw()
 #ifdef D_CIRCLE_TEST
 	//if(InScreen(static_cast<int>(circle_.radius)))
 	mymath::Rectf cr = camera::GetScreenRect();
-	if (cr.Contains(circle_))
+	if (cr.Contains(*circle_))
 	{
-		circle_.draw(0xff4050ff);
+		circle_->draw(0xff4050ff);
 	}
 #endif
 #ifdef D_CORD_TEST
 	std::stringstream ss;
-	ss	<< "(" << std::setw(4) << (int)circle_.center.x
-		<< "," << std::setw(4) << (int)circle_.center.y
+	ss	<< "(" << std::setw(4) << (int)circle_->center.x
+		<< "," << std::setw(4) << (int)circle_->center.y
 		<< ")"
-		<< "r:" << std::setw(4) << (int)circle_.radius;
+		<< "r:" << std::setw(4) << (int)circle_->radius;
 
-	Draw_FontText(	(int)circle_.center.x,
-		(int)circle_.center.y,
-		circle_.center.z,
+	Draw_FontText(	(int)circle_->center.x,
+		(int)circle_->center.y,
+		circle_->center.z,
 		ss.str(),-1,0);
 #endif
 
 }
 
+mymath::ShapefPtr CActionCircle::GetAP()
+{
+	return circle_;
+}
+
+
 bool CActionCircle::Contains(const mymath::Vec3f& point) const
 {
-	return circle_.Contains(point);
+	return circle_->Contains(point);
 }
 
-bool CActionCircle::Contains(const mymath::Linef& line) const
+bool CActionCircle::Contains(const mymath::Linef& line, bool fullContain, bool intersectOnly) const
 {
-	return circle_.Contains(line,false,true);
+	return circle_->Contains(line, false, true);
 }
 
-bool CActionCircle::Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end) const
+bool CActionCircle::Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain, bool intersectOnly) const
 {
-	return circle_.Contains(sta,end,false,true);
+	return circle_->Contains(sta, end, false, true);
 }
 
-bool CActionCircle::Contains(const mymath::ShapefPtr& shape) const
+bool CActionCircle::Contains(const mymath::ShapefPtr& shape, bool fullContain, bool intersectOnly) const
 {
 	const auto& id = typeid(*shape);
 	if (id == typeid(mymath::Circlef))
 	{
-		return circle_.Contains(*std::dynamic_pointer_cast<mymath::Circlef>(shape));
+		return circle_->Contains(*std::dynamic_pointer_cast<mymath::Circlef>(shape), fullContain, intersectOnly);
 	}
 	else if (id == typeid(mymath::Rectf))
 	{
-		return circle_.Contains(*std::dynamic_pointer_cast<mymath::Rectf>(shape));
+		return circle_->Contains(*std::dynamic_pointer_cast<mymath::Rectf>(shape), fullContain, intersectOnly);
 	}
 	else if (id == typeid(mymath::Polyf))
 	{
-		return circle_.Contains(*std::dynamic_pointer_cast<mymath::Polyf>(shape));
+		return circle_->Contains(*std::dynamic_pointer_cast<mymath::Polyf>(shape), fullContain, intersectOnly);
 	}
 	return false;
 }
@@ -162,45 +169,45 @@ bool CActionCircle::Contains(const mymath::ShapefPtr& shape) const
 
 mymath::Vec3f CActionCircle::IntersectionPoint2(const mymath::Vec3f& point) const
 {
-	return circle_.IntersectionPoint2(point);
+	return circle_->IntersectionPoint2(point);
 }
 
 std::vector<mymath::Vec3f> CActionCircle::IntersectionPoint2(const mymath::Linef& line) const
 {
-	return circle_.IntersectionPoint2(line);
+	return circle_->IntersectionPoint2(line);
 }
 
 std::vector<mymath::Vec3f> CActionCircle::IntersectionPoint2(const mymath::Vec3f& sta, const mymath::Vec3f& end) const
 {
-	return circle_.IntersectionPoint2(sta, end);
+	return circle_->IntersectionPoint2(sta, end);
 }
 
-//std::vector<mymath::Vec3f> CActionCircle::IntersectionPoint2(const mymath::ShapefPtr& shape) const
-//{
-//	const auto& id = typeid(*shape);
-//	if (id == typeid(mymath::Circlef))
-//	{
-//		return circle_.IntersectionPoint2(*std::dynamic_pointer_cast<mymath::Circlef>(shape));
-//	}
-//	else if (id == typeid(mymath::Rectf))
-//	{
-//		return circle_.IntersectionPoint2(*std::dynamic_pointer_cast<mymath::Rectf>(shape));
-//	}
-//	else if (id == typeid(mymath::Polyf))
-//	{
-//		return circle_.IntersectionPoint2(*std::dynamic_pointer_cast<mymath::Polyf>(shape));
-//	}
-//	return std::vector<mymath::Vec3f>();
-//}
+std::vector<mymath::Vec3f> CActionCircle::IntersectionPoint2(const mymath::ShapefPtr& shape) const
+{
+	const auto& id = typeid(*shape);
+	if (id == typeid(mymath::Circlef))
+	{
+		return circle_->IntersectionPoint2(*std::dynamic_pointer_cast<mymath::Circlef>(shape));
+	}
+	else if (id == typeid(mymath::Rectf))
+	{
+		return circle_->IntersectionPoint2(*std::dynamic_pointer_cast<mymath::Rectf>(shape));
+	}
+	else if (id == typeid(mymath::Polyf))
+	{
+		return circle_->IntersectionPoint2(*std::dynamic_pointer_cast<mymath::Polyf>(shape));
+	}
+	return std::vector<mymath::Vec3f>();
+}
 
 mymath::Vec3f CActionCircle::IntersectionPoint2Nearest(const mymath::Linef& line) const
 {
-	return circle_.IntersectionPoint2Nearest(line);
+	return circle_->IntersectionPoint2Nearest(line);
 }
 
 mymath::Vec3f CActionCircle::IntersectionPoint2Nearest(const mymath::Vec3f& sta, const mymath::Vec3f& end) const
 {
-	return circle_.IntersectionPoint2Nearest(sta, end);
+	return circle_->IntersectionPoint2Nearest(sta, end);
 }
 
 #pragma endregion // CActionCircle methods
@@ -211,16 +218,16 @@ mymath::Vec3f CActionCircle::IntersectionPoint2Nearest(const mymath::Vec3f& sta,
 #pragma region CActionPolygon methods
 
 CActionPolygon::CActionPolygon(const std::vector<mymath::Vec3f>& points) :
-	IActionPoint("ActionPolygon")
-	, polygon_(points)
-	, vertexes(polygon_.points)
+IActionPoint("ActionPolygon")
+, polygon_(new mymath::Polyf(points))
+, vertexes(polygon_->points)
 {
 }
 
-CActionPolygon::CActionPolygon(const mymath::Polyf& polygon):
-	IActionPoint("ActionPolygon")
-	, polygon_(polygon)
-	, vertexes(polygon_.points)
+CActionPolygon::CActionPolygon(const mymath::Polyf& polygon) :
+IActionPoint("ActionPolygon")
+, polygon_(new mymath::Polyf(polygon))
+, vertexes(polygon_->points)
 {
 }
 
@@ -228,13 +235,14 @@ CActionPolygon::CActionPolygon(const mymath::Polyf& polygon):
 std::vector<mymath::Linef> CActionPolygon::MakeLines() const
 {
 	std::vector<mymath::Linef> lines;
-	for (size_t sta = 0; sta < polygon_.size(); ++sta)
+	lines.reserve(polygon_->size());
+	for (size_t sta = 0; sta < polygon_->size(); ++sta)
 	{
-		size_t end = (sta + 1) % polygon_.size();
+		size_t end = (sta + 1) % polygon_->size();
 		lines.push_back(
 			mymath::Linef(
-			polygon_.points[sta],
-			polygon_.points[end]));
+			polygon_->points[sta],
+			polygon_->points[end]));
 	}
 	return lines;
 }
@@ -274,39 +282,44 @@ void CActionPolygon::draw()
 #endif
 }
 
+mymath::ShapefPtr CActionPolygon::GetAP()
+{
+	return polygon_;
+}
+
 bool CActionPolygon::Contains(const mymath::Vec3f& point) const
 {
-	return polygon_.Contains(point);
+	return polygon_->Contains(point);
 }
-bool CActionPolygon::Contains(const mymath::Linef& line) const
+bool CActionPolygon::Contains(const mymath::Linef& line, bool fullContain, bool intersectOnly) const
 {
-	return polygon_.Contains(line, false, true);
+	return polygon_->Contains(line, fullContain, intersectOnly);
 }
 
-bool CActionPolygon::Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end) const
+bool CActionPolygon::Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain, bool intersectOnly) const
 {
-	return polygon_.Contains(sta, end, false, true);
+	return polygon_->Contains(sta, end, fullContain, intersectOnly);
 }
 
-bool CActionPolygon::Contains(const mymath::ShapefPtr& shape) const
+bool CActionPolygon::Contains(const mymath::ShapefPtr& shape, bool fullContain, bool intersectOnly) const
 {
 	std::vector<mymath::Linef> lines = MakeLines();
 	const auto& id = typeid(*shape);
 	if (id == typeid(mymath::Circlef))
 	{
 		// Circle
-		return 	polygon_.Contains(*std::dynamic_pointer_cast<mymath::Circlef>(shape));
+		return 	polygon_->Contains(*std::dynamic_pointer_cast<mymath::Circlef>(shape), fullContain, intersectOnly);
 
 	}
 	else if (id == typeid(mymath::Rectf))
 	{
 		// Rect
-		return 	polygon_.Contains(*std::dynamic_pointer_cast<mymath::Rectf>(shape));
+		return 	polygon_->Contains(*std::dynamic_pointer_cast<mymath::Rectf>(shape), fullContain, intersectOnly);
 	}
 	else if (id == typeid(mymath::Polyf))
 	{
 		// Polygon
-		return 	polygon_.Contains(*std::dynamic_pointer_cast<mymath::Polyf>(shape));
+		return 	polygon_->Contains(*std::dynamic_pointer_cast<mymath::Polyf>(shape), fullContain, intersectOnly);
 	}
 	return false;
 
@@ -314,28 +327,46 @@ bool CActionPolygon::Contains(const mymath::ShapefPtr& shape) const
 
 mymath::Vec3f CActionPolygon::IntersectionPoint2(const mymath::Vec3f& point) const
 {
-	return polygon_.IntersectionPoint2(point);
+	return polygon_->IntersectionPoint2(point);
 }
 
 std::vector<mymath::Vec3f> CActionPolygon::IntersectionPoint2(const mymath::Linef& line) const
 {
-	return polygon_.IntersectionPoint2(line);
+	return polygon_->IntersectionPoint2(line);
 }
 
 std::vector<mymath::Vec3f> CActionPolygon::IntersectionPoint2(const mymath::Vec3f& sta, const mymath::Vec3f& end) const
 {
-	return polygon_.IntersectionPoint2(sta, end);
+	return polygon_->IntersectionPoint2(sta, end);
+}
+
+std::vector<mymath::Vec3f> CActionPolygon::IntersectionPoint2(const mymath::ShapefPtr& shape) const
+{
+	const auto& id = typeid(*shape);
+	if (id == typeid(mymath::Circlef))
+	{
+		return polygon_->IntersectionPoint2(*std::dynamic_pointer_cast<mymath::Circlef>(shape));
+	}
+	else if (id == typeid(mymath::Rectf))
+	{
+		return polygon_->IntersectionPoint2(*std::dynamic_pointer_cast<mymath::Rectf>(shape));
+	}
+	else if (id == typeid(mymath::Polyf))
+	{
+		return polygon_->IntersectionPoint2(*std::dynamic_pointer_cast<mymath::Polyf>(shape));
+	}
+	return std::vector<mymath::Vec3f>();
 }
 
 
 mymath::Vec3f CActionPolygon::IntersectionPoint2Nearest(const mymath::Linef& line) const
 {
-	return polygon_.IntersectionPoint2Nearest(line);
+	return polygon_->IntersectionPoint2Nearest(line);
 }
 
 mymath::Vec3f CActionPolygon::IntersectionPoint2Nearest(const mymath::Vec3f& sta, const mymath::Vec3f& end) const
 {
-	return polygon_.IntersectionPoint2Nearest(sta, end);
+	return polygon_->IntersectionPoint2Nearest(sta, end);
 }
 
 #pragma endregion // CActionPolygon methods

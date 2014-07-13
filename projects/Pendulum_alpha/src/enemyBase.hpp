@@ -1,8 +1,8 @@
 #ifndef DEF_ENEMYBASE_HPP
 #define DEF_ENEMYBASE_HPP
 
-#ifndef DEF_CHARAOBJBASE_HPP
-#include "charaObjBase.hpp"
+#ifndef DE_CHARACTERBASE_H
+#include "characterBase.h"
 #endif
 
 #ifndef DEF_ATTACKBASE_HPP
@@ -42,15 +42,15 @@ protected:
 protected:
 	
 public:
-	/*
-		@brief	コンストラクタ
+	/*	
+		@brief	オブジェクト生成
 		@param	[in]	name	名前("E_"から始める)
-		@param	[in]	attack	攻撃用クラスポインタ
 		@attention	nameは"E_"から始めること
 	*/
 	IEnemy(const std::string& name):
 		ICharacter(name)
 	{}
+
 	/*
 		@brief	インターフェース化するための純粋仮想関数
 	*/

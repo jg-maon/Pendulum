@@ -1,8 +1,8 @@
 #ifndef DEF_PLAYER_H
 #define DEF_PLAYER_H
 
-#ifndef DEF_CHARAOBJBASE_HPP
-#include "charaObjBase.hpp"
+#ifndef DE_CHARACTERBASE_H
+#include "characterBase.h"
 #endif
 
 #ifndef DEF_MYMATH_HPP
@@ -24,10 +24,11 @@ class CPlayer : public ICharacter
 public:
 	struct LoadInfo
 	{
-		std::string armImg;			// 腕画像
+		std::string armImg;		// 腕画像
 		float armX;				// 腕オフセットX
 		float armY;				// 腕オフセットY
 
+		std::string chainImg;	// 鎖画像
 
 		float MAX_G;			// 最大重力速度
 		float GRAVITY_ACC;		// 重力加速度
@@ -46,15 +47,18 @@ public:
 		float attackRadius;		// 攻撃範囲
 	};
 private:
-	enum MotionType		// モーション番号
+	enum class MotionType		// モーション番号
 	{
 		FALL,			// 落下(通常時)
 		HANG,			// 立体機動中
 		ATTACK,			// 攻撃中
+		DAMAGE,			// 被弾中
 
+		MOTION_NUM,		// モーション数
 	};
 	enum
 	{
+		MAX_SLASH = 15,				// 最高斬撃音階数
 		MAX_CHAIN = 999,			// 最高Chain数
 	};
 private:
@@ -79,7 +83,9 @@ private:
 	
 	bool isHanging_;					// ぶら下がっているか
 	mymath::Vec3f hangPoint_;			// ぶら下がっている支点
-		
+	
+	charabase::Anim motionAnim_;		// モーションアニメーション用
+
 	charabase::CharPtr attackRange_;	// 攻撃範囲
 	bool isAttacking_;					// 攻撃中か
 
@@ -110,11 +116,6 @@ private:
 
 private:
 
-	/*
-		@brief	プレイヤー座標基準のカメラ移動
-		@return	なし
-	*/
-	void MoveCamera();
 
 	/*
 		@brief	キー入力

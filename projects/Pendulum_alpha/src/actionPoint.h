@@ -19,6 +19,11 @@ public:
 	virtual ~IActionPoint() = 0;
 	virtual void step() = 0;
 	virtual void draw() = 0;
+	/*
+		@brief	アクションポイントの取得
+		@return	アクションポイント
+	*/
+	virtual mymath::ShapefPtr GetAP() = 0;
 	//================================================================================
 #pragma region Contains
 	/*
@@ -30,31 +35,43 @@ public:
 	*/
 	virtual bool Contains(const mymath::Vec3f& point) const;
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	line(sta,end)	判定する線分
-		@return	交差、内包しているか
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	line(sta,end)	判定する線分(始点、終点)
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Linef& line) const;
+	virtual bool Contains(const mymath::Linef& line, bool fullContain = false, bool intersectOnly = false) const;
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	sta				判定する線分の始点
-		@param	[in]	end				判定する線分の終点
-		@return	交差、内包しているか
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第4引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	sta	判定する線分の始点
+		@param	[in]	end	判定する線分の終点
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end) const;
+	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain = false, bool intersectOnly = false) const;
 	
 	/*
-		@brief	図形の交差、内包判定
-		@param	[in]	shape		判定する図形
-		@return	交差、内包しているか
+		@brief			図形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+		完全内包と境界線交差は内包が優先される
+		@param	[in]	shape			判定する図形
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::ShapefPtr& shape) const;
+	virtual bool Contains(const mymath::ShapefPtr& shape, bool fullContain = false, bool intersectOnly = false) const;
 
 #pragma endregion // Contains
 	//================================================================================
@@ -99,7 +116,7 @@ public:
 		@param	[in]	shape	判定する図形
 		@return	全交点
 	*/
-	//virtual std::vector<mymath::Vec3f> IntersectionPoint2(const mymath::ShapefPtr& shape) const;
+	virtual std::vector<mymath::Vec3f> IntersectionPoint2(const mymath::ShapefPtr& shape) const;
 
 
 	/*
@@ -134,11 +151,16 @@ typedef std::shared_ptr<IActionPoint> ActPtPtr;
 #pragma region class CActionCircle
 class CActionCircle : public IActionPoint
 {
-	mymath::Circlef circle_;
+	std::shared_ptr<mymath::Circlef> circle_;
 public:
 	CActionCircle(float x, float y, float r);
 	virtual void step() override;
 	virtual void draw() override;
+	/*
+		@brief	アクションポイントの取得
+		@return	アクションポイント
+	*/
+	virtual mymath::ShapefPtr GetAP() override;
 	//================================================================================
 #pragma region Contains
 	/*
@@ -150,33 +172,46 @@ public:
 	*/
 	virtual bool Contains(const mymath::Vec3f& point) const override;
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	line(sta,end)	判定する線分
-		@return	交差、内包しているか
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	line(sta,end)	判定する線分(始点、終点)
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Linef& line) const override;
+	virtual bool Contains(const mymath::Linef& line, bool fullContain = false, bool intersectOnly = false) const override;
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	sta				判定する線分の始点
-		@param	[in]	end				判定する線分の終点
-		@return	交差、内包しているか
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第4引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	sta	判定する線分の始点
+		@param	[in]	end	判定する線分の終点
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end) const override;
-
-	/*
-		@brief	図形の交差、内包判定
-		@param	[in]	shape		判定する図形
-		@return	交差、内包しているか
-		@retval	true	している
-		@retval	false	していない
-	*/
-	virtual bool Contains(const mymath::ShapefPtr& shape) const override;
-
+	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain = false, bool intersectOnly = false) const override;
 	
+	/*
+		@brief			図形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+		完全内包と境界線交差は内包が優先される
+		@param	[in]	shape			判定する図形
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
+		@retval	true	している
+		@retval	false	していない
+	*/
+	virtual bool Contains(const mymath::ShapefPtr& shape, bool fullContain = false, bool intersectOnly = false) const override;
+#pragma endregion	// Contains
+
+	//================================================================================
 
 
 	//================================================================================
@@ -219,7 +254,7 @@ public:
 		@param	[in]	shape	判定する図形
 		@return	全交点
 	*/
-	//virtual std::vector<mymath::Vec3f> IntersectionPoint2(const mymath::ShapefPtr& shape) const override;
+	virtual std::vector<mymath::Vec3f> IntersectionPoint2(const mymath::ShapefPtr& shape) const override;
 
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
@@ -253,24 +288,30 @@ public:
 class CActionPolygon : public IActionPoint
 {
 private:
-	mymath::Polyf polygon_;
+	std::shared_ptr<mymath::Polyf> polygon_;
 public:
 	const std::vector<mymath::Vec3f>& vertexes;
 private:
-	/*
-		@brief	vertexes_の情報を元にポリゴン(閉路)を成形
-		@return	ポリゴンの枠
-	*/
-	std::vector<mymath::Linef> MakeLines() const;
 public:
 	CActionPolygon(const std::vector<mymath::Vec3f>& points);
 	CActionPolygon(const mymath::Polyf& polygon);
 	virtual void step() override;
 	virtual void draw() override;
+
+	/*
+		@brief	アクションポイントの取得
+		@return	アクションポイント
+	*/
+	virtual mymath::ShapefPtr GetAP() override;
+
+	/*
+		@brief	vertexes_の情報を元にポリゴン(閉路)を成形
+		@return	ポリゴンの枠
+	*/
+	std::vector<mymath::Linef> MakeLines() const;
 	
 	//================================================================================
 #pragma region Contains
-
 	/*
 		@brief	点の内包判定
 		@param	[in]	point	判定する点
@@ -280,35 +321,46 @@ public:
 	*/
 	virtual bool Contains(const mymath::Vec3f& point) const override;
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	line(sta,end)	判定する線分
-		@return	交差、内包しているか
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	line(sta,end)	判定する線分(始点、終点)
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Linef& line) const override;
+	virtual bool Contains(const mymath::Linef& line, bool fullContain = false, bool intersectOnly = false) const override;
 	/*
-		@brief	線分の交差、内包判定
-		@param	[in]	sta				判定する線分の始点
-		@param	[in]	end				判定する線分の終点
-		@return	交差、内包しているか
+		@brief			線分の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第4引数により変わる
+						完全内包と境界線交差は内包が優先される
+		@param	[in]	sta	判定する線分の始点
+		@param	[in]	end	判定する線分の終点
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end) const override;
-
+	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain = false, bool intersectOnly = false) const override;
+	
 	/*
-		@brief	図形の交差、内包判定
-		@param	[in]	shape		判定する図形
-		@return	交差、内包しているか
+		@brief			図形の交差、内包判定
+		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
+		完全内包と境界線交差は内包が優先される
+		@param	[in]	shape			判定する図形
+		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::ShapefPtr& shape) const override;
+	virtual bool Contains(const mymath::ShapefPtr& shape, bool fullContain = false, bool intersectOnly = false) const override;
+#pragma endregion	// Contains
 
-#pragma endregion // Contains
 	//================================================================================
-
 	//================================================================================
 #pragma region Intersection
 	/*
@@ -349,7 +401,7 @@ public:
 		@param	[in]	shape	判定する図形
 		@return	全交点
 	*/
-	//virtual std::vector<mymath::Vec3f> IntersectionPoint2(const mymath::ShapefPtr& shape) const override;
+	virtual std::vector<mymath::Vec3f> IntersectionPoint2(const mymath::ShapefPtr& shape) const override;
 
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得

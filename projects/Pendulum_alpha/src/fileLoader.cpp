@@ -533,6 +533,7 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 		{ "#ArmImg", &(lf.armImg), typeid(std::string) },
 		{ "#ArmOffsetX", &(lf.armX), typeid(float) },
 		{ "#ArmOffsetY", &(lf.armY), typeid(float) },
+		{ "#ChainImg", &(lf.chainImg), typeid(std::string) },
 		{ "#GravityAcc", &(lf.GRAVITY_ACC), typeid(float) },
 		{ "#MaxGravity", &(lf.MAX_G), typeid(float) },
 		{ "#Tension", &(lf.TENSION), typeid(float) },

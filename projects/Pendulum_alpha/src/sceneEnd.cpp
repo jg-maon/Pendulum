@@ -41,13 +41,13 @@ void CSceneEnd::draw()
 			100 + i * 25,
 			300,
 			0.1f,
-			"img_alphabet",
+			"img_UIalphabet",
 			i * 20, 0, 20, 40);
 		graph::Draw_GraphicsNC(
 			100 + i * 25,
 			300,
 			0.f,
-			"img_alphabet",
+			"img_UIalphabet",
 			i * 20, 0, 20, 40,
 			0, 0,
 			1.f + std::sinf(s),

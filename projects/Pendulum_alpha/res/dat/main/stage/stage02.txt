@@ -1,4 +1,4 @@
-#Bgm	bgm_stage02
+#Bgm	bgm_stage01
 
 #ClearAnnounce
 img_clearAnnounce01	-1	-1
@@ -6,7 +6,7 @@ img_clearAnnounce01	-1	-1
 
 #StageClear
 Goal	3000	2000	200
-img_goalObj02	1	1
+img_goalObj01	1	1
 
 
 #Left	0
@@ -24,6 +24,7 @@ img_goalObj02	1	1
 1483	1929
 
 #Enemy
+res/dat/main/enemy/debugTable01.txt
 res/dat/main/enemy/enemyTable01.txt
 
 #ActionCircle
@@ -36,7 +37,7 @@ res/dat/main/enemy/enemyTable01.txt
 1007	1859	288
 }
 
-ActionPolygon
+#ActionPolygon
 {
 4
 3308	3053

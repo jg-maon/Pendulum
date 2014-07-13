@@ -20,9 +20,10 @@ public:
 	/*
 		@brief	爆発発生
 		@param	[in]	pos		中心座標
+		@param	[in]	angle	斬り方向[unit:degree](デフォルト:315度)
 		@param	[in]	scale	拡大率(デフォルト：1.0f倍)
 	*/
-	CEffectSlash(const mymath::Vec3f& pos, float scale = 1.f);
+	CEffectSlash(const mymath::Vec3f& pos, float angle = 315.f, float scale = 1.f);
 	
 	void step() override;
 	void draw() override;

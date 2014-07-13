@@ -1,8 +1,8 @@
 #ifndef DEF_STAGE3_H
 #define DEF_STAGE3_H
 
-#ifndef DEF_STAGEBASE_HPP
-#include "stageBase.hpp"
+#ifndef DEF_STAGEBASE_H
+#include "stageBase.h"
 #endif
 
 #include <fstream>

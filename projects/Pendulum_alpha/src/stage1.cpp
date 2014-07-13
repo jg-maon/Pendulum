@@ -1,12 +1,15 @@
 #include "stage1.h"
 
+#include "gameManager.h"
+#include "common.h"
+
 #include "easing.h"
 
-CStage1::CStage1(ifstream& f) :
+CStage1::CStage1(std::ifstream& f) :
 IStage("Stage1")
 {
 	goalObj_ = charabase::CharPtr(new charabase::CharBase());
-
+	sm_ = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
 	load(f);
 	LoadClear(f, goalArea_);
 }
@@ -46,7 +49,8 @@ void CStage1::init(std::ifstream& f)
 	for (auto& obj : objs)
 		obj->SetStatusDisp();
 	auto playerPos_ = gm()->GetPlayerPos();
-	camera::SetLookAt(playerPos_.x, playerPos_.y);
+	
+	sm_.lock()->MoveCamera(playerPos_);
 
 	// ðŒ‚Í¶’†‰›‚©‚ç—ˆ‚é
 	RECT rt = camera::GetScreenRect();
@@ -222,7 +226,7 @@ bool CStage1::UpdateClearAnnounce()
 		}
 	}
 
-	camera::SetLookAt(cameraPos.x, cameraPos.y);
+	sm_.lock()->MoveCamera(cameraPos);
 
 	return false;
 }

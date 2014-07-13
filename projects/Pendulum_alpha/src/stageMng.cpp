@@ -26,6 +26,9 @@ Base("StageMng")
 {
 	// メインゲームになるまで待機
 	status_ = Status::idle;
+}
+void CStageMng::load()
+{
 	//----------------------------------------------------
 	// ステージのロード
 	std::string stages = gm()->fm().GetFile("#StageFile");
@@ -107,6 +110,25 @@ const std::shared_ptr<CStageMng> CStageMng::GetPtr()
 	extern CGameManager *gm;
 	const auto& sm = gm->GetObj(typeid(CStageMng));
 	return std::dynamic_pointer_cast<CStageMng>(sm);
+}
+
+void CStageMng::MoveCamera(const mymath::Vec3f& lookAt, float adjust) const
+{
+	mymath::Vec3f cameraPos = camera::GetLookAt();
+	const auto& cameraRect = getCameraRect();
+
+	mymath::Vec3f newPos;
+	newPos.x = static_cast<float>(clamp(lookAt.x, (cameraRect.left + system::WINW / 2), (cameraRect.right - system::WINW / 2)));
+	newPos.y = static_cast<float>(clamp(lookAt.y, (cameraRect.top + system::WINH / 2), (cameraRect.bottom - system::WINH / 2)));
+
+	
+	if (mymath::POW2(cameraPos.x - newPos.x) > mymath::POW2(adjust))
+		cameraPos.x = newPos.x;
+	if (mymath::POW2(cameraPos.y - newPos.y) > mymath::POW2(adjust))
+		cameraPos.y = newPos.y;
+	
+
+	camera::SetLookAt(cameraPos.x, cameraPos.y);
 }
 
 bool CStageMng::isEndStage() const

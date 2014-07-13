@@ -5,8 +5,8 @@
 #include "obj.h"
 #endif
 
-#ifndef DEF_STAGEBASE_HPP
-#include "stageBase.hpp"
+#ifndef DEF_STAGEBASE_H
+#include "stageBase.h"
 #endif
 
 #ifndef DEF_MYMATH_HPP
@@ -37,6 +37,21 @@ public:
 		@retval	マネージャーのポインタ
 	*/
 	static const std::shared_ptr<CStageMng> GetPtr();
+
+	/*
+		@brief	クラス情報の初期化(ロード処理)
+		@return	なし
+	*/
+	void load();
+
+	/*
+		@brief	ステージカメラ可動領域に合わせた[ゲープロ2Dカメラ]移動
+		@param	[in]	lookAt	カメラの中心座標
+		@param	[in]	adjust	カメラ移動までの制限値(デフォルト:0)
+								adjust[px]以上移動していた場合カメラ移動
+		@return	なし
+	*/
+	void MoveCamera(const mymath::Vec3f& lookAt, float adjust = 0.f) const;
 
 	/*
 		@brief	ステージが終了したか取得

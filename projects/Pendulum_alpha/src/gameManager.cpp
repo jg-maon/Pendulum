@@ -48,6 +48,8 @@ void CGameManager::start()
 	{
 		auto sm = std::shared_ptr<CStageMng>(new CStageMng());
 		AddObject2(sm);
+		TempCharacter t(sm);
+		sm->load();
 #ifdef DEF_GM_PTR
 		//SetStageMngPtr(sm);
 #endif

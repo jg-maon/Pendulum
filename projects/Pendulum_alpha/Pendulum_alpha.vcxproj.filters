@@ -162,6 +162,12 @@
     <Filter Include="リソース ファイル\Main\pickup">
       <UniqueIdentifier>{5a24c980-0f3e-47ee-b71d-f933a5393d2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage\Base">
+      <UniqueIdentifier>{05bf4041-1231-42d5-801f-c829a4805283}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Base">
+      <UniqueIdentifier>{21ae688d-cb89-4c7e-b63e-b806ae20ed96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -299,9 +305,6 @@
     <ClInclude Include="src\actionPoint.h">
       <Filter>ソース ファイル\InGame\ActionPoint</Filter>
     </ClInclude>
-    <ClInclude Include="src\charaObjBase.hpp">
-      <Filter>ソース ファイル\InGame\Character</Filter>
-    </ClInclude>
     <ClInclude Include="src\collision.h">
       <Filter>ソース ファイル\InGame\Collision</Filter>
     </ClInclude>
@@ -347,9 +350,6 @@
     <ClInclude Include="src\nWaySing.h">
       <Filter>ソース ファイル\InGame\Attack\nWaySing</Filter>
     </ClInclude>
-    <ClInclude Include="src\stageBase.hpp">
-      <Filter>ソース ファイル\InGame\StageManager\Stage</Filter>
-    </ClInclude>
     <ClInclude Include="src\stage1.h">
       <Filter>ソース ファイル\InGame\StageManager\Stage\Stage1</Filter>
     </ClInclude>
@@ -370,6 +370,12 @@
     </ClInclude>
     <ClInclude Include="src\pickupJewely.h">
       <Filter>ソース ファイル\InGame\Pickup\Jewely</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stageBase.h">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\characterBase.h">
+      <Filter>ソース ファイル\InGame\Character\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -423,9 +429,6 @@
     </ClCompile>
     <ClCompile Include="src\easing.cpp">
       <Filter>ソース ファイル\Easing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gameManager.cpp">
-      <Filter>ソース ファイル\GameManager</Filter>
     </ClCompile>
     <ClCompile Include="src\gameover.cpp">
       <Filter>ソース ファイル\GameOver</Filter>
@@ -510,6 +513,15 @@
     </ClCompile>
     <ClCompile Include="src\pickupJewely.cpp">
       <Filter>ソース ファイル\InGame\Pickup\Jewely</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stageBase.cpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameManager.cpp">
+      <Filter>ソース ファイル\GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\characterBase.cpp">
+      <Filter>ソース ファイル\InGame\Character\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

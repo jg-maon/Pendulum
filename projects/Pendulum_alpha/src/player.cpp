@@ -5,8 +5,10 @@
 //#define D_GRAVITY_TEST		// 重力なし
 //#define D_COLOR_TEST	// HSV変換テスト
 //#define D_LOG_TEST	// 移動軌跡
+#define D_SCALE_TEST		// マウススケーリング
+#define D_LINE_TEST		// 鎖Line補完
 #endif
-#define D_ACT_TEST			// マウスクリック座標でぶら下がる
+//#define D_ACT_TEST			// マウスクリック座標でぶら下がる
 #define D_ATK_TEST	// 攻撃範囲拡大
 #define DEF_SHAPE_DRAW
 
@@ -31,6 +33,23 @@
 #endif
 
 #include "common.h"
+
+
+#include "effectSlash.h"
+
+
+#ifdef D_GRAVITY_TEST
+bool gravityF = false;
+#endif
+
+#ifdef _DEBUG
+mymath::Vec3f vel_log;	// 最高速度
+#endif
+
+#ifdef D_ATK_TEST
+mymath::Circlef atk_range(0.f, 0.f, 0.5f, 300.f);
+#endif
+
 
 /*
 const float CPlayer::GRAVITY_ACC = 25.f;	// 最大重力速度
@@ -99,7 +118,7 @@ void CPlayer::init(float x, float y, float z)
 	chainMsg_ = charabase::CharPtr(new charabase::CharBase(
 		chainStaPos_,
 		mymath::Vec3f(),
-		"img_chain",
+		"img_UIchain",
 		151, 55));
 	chainMsg_->alpha = 0.f;
 	numberAnimTime_ = 0.f;
@@ -113,61 +132,14 @@ void CPlayer::init(float x, float y, float z)
 
 	//----------------------------------
 	// カメラ移動
-	{
-		mymath::Vec3f& pos = obj_.pos;
-		/*
-		mymath::Vec3f cameraPos;
-		//const auto& sm = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
-		const auto& sm = CStageMng::GetPtr();
-		const auto& cameraRect = sm->getCameraRect();
-		cameraPos.x = clamp(pos.x, (cameraRect.left + system::WINW)/2.f, cameraRect.right);
-		cameraPos.y = clamp(pos.y, (cameraRect.top  + system::WINH)/2.f, cameraRect.bottom);
-		//*/
-		camera::SetLookAt(pos.x, pos.y);
-	}
-}
-
-
-
-#ifdef D_GRAVITY_TEST
-bool gravityF = false;
-#endif
-
-#ifdef _DEBUG
-mymath::Vec3f vel_log;	// 最高速度
-#endif
+	//sm()->MoveCamera(obj_.pos.x, obj_.pos.y);
+	
 
 #ifdef D_ATK_TEST
-mymath::Circlef atk_range(0.f,0.f,0.5f,300.f);
+	atk_range.radius = loadInfo_.attackRadius;
 #endif
-
-
-void CPlayer::MoveCamera()
-{
-	const auto& pos = obj_.pos;
-	mymath::Vec3f cameraPos = camera::GetLookAt();
-	mymath::Vec3f vec = pos - cameraPos;
-	const auto& sm = CStageMng::GetPtr();
-	const auto& cameraRect = sm->getCameraRect();
-	/*
-	if (pos.x < cameraRect.left + system::WINW / 2)
-	cameraPos.x = cameraRect.left + system::WINW / 2;
-	if (pos.x > cameraRect.right - system::WINW / 2)
-	cameraPos.x = cameraRect.right - system::WINW / 2;
-	if (pos.y  < cameraRect.top + system::WINH / 2)
-	cameraPos.y = cameraRect.top + system::WINH / 2;
-	if (pos.y  > cameraRect.bottom - system::WINH / 2)
-	cameraPos.y = cameraRect.bottom - system::WINH / 2;
-	//*/
-	
-	cameraPos.x = static_cast<float>(clamp(pos.x, (cameraRect.left + system::WINW / 2), (cameraRect.right - system::WINW / 2)));
-	cameraPos.y = static_cast<float>(clamp(pos.y, (cameraRect.top + system::WINH / 2), (cameraRect.bottom - system::WINH / 2)));
-	
-
-
-
-	camera::SetLookAt(cameraPos.x, cameraPos.y);
 }
+
 
 void CPlayer::key()
 {
@@ -182,17 +154,19 @@ void CPlayer::key()
 		gravityF_ = true;
 		tensionAcc_ = loadInfo_.TENSION;
 		isHanging_ = true;
+		motionAnim_.set(0, 0.f);
 #else
-		const auto& sm = CStageMng::GetPtr();
-		const auto& aps = sm->getActionPoints();
+		const auto& aps = sm()->getActionPoints();
 		for(const auto& act : aps)
 		{
-			if (act->Contains(obj_.pos, mouse))
+			if (act->Contains(mouse) && act->Contains(obj_.pos, mouse))
 			{
 				hangPoint_ = act->IntersectionPoint2Nearest(obj_.pos, mouse);
 				gravityF_ = true;
 				tensionAcc_ = loadInfo_.TENSION;
 				isHanging_ = true;
+				motionAnim_.set(0, 0.f);
+				obj_.src.y = static_cast<int>(MotionType::HANG);
 
 				break;
 			}
@@ -200,6 +174,22 @@ void CPlayer::key()
 #endif
 #endif
 	}
+#ifdef D_SCALE_TEST
+	float s = camera::GetScale();
+	WHEEL w = input::GetWheelRoll();
+	switch (w)
+	{
+	case gplib::MWHEEL_UP:
+		s -= 0.1f;
+		break;
+	case gplib::MWHEEL_NEUTRAL:
+		break;
+	case gplib::MWHEEL_DOWN:
+		s += 0.1f;
+		break;
+	}
+	camera::SetScale(s);
+#endif
 #ifdef D_HANG_TEST
 	if (CheckPress(KEY_BTN2))
 	{
@@ -218,7 +208,6 @@ void CPlayer::key()
 #endif
 #ifdef D_ATK_TEST
 	atk_range.center = obj_.pos;
-	atk_range.radius = loadInfo_.attackRadius;
 #endif
 	if (CheckPress(KEY_MOUSE_LBTN))
 	{
@@ -256,10 +245,12 @@ void CPlayer::key()
 	if (CheckPress(KEY_LEFT))
 	{
 		obj_.pos.x -= 10.f;
+		turnFlag_ = true;
 	}
 	if (CheckPress(KEY_RIGHT))
 	{
 		obj_.pos.x += 10.f;
+		turnFlag_ = false;
 	}
 	if (CheckPress(KEY_UP))
 	{
@@ -282,7 +273,7 @@ void CPlayer::move()
 {
 	mymath::Vec3f& pos = obj_.pos;
 	mymath::Vec3f& velocity = obj_.add;
-	if (mymath::PYTHA(velocity.x, velocity.y) < mymath::POW2(0.5f))
+	if (mymath::PYTHA(velocity.x, velocity.y) < mymath::POW2(1.f/system::FrameTime))
 	{
 		velocity = 0.f;
 	}
@@ -313,7 +304,6 @@ void CPlayer::move()
 	// 重力
 	if (gravityF_)
 	{
-		obj_.src.y = MotionType::FALL;
 		gravity_ += loadInfo_.GRAVITY_ACC;
 		if (gravity_ >= loadInfo_.MAX_G)
 		{
@@ -325,7 +315,7 @@ void CPlayer::move()
 	if (isHanging_)
 	{
 		// ぶら下がり中
-		obj_.src.y = MotionType::HANG;
+		gravityF_ = true;
 		mymath::Vec3f dist = hangPoint_ - pos;	// pos -> hang
 
 		const float min_radius = 150.f;	// 最小距離(振り子の半径)
@@ -405,8 +395,7 @@ void CPlayer::move()
 		size.x = col->right - col->left;
 		size.y = col->bottom - col->top;
 		//const mymath::Vec3f size = obj_.size / 2;
-		const auto& sm = CStageMng::GetPtr();
-		const auto& stageRect = sm->getStageRect();
+		const auto& stageRect = sm()->getStageRect();
 		pos.x = clamp(pos.x, stageRect.left + size.x, stageRect.right - size.x);
 		pos.y = clamp(pos.y, stageRect.top + size.y, stageRect.bottom - size.y);
 	}
@@ -419,6 +408,8 @@ void CPlayer::UnHang()
 	isHanging_ = false;
 	gravity_ = 0.f;
 	gravityF_ = true;
+	motionAnim_.set(2, 0.2f);
+	obj_.src.y = static_cast<int>(MotionType::FALL);
 }
 
 
@@ -431,6 +422,17 @@ void CPlayer::step()
 
 	// 移動処理
 	move();
+
+	// アニメーション処理
+	if (motionAnim_.step())
+	{
+		obj_.src.y = static_cast<int>(MotionType::FALL);
+		obj_.src.x = 0;
+	}
+	else
+	{
+		obj_.src.x = motionAnim_.no;
+	}
 
 	//----------------------------------------
 	// 無敵
@@ -541,7 +543,7 @@ void CPlayer::step()
 
 	//----------------------------------------
 	// カメラ移動
-	MoveCamera();
+	sm()->MoveCamera(obj_.pos);
 }
 
 
@@ -649,7 +651,7 @@ void CPlayer::draw()
 		ss.str(), 0xffff0000,
 		setting::GetFontID("font_MSG15"));
 
-
+/*
 	mymath::Recti arc = attackRange_->GetRect();
 	ss.str(emply_string);
 	ss << "ARGB(" << std::setw(3) << (int)attackRange_->alpha
@@ -661,21 +663,12 @@ void CPlayer::draw()
 		arc.left, arc.bottom, 0.f,
 		ss.str(), -1,
 		setting::GetFontID("font_MSG15"));
+		//*/
 
 #endif
 
 
 	//attackRange_->draw();
-	if (isHanging_)
-	{
-		graph::Draw_Line(
-			static_cast<int>(pos.x+loadInfo_.armX),
-			static_cast<int>(pos.y+loadInfo_.armY),
-			static_cast<int>(hangPoint_.x),
-			static_cast<int>(hangPoint_.y),
-			pos.z - 0.2f,
-			0x7fffffff, 2);
-	}
 
 	//-----------------------------------------------------------
 	// Chain
@@ -695,7 +688,7 @@ void CPlayer::draw()
 				numberPos_.x - i*width,
 				numberPos_.y - 10.f,
 				numberPos_.z,
-				"img_number",
+				"img_UInumber",
 				(work % 10) * width, 0,
 				width, height);
 			work /= 10;
@@ -719,7 +712,7 @@ void CPlayer::draw()
 			draw_x + width,
 			draw_y + height, 0.8f,
 			ARGB(200, 10, 10, 10), ARGB(255, 0, 0, 0),
-			2, true);
+			5, true);
 		//------------------------
 		// 中
 		// 体力に応じて幅を計算
@@ -736,29 +729,75 @@ void CPlayer::draw()
 	// プレイヤー画像
 	obj_.draw(charabase::CharBase::MODE::Center, turnFlag_);
 	//-----------------------------------------
-	// 左腕
+	// 左腕+鎖
 	{
+		// 腕
 		float z = pos.z;
 		float angle = (isHanging_) ? math::DegreeOfPoints2(pos.x, pos.y, hangPoint_.x, hangPoint_.y) : 270.f;
-		SIZE s = graph::Draw_GetImageSize2(loadInfo_.armImg);
+		SIZE armsz = graph::Draw_GetImageSize2(loadInfo_.armImg);
 		// 回転中心
-		POINT c = { 0, s.cy / 2 };
+		POINT c = { 0, armsz.cy / 2 };
+
+		float x;	// 反転成分
 		if (turnFlag_)
 		{
 			// 左向きの時は体より手前に描画
 			z -= 0.1f;
+			// 反転
+			x = -1.f;
 		}
 		else
 		{
 			// 右向きの時は体より奥に描画
 			z += 0.1f;
+			x = 1.f;
 		}
+
 		graph::Draw_GraphicsLeftTop(
-			pos.x + loadInfo_.armX,
+			pos.x + loadInfo_.armX * x,
 			pos.y + loadInfo_.armY,
 			z, loadInfo_.armImg,
-			0, 0, s.cx, s.cy,
-			angle, &c);
+			0, 0, armsz.cx, armsz.cy,
+			static_cast<int>(angle), &c);
+
+		//----------------------------------------------
+		// 鎖
+		if (isHanging_)
+		{
+			mymath::Vec3f vec = hangPoint_ - obj_.pos.TmpReplace(
+												mymath::Vec3f::X|mymath::Vec3f::Y,
+												mymath::Vec3f(
+													pos.x + loadInfo_.armX * x,
+													pos.y + loadInfo_.armY));
+			SIZE chainsz = graph::Draw_GetImageSize2(loadInfo_.chainImg);
+			float sx = 1.f;	// 拡縮率
+			if (mymath::PYTHA(vec.x, vec.y) < mymath::PYTHA(chainsz.cx, chainsz.cy))
+			{
+				// 画像の幅を切る
+				chainsz.cx = static_cast<LONG>(vec.Length2());
+			}
+			else
+			{
+				// 画像の拡大率を変える
+				sx = vec.Length2() / static_cast<float>(chainsz.cx);
+			}
+			graph::Draw_GraphicsLeftTop(
+				pos.x + loadInfo_.armX * x,
+				pos.y + loadInfo_.armY,
+				z + 0.1f, "img_chain",
+				0, 0, chainsz.cx, chainsz.cy,
+				static_cast<int>(-angle), &c,
+				sx);
+#ifdef D_LINE_TEST
+			graph::Draw_Line(
+				static_cast<int>(pos.x + loadInfo_.armX * x),
+				static_cast<int>(pos.y + loadInfo_.armY),
+				static_cast<int>(hangPoint_.x),
+				static_cast<int>(hangPoint_.y),
+				pos.z - 0.2f,
+				0x7fffffff, 2);
+#endif
+		}
 	}
 }
 
@@ -773,54 +812,155 @@ void CPlayer::hit(const ObjPtr& rival)
 #ifdef DEF_PREPOS
 		mymath::Vec3f dist = obj_.pos - prePos_;
 		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
-#else
+		#else
 		mymath::Vec3f dist = nextPos() - obj_.pos;
 		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(obj_.pos, nextPos());
-#endif
+		#endif
 		obj_.pos = intersection;
 		obj_.pos -= dist.Normalize();
 		//*/
 
+
+
+
+
 		// 交点を元に座標補正
 		auto& stacols = GetStageCollisions();
 		auto& vertexes = ap->vertexes;
-		auto it = collisions_.begin();
+		auto it = stageCollisions_.begin();
 		for (auto& col : stacols)
 		{
-			for (size_t i = 0; i < vertexes.size(); ++i)
-			{
-				size_t j = (i + 1) % vertexes.size();
-				if (col->Contains(vertexes[i], vertexes[j], false, true))
-				{
-					auto& colRc = std::dynamic_pointer_cast <mymath::Rectf>(col);
-					auto& rect = std::dynamic_pointer_cast<mymath::Rectf>(*it);
+			auto& colRc = std::dynamic_pointer_cast <mymath::Rectf>(col);
+			auto& rect = std::dynamic_pointer_cast<mymath::Rectf>(*it);
 
-					mymath::Vec3f intersection = colRc->IntersectionPoint2Nearest(vertexes[i], vertexes[j]);
-					//----------------------------------------------
-					// 横方向
-					if (obj_.add.x < 0.f && colRc->left < intersection.x )
-					{
-						// ←へ進んでいた →へ補正
-						obj_.pos.x = intersection.x - rect->left + 1;
-					}
-					if (obj_.add.x > 0.f && intersection.x < colRc->right)
-					{
-						// →へ進んでいた ←へ補正
-						obj_.pos.x = intersection.x - rect->right - 1;
-					}
-					//---------------------------
-					// 縦方向
-					if (obj_.add.y < 0.f &&  colRc->top < intersection.y )
-					{
-						// ↑へ進んでいた ↓へ補正
-						obj_.pos.y = intersection.y - rect->top + 1;
-					}
-					if (obj_.add.y > 0.f && intersection.y < colRc->bottom)
-					{
-						// ↓へ進んでいた ↑へ補正
-						obj_.pos.y = intersection.y - rect->bottom - 1;
-					}
+			std::vector<mymath::Vec3f> intersections;
+			//if (col->Contains(line, false, true))
+			if (ap->Contains(col, false, true))
+			{
+				// 全交点から補正をかける
+				// 交差
+				intersections = ap->IntersectionPoint2(col);
+			}
+			else if (ap->Contains(obj_.pos))
+			{
+				// 内包
+				intersections.push_back(ap->IntersectionPoint2(obj_.pos));
+			}
+			else
+			{
+				//col->Contains(, false, true);
+				ap->Contains(obj_.pos);
+				//intersections.push_back(mymath::);
+			}
+			mymath::Vec3f adjustPos = intersections[0];
+			for (auto& intersection : intersections)
+			{
+				//======================================
+				// 横方向
+				if (obj_.add.x < 0.f)
+				{
+					// ←
+					adjustPos.x = min(adjustPos.x, intersection.x);
+				}
+				else if (obj_.add.x > 0.f)
+				{
+					// →
+					adjustPos.x = max(adjustPos.x, intersection.x);
+				}
+				//======================================
+				// 縦方向
+				//---------------------------
+				if (obj_.add.y < 0.f)
+				{
+					// ↑
+					adjustPos.y = min(adjustPos.y, intersection.y);
+				}
+				else if (obj_.add.y > 0.f)
+				{
+					// ↓
+					adjustPos.y = max(adjustPos.y, intersection.y);
+				}
+			}
+			//======================================
+			// 横方向
+			if (obj_.add.x < 0.f)
+			{
+				// ←
+				obj_.pos.x = adjustPos.x - rect->left + 1.f;
+			}
+			else if (obj_.add.x > 0.f)
+			{
+				// →
+				obj_.pos.x = adjustPos.x - rect->right - 1.f;
+			}
+			//======================================
+			// 縦方向
+			//---------------------------
+			if (obj_.add.y < 0.f)
+			{
+				// ↑
+				obj_.pos.y = adjustPos.y - rect->top + 1.f;
+			}
+			else if (obj_.add.y > 0.f)
+			{
+				// ↓
+				obj_.pos.y = adjustPos.y - rect->bottom - 1.f;
+				gravityF_ = false;
+			}
+			/*
+			mymath::Vec3f intersection = colRc->IntersectionPoint2Nearest(line);
+			//----------------------------------------------
+			// 横方向
+			if (obj_.add.x < 0.f && colRc->left < intersection.x )
+			{
+			// ←へ進んでいた →へ補正
+			obj_.pos.x = intersection.x - rect->left + 1;
+			}
+			if (obj_.add.x > 0.f && intersection.x < colRc->right)
+			{
+			// →へ進んでいた ←へ補正
+			obj_.pos.x = intersection.x - rect->right - 1;
+			}
+			//---------------------------
+			// 縦方向
+			if (obj_.add.y < 0.f &&  colRc->top < intersection.y )
+			{
+			// ↑へ進んでいた ↓へ補正
+			obj_.pos.y = intersection.y - rect->top + 1;
+			}
+			if (obj_.add.y > 0.f && intersection.y < colRc->bottom)
+			{
+			// ↓へ進んでいた ↑へ補正
+			obj_.pos.y = intersection.y - rect->bottom - 1;
+			}
+			//*/
+			/*
+			//if ((intersection.y == colRc->top || intersection.y == colRc->bottom)
+			//|| (intersection.x == colRc->right || interserc)
+			{
+
+			if (obj_.add.y > 0.f)
+			obj_.pos.y = intersection.y - rect->bottom;
+			else if (obj_.add.y < 0.f)
+			obj_.pos.y = intersection.y - rect->top;
+			if (intersection.y == colRc->top || intersection.y == colRc->bottom)
+			{
+			if (obj_.add.x > 0.f)
+			obj_.pos.x = intersection.x - rect->right;
+			else if (obj_.add.x < 0.f)
+			obj_.pos.x = intersection.x - rect->left;
+			}
+
+
+			}
+			//*/
 #ifdef _DEBUG
+			auto lines = ap->MakeLines();
+			for (auto& line : lines)
+			{
+				auto intersections = colRc->IntersectionPoint2(line);
+				for (auto& intersection : intersections)
+				{
 					graph::Draw_Line(
 						(int)intersection.x - 3, (int)intersection.y - 3,
 						(int)intersection.x + 3, (int)intersection.y + 3,
@@ -831,31 +971,32 @@ void CPlayer::hit(const ObjPtr& rival)
 						(int)intersection.x - 3, (int)intersection.y + 3,
 						0.f,
 						0xffffff00, 1);
-#endif
-					//------------------------------------------------
-					// 移動後が別のPolygonにぶつかっていないか判断
-					break;
-					/*
-					auto& sm = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
-					auto& acpts = sm->getActionPoints();
-					for (auto& acpt : acpts)
-					{
-						if (acpt->FindName("Polygon"))
-						{
-							if (acpt->Contains(col))
-							{
-								hit(acpt);
-								break;
-							}
-						}
-					}
-					//*/
 				}
 			}
+#endif
+			//break;
+			//------------------------------------------------
+			// 移動後が別のPolygonにぶつかっていないか判断
+			/*
+			auto& acpts = sm()->getActionPoints();
+			for (auto& acpt : acpts)
+			{
+			if (acpt->FindName("Polygon"))
+			{
+			if (acpt->Contains(col))
+			{
+			hit(acpt);
+			break;
+			}
+			}
+			}
+			//*/
+		
 			++it;
 		}
-
-		MoveCamera();
+		// 補正後の座標にカメラを移動させる
+		sm()->MoveCamera(obj_.pos, 10.f);
+		obj_.add = 0.f;
 	}
 	else if (rival->FindName("Atk_"))
 	{
@@ -871,6 +1012,9 @@ void CPlayer::hit(const ObjPtr& rival)
 		}
 		else
 		{
+			obj_.src.y = static_cast<int>(MotionType::DAMAGE);
+			obj_.src.x = 0;
+			motionAnim_.set(2, 0.1f);
 			invincibleTime_ = loadInfo_.INV_TIME;
 		}
 	}
@@ -946,14 +1090,23 @@ void CPlayer::ApplyAttack(const mymath::Vec3f& pos)
 	// 敵の場所に移動
 	//obj_.velocity += (pos - obj_.pos) / FrameTime / 3.f;
 
+	// 相手方向のベクトル
+	//mymath::Vec3f vec = pos - obj_.pos;
+
+	gm()->AddObject(ObjPtr(new CEffectSlash(pos,
+							math::Calc_RadToDegree(
+								mymath::Vec3f::Angle(obj_.pos, pos)))));
 	obj_.pos = pos;
-	obj_.src.y = MotionType::ATTACK;
+	obj_.src.y = static_cast<int>(MotionType::ATTACK);
+	obj_.src.x = 0;
+	motionAnim_.set(2, 0.15f);
 	//obj_.velocity *= 0.5f;
 
 	//---------------------------------
 	// フラグ
 	gravityF_ = true;
 	isHanging_ = false;
+
 
 }
 
@@ -993,6 +1146,11 @@ void CPlayer::KilledEnemy()
 			break;
 		}
 	}
+	// 音階
+	std::stringstream slash;
+	slash << "se_slash" << std::setw(2) << std::setfill('0') <<
+		(chainCnt_ <= MAX_SLASH) ? chainCnt_ : MAX_SLASH;
+	se::DSound_Play(slash.str());
 }
 
 Base::Collisions CPlayer::GetDamageAreas() const

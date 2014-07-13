@@ -135,6 +135,9 @@
 				KEY_SPACE,			//スペースキー
 				KEY_F1,				//F1キー
 				KEY_F2,				//F2キー
+				KEY_SHIFT,			//シフトキー
+				KEY_LSHIFT,			//左シフトキー
+				KEY_RSHIFT,			//右シフトキー
 				KEY_BTNMAX,			//キーボードの最大数　キー追加の際はこの上に記述
 				KEY_MOUSE_LBTN = KEY_BTNMAX,//マウスの左ボタン
 				KEY_MOUSE_RBTN,		//マウスの右ボタン

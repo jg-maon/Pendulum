@@ -162,7 +162,9 @@ public:
 	
 };
 
-
+/*
+	@brief	ゲームマネージャ初期化用シーン
+*/
 class TempScene : public IScene
 {
 protected:

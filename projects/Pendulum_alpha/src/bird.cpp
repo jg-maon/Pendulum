@@ -105,7 +105,7 @@ void CBird::draw()
 
 void CBird::WaitStep()
 {
-
+	
 }
 
 void CBird::ChaseStep()

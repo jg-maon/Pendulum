@@ -1,7 +1,7 @@
 #ifdef _DEBUG
 //#define D_SCALE_TEST	// 拡大、カメラ移動テスト
-//#define D_EFFECT_TEST	// エフェクト生成テスト
-#define D_PICKUP_TEST	//  ピックアップアイテムテスト
+#define D_EFFECT_TEST	// エフェクト生成テスト
+//#define D_PICKUP_TEST	//  ピックアップアイテムテスト
 #endif
 
 //=================================================================================
@@ -123,6 +123,94 @@ CSceneTitle::~CSceneTitle()
 //======================================
 // 描画、処理、初期化
 //======================================
+
+
+// 処理
+bool CSceneTitle::update()
+{
+	//タイトルデモ間のフェードアウト、イン
+	switch (fadeState_)
+	{
+
+	case IScene::State::INNING:
+		//フェードイン処理
+		if (CFade::FadeIn(255.f / 0.3f * system::FrameTime))
+		{
+			fadeState_ = State::MAIN;
+
+		}
+		break;
+
+	case IScene::State::MAIN:
+		switch (phase_)
+		{
+		case CSceneTitle::Phase::TITLE:
+
+			// タイトル画面表示中
+			TitleStep();
+			// シーン変化
+			if (input::CheckPush(input::KEY_MOUSE_LBTN))
+			{
+				bgm::DShow_Stop("bgm_title");
+				se::DSound_Play("se_enter");
+				return true;
+			}
+			break;
+		case CSceneTitle::Phase::DEMO:
+			// デモプレイ表示中
+			DemoStep();
+			break;
+		}
+		break;
+
+	case IScene::State::OUTING:
+
+		if (CFade::FadeOut(255.f / 0.3f * system::FrameTime))
+		{
+			fadeState_ = IScene::State::INNING;
+			CFade::StartFadeIn();
+			if (phase_ == Phase::DEMO)
+			{
+				phase_ = Phase::TITLE;
+				TitleInit();
+			}
+			else if (phase_ == Phase::TITLE)
+			{
+				phase_ = Phase::DEMO;
+				DemoInit();
+			}
+		}
+		break;
+	}
+
+
+
+#ifdef D_EFFECT_TEST
+	if (input::CheckPress(input::KEY_SHIFT))
+	{
+		if (input::CheckPush(input::KEY_BTN0))
+			gm()->AddObject(ObjPtr(new CEffectSlash(gm()->GetCursorPos(), math::GetRandom(0.f, 360.f))));
+	}
+	else
+	{
+		if (input::CheckPush(input::KEY_BTN0))
+			gm()->AddObject(ObjPtr(new CEffectSlash(gm()->GetCursorPos())));
+		if (input::CheckPush(input::KEY_BTN1))
+			gm()->AddObject(ObjPtr(new CEffectExplosion(gm()->GetCursorPos())));
+	}
+#endif
+
+
+
+	return false;
+}
+
+IScene* CSceneTitle::NextScene()
+{
+	return new CSceneStageSelect();
+}
+
+
 
 //-------------------------
 //Draw
@@ -353,83 +441,6 @@ void CSceneTitle::DemoStep()
 
 
 
-
-// 処理
-bool CSceneTitle::update()
-{
-	//タイトルデモ間のフェードアウト、イン
-	switch (fadeState_)
-	{
-
-	case IScene::State::INNING:
-		//フェードイン処理
-		if (CFade::FadeIn(255.f / 0.3f * system::FrameTime))
-		{
-			fadeState_ = State::MAIN;
-
-		}
-		break;
-
-	case IScene::State::MAIN:
-		switch (phase_)
-		{
-		case CSceneTitle::Phase::TITLE:
-
-			// タイトル画面表示中
-			TitleStep();
-			// シーン変化
-			if (input::CheckPush(input::KEY_MOUSE_LBTN))
-			{
-				bgm::DShow_Stop("bgm_title");
-				se::DSound_Play("se_enter");
-				return true;
-			}
-			break;
-		case CSceneTitle::Phase::DEMO:
-			// デモプレイ表示中
-			DemoStep();
-			break;
-		}
-		break;
-
-	case IScene::State::OUTING:
-
-		if (CFade::FadeOut(255.f / 0.3f * system::FrameTime))
-		{
-			fadeState_ = IScene::State::INNING;
-			CFade::StartFadeIn();
-			if (phase_ == Phase::DEMO)
-			{
-				phase_ = Phase::TITLE;
-				TitleInit();
-			}
-			else if (phase_ == Phase::TITLE)
-			{
-				phase_ = Phase::DEMO;
-				DemoInit();
-			}
-		}
-		break;
-	}
-
-
-
-#ifdef D_EFFECT_TEST
-	if (input::CheckPush(input::KEY_BTN0))
-		gm()->AddObject(ObjPtr(new CEffectSlash(gm()->GetCursorPos())));
-	if (input::CheckPush(input::KEY_BTN1))
-		gm()->AddObject(ObjPtr(new CEffectExplosion(gm()->GetCursorPos())));
-#endif
-
-
-
-	return false;
-}
-
-IScene* CSceneTitle::NextScene()
-{
-	return new CSceneStageSelect();
-}
 
 
 //======================================

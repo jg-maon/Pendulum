@@ -1,6 +1,8 @@
 #include "stage2.h"
 
-CStage2::CStage2(ifstream& f) :
+#include "gameManager.h"
+
+CStage2::CStage2(std::ifstream& f) :
 IStage("Stage2")
 {
 	load(f);

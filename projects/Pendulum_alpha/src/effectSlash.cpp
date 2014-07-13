@@ -5,9 +5,9 @@
 
 #include "define.h"
 
-CEffectSlash::CEffectSlash(const mymath::Vec3f& pos, float scale):
-	IEffect("EffectSlash")
-	,animCnt_(0.f)
+CEffectSlash::CEffectSlash(const mymath::Vec3f& pos, float angle, float scale):
+IEffect("EffectSlash")
+,animCnt_(0.f)
 {
 	obj_.pos = pos;
 	obj_.scale = scale;
@@ -15,6 +15,12 @@ CEffectSlash::CEffectSlash(const mymath::Vec3f& pos, float scale):
 	obj_.resname = "img_slash";
 	obj_.size(500, 500);
 	
+	obj_.angle = angle + 45.f;
+
+	if (obj_.angle >= 360.f)
+		obj_.angle -= 360.f;
+	else if (obj_.angle < 0.f)
+		obj_.angle += 360.f;
 
 	/*
 	addAngle_ = math::GetRandom(-3600.f, 3600.f) / 10.f;

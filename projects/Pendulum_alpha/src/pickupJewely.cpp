@@ -15,7 +15,7 @@ IPickup("PickupJewely")
 CPickupJewely::CPickupJewely(const mymath::Vec3f& pos, int score, int type) :
 IPickup("PickupJewely")
 {
-	gm()->fm().GetData(*this);
+	gm()->GetData(*this);
 
 	if (type == -1)
 		init(pos, score, math::GetRandom<int>(0, 8));

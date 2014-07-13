@@ -116,7 +116,7 @@
     <ClInclude Include="src\actionPoint.h" />
     <ClInclude Include="src\attackBase.hpp" />
     <ClInclude Include="src\bird.h" />
-    <ClInclude Include="src\charaObjBase.hpp" />
+    <ClInclude Include="src\characterBase.h" />
     <ClInclude Include="src\charBase.h" />
     <ClInclude Include="src\collision.h" />
     <ClInclude Include="src\common.h" />
@@ -151,7 +151,7 @@
     <ClInclude Include="src\stage2.h" />
     <ClInclude Include="src\stage3.h" />
     <ClInclude Include="src\stage4.h" />
-    <ClInclude Include="src\stageBase.hpp" />
+    <ClInclude Include="src\stageBase.h" />
     <ClInclude Include="src\stageMng.h" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +171,7 @@
     <ClCompile Include="..\..\lib\gplib.cpp" />
     <ClCompile Include="src\actionPoint.cpp" />
     <ClCompile Include="src\bird.cpp" />
+    <ClCompile Include="src\characterBase.cpp" />
     <ClCompile Include="src\charBase.cpp" />
     <ClCompile Include="src\collision.cpp" />
     <ClCompile Include="src\common.cpp" />
@@ -200,6 +201,7 @@
     <ClCompile Include="src\stage2.cpp" />
     <ClCompile Include="src\stage3.cpp" />
     <ClCompile Include="src\stage4.cpp" />
+    <ClCompile Include="src\stageBase.cpp" />
     <ClCompile Include="src\stageMng.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -33,7 +33,6 @@ mymath::Linef line(0.f,0.f,0.5f, 500.f,1000.f,0.5f);
 
 #include "nWayShot.h"
 
-#include "effectSlash.h"
 
 #include <memory>
 
@@ -114,16 +113,17 @@ void CCollision::step()
 				//mymath::Vec3f dist = nextPos - plpos;
 				if (actp->Contains(plpos, nextPos))
 #else
-				if (actp->Contains(stacol))
+				if (actp->Contains(stacol, false, true))
 #endif
 				{
 					// 交差
 					pl->hit(actp);
 				}
 				//else if (actp->Contains(nextPos))
+				else if (actp->Contains(plpos))
 				{
 					// 内包
-					//pl->hit(actp);
+					pl->hit(actp);
 				}
 			}
 		}
@@ -170,12 +170,16 @@ void CCollision::step()
 							auto& epos = enemy->obj().pos;
 							// ダメージ
 							pl->ApplyAttack(epos);
-							gm()->AddObject(ObjPtr(new CEffectSlash(epos)));
 							if (enemy->ApplyDamage(pl->getPower()))
 							{
 								//-----------------------------------------
 								// 敵kill
 								pl->KilledEnemy();
+							}
+							else
+							{
+								// ノーマル斬撃音
+								se::DSound_Play("se_slash");
 							}
 							break;
 						}

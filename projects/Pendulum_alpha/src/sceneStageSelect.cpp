@@ -3,7 +3,9 @@
 #include "sceneStageSelect.h"
 #include "define.h"
 
+#include "sceneTitle.h"
 #include "sceneMain.h"
+
 #include "Fade.h"
 
 #include "common.h"
@@ -89,6 +91,23 @@ void CSceneStageSelect::draw()
 // 処理
 bool CSceneStageSelect::update()
 {
+	// タイトル画面へ移行するかのチェック
+	if (input::CheckPush(input::KEY_MOUSE_LBTN) && input::CheckPush(input::KEY_MOUSE_RBTN))
+	{
+		toTitleTime_ = 0.f;
+	}
+	if (input::CheckPress(input::KEY_MOUSE_LBTN) && input::CheckPress(input::KEY_MOUSE_RBTN))
+	{
+		toTitleTime_ += system::FrameTime;
+		if (toTitleTime_ >= TO_TITLE_TIME / 10.f)
+		{
+			// タイトル画面へ
+			nextScene_ = NextSceneType::TITLE;
+			CFade::ChangeColor(0xff000000);
+			return true;
+		}
+	}
+
 	const mymath::Vec3f& mouse = gm()->GetCursorPos();
 	POINT mouseNC = camera::GetCursorPositionNC();
 
@@ -190,6 +209,7 @@ bool CSceneStageSelect::update()
 					std::stringstream ss;
 					ss << "Stage" << std::setw(2) << std::setfill('0') << (i + 1);
 					stageName_ = ss.str();
+					nextScene_ = NextSceneType::MAIN;
 					return true;
 				}
 			}
@@ -208,19 +228,29 @@ bool CSceneStageSelect::update()
 
 IScene* CSceneStageSelect::NextScene()
 {
-	const auto& sm = gm()->GetObjects("StageMng");
-	if (!sm.empty())
+	
+	switch (nextScene_)
 	{
-		std::dynamic_pointer_cast<CStageMng>(sm[0])->LoadStage(stageName_);
+	case CSceneStageSelect::NextSceneType::TITLE:
+		return new CSceneTitle();
+	case CSceneStageSelect::NextSceneType::MAIN:
+		{
+			const auto& sm = gm()->GetObjects("StageMng");
+			if (!sm.empty())
+			{
+				std::dynamic_pointer_cast<CStageMng>(sm[0])->LoadStage(stageName_);
+			}
+			else
+			{
+				ObjPtr stage(new CStageMng());
+				//InsertObject(stage);
+				gm()->AddObject(stage);
+				std::dynamic_pointer_cast<CStageMng>(stage)->LoadStage(stageName_);
+			}
+			return new CSceneMain();
+		}
+		break;
 	}
-	else
-	{
-		ObjPtr stage(new CStageMng());
-		//InsertObject(stage);
-		gm()->AddObject(stage);
-		std::dynamic_pointer_cast<CStageMng>(stage)->LoadStage(stageName_);
-	}
-	return new CSceneMain();
 }
 
 

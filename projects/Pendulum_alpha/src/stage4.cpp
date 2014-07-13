@@ -1,6 +1,9 @@
 #include "stage4.h"
 
-CStage4::CStage4(ifstream& f) :
+
+#include "gameManager.h"
+
+CStage4::CStage4(std::ifstream& f) :
 IStage("Stage4")
 {
 	load(f);

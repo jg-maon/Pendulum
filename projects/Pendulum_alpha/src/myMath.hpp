@@ -255,12 +255,16 @@ public:
 		@param	[in]	v2	ベクトル
 		@return	なす角 [ unit:radian ]
 	*/
-	static float Angle(const Vec3<T>& v1, const Vec3<T>& v2)
+	static T Angle(const Vec3<T>& v1, const Vec3<T>& v2)
 	{
+		/*
 		float l1 = v1.Length();
 		float l2 = v2.Length();
 		if (l1 == 0.0f || l2 == 0.0f) return 0.0f;
 		return std::acosf(Dot(v1, v2) / (l1 * l2));
+		*/
+		Vec3<T> v = v2 - v1;
+		return std::atan2(v.y, v.x);
 	}
 
 	/*
@@ -271,7 +275,7 @@ public:
 	*/
 	static T Dot(const Vec3<T>& v1, const Vec3<T>& v2)
 	{
-		return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
+		return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 	}
 	/*
 		@brief	引数のベクトルとのXY平面における内積(v1・v2)
@@ -281,7 +285,7 @@ public:
 	*/
 	static T Dot2(const Vec3<T>& v1, const Vec3<T>& v2)
 	{
-		return v1.x*v2.x + v1.y*v2.y;
+		return (v1.x * v2.x) + (v1.y * v2.y);
 	}
 
 	/*
@@ -302,7 +306,7 @@ public:
 	*/
 	static T Cross2(const Vec3<T>& v1, const Vec3<T>& v2)
 	{
-		return (v1.y*v2.x) - (v1.y * v2.x);
+		return (v1.x*v2.y) - (v1.y * v2.x);
 	}
 	
 	/*
@@ -561,10 +565,10 @@ public:
 	virtual bool Contains(const Circle<T, T>& circ, bool fullContain = false, bool intersectOnly = false) const{ return false; }
 	
 	/*
-		@brief			頭形の交差、内包判定
+		@brief			図形の交差、内包判定
 		@attension		線分の両端が境界線の中にある場合は第3引数により変わる
 		完全内包と境界線交差は内包が優先される
-		@param	[in]	shape			判定する円
+		@param	[in]	shape			判定する図形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
 		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
 		@return			交差、内包しているか
@@ -627,6 +631,34 @@ public:
 	*/
 	virtual std::vector<Vec3<T>> IntersectionPoint2(const Vec3<T>& sta, const Vec3<T>& end) const{return std::vector<Vec3<T>>();}
 	
+	/*
+		@brief	多角形との交点の取得
+			if (Contains(polygon))
+				points = IntersectionPoint2(polygon);
+		@attention	交差していることが前提
+		@param	[in]	polygon	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T>> IntersectionPoint2(const Polygon<T>& polygon) const{return std::vector<Vec3<T>>();}
+	/*
+		@brief	矩形との交点の取得
+			if (Contains(rect))
+				points = IntersectionPoint2(rect);
+		@attention	交差していることが前提
+		@param	[in]	rect	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T>> IntersectionPoint2(const Rect<T>& rect) const{return std::vector<Vec3<T>>();}
+	/*
+		@brief	円との交点の取得
+			if (Contains(circle))
+				points = IntersectionPoint2(circle);
+		@attention	交差していることが前提
+		@param	[in]	circle	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T>> IntersectionPoint2(const Circle<T, T>& circle) const{ return std::vector<Vec3<T>>(); }
+
 	/*
 		@brief	線分との交点のうち、始点に近い点を取得
 			if (Contains(line))
@@ -858,7 +890,7 @@ public:
 			Vec3<T> vec(points[j] - points[i]);	// ab,bc,ca
 			Vec3<T> p_p(point - points[i]);		// ap,bp,cp 
 			// 外積の向き判定
-			cnt += (Vec3<T>::Dot2(vec, p_p) > static_cast<T>(0)) ? 1 : -1;
+			cnt += (Vec3<T>::Cross2(vec, p_p) > static_cast<T>(0)) ? 1 : -1;
 		}
 		return (cnt == size || cnt == -size);
 	}
@@ -898,7 +930,7 @@ public:
 			// 完全内包チェック(始点または終点が内包されていれば完全内包といえる)
 			return !intersectOnly && Contains(line.sta);
 		}
-		return true;
+		return !intersections.empty();
 	}
 	/*
 		@brief			線分の交差、内包判定
@@ -936,7 +968,7 @@ public:
 			// 完全内包チェック(始点または終点が内包されていれば完全内包といえる)
 			return !intersectOnly && Contains(sta);
 		}
-		return true;
+		return !intersections.empty();
 	}
 	/*
 		@brief			多角形の交差、内包判定
@@ -1002,8 +1034,8 @@ public:
 		Vec3<T> rp[4] = {
 			Vec3<T>(rect.left, rect.top, points[0].z),
 			Vec3<T>(rect.right, rect.top, points[0].z),
+			Vec3<T>(rect.right, rect.bottom, points[0].z),
 			Vec3<T>(rect.left, rect.bottom, points[0].z),
-			Vec3<T>(rect.right, rect.bottom, points[0].z)
 		};
 		for (int i = 0; i < 4; ++i)
 		{
@@ -1147,6 +1179,98 @@ public:
 		}
 		return intersections;
 	}
+
+		
+	/*
+		@brief	多角形との交点の取得
+			if (Contains(polygon))
+				points = IntersectionPoint2(polygon);
+		@attention	交差していることが前提
+		@param	[in]	polygon	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T>> IntersectionPoint2(const Polygon<T>& polygon) const override
+	{
+		std::vector<Vec3<T>> intersections;
+		int destSize = static_cast<int>(polygon.points.size());
+		int size = static_cast<int>(points.size());
+		// 辺交差
+		intersections.reserve(size);
+		for (int i = 0; i < size; ++i)
+		{
+			int j = (i + 1) % size;
+			Line<T> line(points[i], points[j]);
+			for (int k = 0; k < destSize; ++k)
+			{
+				int l = (k + 1) % destSize;
+				if (line.Intersect(polygon.points[k], polygon.points[l]))
+					intersections.push_back(line.IntersectionPoint2(polygon.points[k], polygon.points[l]));
+			}
+		}
+		return intersections;
+	}
+	/*
+		@brief	矩形との交点の取得
+			if (Contains(rect))
+				points = IntersectionPoint2(rect);
+		@attention	交差していることが前提
+		@param	[in]	rect	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T>> IntersectionPoint2(const Rect<T>& rect) const override
+	{
+		std::vector<Vec3<T>> intersections;
+		// 頂点内包
+		Vec3<T> rp[4] = {
+			Vec3<T>(rect.left, rect.top, points[0].z),
+			Vec3<T>(rect.right, rect.top, points[0].z),
+			Vec3<T>(rect.right, rect.bottom, points[0].z),
+			Vec3<T>(rect.left, rect.bottom, points[0].z),
+		};
+		// 辺交差
+		int size = static_cast<int>(points.size());
+		intersections.reserve(size);
+		for (int i = 0; i < size; ++i)
+		{
+			int j = (i + 1) % size;
+			Line<T> line(points[i], points[j]);
+			for (int k = 0; k < 4; ++k)
+			{
+				int l = (k + 1) % 4;
+				if (line.Intersect(rp[k], rp[l]))
+					intersections.push_back(line.IntersectionPoint2(rp[k], rp[l]));
+			}
+		}
+		return intersections;
+	}
+	/*
+		@brief	円との交点の取得
+			if (Contains(circle))
+				points = IntersectionPoint2(circle);
+		@attention	交差していることが前提
+		@param	[in]	circle	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T>> IntersectionPoint2(const Circle<T, T>& circle) const override
+	{
+		std::vector<Vec3<T>> intersections;
+		// 辺交差
+		int size = static_cast<int>(points.size());
+		intersections.reserve(size);
+		for (int i = 0; i < size; ++i)
+		{
+			int j = (i + 1) % size;
+			Line<T> line(points[i], points[j]);
+			if (circle.Contains(line))
+			{
+				auto inter = (circle.IntersectionPoint2(line));
+				intersections.insert(intersections.end(), inter.begin(), inter.end());
+			}
+			
+		}
+		return intersections;
+	}
+
 
 
 	/*
@@ -1373,8 +1497,8 @@ public:
 		Vec3<T> points[4] = {
 			Vec3<T>(left, top, line.sta.z),
 			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z),
 			Vec3<T>(left, bottom, line.sta.z),
-			Vec3<T>(right, bottom, line.sta.z)
 		};
 		for (int i = 0; i < 4; ++i)
 		{
@@ -1391,7 +1515,7 @@ public:
 			// 完全内包チェック(始点または終点が内包されていれば完全内包といえる)
 			return !intersectOnly && Contains(line.sta);
 		}
-		return true;
+		return intersection;
 	}
 	/*
 		@brief			線分の交差、内包判定
@@ -1418,8 +1542,8 @@ public:
 		Vec3<T> points[4] = {
 			Vec3<T>(left, top, line.sta.z),
 			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z),
 			Vec3<T>(left, bottom, line.sta.z),
-			Vec3<T>(right, bottom, line.sta.z)
 		};
 		for (int i = 0; i < 4; ++i)
 		{
@@ -1436,7 +1560,7 @@ public:
 			// 完全内包チェック(始点または終点が内包されていれば完全内包といえる)
 			return !intersectOnly && Contains(sta);
 		}
-		return true;
+		return intersection;
 	}
 	/*
 		@brief			多角形の交差、内包判定
@@ -1472,8 +1596,8 @@ public:
 		Vec3<T> points[4] = {
 			Vec3<T>(left, top, poly.points[0].z),
 			Vec3<T>(right, top, poly.points[0].z),
+			Vec3<T>(right, bottom, poly.points[0].z),
 			Vec3<T>(left, bottom, poly.points[0].z),
-			Vec3<T>(right, bottom, poly.points[0].z)
 		};
 		// 辺交差
 		for (int i = 0; i < 4; ++i)
@@ -1507,8 +1631,8 @@ public:
 			Vec3<T> rp[4] = {
 				Vec3<T>(rect.left, rect.top, 0),
 				Vec3<T>(rect.right, rect.top, 0),
+				Vec3<T>(rect.right, rect.bottom, 0),
 				Vec3<T>(rect.left, rect.bottom, 0),
-				Vec3<T>(rect.right, rect.bottom, 0)
 			};
 			// 頂点内包
 			int conVer = 0;
@@ -1553,8 +1677,8 @@ public:
 		Vec3<T> points[4] = {
 			Vec3<T>(left, top, circ.center.z),
 			Vec3<T>(right, top, circ.center.z),
+			Vec3<T>(right, bottom, circ.center.z),
 			Vec3<T>(left, bottom, circ.center.z),
-			Vec3<T>(right, bottom, circ.center.z)
 		};
 		// 辺交差;
 		for (int i = 0; i < 4; ++i)
@@ -1594,8 +1718,8 @@ public:
 		Vec3<T> points[4] = {
 			Vec3<T>(left, top, point.z),
 			Vec3<T>(right, top, point.z),
+			Vec3<T>(right, bottom, point.z),
 			Vec3<T>(left, bottom, point.z),
-			Vec3<T>(right, bottom, point.z)
 		};
 		Vec3<T> ab(points[1] - points[0]);	// p0 -> p1
 		Vec3<T> bp(point - points[1]);		// p1 -> point
@@ -1643,8 +1767,8 @@ public:
 		Vec3<T> points[4] = {
 			Vec3<T>(left, top, line.sta.z),
 			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z),
 			Vec3<T>(left, bottom, line.sta.z),
-			Vec3<T>(right, bottom, line.sta.z)
 		};
 		for (int i = 0; i < 4; ++i)
 		{
@@ -1670,8 +1794,8 @@ public:
 		Vec3<T> points[4] = {
 			Vec3<T>(left, top, line.sta.z),
 			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z),
 			Vec3<T>(left, bottom, line.sta.z),
-			Vec3<T>(right, bottom, line.sta.z)
 		};
 		for (int i = 0; i < 4; ++i)
 		{
@@ -1681,6 +1805,112 @@ public:
 		}
 		return intersections;
 	}
+
+		
+	/*
+		@brief	多角形との交点の取得
+			if (Contains(polygon))
+				points = IntersectionPoint2(polygon);
+		@attention	交差していることが前提
+		@param	[in]	polygon	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T>> IntersectionPoint2(const Polygon<T>& polygon) const override
+	{
+		std::vector<Vec3<T>> intersections;
+		int destSize = static_cast<int>(polygon.points.size());
+		int size = 4;
+		intersections.reserve(size);
+		// 辺交差
+		Vec3<T> points[4] = {
+			Vec3<T>(left, top, polygon.points[0].z),
+			Vec3<T>(right, top, polygon.points[0].z),
+			Vec3<T>(right, bottom, polygon.points[0].z),
+			Vec3<T>(left, bottom, polygon.points[0].z),
+		};
+		for (int i = 0; i < size; ++i)
+		{
+			int j = (i + 1) % size;
+			Line<T> line(points[i], points[j]);
+			for (int k = 0; k < destSize; ++k)
+			{
+				int l = (k + 1) % destSize;
+				if (line.Intersect(polygon.points[k], polygon.points[l]))
+				{
+					intersections.push_back(line.IntersectionPoint2(polygon.points[k], polygon.points[l]));
+					
+				}
+			}
+		}
+		return intersections;
+	}
+	/*
+		@brief	矩形との交点の取得
+			if (Contains(rect))
+				points = IntersectionPoint2(rect);
+		@attention	交差していることが前提
+		@param	[in]	rect	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T>> IntersectionPoint2(const Rect<T>& rect) const override
+	{
+		std::vector<Vec3<T>> intersections;
+		// 頂点内包
+		Vec3<T> rp[4] = {
+			Vec3<T>(rect.left, rect.top, 0),
+			Vec3<T>(rect.right, rect.top, 0),
+			Vec3<T>(rect.right, rect.bottom, 0),
+			Vec3<T>(rect.left, rect.bottom, 0),
+		};
+		// 辺交差
+		int size = 4;
+		intersections.reserve(size);
+		for (int i = 0; i < size; ++i)
+		{
+			int j = (i + 1) % size;
+			if (Contains(rp[i], rp[j]))
+			{
+				auto inter = IntersectionPoint2(rp[i], rp[j]);
+				intersections.insert(intersections.end(), inter.begin(), inter.end());
+			}
+		}
+		return intersections;
+	}
+	/*
+		@brief	円との交点の取得
+			if (Contains(circle))
+				points = IntersectionPoint2(circle);
+		@attention	交差していることが前提
+		@param	[in]	circle	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T>> IntersectionPoint2(const Circle<T, T>& circle) const override
+	{
+		std::vector<Vec3<T>> intersections;
+		// 辺交差
+		Vec3<T> points[4] = {
+			Vec3<T>(left, top, circle.center.z),
+			Vec3<T>(right, top, circle.center.z),
+			Vec3<T>(right, bottom, circle.center.z),
+			Vec3<T>(left, bottom, circle.center.z),
+		};
+		int size = 4;
+		intersections.reserve(size*2);
+		for (int i = 0; i < size; ++i)
+		{
+			int j = (i + 1) % size;
+			Line<T> line(points[i], points[j]);
+			if (circle.Contains(line))
+			{
+
+				auto inter = (circle.IntersectionPoint2(line));
+				intersections.insert(intersections.end(), inter.begin(), inter.end());
+			}
+			
+		}
+		return intersections;
+	}
+
 
 
 	/*
@@ -1697,8 +1927,8 @@ public:
 		Vec3<T> points[4] = {
 			Vec3<T>(left, top, line.sta.z),
 			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z),
 			Vec3<T>(left, bottom, line.sta.z),
-			Vec3<T>(right, bottom, line.sta.z)
 		};
 		for (int i = 0; i < 4; ++i)
 		{
@@ -1733,8 +1963,8 @@ public:
 		Vec3<T> points[4] = {
 			Vec3<T>(left, top, line.sta.z),
 			Vec3<T>(right, top, line.sta.z),
+			Vec3<T>(right, bottom, line.sta.z),
 			Vec3<T>(left, bottom, line.sta.z),
-			Vec3<T>(right, bottom, line.sta.z)
 		};
 		for (int i = 0; i < 4; ++i)
 		{
@@ -2017,8 +2247,8 @@ public:
 		Vec3<T1> rp[4] = {
 			Vec3<T1>(rect.left, rect.top, 0),
 			Vec3<T1>(rect.right, rect.top, 0),
+			Vec3<T1>(rect.right, rect.bottom, 0),
 			Vec3<T1>(rect.left, rect.bottom, 0),
-			Vec3<T1>(rect.right, rect.bottom, 0)
 		};
 		// 頂点内包
 		for (int i = 0; i < 4; ++i)
@@ -2243,6 +2473,97 @@ public:
 		}
 		return intersections;
 	}
+
+	
+		
+	/*
+		@brief	多角形との交点の取得
+			if (Contains(polygon))
+				points = IntersectionPoint2(polygon);
+		@attention	交差していることが前提
+		@param	[in]	polygon	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T1>> IntersectionPoint2(const Polygon<T1>& polygon) const override
+	{
+		std::vector<Vec3<T1>> intersections;
+		int size = static_cast<int>(polygon.points.size());
+		intersections.reserve(size*2);
+		// 辺交差
+		for (int i = 0; i < size; ++i)
+		{
+			int j = (i + 1) % size;
+			if (Contains(polygon.points[i], polygon.points[j]))
+			{
+				auto inter = IntersectionPoint2(polygon.points[i], polygon.points[j]);
+				intersections.insert(intersections.end(), inter.begin(), inter.end());
+			}
+		}
+		return intersections;
+	}
+	/*
+		@brief	矩形との交点の取得
+			if (Contains(rect))
+				points = IntersectionPoint2(rect);
+		@attention	交差していることが前提
+		@param	[in]	rect	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T1>> IntersectionPoint2(const Rect<T1>& rect) const override
+	{
+		std::vector<Vec3<T1>> intersections;
+		// 頂点内包
+		Vec3<T1> rp[4] = {
+			Vec3<T1>(rect.left, rect.top, 0),
+			Vec3<T1>(rect.right, rect.top, 0),
+			Vec3<T1>(rect.right, rect.bottom, 0),
+			Vec3<T1>(rect.left, rect.bottom, 0),
+		};
+		// 辺交差
+		int size = 4;
+		intersections.reserve(size*2);
+		for (int i = 0; i < size; ++i)
+		{
+			int j = (i + 1) % size;
+			if (Contains(rp[i], rp[j]))
+			{
+				auto inter = IntersectionPoint2(rp[i], rp[j]);
+				intersections.insert(intersections.end(), inter.begin(), inter.end());
+
+			}
+		}
+		return intersections;
+	}
+	/*
+		@brief	円との交点の取得
+			if (Contains(circle))
+				points = IntersectionPoint2(circle);
+		@attention	交差していることが前提
+		@param	[in]	circle	比較図形
+		@return	全交点
+	*/
+	virtual std::vector<Vec3<T1>> IntersectionPoint2(const Circle<T1, T2>& circle) const override
+	{
+		std::vector<Vec3<T1>> intersections;
+		intersections.reserve(2);
+
+		Vec3<T1> dist = circle.center - center;
+
+		T1 c = (PYTHA(center.x, center.y) - POW2(radius))
+			- (PYTHA(circle.center.x, circle.center.y) - POW2(circle.radius)) / static_cast<T1>(2);
+
+		T1 d = dist.x*center.x + dist.y*center.y + c;
+		T1 tmp = static_cast<T1>(sqrt( PYTHA(dist.x, dist.y)*POW2(radius) - d*d ));
+		intersections.push_back(mymath::Vec3<T1>(
+			(-dist.x*d + dist.y*tmp) / PYTHA(dist.x, dist.y) + center.x,
+			(-dist.y*d - dist.x*tmp) / PYTHA(dist.x, dist.y) + center.y));
+		intersections.push_back(mymath::Vec3<T1>(
+			(-dist.x*d - dist.y*tmp) / PYTHA(dist.x, dist.y) + center.x,
+			(-dist.y*d + dist.x*tmp) / PYTHA(dist.x, dist.y) + center.y));
+
+		return intersections;
+	}
+
 
 
 	/*
