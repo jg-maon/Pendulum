@@ -25,6 +25,8 @@ public:
 	struct LoadInfo
 	{
 		std::string armImg;		// 腕画像
+		float armRotateX;		// 腕回転中心X
+		float armRotateY;		// 腕回転中心Y
 		float armX;				// 腕オフセットX
 		float armY;				// 腕オフセットY
 

@@ -531,6 +531,8 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	//*
 	LoadValue loadValues[] = {
 		{ "#ArmImg", &(lf.armImg), typeid(std::string) },
+		{ "#ArmRotateX", &(lf.armRotateX), typeid(float) },
+		{ "#ArmRotateY", &(lf.armRotateY), typeid(float) },
 		{ "#ArmOffsetX", &(lf.armX), typeid(float) },
 		{ "#ArmOffsetY", &(lf.armY), typeid(float) },
 		{ "#ChainImg", &(lf.chainImg), typeid(std::string) },

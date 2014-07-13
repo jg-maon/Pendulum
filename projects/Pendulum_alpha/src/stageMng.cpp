@@ -27,7 +27,7 @@ Base("StageMng")
 	// メインゲームになるまで待機
 	status_ = Status::idle;
 }
-void CStageMng::load()
+bool CStageMng::load()
 {
 	//----------------------------------------------------
 	// ステージのロード
@@ -36,14 +36,14 @@ void CStageMng::load()
 	if (stageF.fail())
 	{
 		debug::BToM("CStageMng::CStageMng [stageF] path:%s", stages.c_str());
-		return;
+		return false;
 	}
 
 	std::string path;		// ステージファイルパス
 	if (!FindChunk(stageF, "#StagePath"))
 	{
 		debug::BToM("CStageMng::Loadstage #StagePath not found");
-		return;
+		return false;
 	}
 	stageF >> path;
 
@@ -60,7 +60,7 @@ void CStageMng::load()
 			if (f.fail())
 			{
 				debug::BToM("CStageMng::CStageMng [%s] path:%s", tag.str().c_str(), stage.c_str());
-				return;
+				return false;
 			}
 			switch (i)
 			{
@@ -85,11 +85,11 @@ void CStageMng::load()
 		else
 		{
 			debug::BToM("CStageMng::CStageMng %s tag not found", tag.str().c_str());
-			return;
+			return false;
 		}
 	}
 
-
+	return true;
 }
 
 

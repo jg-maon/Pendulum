@@ -40,9 +40,11 @@ public:
 
 	/*
 		@brief	クラス情報の初期化(ロード処理)
-		@return	なし
+		@return	ロードに成功したか
+		@retval	true	成功
+		@retval	false	失敗
 	*/
-	void load();
+	bool load();
 
 	/*
 		@brief	ステージカメラ可動領域に合わせた[ゲープロ2Dカメラ]移動

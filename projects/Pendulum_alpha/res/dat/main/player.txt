@@ -29,8 +29,10 @@ motion02
 
 //===========================================================
 #ArmImg			img_playerArm
-#ArmOffsetX		7.0
-#ArmOffsetY		-30.0
+#ArmRotateX		6.0
+#ArmRotateY		8.0
+#ArmOffsetX		9.0
+#ArmOffsetY		-10.0
 
 #ChainImg		img_chain
 

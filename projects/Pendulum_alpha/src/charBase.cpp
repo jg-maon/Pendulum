@@ -128,21 +128,25 @@ void CharBase::SetImgData(const BaseData& bd)
 
 mymath::Vec3f CharBase::GetSize() const
 {
-	return mymath::Vec3f(size.x*scale.x, size.y*scale.y, size.z*scale.z);
+	float s = camera::GetScale();
+	return mymath::Vec3f(size.x*scale.x / s, size.y*scale.y / s, size.z*scale.z / s);
 }
 
 float CharBase::HalfWidth() const
 {
-	return size.x*scale.x / 2.0f;
+	float s = camera::GetScale();
+	return size.x*scale.x / 2.0f / s;
 }
 
 float CharBase::HalfHeight() const
 {
-	return size.y*scale.y / 2.0f;
+	float s = camera::GetScale();
+	return size.y*scale.y / 2.0f / s;
 }
 mymath::Vec3f CharBase::HalfSize() const
 {
-	return GetSize() / 2.0f;
+	float s = camera::GetScale();
+	return GetSize() / 2.0f / s;
 }
 
 mymath::Rectf CharBase::GetRect(MODE mode) const

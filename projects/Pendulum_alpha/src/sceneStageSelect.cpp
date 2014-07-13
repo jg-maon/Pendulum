@@ -251,6 +251,7 @@ IScene* CSceneStageSelect::NextScene()
 		}
 		break;
 	}
+	return new CSceneStageSelect();
 }
 
 

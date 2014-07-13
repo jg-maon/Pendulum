@@ -733,10 +733,7 @@ void CPlayer::draw()
 	{
 		// òr
 		float z = pos.z;
-		float angle = (isHanging_) ? math::DegreeOfPoints2(pos.x, pos.y, hangPoint_.x, hangPoint_.y) : 270.f;
 		SIZE armsz = graph::Draw_GetImageSize2(loadInfo_.armImg);
-		// âÒì]íÜêS
-		POINT c = { 0, armsz.cy / 2 };
 
 		float x;	// îΩì]ê¨ï™
 		if (turnFlag_)
@@ -753,10 +750,28 @@ void CPlayer::draw()
 			x = 1.f;
 		}
 
-		graph::Draw_GraphicsLeftTop(
-			pos.x + loadInfo_.armX * x,
-			pos.y + loadInfo_.armY,
-			z, loadInfo_.armImg,
+		// åµñßÇ…ÇÕå®
+		mymath::Vec3f armPos(
+			pos.x + (loadInfo_.armX - loadInfo_.armRotateX) * x,
+			pos.y + (loadInfo_.armY - loadInfo_.armRotateY),
+			z);
+		POINT c = { static_cast<LONG>(loadInfo_.armRotateX),
+					static_cast<LONG>(loadInfo_.armRotateY) };
+		float angle = (isHanging_) ? math::DegreeOfPoints2(armPos.x, armPos.y, hangPoint_.x, hangPoint_.y) : 270.f;
+
+		graph::Draw_Graphics(
+			armPos.x,
+			armPos.y,
+			armPos.z,
+			loadInfo_.armImg,
+			0, 0, armsz.cx, armsz.cy,
+			static_cast<int>(angle), &c);
+
+		graph::Draw_Graphics(
+			armPos.x,
+			armPos.y,
+			armPos.z,
+			loadInfo_.armImg,
 			0, 0, armsz.cx, armsz.cy,
 			static_cast<int>(angle), &c);
 
@@ -764,12 +779,10 @@ void CPlayer::draw()
 		// çΩ
 		if (isHanging_)
 		{
-			mymath::Vec3f vec = hangPoint_ - obj_.pos.TmpReplace(
-												mymath::Vec3f::X|mymath::Vec3f::Y,
-												mymath::Vec3f(
-													pos.x + loadInfo_.armX * x,
-													pos.y + loadInfo_.armY));
+			mymath::Vec3f vec = armPos - hangPoint_;
+			angle = math::DegreeOfPoints2(0.f, 0.f, vec.x, vec.y);
 			SIZE chainsz = graph::Draw_GetImageSize2(loadInfo_.chainImg);
+			POINT c = { 0, chainsz.cy / 2 };
 			float sx = 1.f;	// ägèkó¶
 			if (mymath::PYTHA(vec.x, vec.y) < mymath::PYTHA(chainsz.cx, chainsz.cy))
 			{
@@ -782,18 +795,18 @@ void CPlayer::draw()
 				sx = vec.Length2() / static_cast<float>(chainsz.cx);
 			}
 			graph::Draw_GraphicsLeftTop(
-				pos.x + loadInfo_.armX * x,
-				pos.y + loadInfo_.armY,
+				hangPoint_.x,
+				hangPoint_.y,
 				z + 0.1f, "img_chain",
 				0, 0, chainsz.cx, chainsz.cy,
-				static_cast<int>(-angle), &c,
+				static_cast<int>(angle), &c,
 				sx);
 #ifdef D_LINE_TEST
 			graph::Draw_Line(
-				static_cast<int>(pos.x + loadInfo_.armX * x),
-				static_cast<int>(pos.y + loadInfo_.armY),
 				static_cast<int>(hangPoint_.x),
 				static_cast<int>(hangPoint_.y),
+				static_cast<int>(armPos.x),
+				static_cast<int>(armPos.y),
 				pos.z - 0.2f,
 				0x7fffffff, 2);
 #endif
