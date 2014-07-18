@@ -212,6 +212,12 @@ public:
 	const mymath::Vec3f& GetCursorPos() const;
 
 	/*
+		@brief	マウスカーソルのスクリーン座標を取得
+		@return	マウスカーソルスクリーン内座標
+	*/
+	mymath::Vec3f GetCursorPosNC() const;
+
+	/*
 		@brief	プレイヤー座標の取得
 		@return	プレイヤーオブジェクトの座標
 	*/
@@ -263,6 +269,18 @@ public:
 		@return	スコアマネージャ
 	*/
 	CScoreMng& scoreMng();
+
+	/*
+		@brief	プレイヤーオブジェクトの取得
+		@return	プレイヤーオブジェクト
+	*/
+	CPlayer& GetPlayer();
+
+	/*
+		@brief	エネミーマネージャの取得
+		@return	エネミーマネージャ
+	*/
+	CEnemyMng& enemyMng();
 #endif
 
 

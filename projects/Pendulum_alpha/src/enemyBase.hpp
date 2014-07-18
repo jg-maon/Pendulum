@@ -49,6 +49,7 @@ public:
 	*/
 	IEnemy(const std::string& name):
 		ICharacter(name)
+		, attack_(nullptr)
 	{}
 
 	/*

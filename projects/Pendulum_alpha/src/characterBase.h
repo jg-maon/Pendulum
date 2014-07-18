@@ -33,6 +33,8 @@ protected:
 	mymath::Vec3f prePos_;					// 1フレーム前の座標
 #endif
 
+	bool gravityF_;							// 重力処理フラグ
+
 protected:
 	/*
 		@brief	ステージマネージャのポインタ取得

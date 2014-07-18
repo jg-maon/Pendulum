@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+#include "fade.h"
+
 //=============================================================================
 #pragma region public methods
 
@@ -10,9 +12,6 @@ IStage::IStage(const std::string& name) :
 Base(name)
 , phase_(IStage::Phase::CLEAR_ANNOUNCE)
 , bgm(bgm_)
-, actionPoints(actionPoints_)
-, rect(stageRect_)
-, cameraRect(cameraRect_)
 {
 
 
@@ -40,19 +39,42 @@ void IStage::step()
 		//*/
 		break;
 	case IStage::Phase::NORMAL:
-		for (auto& ap : actionPoints_)
+		for (auto& ap : stage_[0].actionPoints)
 			ap->step();
 		if (UpdateNormal())
 		{
-			phase_ = IStage::Phase::BOSS;
+			nextPhase_ = IStage::Phase::BOSS;
+			phase_ = IStage::Phase::FADE_OUT;
+			fadeOutTime_ = 0.3f;
+			fadeInTime_ = 0.3f;
+			CFade::ChangeColor(0xff000000);
+			CFade::StartFadeOut();
+		}
+		break;
+	case IStage::Phase::FADE_OUT:
+		if (CFade::FadeOut(255.f / fadeOutTime_*system::FrameTime))
+		{
+			phase_ = IStage::Phase::FADE_IN;
+			CFade::StartFadeIn();
+		}
+		break;
+	case IStage::Phase::FADE_IN:
+		if (CFade::FadeIn(255.f / fadeInTime_*system::FrameTime))
+		{
+			phase_ = nextPhase_;
 		}
 		break;
 	case IStage::Phase::BOSS:
-		for (auto& ap : actionPoints_)
+		for (auto& ap : stage_[1].actionPoints)
 			ap->step();
 		if (UpdateBoss())
 		{
-			phase_ = IStage::Phase::RESULT;
+			nextPhase_ = IStage::Phase::RESULT;
+			phase_ = IStage::Phase::FADE_OUT;
+			fadeOutTime_ = 0.7f;
+			fadeInTime_ = 0.3f;
+			CFade::ChangeColor(0xffffffff);
+			CFade::StartFadeOut();
 		}
 		break;
 	}
@@ -64,8 +86,13 @@ void IStage::step()
 
 void IStage::draw()
 {
-	for (auto& ap : actionPoints_)
-		ap->draw();
+	if (phase_ == Phase::BOSS || phase_ == Phase::RESULT)
+		for (auto& ap : stage_[1].actionPoints)
+			ap->draw();
+	else
+		for (auto& ap : stage_[0].actionPoints)
+			ap->draw();
+
 }
 
 void IStage::init(std::ifstream& f)
@@ -76,7 +103,6 @@ void IStage::init(std::ifstream& f)
 	for (auto& obj : objs)
 	obj->kill();
 	//*/
-	phase_ = IStage::Phase::CLEAR_ANNOUNCE;
 	LoadPlayer(f);
 	LoadEnemies(f);
 
@@ -87,6 +113,21 @@ void IStage::init(std::ifstream& f)
 bool IStage::isEndStage() const
 {
 	return phase_ == IStage::Phase::RESULT;
+}
+
+const std::vector<ActPtPtr>& IStage::getActionPoints() const
+{
+	return (phase_ == Phase::BOSS) ? stage_[1].actionPoints : stage_[0].actionPoints;
+}
+
+const mymath::Recti& IStage::getStageRect() const
+{
+	return (phase_ == Phase::BOSS) ? stage_[1].stageRect : stage_[0].stageRect;
+}
+
+const mymath::Recti& IStage::getCameraRect() const
+{
+	return (phase_ == Phase::BOSS) ? stage_[1].cameraRect : stage_[0].cameraRect;
 }
 
 #pragma endregion	// public methods
@@ -115,45 +156,129 @@ bool IStage::LoadEnv(std::ifstream& f)
 	return f.eof();
 }
 
-bool IStage::LoadRect(std::ifstream& f)
+bool IStage::LoadRect(std::ifstream& f, int stage)
 {
 	//--------------------------------------
 	// ステージ
 	if (common::FindChunk(common::SeekSet(f), "#Left"))
 	{
-		f >> stageRect_.left;
+		f >> stage_[stage].stageRect.left;
 	}
 	if (common::FindChunk(common::SeekSet(f), "#Top"))
 	{
-		f >> stageRect_.top;
+		f >> stage_[stage].stageRect.top;
 	}
 	if (common::FindChunk(common::SeekSet(f), "#Right"))
 	{
-		f >> stageRect_.right;
+		f >> stage_[stage].stageRect.right;
 	}
 	if (common::FindChunk(common::SeekSet(f), "#Bottom"))
 	{
-		f >> stageRect_.bottom;
+		f >> stage_[stage].stageRect.bottom;
 	}
 	//--------------------------------------
 	// カメラ
 	if (common::FindChunk(common::SeekSet(f), "#CameraLeft"))
 	{
-		f >> cameraRect_.left;
+		f >> stage_[stage].cameraRect.left;
 	}
 	if (common::FindChunk(common::SeekSet(f), "#CameraTop"))
 	{
-		f >> cameraRect_.top;
+		f >> stage_[stage].cameraRect.top;
 	}
 	if (common::FindChunk(common::SeekSet(f), "#CameraRight"))
 	{
-		f >> cameraRect_.right;
+		f >> stage_[stage].cameraRect.right;
 	}
 	if (common::FindChunk(common::SeekSet(f), "#CameraBottom"))
 	{
-		f >> cameraRect_.bottom;
+		f >> stage_[stage].cameraRect.bottom;
 	}
 	return f.eof();
+}
+
+
+bool IStage::LoadActionCircles(std::ifstream& f, int stage)
+{
+	if (common::FindChunk(common::SeekSet(f), "#ActionCircle"))
+	{
+		std::string label;
+		f >> label;
+		if (label != "{" || f.eof()) return f.eof();
+		while (!f.eof())
+		{
+			std::vector<float> info;
+			for (int i = 0; i<3; ++i)
+			{
+				f >> label;
+				if (label == "}" || f.eof())return f.eof();
+				info.push_back(static_cast<float>(std::atof(label.c_str())));
+			}
+			if (info.size() == 3)
+			{
+				stage_[stage].actionPoints.push_back(ActPtPtr(
+					new CActionCircle(info[0], info[1], info[2])
+					));
+			}
+		}
+	}
+	return f.eof();
+}
+
+bool IStage::LoadActionPolygons(std::ifstream& f, int stage)
+{
+	if (common::FindChunk(common::SeekSet(f), "#ActionPolygon"))
+	{
+		std::string label;
+		f >> label;
+		if (label != "{" || f.eof()) return f.eof();
+		while (!f.eof())
+		{
+			f >> label;
+			if (label == "}")break;
+			int num = std::atoi(label.c_str());
+			std::vector<mymath::Vec3f> info(num);
+			for (int i = 0; i<num; ++i)
+			{
+				mymath::Vec3f pos;
+				f >> label;
+				if (label == "}" || f.eof()) return f.eof();
+				pos.x = static_cast<float>(std::atof(label.c_str()));
+				f >> label;
+				if (label == "}" || f.eof()) return f.eof();
+				pos.y = static_cast<float>(std::atof(label.c_str()));
+				pos.z = 0.5f;
+				info[i] = pos;
+			}
+			//info.push_back(info[0]);	// 閉路にする
+			stage_[stage].actionPoints.push_back(ActPtPtr(
+				new CActionPolygon(info)));
+
+		}
+	}
+	return f.eof();
+}
+
+#pragma endregion	// private methods
+
+//=============================================================================
+#pragma region protected methods
+
+void IStage::load(std::ifstream& f, int stage)
+{
+	/*
+	// 先に登録されているオブジェクトを消してから読み込む
+	auto& objs = gm()->GetObjects("Player,Action", ',');
+	for (auto& obj : objs)
+		obj->kill();
+	LoadPlayer(f);
+	LoadEnemies(f);
+	//*/
+
+	LoadRect(f, stage);
+	stage_[stage].actionPoints.clear();
+	LoadActionCircles(f, stage);
+	LoadActionPolygons(f, stage);
 }
 
 bool IStage::LoadPlayer(std::ifstream& f)
@@ -186,7 +311,7 @@ bool IStage::LoadPlayer(std::ifstream& f)
 #ifdef DEF_GM_PTR
 		gm()->SetPlayerPtr(player);
 #endif
-			
+
 	}
 
 	return f.eof();
@@ -218,90 +343,6 @@ bool IStage::LoadEnemies(std::ifstream& f)
 #endif
 	}
 	return f.eof();
-}
-
-
-bool IStage::LoadActionCircles(std::ifstream& f)
-{
-	if (common::FindChunk(common::SeekSet(f), "#ActionCircle"))
-	{
-		std::string label;
-		f >> label;
-		if (label != "{" || f.eof()) return f.eof();
-		while (!f.eof())
-		{
-			std::vector<float> info;
-			for (int i = 0; i<3; ++i)
-			{
-				f >> label;
-				if (label == "}" || f.eof())return f.eof();
-				info.push_back(static_cast<float>(std::atof(label.c_str())));
-			}
-			if (info.size() == 3)
-			{
-				actionPoints_.push_back(ActPtPtr(
-					new CActionCircle(info[0], info[1], info[2])
-					));
-			}
-		}
-	}
-	return f.eof();
-}
-
-bool IStage::LoadActionPolygons(std::ifstream& f)
-{
-	if (common::FindChunk(common::SeekSet(f), "#ActionPolygon"))
-	{
-		std::string label;
-		f >> label;
-		if (label != "{" || f.eof()) return f.eof();
-		while (!f.eof())
-		{
-			f >> label;
-			if (label == "}")break;
-			int num = std::atoi(label.c_str());
-			std::vector<mymath::Vec3f> info(num);
-			for (int i = 0; i<num; ++i)
-			{
-				mymath::Vec3f pos;
-				f >> label;
-				if (label == "}" || f.eof()) return f.eof();
-				pos.x = static_cast<float>(std::atof(label.c_str()));
-				f >> label;
-				if (label == "}" || f.eof()) return f.eof();
-				pos.y = static_cast<float>(std::atof(label.c_str()));
-				pos.z = 0.5f;
-				info[i] = pos;
-			}
-			//info.push_back(info[0]);	// 閉路にする
-			actionPoints_.push_back(ActPtPtr(
-				new CActionPolygon(info)));
-
-		}
-	}
-	return f.eof();
-}
-
-#pragma endregion	// private methods
-
-//=============================================================================
-#pragma region protected methods
-
-void IStage::load(std::ifstream& f)
-{
-	/*
-	// 先に登録されているオブジェクトを消してから読み込む
-	auto& objs = gm()->GetObjects("Player,Action", ',');
-	for (auto& obj : objs)
-		obj->kill();
-	LoadPlayer(f);
-	LoadEnemies(f);
-	//*/
-
-	LoadEnv(f);
-	LoadRect(f);
-	LoadActionCircles(f);
-	LoadActionPolygons(f);
 }
 
 #pragma endregion	// protected methods

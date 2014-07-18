@@ -6,6 +6,7 @@ using namespace gplib;
 
 #include "bird.h"
 #include "fairy.h"
+#include "griffon.h"
 #include "player.h"
 #include "pickupJewely.h"
 
@@ -390,6 +391,136 @@ bool CFileLoader::LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& 
 
 	return success;
 }
+//=====================================================================================
+//=====================================================================================
+//=====================================================================================
+//=====================================================================================
+bool CFileLoader::LoadGriffon(const std::string& fileName, std::vector<EnemyPtr>& enemies)
+{
+	using common::FindChunk;
+	using common::SeekSet;
+	std::ifstream eneF(fileName);
+	if (eneF.fail())
+	{
+		debug::BToM("CFileLoader::LoadGriffon path:%s", fileName.c_str());
+		return false;
+	}
+	// 情報ロード用
+	CGriffon tmp;
+	CGriffon::LoadInfo lf;
+	charabase::CharBase cb;
+	// ファイルから情報を抜き取る際のタグ検索用
+	bool success;
+
+	std::string successProc = "none";
+
+	//-----------------------------------------------
+	// 画像情報
+	//-----------------------------------------------
+	if (success = LoadCharBase(eneF, cb))
+	{
+		// 画像情報設定
+		tmp.obj(cb);
+		successProc = "CharBase";
+	}
+	//-----------------------------------------------
+	// クラス情報
+	//-----------------------------------------------
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#Collision")))
+	{
+		tmp.LoadCollisions(eneF);
+		successProc = "Collision";
+	}
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#StageCollision")))
+	{
+		tmp.LoadStageCollisions(eneF);
+		successProc = "StageCollision";
+	}
+	// 攻撃
+	if (success && (success = FindChunk(SeekSet(eneF), "#Attack")))
+	{
+		tmp.LoadAttack(eneF);
+		successProc = "Attack";
+	}
+	//-------------------------------------
+	// 範囲系
+	if (success && (success = FindChunk(SeekSet(eneF), "#SearchRange")))
+	{
+		eneF >> lf.SEARCH_RANGE;
+		successProc = "SearchRange";
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#ChaseRange")))
+	{
+		eneF >> lf.CHASE_RANGE;
+		successProc = "ChaseRange";
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#AttackRange")))
+	{
+		eneF >> lf.ATTACK_RANGE;
+		successProc = "AttackRange";
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#MoveSpeed")))
+	{
+		eneF >> lf.MOVE_SPEED;
+		successProc = "MoveSpeed";
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#AttackSpeed")))
+	{
+		eneF >> lf.ATTACK_SPEED;
+		successProc = "AttackSpeed";
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#InvincibleTime")))
+	{
+		eneF >> lf.INV_TIME;
+		successProc = "InvincibleTime";
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#DamageTime")))
+	{
+		eneF >> lf.damageTime;
+		successProc = "DamageTime";
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#AttackDist")))
+	{
+		eneF >> lf.tackleDist;
+		successProc = "AttackDist";
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#AttackInterval")))
+	{
+		eneF >> lf.attackInterval;
+		successProc = "AttackInterval";
+	}
+
+	if (success && (success = FindChunk(SeekSet(eneF), "#Health")))
+	{
+		eneF >> lf.health;
+		successProc = "Health";
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#Power")))
+	{
+		eneF >> lf.power;
+		successProc = "Power";
+	}
+	//-------------------------------------
+
+	if (success)
+	{
+		//-----------------------------------------------
+		// 全ての情報が正しく読み込めた際のみここに入る
+		// パラメータ
+		tmp.SetInfo(lf);
+
+		// コピーコンストラクタを用いオリジナル作成
+		enemies.push_back(EnemyPtr(new CGriffon(tmp)));
+	}
+	else
+	{
+		debug::BToM("CFileLoader::LoadGriffon load failed\n last successProc = %s", successProc.c_str());
+	}
+
+	return success;
+}
 
 #pragma endregion	// 敵テーブル読み込み
 //=====================================================================================
@@ -675,6 +806,15 @@ bool CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 		std::string buf;
 		f >> buf;
 		if (!LoadFairy(buf, enemies))
+		{
+			return false;
+		}
+	}
+	if (FindChunk(SeekSet(f), "#Griffon"))
+	{
+		std::string buf;
+		f >> buf;
+		if (!LoadGriffon(buf, enemies))
 		{
 			return false;
 		}

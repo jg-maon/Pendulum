@@ -32,6 +32,10 @@ void (CBird::*CBird::StateStep_[])() =
 CBird::CBird() :
 IEnemy("E_Bird")
 {
+	std::vector<int> move = { 1, 2, 4, 3, 2 };
+	motionTable_.push_back(move);
+	std::vector<int> attack = { 1, 0, 1, 3, 4 };
+	motionTable_.push_back(attack);
 }
 
 CBird::CBird(const mymath::Vec3f& pos) :
@@ -64,8 +68,10 @@ void CBird::init(const mymath::Vec3f& pos)
 	elapsedTime_ = 0.f;
 	nextActTime_ = 0.f;
 	state_ = State::WAIT;
+	motionType_ = MotionType::MOVE;
+	motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, 0.3f);
+	obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
 	//obj_.alpha = 200.f;
-
 
 }
 
@@ -75,6 +81,23 @@ void CBird::step()
 	elapsedTime_ += system::FrameTime;
 
 	DecideState();
+
+	// アニメーション処理
+	if (motionAnim_.step())
+	{
+		if (motionType_ != MotionType::MOVE)
+		{
+			obj_.src.x = 0;
+			obj_.src.y = 0;
+			motionType_ = MotionType::MOVE;
+			motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, 0.3f);
+		}
+	}
+	else
+	{
+		obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
+	}
+
 
 	if (attack_ != nullptr)
 		attack_->step();
@@ -105,7 +128,6 @@ void CBird::draw()
 
 void CBird::WaitStep()
 {
-	
 }
 
 void CBird::ChaseStep()
@@ -115,6 +137,7 @@ void CBird::ChaseStep()
 	float angle = std::atan2f(dist.y, dist.x);
 	obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.MOVE_SPEED;
 	obj_.Move();
+
 }
 
 void CBird::ReturnStep()
@@ -132,13 +155,18 @@ void CBird::ReturnStep()
 		state_ = State::WAIT;
 	}
 	obj_.Move();
+
 }
 
 void CBird::AttackStep()
 {
+	// 溜め中は羽を固定
+	if (motionAnim_.no == 1)
+		motionAnim_.stop();
 	// 攻撃
 	if (elapsedTime_ > nextActTime_)
 	{
+		motionAnim_.start();		// アニメーション再開
 		CreateAttack();
 		state_ = State::WAIT;
 		nextActTime_ = elapsedTime_ + loadInfo_.attackInterval;		// 連続間隔
@@ -175,6 +203,7 @@ void CBird::DecideState()
 	{
 		// 攻撃範囲内 or 攻撃中
 		state_ = State::ATTACK;
+		motionType_ = MotionType::ATTACK;
 	}
 	else if (plyDist < mymath::POW2(loadInfo_.SEARCH_RANGE))
 	{
@@ -199,6 +228,7 @@ void CBird::DecideState()
 	{
 		// 保険(各行動の最後にはWAITに戻してるはず)
 		state_ = State::WAIT;
+		motionType_ = MotionType::MOVE;
 	}
 }
 
@@ -213,7 +243,7 @@ void CBird::CreateAttack()
 	const float ACC = 5.f;			// 加速度
 	std::dynamic_pointer_cast<CNWayShot>(attack_)->CreateAttack(
 		mypos,
-		5,
+		3,
 		angle, INTERVAL,
 		SP, ACC);
 }
@@ -221,21 +251,8 @@ void CBird::CreateAttack()
 
 void CBird::hit(const ObjPtr& rival)
 {
-	if (rival->FindName("ActionPolygon"))
-	{
-		// めり込み補正,通過補正
-		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);
-#ifdef DEF_PREPOS
-		mymath::Vec3f dist = obj_.pos - prePos_;
-		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
-#else
-		mymath::Vec3f dist = nextPos() - obj_.pos;
-		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(obj_.pos, nextPos());
-#endif
-		obj_.pos = intersection;
-		obj_.pos -= dist.Normalize();
-
-	}
+	// Polygon
+	__super::hit(rival);
 }
 
 

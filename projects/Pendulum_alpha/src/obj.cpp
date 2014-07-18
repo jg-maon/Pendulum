@@ -286,12 +286,18 @@ bool IColObject::LoadStageCollisions(std::ifstream& f)
 
 Base::Collisions IColObject::GetDamageAreas() const
 {
-	return this->GetWorldCollisions(collisions_);
+	if (status_ == Base::Status::run || status_ == Base::Status::update)
+		return this->GetWorldCollisions(collisions_);
+	else
+		return Base::Collisions();
 }
 
 Base::Collisions IColObject::GetStageCollisions() const
 {
-	return this->GetWorldCollisions(stageCollisions_);
+	if (status_ == Base::Status::run || status_ == Base::Status::update)
+		return this->GetWorldCollisions(stageCollisions_);
+	else
+		return Base::Collisions();
 }
 
 void IColObject::SetCollisionAreas(const Base::Collisions& collisions)

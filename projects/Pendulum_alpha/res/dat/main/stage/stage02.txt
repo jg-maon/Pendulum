@@ -27,6 +27,10 @@ img_goalObj01	1	1
 res/dat/main/enemy/debugTable01.txt
 res/dat/main/enemy/enemyTable01.txt
 
+#Boss
+res/dat/main/stage/bossStage01.txt
+
+
 #ActionCircle
 {
 2863	2748	361

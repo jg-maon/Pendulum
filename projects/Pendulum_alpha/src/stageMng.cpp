@@ -112,33 +112,9 @@ const std::shared_ptr<CStageMng> CStageMng::GetPtr()
 	return std::dynamic_pointer_cast<CStageMng>(sm);
 }
 
-void CStageMng::MoveCamera(const mymath::Vec3f& lookAt, float adjust) const
-{
-	mymath::Vec3f cameraPos = camera::GetLookAt();
-	const auto& cameraRect = getCameraRect();
-
-	mymath::Vec3f newPos;
-	newPos.x = static_cast<float>(clamp(lookAt.x, (cameraRect.left + system::WINW / 2), (cameraRect.right - system::WINW / 2)));
-	newPos.y = static_cast<float>(clamp(lookAt.y, (cameraRect.top + system::WINH / 2), (cameraRect.bottom - system::WINH / 2)));
-
-	
-	if (mymath::POW2(cameraPos.x - newPos.x) > mymath::POW2(adjust))
-		cameraPos.x = newPos.x;
-	if (mymath::POW2(cameraPos.y - newPos.y) > mymath::POW2(adjust))
-		cameraPos.y = newPos.y;
-	
-
-	camera::SetLookAt(cameraPos.x, cameraPos.y);
-}
-
-bool CStageMng::isEndStage() const
-{
-	return stages_.at(nowStage_)->isEndStage();
-}
-
 void CStageMng::LoadStage(const std::string& stageName)
 {
-
+	stageState_ = StageState::ENTER;
 	nowStage_ = stageName;
 
 	std::string stages = gm()->fm().GetFile("#StageFile");
@@ -181,7 +157,48 @@ void CStageMng::LoadStage(const std::string& stageName)
 		debug::BToM("CStageMng::Loadstage %s not found", tag.str().c_str());
 		return;
 	}
+
+}
+
+
+void CStageMng::MoveCamera(const mymath::Vec3f& lookAt, float adjust) const
+{
+	mymath::Vec3f cameraPos = camera::GetLookAt();
+	const auto& cameraRect = getCameraRect();
+
+	mymath::Vec3f newPos;
+	newPos.x = static_cast<float>(clamp(lookAt.x, (cameraRect.left + system::WINW / 2), (cameraRect.right - system::WINW / 2)));
+	newPos.y = static_cast<float>(clamp(lookAt.y, (cameraRect.top + system::WINH / 2), (cameraRect.bottom - system::WINH / 2)));
+
 	
+	if (mymath::POW2(cameraPos.x - newPos.x) > mymath::POW2(adjust))
+		cameraPos.x = newPos.x;
+	if (mymath::POW2(cameraPos.y - newPos.y) > mymath::POW2(adjust))
+		cameraPos.y = newPos.y;
+	
+
+	camera::SetLookAt(cameraPos.x, cameraPos.y);
+}
+
+bool CStageMng::isEndStage() const
+{
+	return stages_.at(nowStage_)->isEndStage();
+}
+
+
+void CStageMng::setStageState(CStageMng::StageState state)
+{
+	stageState_ = state;
+}
+
+bool CStageMng::isEnterAnimating() const
+{
+	return stageState_ == StageState::ENTER;
+}
+
+bool CStageMng::isExitAnimating() const
+{
+	return stageState_ == StageState::EXIT;
 }
 
 
@@ -193,28 +210,28 @@ const std::string& CStageMng::getStageBGM() const
 
 const mymath::Recti& CStageMng::getStageRect() const
 {
-	return stages_.at(nowStage_)->rect;
+	return stages_.at(nowStage_)->getStageRect();
 }
 
 
 const mymath::Recti& CStageMng::getStageRect(const std::string& stage) const
 {
-	return stages_.at(stage)->rect;
+	return stages_.at(stage)->getStageRect();
 }
 
 const mymath::Recti& CStageMng::getCameraRect() const
 {
-	return stages_.at(nowStage_)->cameraRect;
+	return stages_.at(nowStage_)->getCameraRect();
 }
 
 const mymath::Recti& CStageMng::getCameraRect(const std::string& stage) const
 {
-	return stages_.at(stage)->cameraRect;
+	return stages_.at(stage)->getCameraRect();
 }
 
 
 const std::vector<ActPtPtr>& CStageMng::getActionPoints() const
 {
-	return stages_.at(nowStage_)->actionPoints;
+	return stages_.at(nowStage_)->getActionPoints();
 }
 

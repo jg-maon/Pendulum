@@ -33,13 +33,26 @@ public:
 	{
 		CLEAR_ANNOUNCE,	// クリア条件表示
 		NORMAL,			// 雑魚ステージ
+		FADE_OUT,		// ステージ切替時フェードアウト
+		FADE_IN,		// ステージ切替時フェードイン
 		BOSS,			// ボスステージ
 		RESULT,			// リザルト画面へ
 	};
+	
 	enum class ClearType	// クリア条件
 	{
 		GOAL,			// ゴール
 		ANNIHILATION,	// 殲滅
+	};
+	/*
+		@brief	ステージ情報
+	*/
+	struct StageInfo
+	{
+		mymath::Recti cameraRect;					// カメラの可動範囲
+		mymath::Recti stageRect;					// ステージの大きさ
+		std::vector<std::string> backgroundIMG;		// 背景画像
+		std::vector<ActPtPtr> actionPoints;			// アクションポイント群
 	};
 protected:
 	std::string bgm_;							// BGM
@@ -47,32 +60,22 @@ protected:
 	charabase::CharPtr caObj_;					// クリア条件表示用オブジェクト
 
 	IStage::Phase phase_;						// ステージフェーズ
+	IStage::Phase nextPhase_;					// フェードイン後のフェーズ
 	IStage::ClearType clearType_;				// クリア条件
-	mymath::Recti cameraRect_;					// カメラの可動範囲
-	mymath::Recti stageRect_;					// ステージの大きさ
-	std::vector<std::string> backgroundIMG_;	// 背景画像
-	std::vector<ActPtPtr> actionPoints_;		// 
+	
+	float fadeOutTime_;				// フェードアウト時間
+	float fadeInTime_;				// フェードイン時間
+
+	StageInfo stage_[2];		// [0]:雑魚, [1]:ボス
 
 public:
 	const std::string& bgm;
 
-	const std::vector<ActPtPtr>& actionPoints;
-	const mymath::Recti& rect;
-	const mymath::Recti& cameraRect;
 
 
 private:
 #pragma region private methods
 
-	/*
-		@brief		ステージシステム環境の読み込み
-		@attension	fはオープン済み
-		@param	[in/out]	f	ステージファイル
-		@return	EOFか
-		@retval	true	EOF
-		@retval	false	EOFでない
-	*/
-	bool LoadEnv(std::ifstream& f);
 
 	/*
 		@brief		ステージサイズ,カメラ可動範囲の読み込み
@@ -82,7 +85,53 @@ private:
 		@retval	true	EOF
 		@retval	false	EOFでない
 	*/
-	bool LoadRect(std::ifstream& f);
+	bool LoadRect(std::ifstream& f, int stage);
+	/*
+		@brief		ActionCircleの読み込み
+		@attension	fはオープン済み
+		@param	[in/out]	f		ステージファイル
+		@param	[in]		stage	ステージタイプ(0:雑魚 1:ボス)
+		@return	EOFか
+		@retval	true	EOF
+		@retval	false	EOFでない
+	*/
+	bool LoadActionCircles(std::ifstream& f, int stage);
+	/*
+		@brief		ActionPolygonの読み込み
+		@attension	fはオープン済み
+		@param	[in/out]	f	ステージファイル
+		@param	[in]		stage	ステージタイプ(0:雑魚 1:ボス)
+		@return	EOFか
+		@retval	true	EOF
+		@retval	false	EOFでない
+	*/
+	bool LoadActionPolygons(std::ifstream& f, int stage);
+
+#pragma endregion	// private methods
+
+protected:
+#pragma region protected methods
+
+	/*
+		@brief	各種ファイルロード処理
+		@param	[in/out]	f	ステージファイル
+		@param	[in]		stage	ステージタイプ(0:雑魚 1:ボス)
+		@attension	fはオープン済み
+		@return	なし
+	*/
+	void load(std::ifstream& f, int stage);
+	
+	/*
+		@brief		ステージシステム環境の読み込み
+		@attension	fはオープン済み
+		@param	[in/out]	f		ステージファイル
+		//@param	[in]		stage	ステージタイプ(0:雑魚 1:ボス)
+		@return	EOFか
+		@retval	true	EOF
+		@retval	false	EOFでない
+	*/
+	bool LoadEnv(std::ifstream& f);
+	
 	/*
 		@brief		プレイヤーの読み込み
 		@attension	fはオープン済み
@@ -92,6 +141,7 @@ private:
 		@retval	false	EOFでない
 	*/
 	bool LoadPlayer(std::ifstream& f);
+	
 	/*
 		@brief		敵情報の読み込み
 		@attension	fはオープン済み
@@ -101,39 +151,7 @@ private:
 		@retval	false	EOFでない
 	*/
 	bool LoadEnemies(std::ifstream& f);
-	/*
-		@brief		ActionCircleの読み込み
-		@attension	fはオープン済み
-		@param	[in/out]	f	ステージファイル
-		@return	EOFか
-		@retval	true	EOF
-		@retval	false	EOFでない
-	*/
-	bool LoadActionCircles(std::ifstream& f);
-	/*
-		@brief		ActionPolygonの読み込み
-		@attension	fはオープン済み
-		@param	[in/out]	f	ステージファイル
-		@return	EOFか
-		@retval	true	EOF
-		@retval	false	EOFでない
-	*/
-	bool LoadActionPolygons(std::ifstream& f);
 
-#pragma endregion	// private methods
-
-protected:
-#pragma region protected methods
-	
-
-	/*
-		@brief	各種ファイルロード処理
-		@param	[in/out]	f	ステージファイル
-		@attension	fはオープン済み
-		@return	なし
-	*/
-	void load(std::ifstream& f);
-	
 	/*
 		@brief	クリア条件表示更新処理
 		@return	クリア条件表示終了
@@ -191,6 +209,23 @@ public:
 		@retval	false	ステージプレイ継続
 	*/
 	bool isEndStage() const;
+
+	/*
+		@brief	現在のアクションポイントの取得
+		@return	アクションポイント
+	*/
+	const std::vector<ActPtPtr>& getActionPoints() const;
+	
+	/*
+		@brief	現在のステージサイズ取得
+		@return	ステージサイズ
+	*/
+	const mymath::Recti& getStageRect() const;
+	/*
+		@brief	現在のカメラ可動領域の取得
+		@return	カメラ可動領域
+	*/
+	const mymath::Recti& getCameraRect() const;
 
 #pragma endregion	// public methods
 };

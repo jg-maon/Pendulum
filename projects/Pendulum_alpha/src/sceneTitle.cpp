@@ -12,7 +12,7 @@
 
 #include "setting.h"
 
-#include "sceneStageSelect.h"
+#include "sceneDescription.h"
 
 #include "easing.h"
 
@@ -82,8 +82,8 @@ const float CSceneTitle::CLICK_ON = 1.f;
 //const int CSceneTitle::CLICK_MIN_ALPHA = 50;
 
 //表示時間
-const float CSceneTitle::TITLETIME = 20.f;
-const float CSceneTitle::DEMOTIME = 10.f;
+const float CSceneTitle::TITLETIME = 30.f;
+const float CSceneTitle::DEMOTIME = 0.f;
 
 #pragma endregion // 変数定数定義
 //=================================================================================
@@ -207,7 +207,7 @@ bool CSceneTitle::update()
 
 IScene* CSceneTitle::NextScene()
 {
-	return new CSceneStageSelect();
+	return new CSceneDescription();
 }
 
 
@@ -427,7 +427,7 @@ void CSceneTitle::DemoStep()
 
 
 	// デモプレイ終了
-	if (input::CheckPush(input::KEY_BTN0))
+	if (input::CheckPush(input::KEY_MOUSE_LBTN))
 	{
 		phaseTime_ = DEMOTIME;
 	}
@@ -435,7 +435,7 @@ void CSceneTitle::DemoStep()
 
 	if (phaseTime_ >= DEMOTIME)
 	{
-		CSceneTitle::ChangePhase();
+		ChangePhase();
 	}
 }
 

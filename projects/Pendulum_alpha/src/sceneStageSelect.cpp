@@ -64,6 +64,13 @@ void CSceneStageSelect::draw()
 		0.f,
 		ss.str(),
 		-1,0);
+
+	const mymath::Vec3i m = gm()->GetCursorPosNC();
+	ss.str("");
+	ss << "(" << std::setw(4) << m.x
+		<< "," << std::setw(4) << m.y
+		<< ")";
+	font::Draw_FontTextNC(100, 100, 0.f, ss.str(), 0xff000000, 1);
 #endif
 
 	// ”wŒi

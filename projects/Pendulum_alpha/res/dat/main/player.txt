@@ -29,10 +29,10 @@ motion02
 
 //===========================================================
 #ArmImg			img_playerArm
-#ArmRotateX		6.0
-#ArmRotateY		8.0
-#ArmOffsetX		9.0
-#ArmOffsetY		-10.0
+#ArmRotateX		2.8
+#ArmRotateY		7.1
+#ArmOffsetX		3.0
+#ArmOffsetY		-30.0
 
 #ChainImg		img_chain
 
@@ -50,6 +50,6 @@ motion02
 #InvincibleTime	1.0
 
 
-#Health			100
+#Health			150
 #Power			5
 #AttackRadius	300.0

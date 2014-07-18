@@ -2752,10 +2752,12 @@ public:
 	*/
 	static void draw(T1 center_x, T1 center_y, T1 center_z, T2 radius, D3DCOLOR color = 0xffffffff, int size = 1)
 	{
-		for(int i=0; i<360; ++i)
+		const float resolution = 120.f;
+		const int add = static_cast<int>(360.f / resolution);
+		for (int i = 0; i<360; i += add)
 		{
-			float rad = static_cast<float>(i)	* 2.0f * PI / 360.0f;
-			float ra2 = static_cast<float>(i+1)	* 2.0f * PI / 360.0f;
+			float rad = static_cast<float>(i)* 2.0f * PI / 360.0f;
+			float ra2 = static_cast<float>(i + add) * 2.0f * PI / 360.0f;
 			POINT sta = { LONG(std::cosf(rad) * radius + center_x), LONG(-std::sinf(rad) * radius + center_y) };
 			POINT end = { LONG(std::cosf(ra2) * radius + center_x), LONG(-std::sinf(ra2) * radius + center_y) };
 			graph::Draw_Line(	(int)sta.x,
@@ -2779,7 +2781,7 @@ public:
 	*/
 	virtual void draw(DWORD color = -1, int size = 1, bool fill = true) const override
 	{
-		const float resolution = 120.f;
+		const float resolution = 40.f;
 		const int add = static_cast<int>(360.f / resolution);
 		for (int i = 0; i<360; i += add)
 		{

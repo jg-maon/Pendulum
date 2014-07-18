@@ -6,7 +6,7 @@
 CStage4::CStage4(std::ifstream& f) :
 IStage("Stage4")
 {
-	load(f);
+	load(f, 0);
 }
 
 void CStage4::step()
@@ -21,11 +21,6 @@ void CStage4::step()
 void CStage4::draw()
 {
 	__super::draw();
-	graph::Draw_GraphicsLeftTop(
-		0, 0, 1.f,
-		"img_stage01", 0, 0, 1280, 800, 0, 0,
-		(cameraRect.right - cameraRect.left) / 1280.f,
-		(cameraRect.bottom - cameraRect.top) / 800.f);
 
 }
 

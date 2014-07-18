@@ -16,13 +16,24 @@
 
 class CStageMng : public Base
 {
+public:
+	enum class StageState		// ステージのアニメーション状態
+	{
+		ENTER,			// 登場アニメーション中
+		BATTLE,			// 戦闘中
+		EXIT,			// 退場アニメーション中
+	};
 private:
 	
 	typedef std::shared_ptr<IStage> StagePtr;
 	typedef std::unordered_map<std::string, StagePtr> StageMap;
-	StageMap stages_;
+	StageMap stages_;			// ステージクラス
 
-	std::string nowStage_;		// ステージ名
+	std::string nowStage_;		// 現在ステージ名
+	
+	StageState stageState_;		// ステージアニメーション状態
+
+
 
 
 public:
@@ -47,6 +58,14 @@ public:
 	bool load();
 
 	/*
+		@brief	ステージのロード
+		@param	[in]	stageName	ステージ名(ファイル名)
+		@return	なし
+	*/
+	void LoadStage(const std::string& stageName);
+
+
+	/*
 		@brief	ステージカメラ可動領域に合わせた[ゲープロ2Dカメラ]移動
 		@param	[in]	lookAt	カメラの中心座標
 		@param	[in]	adjust	カメラ移動までの制限値(デフォルト:0)
@@ -63,12 +82,33 @@ public:
 	*/
 	bool isEndStage() const;
 
+	
+
 	/*
-		@brief	ステージのロード
-		@param	[in]	stageName	ステージ名(ファイル名)
+		@brief	ステージ状態更新
+		@param	[in]	state	状態
 		@return	なし
 	*/
-	void LoadStage(const std::string& stageName);
+	void setStageState(StageState state);
+
+	/*
+		@brief	登場アニメーション中か
+		@return	アニメーション中フラグ
+		@retval	true	アニメーション中
+		@retval	false	アニメーション中ではない
+	*/
+	bool isEnterAnimating() const;
+	
+	/*
+		@brief	退場アニメーション中か
+		@return	アニメーション中フラグ
+		@retval	true	アニメーション中
+		@retval	false	アニメーション中ではない
+	*/
+	bool isExitAnimating() const;
+
+
+	//=====================================================================
 
 	/*
 		@brief	現在のステージのBGM名を取得
@@ -108,6 +148,9 @@ public:
 		@return	アクションポイント
 	*/
 	const std::vector<ActPtPtr>& getActionPoints() const;
+
+
+
 };
 
 #endif
