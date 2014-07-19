@@ -1,14 +1,19 @@
 //＿リソースファイル管理データ
 //＿#タグ{}の間に記述
 
+	img_circle		res/gra/circle_x96.png			0xff000000
 //＿画像＿管理名(img_でスタート)＿パス＿透過色(16進ARGB)
 #Img
 {
+
+
+	img_description	res/gra/description.png			0x00000000
+
+
 	img_cursor		res/gra/ui/cursor.png			0xff00ff00
 	img_UInumber	res/gra/ui/number.png			0xff000000
 	img_UIchain		res/gra/ui/chain.png			0xff000000
 	img_UIalphabet	res/gra/ui/abc.png				0xff000000
-	img_circle		res/gra/circle_x96.png			0xff000000
 	img_explosion	res/gra/effect/explosion.png	0xff000000
 	img_slash		res/gra/effect/slash.png		0xff000000
 
@@ -28,7 +33,7 @@
 	img_ss04			res/gra/stageSelect/stage04.png			0xff000000
 	img_stageDescription04	res/gra/stageSelect/stageDesc04.png	0xff00ff00
 
-	img_stage01			res/gra/main/stages/stage01/bg.jpg					0xff000000
+	img_stage01			res/gra/main/stages/stage01/bg.png					0xff000000
 	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xff000000
 	img_player			res/gra/main/character/player/base.png				0xff00ff00
 	img_playerArm		res/gra/main/character/player/arm.png				0xffffffff
@@ -37,7 +42,13 @@
 	img_birdShot		res/gra/main/character/enemy/bird/birdShot.png		0xff000000
 	img_fairy			res/gra/main/character/enemy/fairy/fairy.png		0xff000000
 	img_fairySing		res/gra/main/character/enemy/fairy/fairySing.png	0xff000000
+	
+	img_griffon			res/gra/main/character/enemy/griffon/griffon.png	0xff000000
 
+	img_end				res/gra/end/bg.png									0xff000000
+	img_button			res/gra/end/button.png								0xffffffff
+	img_letter			res/gra/end/letter.png								0xff00ff00
+	img_select			res/gra/end/select.png								0xffffffff
 
 }
 

@@ -1,0 +1,52 @@
+読み込み画像	画像管理名
+#Img		img_bird
+
+画像サイズ	幅	高さ	※整数のみ
+#Size		192	192
+
+当たり判定＿＿＿{}内に収めること＿＿＿※値は実数可
+#Collision
+{
+円	pos(画像の中心)からの相対座標X	相対座標Y	半径(halfWidth,halfHeightで自動計算)
+#Circle	0	0	halfWidth
+
+ポリゴン	頂点数	相対座標X1 相対座標Y1	X2 Y2……
+//#Polygon	3	-10 -10		10 -10		5 10	
+
+四角(そのうちPolygonに吸収)	左	上	右	下座標
+//#Rect	-halfWidth	-halfHeight	halfWidth	halfHeight
+}
+
+ステージ当たり判定＿#Collisionと同じ書式
+#StageCollision
+{
+
+#Rect	-20	-60	20	60
+
+}
+
+
+
+攻撃＿＿攻撃方法{攻撃方法別値}＿＿NWayShotの書式は固定で以下の通り
+#Attack NWayShot
+{
+ショット画像管理名	img_birdShot
+ショット画像幅	64
+ショット画像高	64
+ショット当たり判定
+{
+#Circle	0	0	halfWidth
+}
+
+}
+
+
+//==================================================
+
+#SearchRange	500.0
+#ChaseRange		300.0		
+#AttackRange	100.0
+#ReturnRange	3.0
+#MoveSpeed		100.0
+
+#AttackInterval	10.0

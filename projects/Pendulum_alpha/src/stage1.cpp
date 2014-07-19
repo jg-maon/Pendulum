@@ -10,13 +10,34 @@ IStage("Stage1")
 {
 	goalObj_ = charabase::CharPtr(new charabase::CharBase());
 	sm_ = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
-	load(f);
-	LoadClear(f, goalArea_);
+	LoadEnv(f);		// ステージシステム読み込み
+	load(f, 0);		// 雑魚ステージ読み込み
+	LoadClear(f, goalArea_);	// クリア条件読み込み
+	//------------------------------------
+	// ボスステージ読み込み
+	if (common::FindChunk(common::SeekSet(f), "#BossStage"))
+	{
+		//std::string bossFile;
+		f >> bossFile_;
+		std::ifstream bossF(bossFile_);
+		load(bossF, 1);
+	}
+	//------------------------------------
 }
 
 void CStage1::step()
 {
+	bool f = (phase_ == Phase::FADE_OUT);
 	__super::step();
+	// フェードインからフェードアウトに変わった瞬間
+	if (f && phase_ == Phase::FADE_IN)
+	{
+		std::ifstream bossF(bossFile_);
+		__super::init(bossF);
+		auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
+		for (auto& obj : objs)
+			obj->start();
+	}
 
 }
 
@@ -28,32 +49,35 @@ void CStage1::draw()
 	if (caObj_->CheckUse())
 		caObj_->drawNC();
 
+
 	auto s = graph::Draw_GetImageSize2("img_stage01");
+	mymath::Recti& rt = (phase_ == Phase::BOSS || phase_ == Phase::RESULT) ? stage_[1].cameraRect : stage_[0].cameraRect;
 	graph::Draw_GraphicsLeftTop(
-		cameraRect_.left, cameraRect_.top, 1.f,
+		rt.left, rt.top, 1.f,
 		"img_stage01", 0, 0, s.cx, s.cy, 0, 0,
-		(cameraRect_.right - cameraRect_.left) / static_cast<float>(system::WINW),
-		(cameraRect_.bottom - cameraRect_.top) / static_cast<float>(system::WINH));
+		(rt.right - rt.left) / static_cast<float>(s.cx),
+		(rt.bottom - rt.top) / static_cast<float>(s.cy));
 
 }
 
 void CStage1::init(std::ifstream& f)
 {
 	__super::init(f);
+
+	phase_ = IStage::Phase::CLEAR_ANNOUNCE;
 	
-	caPhase_ = ClearAnnouncePhase::TO_GOAL;
+	caPhase_ = ClearAnnouncePhase::WAIT;
 	announceTime_ = 0.f;
 
-	// タイトルアニメーション中はプレイヤーと敵の動きを止めておく必要がある
-	auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
+	// タイトルアニメーション中はプレイヤープレイヤー登場アニメーション
+	auto& objs = gm()->GetObjects("Player");
 	for (auto& obj : objs)
-		obj->SetStatusDisp();
+		obj->start();
 	auto playerPos_ = gm()->GetPlayerPos();
 	
 	sm_.lock()->MoveCamera(playerPos_);
 
 	// 条件は左中央から来る
-	RECT rt = camera::GetScreenRect();
 	caObj_->pos.x = -caObj_->HalfWidth();
 	caObj_->pos.y = static_cast<float>(system::WINH) / 4.f;
 	caObj_->pos.z = 0.f;
@@ -127,6 +151,18 @@ bool CStage1::UpdateClearAnnounce()
 	// 自分→ゴール→自分
 	switch (caPhase_)
 	{
+	case CStage1::ClearAnnouncePhase::WAIT:
+		if (!(sm_.lock()->isEnterAnimating() || sm_.lock()->isExitAnimating()))
+		{
+			// タイトルアニメーション中はプレイヤーと敵の動きを止めておく必要がある
+			auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
+			for (auto& obj : objs)
+				obj->SetStatusDisp();
+
+			announceTime_ = 0.f;
+			caPhase_ = ClearAnnouncePhase::TO_GOAL;
+		}
+		break;
 	case CStage1::ClearAnnouncePhase::TO_GOAL:
 		{
 			const float moveTime = 2.f;		// カメラ移動時間
@@ -135,30 +171,23 @@ bool CStage1::UpdateClearAnnounce()
 			cameraPos.y = Easing::ExpoIn(announceTime_, playerPos_.y, vec.y, moveTime);
 			if (announceTime_ >= moveTime)
 			{
-				caPhase_ = ClearAnnouncePhase::WAIT;
-				announceTime_ = 0.f;
-			}
-		}
-
-		break;
-	case CStage1::ClearAnnouncePhase::WAIT:
-		{
-			const float waitTime = 1.f;		// wait時間
-			if (announceTime_ >= waitTime)
-			{
 				caPhase_ = ClearAnnouncePhase::TO_PLAYER;
 				announceTime_ = 0.f;
 			}
 		}
+
 		break;
 	case CStage1::ClearAnnouncePhase::TO_PLAYER:
 		{
+			const float waitTime = 1.f;		// wait時間
+			if (announceTime_ < waitTime) break;
+			float animTime = announceTime_ - waitTime;
 			const float moveTime = 0.5f;		// カメラ移動時間
 			const mymath::Vec3f vec = playerPos_ - goalObj_->pos;
-			cameraPos.x = Easing::Linear(announceTime_, goalObj_->pos.x, vec.x, moveTime);
-			cameraPos.y = Easing::Linear(announceTime_, goalObj_->pos.y, vec.y, moveTime);
+			cameraPos.x = Easing::Linear(animTime, goalObj_->pos.x, vec.x, moveTime);
+			cameraPos.y = Easing::Linear(animTime, goalObj_->pos.y, vec.y, moveTime);
 
-			if (announceTime_ >= moveTime)
+			if (animTime >= moveTime)
 			{
 				camera::SetLookAt(cameraPos.x, cameraPos.y);
 				announceTime_ = 0.f;
@@ -188,9 +217,8 @@ bool CStage1::UpdateClearAnnounce()
 				// 終了値rgb( r, g, b)へ向かう
 				float r = 100.f, g = 190.f, b = 250.f;
 				caObj_->r = Easing::ElasticOut(t, 255.f, -255.f+r, animTime / 2.f);
-				caObj_->g = Easing::ExpoOut(t, 255.f, -255.f+g, animTime / 2.f);
-				caObj_->b = Easing::BackOut(t, 255.f, -255.f+b, animTime / 2.f);
-
+				caObj_->g = Easing::ExpoInOut(t, 255.f, -255.f+g, animTime / 2.f);
+				caObj_->b = Easing::SineIn(t, 255.f, -255.f+b, animTime / 2.f);
 			}
 			else
 			{
@@ -234,12 +262,41 @@ bool CStage1::UpdateClearAnnounce()
 
 bool CStage1::UpdateNormal()
 {
+	const auto& player = gm()->GetPlayer();
+	auto& stacols = player.GetStageCollisions();
+	for (auto& col : stacols)
+	{
+		if (goalArea_->Contains(col))
+		{
+			sm_.lock()->setStageState(CStageMng::StageState::EXIT);
+			//sm_.lock()
+			return true;
+		}
+	}
+
 	return false;
 }
 
 bool CStage1::UpdateBoss()
 {
-	return false;
+	// ボスが倒されていたらクリア
+	auto& em = gm()->enemyMng();
+	auto& enemies = em.getEnemies();
+	
+	for (auto& enemy : enemies)
+	{
+		// ボスオブジェクトが生存している場合継続
+		if (enemy->FindName("E_Boss"))
+			return false;
+	}
+
+
+
+	auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
+	for (auto& obj : objs)
+		obj->stop();
+
+	return true;
 }
 
 

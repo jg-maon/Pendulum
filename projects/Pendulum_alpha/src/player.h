@@ -78,6 +78,10 @@ private:
 	
 	LoadInfo loadInfo_;					// ファイルから取得する可変値
 
+	float animTime_;					// アニメーション用カウンタ
+
+	mymath::Vec3f startPos_;			// ステージ開始時座標
+
 	float gravity_;						// 重力
 	bool gravityF_;						// 重力処理をするか(壁に刺さってる時などの処理用)
 	float tensionAcc_;					// 張力の加速度
@@ -104,12 +108,12 @@ private:
 	}chainState_;
 	
 	//--------------------------------------------------
-	charabase::CharPtr chainMsg_;			// Chain文字画像
+	charabase::CharPtr chainMsg_;		// Chain文字画像
 	mymath::Vec3f numberPos_;			// Chain数字座標
-	float numberAnimTime_;		// Chain数字アニメーション用カウント1
+	float numberAnimTime_;				// Chain数字アニメーション用カウント1
 	mymath::Vec3f chainStaPos_;			// Chain文字初期位置
-	float chainAnimTime_;		// Chain文字アニメーション用カウント
-	float chainTime_;			// Chain残り時間
+	float chainAnimTime_;				// Chain文字アニメーション用カウント
+	float chainTime_;					// Chain残り時間
 	
 	//--------------------------------------------------
 	int chainCnt_;				// Chain数
@@ -118,6 +122,17 @@ private:
 
 private:
 
+	/*
+		@brief	登場アニメーション
+		@return	なし
+	*/
+	void EnterAnimation();
+
+	/*
+		@brief	退場アニメーション
+		@return	なし
+	*/
+	void ExitAnimation();
 
 	/*
 		@brief	キー入力

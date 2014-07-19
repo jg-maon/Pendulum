@@ -29,6 +29,19 @@ private:
 
 	};
 
+	enum class MotionType
+	{
+		MOVE,				// 待機・移動
+		ATTACK,				// 攻撃
+	};
+
+	struct InvincibleInfo
+	{
+		float time;		// 点滅アニメーション用
+		bool isOn;		// on / off
+		int cnt;		// 点滅オンオフカウント
+	};
+
 private:
 	/*static const float SEARCH_RANGE;		// 索敵範囲(現在座標からどれだけ策敵するか)
 	static const float CHASE_RANGE;			// 追跡範囲(初期座標からどれだけ追跡するか)
@@ -40,8 +53,13 @@ private:
 
 	LoadInfo loadInfo_;
 
-	
+	charabase::Anim motionAnim_;					// アニメーション用
+	MotionType motionType_;							// モーション
+	std::vector<std::vector<int> > motionTable_;	// アニメーションテーブル
+
 	State state_;					// 行動状態
+
+	InvincibleInfo invincible_;		// 点滅
 
 	float elapsedTime_;				// 経過時間
 	float nextActTime_;				// 次に行動を起こす時間

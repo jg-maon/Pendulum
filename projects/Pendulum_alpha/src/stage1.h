@@ -23,8 +23,8 @@ private:
 
 	enum class ClearAnnouncePhase
 	{
-		TO_GOAL,			// ゴール表示
 		WAIT,				// ウェイト
+		TO_GOAL,			// ゴール表示
 		TO_PLAYER,			// プレイヤー表示
 		MSGIN,				// 条件表示
 		MSGOUT,				// 条件非表示
@@ -35,6 +35,7 @@ private:
 	mymath::ShapefPtr goalArea_;		// ゴールエリア
 	charabase::CharPtr goalObj_;		// ゴールオブジェクト
 
+	std::string bossFile_;
 
 	float announceTime_;				// クリア条件表示中タイマー
 	//mymath::Vec3f playerPos_;			// プレイヤースタート座標

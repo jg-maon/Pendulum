@@ -34,6 +34,10 @@ void (CFairy::*CFairy::StateStep_[])() =
 CFairy::CFairy() :
 IEnemy("E_Fairy")
 {
+	std::vector<int> move = { 1, 3, 4, 2 };
+	motionTable_.push_back(move);
+	std::vector<int> attack = { 1, 3, 4, 2 };
+	motionTable_.push_back(attack);
 }
 
 CFairy::CFairy(const mymath::Vec3f& pos) :
@@ -66,9 +70,9 @@ void CFairy::init(const mymath::Vec3f& pos)
 	elapsedTime_ = 0.f;
 	nextActTime_ = 0.f;
 	state_ = State::WAIT;
-	//obj_.alpha = 200.f;
-
-	anim_.set(3, 0.3f);
+	motionType_ = MotionType::MOVE;
+	motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, 0.3f);
+	obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
 
 }
 
@@ -78,6 +82,22 @@ void CFairy::step()
 	elapsedTime_ += system::FrameTime;
 
 	DecideState();
+
+	// アニメーション処理
+	if (motionAnim_.step())
+	{
+		if (motionType_ != MotionType::MOVE)
+		{
+			obj_.src.x = 0;
+			obj_.src.y = 0;
+			motionType_ = MotionType::MOVE;
+			motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, 0.3f);
+		}
+	}
+	else
+	{
+		obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
+	}
 
 	if (attack_ != nullptr)
 		attack_->step();
@@ -91,10 +111,6 @@ void CFairy::step()
 		turnFlag_ ^= 1;
 
 
-	// アニメーション
-	int animTable[] = { 0, 1, 2, 1, };
-	anim_.step();
-	obj_.src.x = animTable[anim_.no];
 
 	(this->*StateStep_[static_cast<int>(state_)])();
 
@@ -184,7 +200,10 @@ void CFairy::DecideState()
 	if (plyDist < mymath::POW2(loadInfo_.ATTACK_RANGE) || state_ == State::ATTACK)
 	{
 		// 攻撃範囲内 or 攻撃中
+		if (state_ != State::ATTACK)
+			nextActTime_ = elapsedTime_ + loadInfo_.attackInterval;
 		state_ = State::ATTACK;
+		motionType_ = MotionType::ATTACK;
 	}
 	else if (plyDist < mymath::POW2(loadInfo_.SEARCH_RANGE))
 	{
@@ -245,21 +264,8 @@ void CFairy::CreateAttack()
 
 void CFairy::hit(const ObjPtr& rival)
 {
-	if (rival->FindName("ActionPolygon"))
-	{
-		// めり込み補正,通過補正
-		const auto& ap = std::dynamic_pointer_cast<CActionPolygon>(rival);
-#ifdef DEF_PREPOS
-		mymath::Vec3f dist = obj_.pos - prePos_;
-		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(prePos_, obj_.pos);
-#else
-		mymath::Vec3f dist = nextPos() - obj_.pos;
-		mymath::Vec3f intersection = ap->IntersectionPoint2Nearest(obj_.pos, nextPos());
-#endif
-		obj_.pos = intersection;
-		obj_.pos -= dist.Normalize();
-
-	}
+	// Polygon
+	__super::hit(rival);
 }
 
 

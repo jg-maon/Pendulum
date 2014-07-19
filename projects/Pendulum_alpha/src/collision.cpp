@@ -148,8 +148,15 @@ void CCollision::step()
 					for (const auto& col : enemyCollisions)
 					{
 						// 当たり判定内のみ
-						if (!(col->Contains(mouse) && col->Contains(plpos, mouse))) continue;
-						mymath::Linef line(plpos, col->IntersectionPoint2Nearest(plpos, mouse));
+						if (!col->Contains(mouse)) continue;
+
+						// カーソル座標を目指す
+						mymath::Linef line(plpos, mouse);
+						if (col->Contains(plpos, mouse, false, true))
+						{
+							// 外側から攻撃する際交点を目指す
+							line.end = col->IntersectionPoint2Nearest(plpos, mouse);
+						}
 						// 敵との直線距離にActionPolygonがない場合のみ攻撃有効
 						bool atkFlag = true;
 						for (const auto& actp : actionPoints)

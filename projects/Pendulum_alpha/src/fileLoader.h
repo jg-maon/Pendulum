@@ -89,6 +89,16 @@ private:
 		@retval	false	設定失敗
 	*/
 	bool LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& enemies);
+	
+	/*
+		@brief	CGriffonロード
+		@param	[in]	fileName	敵ファイルパス
+		@param	[out]	enemies		ロードした敵情報を格納する配列
+		@return	情報を設定できたか
+		@retval	true	設定成功
+		@retval	false	設定失敗
+	*/
+	bool LoadGriffon(const std::string& fileName, std::vector<EnemyPtr>& enemies);
 
 #pragma endregion	// 敵テーブル読み込み
 	//---------------------------------

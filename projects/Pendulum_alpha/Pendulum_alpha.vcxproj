@@ -133,6 +133,7 @@
     <ClInclude Include="src\fileMng.h" />
     <ClInclude Include="src\gameManager.h" />
     <ClInclude Include="src\gameover.h" />
+    <ClInclude Include="src\griffon.h" />
     <ClInclude Include="src\myMath.hpp" />
     <ClInclude Include="src\nWayShot.h" />
     <ClInclude Include="src\nWaySing.h" />
@@ -141,8 +142,10 @@
     <ClInclude Include="src\pickupJewely.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\sceneBase.hpp" />
+    <ClInclude Include="src\sceneDescription.h" />
     <ClInclude Include="src\sceneEnd.h" />
     <ClInclude Include="src\sceneMain.h" />
+    <ClInclude Include="src\sceneNameInput.h" />
     <ClInclude Include="src\sceneStageSelect.h" />
     <ClInclude Include="src\sceneTitle.h" />
     <ClInclude Include="src\scoreMng.h" />
@@ -153,6 +156,7 @@
     <ClInclude Include="src\stage4.h" />
     <ClInclude Include="src\stageBase.h" />
     <ClInclude Include="src\stageMng.h" />
+    <ClInclude Include="src\tackle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx3dmeshmanager.cpp" />
@@ -185,14 +189,17 @@
     <ClCompile Include="src\fileMng.cpp" />
     <ClCompile Include="src\gameManager.cpp" />
     <ClCompile Include="src\gameover.cpp" />
+    <ClCompile Include="src\griffon.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\nWayShot.cpp" />
     <ClCompile Include="src\nWaySing.cpp" />
     <ClCompile Include="src\obj.cpp" />
     <ClCompile Include="src\pickupJewely.cpp" />
     <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\sceneDescription.cpp" />
     <ClCompile Include="src\sceneEnd.cpp" />
     <ClCompile Include="src\sceneMain.cpp" />
+    <ClCompile Include="src\sceneNameInput.cpp" />
     <ClCompile Include="src\sceneStageSelect.cpp" />
     <ClCompile Include="src\sceneTitle.cpp" />
     <ClCompile Include="src\scoreMng.cpp" />
@@ -203,17 +210,21 @@
     <ClCompile Include="src\stage4.cpp" />
     <ClCompile Include="src\stageBase.cpp" />
     <ClCompile Include="src\stageMng.cpp" />
+    <ClCompile Include="src\tackle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="C:\Users\maon\Desktop\set\Dropbox\Dropbox\TGS_alpha\exe\res\dat\main\enemy\table\enemyTable01_b.txt" />
     <Text Include="res\dat\main\enemy\bird.txt" />
+    <Text Include="res\dat\main\enemy\boss\griffon.txt" />
     <Text Include="res\dat\main\enemy\debugTable01.txt" />
     <Text Include="res\dat\main\enemy\enemies.txt" />
-    <Text Include="res\dat\main\enemy\enemyTable01.txt" />
     <Text Include="res\dat\main\enemy\enemyTable02.txt" />
     <Text Include="res\dat\main\enemy\enemyTable03.txt" />
     <Text Include="res\dat\main\enemy\enemyTable04.txt" />
     <Text Include="res\dat\main\enemy\fairy.txt" />
+    <Text Include="res\dat\main\enemy\table\enemyTable01.txt" />
     <Text Include="res\dat\main\player.txt" />
+    <Text Include="res\dat\main\stage\bossStage01.txt" />
     <Text Include="res\dat\main\stage\stage01.txt" />
     <Text Include="res\dat\main\stage\stage02.txt" />
     <Text Include="res\dat\main\stage\stage03.txt" />

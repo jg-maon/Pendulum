@@ -1,0 +1,49 @@
+#Img		img_griffon
+
+#Size		512	512
+
+#Collision
+{
+//#Rect	-220 -220	200	200
+#Rect	-halfWidth -halfHeight	halfWidth	halfHeight
+}
+
+ƒXƒe[ƒW“–‚½‚è”»’èQ#Collision‚Æ“¯‚¶‘®
+#StageCollision
+{
+
+#Rect	-200	-200	200	200
+
+}
+
+
+
+UŒ‚QQUŒ‚•û–@{UŒ‚•û–@•Ê’l}QQNWaySing‚Ì‘®‚ÍŒÅ’è‚ÅˆÈ‰º‚Ì’Ê‚è
+#Attack Tackle
+{
+
+}
+
+
+//==================================================
+
+
+#MaxGravity		100.0
+#GravityAcc		25.0
+#SearchRange	900.0
+#ChaseRange		600.0		
+#AttackRange	300.0
+#MoveSpeed		100.0
+
+#AttackSpeed	200.0
+
+#InvincibleTime	1.0
+#Health			50
+300
+#Power			5
+10
+
+#DamageTime		1.0
+#BackDist		100.0
+#AttackDist		250.0
+#AttackInterval	10.0

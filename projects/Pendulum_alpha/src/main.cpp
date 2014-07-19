@@ -66,6 +66,12 @@ namespace gplib{
 		//const int	WINH	=	480;
 		bool		WindowMode = true;
 		int			KeyboardMode = 0;	//pad disable:1 pad enable:0
+#ifdef _DEBUG
+		HINSTANCE hInstance;
+		HINSTANCE hPreInst;
+		LPSTR lpszCmdLine;
+		int nCmdShow;
+#endif
 	}
 }
 
@@ -94,6 +100,15 @@ void system::GameLoop()
 {
 	SceneStep();
 	SceneDisp();
+
+#ifdef _DEBUG
+	if (input::CheckPress(input::KEY_SHIFT) && input::CheckPush(input::KEY_F1))
+	{
+		WindowMode ^= 1;
+		DoWindow(hInstance, hPreInst, lpszCmdLine, nCmdShow);
+	}
+
+#endif
 }
 
 //---------------------------------------------------------------------------------------
@@ -187,5 +202,11 @@ void Draw_TextToBmp(int x, int y, const string& msg, int size, int type)
 //======================================================================================//
 int WINAPI WinMain (HINSTANCE hInstance,HINSTANCE hPreInst,LPSTR lpszCmdLine,int nCmdShow)
 {
+#ifdef _DEBUG
+	system::hInstance = hInstance;
+	system::hPreInst = hPreInst;
+	system::lpszCmdLine = lpszCmdLine;
+	system::nCmdShow = nCmdShow;
+#endif
 	return system::DoWindow(hInstance,hPreInst,lpszCmdLine,nCmdShow);
 }

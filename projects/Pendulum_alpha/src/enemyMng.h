@@ -13,6 +13,7 @@
 // “G
 #include "bird.h"
 #include "fairy.h"
+#include "griffon.h"
 //==================================
 
 class CEnemyMng : public Base

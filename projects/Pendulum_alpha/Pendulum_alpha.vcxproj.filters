@@ -168,6 +168,21 @@
     <Filter Include="ソース ファイル\InGame\Character\Base">
       <UniqueIdentifier>{21ae688d-cb89-4c7e-b63e-b806ae20ed96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Main\Stage\normal">
+      <UniqueIdentifier>{62662c3d-ee6e-4671-80b1-a4f0bd4472c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main\Stage\boss">
+      <UniqueIdentifier>{31427504-643f-4993-9775-3f8ffd5bb806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sequence\nameInput">
+      <UniqueIdentifier>{6b212bef-024f-4382-8024-36e61b01454b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy\Griffon">
+      <UniqueIdentifier>{f0db5b26-f62f-4470-b1d6-9133b8d91bf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack\tackle">
+      <UniqueIdentifier>{9c0e3ea3-b1d3-45d7-89f1-cf1b978b1642}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -377,6 +392,16 @@
     <ClInclude Include="src\characterBase.h">
       <Filter>ソース ファイル\InGame\Character\Base</Filter>
     </ClInclude>
+    <ClInclude Include="src\sceneNameInput.h">
+      <Filter>ソース ファイル\Sequence\nameInput</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tackle.h">
+      <Filter>ソース ファイル\InGame\Attack\tackle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\griffon.h">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Griffon</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneDescription.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -520,8 +545,20 @@
     <ClCompile Include="src\gameManager.cpp">
       <Filter>ソース ファイル\GameManager</Filter>
     </ClCompile>
+    <ClCompile Include="src\sceneNameInput.cpp">
+      <Filter>ソース ファイル\Sequence\nameInput</Filter>
+    </ClCompile>
     <ClCompile Include="src\characterBase.cpp">
       <Filter>ソース ファイル\InGame\Character\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tackle.cpp">
+      <Filter>ソース ファイル\InGame\Attack\tackle</Filter>
+    </ClCompile>
+    <ClCompile Include="src\griffon.cpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Griffon</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneDescription.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -534,19 +571,7 @@
     <Text Include="res\dat\main\enemy\enemies.txt">
       <Filter>リソース ファイル\Main\Enemy</Filter>
     </Text>
-    <Text Include="res\dat\main\stage\stage01.txt">
-      <Filter>リソース ファイル\Main\Stage</Filter>
-    </Text>
-    <Text Include="res\dat\main\stage\stage02.txt">
-      <Filter>リソース ファイル\Main\Stage</Filter>
-    </Text>
-    <Text Include="res\dat\main\stage\stage03.txt">
-      <Filter>リソース ファイル\Main\Stage</Filter>
-    </Text>
     <Text Include="res\dat\main\enemy\enemyTable02.txt">
-      <Filter>リソース ファイル\Main\E_Table</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\enemyTable01.txt">
       <Filter>リソース ファイル\Main\E_Table</Filter>
     </Text>
     <Text Include="res\dat\main\player.txt">
@@ -558,9 +583,6 @@
     <Text Include="res\dat\main\stage\stages.txt">
       <Filter>リソース ファイル\Main\Stage</Filter>
     </Text>
-    <Text Include="res\dat\main\stage\stage04.txt">
-      <Filter>リソース ファイル\Main\Stage</Filter>
-    </Text>
     <Text Include="res\dat\main\enemy\enemyTable04.txt">
       <Filter>リソース ファイル\Main\E_Table</Filter>
     </Text>
@@ -569,6 +591,30 @@
     </Text>
     <Text Include="res\dat\main\enemy\debugTable01.txt">
       <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\bossStage01.txt">
+      <Filter>リソース ファイル\Main\Stage\boss</Filter>
+    </Text>
+    <Text Include="C:\Users\maon\Desktop\set\Dropbox\Dropbox\TGS_alpha\exe\res\dat\main\enemy\table\enemyTable01_b.txt">
+      <Filter>リソース ファイル\Main\Stage\boss</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\table\enemyTable01.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\boss\griffon.txt">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage04.txt">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage01.txt">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage02.txt">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage03.txt">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

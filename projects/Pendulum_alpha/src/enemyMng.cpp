@@ -134,9 +134,34 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 	}
 
 	//---------------------------------------
+	// グリフォン
+	//*
+	if (common::FindChunk(common::SeekSet(f), "#Griffon"))
+	{
+		std::string label;
+		f >> label;
+		if (label == "{")
+		{
+			while (!f.eof())
+			{
+				float pos[2];	// [0]:x [1]:y
+				for (auto& p : pos)
+				{
+					f >> label;
+					// エラーチェック
+					if (label == "}" || f.eof()) break;
+					p = static_cast<float>(std::atof(label.c_str()));
+				}
+				if (label == "}") break;
+				enemies_.push_back(EnemyPtr(new CGriffon(pos[0], pos[1])));
+			}
+		}
+	}
+	//*/
+	//---------------------------------------
 	// 別敵
 	/*
-	if (common::FindChunk(common::SeekSet(f), "#enemyName"))
+	if (common::FindChunk(common::SeekSet(f), "#EnemyName"))
 	{
 	std::string label;
 	f >> label;
@@ -153,7 +178,7 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 	p = static_cast<float>(std::atof(label.c_str()));
 	}
 	if (label == "}") break;
-	enemies_.push_back(EnemyPtr(new CFairy(pos[0], pos[1])));
+	enemies_.push_back(EnemyPtr(new CEnemyName(pos[0], pos[1])));
 	}
 	}
 	}

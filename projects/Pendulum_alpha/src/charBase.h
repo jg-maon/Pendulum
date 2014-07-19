@@ -15,6 +15,9 @@ namespace charabase
 // アニメーション用クラス
 class Anim
 {
+private:
+	enum class State{play, stop};
+	State state_;
 public:
 	int		no;				// 現在のアニメNO　この値は0,1,2,3,4,とカウントするだけ
 	float	cnt;			// アニメ更新カウンタ
@@ -49,10 +52,16 @@ public:
 		@ratval	false	アニメーション中
 	*/
 	bool step();
-
+	
+	/*
+		@brief		アニメーションの再開
+		@attention	アニメーション処理の再開をするだけなので値をも変えたい場合はsetを呼ぶ
+		@return		なし
+	*/
+	void start();
 	/*
 		@brief		アニメーションの一時停止
-		@attention	speedを0にするだけなので、再開時は再度setが必要
+					再開時はstartを呼ぶ
 		@return		なし
 	*/
 	void stop();

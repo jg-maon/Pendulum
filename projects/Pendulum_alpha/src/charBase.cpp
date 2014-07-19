@@ -6,15 +6,18 @@ namespace charabase
 {
 //==========================================================
 #pragma region Anim methods
-Anim::Anim(int max, float speed)
+Anim::Anim(int max, float speed) :
+state_(Anim::State::play)
 {
 	cnt = 0.f;
 	this->max = max;
 	this->speed = speed;
 	no = 0;
+
 }
 void Anim::set(int max, float speed)
 {
+	state_ = Anim::State::play;
 	cnt = 0.f;
 	this->max = max;
 	this->speed = speed;
@@ -22,6 +25,7 @@ void Anim::set(int max, float speed)
 }
 bool Anim::step()
 {
+	if (state_ != Anim::State::play) return false;
 	if ((cnt += speed) >= 1.f)
 	{
 		cnt = 0.f;
@@ -33,9 +37,14 @@ bool Anim::step()
 	}
 	return false;
 }
+void Anim::start()
+{
+	state_ = Anim::State::play;
+}
 void Anim::stop()
 {
-	speed = 0.f;
+	state_ = Anim::State::stop;
+	//speed = 0.f;
 }
 
 #pragma endregion	// Anim methods

@@ -40,12 +40,12 @@ public:
 						完全内包と境界線交差は内包が優先される
 		@param	[in]	line(sta,end)	判定する線分(始点、終点)
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：true)
 		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Linef& line, bool fullContain = false, bool intersectOnly = false) const;
+	virtual bool Contains(const mymath::Linef& line, bool fullContain = false, bool intersectOnly = true) const;
 	/*
 		@brief			線分の交差、内包判定
 		@attension		線分の両端が境界線の中にある場合は第4引数により変わる
@@ -53,12 +53,12 @@ public:
 		@param	[in]	sta	判定する線分の始点
 		@param	[in]	end	判定する線分の終点
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：true)
 		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain = false, bool intersectOnly = false) const;
+	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain = false, bool intersectOnly = true) const;
 	
 	/*
 		@brief			図形の交差、内包判定
@@ -66,12 +66,12 @@ public:
 		完全内包と境界線交差は内包が優先される
 		@param	[in]	shape			判定する図形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：true)
 		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::ShapefPtr& shape, bool fullContain = false, bool intersectOnly = false) const;
+	virtual bool Contains(const mymath::ShapefPtr& shape, bool fullContain = false, bool intersectOnly = true) const;
 
 #pragma endregion // Contains
 	//================================================================================
@@ -177,12 +177,12 @@ public:
 						完全内包と境界線交差は内包が優先される
 		@param	[in]	line(sta,end)	判定する線分(始点、終点)
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：true)
 		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Linef& line, bool fullContain = false, bool intersectOnly = false) const override;
+	virtual bool Contains(const mymath::Linef& line, bool fullContain = false, bool intersectOnly = true) const override;
 	/*
 		@brief			線分の交差、内包判定
 		@attension		線分の両端が境界線の中にある場合は第4引数により変わる
@@ -190,12 +190,12 @@ public:
 		@param	[in]	sta	判定する線分の始点
 		@param	[in]	end	判定する線分の終点
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：true)
 		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain = false, bool intersectOnly = false) const override;
+	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain = false, bool intersectOnly = true) const override;
 	
 	/*
 		@brief			図形の交差、内包判定
@@ -203,12 +203,12 @@ public:
 		完全内包と境界線交差は内包が優先される
 		@param	[in]	shape			判定する図形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：true)
 		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::ShapefPtr& shape, bool fullContain = false, bool intersectOnly = false) const override;
+	virtual bool Contains(const mymath::ShapefPtr& shape, bool fullContain = false, bool intersectOnly = true) const override;
 #pragma endregion	// Contains
 
 	//================================================================================
@@ -326,12 +326,12 @@ public:
 						完全内包と境界線交差は内包が優先される
 		@param	[in]	line(sta,end)	判定する線分(始点、終点)
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：true)
 		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Linef& line, bool fullContain = false, bool intersectOnly = false) const override;
+	virtual bool Contains(const mymath::Linef& line, bool fullContain = false, bool intersectOnly = true) const override;
 	/*
 		@brief			線分の交差、内包判定
 		@attension		線分の両端が境界線の中にある場合は第4引数により変わる
@@ -339,12 +339,12 @@ public:
 		@param	[in]	sta	判定する線分の始点
 		@param	[in]	end	判定する線分の終点
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：true)
 		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain = false, bool intersectOnly = false) const override;
+	virtual bool Contains(const mymath::Vec3f& sta, const mymath::Vec3f& end, bool fullContain = false, bool intersectOnly = true) const override;
 	
 	/*
 		@brief			図形の交差、内包判定
@@ -352,12 +352,12 @@ public:
 		完全内包と境界線交差は内包が優先される
 		@param	[in]	shape			判定する図形
 		@param	[in]	fullContain		完全内包とするか(デフォルト：false)
-		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：false)
+		@param	[in]	intersectOnly	境界線との交差のみにするか(デフォルト：true)
 		@return			交差、内包しているか
 		@retval	true	している
 		@retval	false	していない
 	*/
-	virtual bool Contains(const mymath::ShapefPtr& shape, bool fullContain = false, bool intersectOnly = false) const override;
+	virtual bool Contains(const mymath::ShapefPtr& shape, bool fullContain = false, bool intersectOnly = true) const override;
 #pragma endregion	// Contains
 
 	//================================================================================

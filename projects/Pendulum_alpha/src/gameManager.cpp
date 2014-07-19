@@ -30,12 +30,18 @@ Base("GameManager")
 		CursorSize::width,
 		CursorSize::height));
 	cursor_->alpha = 200.f;
+
+	if (winRect_ == nullptr)
+		winRect_ = new mymath::Recti(0, 0, system::WINW, system::WINH);
+
 }
 
 CGameManager::~CGameManager()
 {
 	objs_.clear();
 	addObjs_.clear();
+	if (winRect_ != nullptr)
+		delete winRect_;
 }
 
 void CGameManager::start()
@@ -327,6 +333,15 @@ const mymath::Vec3f& CGameManager::GetCursorPos() const
 	return cursor_->pos;
 }
 
+mymath::Vec3f CGameManager::GetCursorPosNC() const
+{
+	RECT rt = camera::GetScreenRect();
+	mymath::Vec3f pos = cursor_->pos;
+	pos.x -= rt.left;
+	pos.y -= rt.top;
+	return pos;
+}
+
 
 mymath::Vec3f CGameManager::GetPlayerPos() const
 {
@@ -387,6 +402,16 @@ void CGameManager::SetScoreMngPtr(const std::weak_ptr<CScoreMng>& scoremng)
 CScoreMng& CGameManager::scoreMng()
 {
 	return *pScoreMng_.lock();
+}
+
+CPlayer& CGameManager::GetPlayer()
+{
+	return *pPlayer_.lock();
+}
+
+CEnemyMng& CGameManager::enemyMng()
+{
+	return *pEnemyMng_.lock();
 }
 
 //*/
