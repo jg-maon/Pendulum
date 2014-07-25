@@ -12,7 +12,7 @@ CEffectExplosion::CEffectExplosion(const mymath::Vec3f& pos, float scale):
 	obj_.pos = pos;
 	obj_.scale = scale;
 
-	obj_.resname = "img_explosion";
+	obj_.resname = "img_effectExplosion";
 	obj_.size(500, 500);
 	
 	/*

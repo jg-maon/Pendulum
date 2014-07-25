@@ -20,10 +20,19 @@ private:
 
 	};
 
+
+	enum selectOffset{
+
+		OFFSET_W = 10,
+		OFFSET_H = 10,
+
+	};
+
+
 	enum chgData
 	{
 
-		CHG_WIDTH = 50,
+		CHG_WIDTH = 150,
 		CHG_HEIGHT = 50,
 
 	};
@@ -32,7 +41,7 @@ private:
 	static const mymath::Vec3f CHANGE_POS;				// 文字記号変更ボタンの座標x,y,z
 	static const mymath::Vec3f DISPLAY_POS;				// ディスプレイの座標x,y,z
 	static const float FLASHING_TIME;
-	static const char KEYBOARD_MARKDATA[4][7];			// キーボード記号データ配列
+	static const std::string KEYBOARD_MARKDATA[4];		// キーボード記号データ配列
 	static const std::string KEYBOARD_NAME[3];			// キーボードボタン画像名　	[0]:表示文字,[1]:選択,[2]:ボタン凸凹
 	static const std::string CHANGE_NAME[3];			// 文字記号変換ボタン画像名　[0]:表示文字,[1]:選択,[2]:ボタン凸凹
 	static const std::string DISPLAY_NAME[2];			// キーボードの画像名		[0]:表示文字,[1]:点滅画像
@@ -72,7 +81,14 @@ public:
 
 		};
 
-		
+		//  ボタン同士の間隔
+		enum BtnInterval{
+
+			INTERVAL_W = 5,				// 幅間隔
+			INTERVAL_H = 5,				// 高さ間隔
+
+
+		};
 
 	private:
 		BtnState pushState_;			// ボタンの状態

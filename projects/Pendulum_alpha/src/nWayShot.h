@@ -31,15 +31,22 @@ private:
 		force_ = 1;
 		start();
 		cnt_ = 0;
-		collisions_.push_back(mymath::ShapefPtr(new mymath::Circlef(0.f, 0.f, obj_.pos.z, obj_.HalfHeight())));
+		/*
+		collisions_.push_back(
+			mymath::ShapefPtr(
+				new mymath::Rectf(-5.f, -5.f,
+									5.f, 5.f))
+			);
+		//*/
 	}
 public:
+	
 	/*
 		@brief	‰Šú‰»
 		@param	[in]	shot			’e‚Ìî•ñ
 		@param	[in]	acceleration	‰Á‘¬“x
-	*/
-	CShot(const CShot& shot, const mymath::Vec3f& acceleration = mymath::Vec3f()) :
+	*/	
+	CShot(const CShot& shot, const mymath::Vec3f& acceleration) :
 		IAttack("Atk_Shot")
 		, acceleration_(acceleration)
 	{
@@ -68,14 +75,6 @@ public:
 	virtual void draw() override
 	{
 		obj_.draw();
-#if defined(DEF_SHAPE_DRAW) && defined(_DEBUG)
-		const auto& cols = GetDamageAreas();
-		for (const auto& col : cols)
-		{
-			col->Offset(mymath::Vec3f(0.f, 0.f, -0.1f));
-			col->draw();
-		}
-#endif
 	}
 	virtual void hit(const ObjPtr& rival) override
 	{

@@ -124,6 +124,7 @@
     <ClInclude Include="src\easing.h" />
     <ClInclude Include="src\effectBase.hpp" />
     <ClInclude Include="src\effectExplosion.h" />
+    <ClInclude Include="src\effectMoveStar.h" />
     <ClInclude Include="src\effectSlash.h" />
     <ClInclude Include="src\enemyBase.hpp" />
     <ClInclude Include="src\enemyMng.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="src\common.cpp" />
     <ClCompile Include="src\easing.cpp" />
     <ClCompile Include="src\effectExplosion.cpp" />
+    <ClCompile Include="src\effectMoveStar.cpp" />
     <ClCompile Include="src\effectSlash.cpp" />
     <ClCompile Include="src\enemyMng.cpp" />
     <ClCompile Include="src\fade.cpp" />
@@ -214,14 +216,14 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="C:\Users\maon\Desktop\set\Dropbox\Dropbox\TGS_alpha\exe\res\dat\main\enemy\table\enemyTable01_b.txt" />
-    <Text Include="res\dat\main\enemy\bird.txt" />
     <Text Include="res\dat\main\enemy\boss\griffon.txt" />
-    <Text Include="res\dat\main\enemy\debugTable01.txt" />
     <Text Include="res\dat\main\enemy\enemies.txt" />
     <Text Include="res\dat\main\enemy\enemyTable02.txt" />
     <Text Include="res\dat\main\enemy\enemyTable03.txt" />
     <Text Include="res\dat\main\enemy\enemyTable04.txt" />
-    <Text Include="res\dat\main\enemy\fairy.txt" />
+    <Text Include="res\dat\main\enemy\normal\bird.txt" />
+    <Text Include="res\dat\main\enemy\normal\fairy.txt" />
+    <Text Include="res\dat\main\enemy\table\debugTable01.txt" />
     <Text Include="res\dat\main\enemy\table\enemyTable01.txt" />
     <Text Include="res\dat\main\player.txt" />
     <Text Include="res\dat\main\stage\bossStage01.txt" />
@@ -236,6 +238,7 @@
     <None Include="res\dat\main\pickup\jewely.dat" />
     <None Include="res\dat\main\pickup\pickups.dat" />
     <None Include="res\dat\path.ini" />
+    <None Include="res\dat\result\rank.dat" />
     <None Include="res\dat\stageSelect\setting.dat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

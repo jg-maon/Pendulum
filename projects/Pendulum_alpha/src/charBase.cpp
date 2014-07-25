@@ -47,15 +47,26 @@ void Anim::stop()
 	//speed = 0.f;
 }
 
+bool Anim::isStoped() const
+{
+	return state_ == Anim::State::stop;
+}
+
 #pragma endregion	// Anim methods
 //==========================================================
 
 //==========================================================
 #pragma region BaseData methods
-BaseData::BaseData() :
-size(0)
-, resname("")
+BaseData::BaseData(const std::string& resname, const mymath::Vec3i& size) :
+resname(resname)
+, size(size)
 {}
+
+BaseData::BaseData(const std::string& resname, int width, int height) :
+resname(resname)
+, size(width, height)
+{}
+
 
 void BaseData::ImageSize(BaseData& bd)
 {

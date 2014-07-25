@@ -13,6 +13,8 @@
 #include "player.h"
 #include "enemyMng.h"
 
+#include "gameManager.h"
+
 #include <sstream>
 #include <fstream>
 
@@ -27,6 +29,33 @@ Base("StageMng")
 	// ƒƒCƒ“ƒQ[ƒ€‚É‚È‚é‚Ü‚Å‘Ò‹@
 	status_ = Status::idle;
 }
+
+
+void CStageMng::start()
+{
+	__super::start();
+	time_ = 0.f;
+}
+
+void CStageMng::step()
+{
+	time_ += system::FrameTime;
+	stages_[nowStage_]->step();
+}
+
+void CStageMng::draw()
+{
+	stages_[nowStage_]->draw();
+}
+
+
+const std::shared_ptr<CStageMng> CStageMng::GetPtr()
+{
+	extern CGameManager *gm;
+	const auto& sm = gm->GetObj(typeid(CStageMng));
+	return std::dynamic_pointer_cast<CStageMng>(sm);
+}
+
 bool CStageMng::load()
 {
 	//----------------------------------------------------
@@ -92,25 +121,6 @@ bool CStageMng::load()
 	return true;
 }
 
-
-
-void CStageMng::step()
-{
-	stages_[nowStage_]->step();
-}
-
-void CStageMng::draw()
-{
-	stages_[nowStage_]->draw();
-}
-
-
-const std::shared_ptr<CStageMng> CStageMng::GetPtr()
-{
-	extern CGameManager *gm;
-	const auto& sm = gm->GetObj(typeid(CStageMng));
-	return std::dynamic_pointer_cast<CStageMng>(sm);
-}
 
 void CStageMng::LoadStage(const std::string& stageName)
 {
@@ -199,6 +209,11 @@ bool CStageMng::isEnterAnimating() const
 bool CStageMng::isExitAnimating() const
 {
 	return stageState_ == StageState::EXIT;
+}
+
+bool CStageMng::isNormaTimeClear() const
+{
+	return stages_.at(nowStage_)->isNormaTimeClear(time_);
 }
 
 

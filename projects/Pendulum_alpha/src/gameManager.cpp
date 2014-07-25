@@ -57,7 +57,7 @@ void CGameManager::start()
 		TempCharacter t(sm);
 		sm->load();
 #ifdef DEF_GM_PTR
-		//SetStageMngPtr(sm);
+		SetStageMngPtr(sm);
 #endif
 	}
 
@@ -383,10 +383,10 @@ void CGameManager::SetEnemyMngPtr(const std::weak_ptr<CEnemyMng>& enemymng)
 	pEnemyMng_ = enemymng;
 }
 
-//void CGameManager::SetStageMngPtr(const std::weak_ptr<CStageMng>& stagemng)
-//{
-//	pStageMng_ = stagemng;
-//}
+void CGameManager::SetStageMngPtr(const std::weak_ptr<CStageMng>& stagemng)
+{
+	pStageMng_ = stagemng;
+}
 
 void CGameManager::SetScoreMngPtr(const std::weak_ptr<CScoreMng>& scoremng)
 {
@@ -394,24 +394,24 @@ void CGameManager::SetScoreMngPtr(const std::weak_ptr<CScoreMng>& scoremng)
 }
 
 
-//CStageMng& CGameManager::stageMng()
-//{
-//	return *pStageMng_.lock();
-//}
-
-CScoreMng& CGameManager::scoreMng()
+std::shared_ptr<CStageMng> CGameManager::stageMng()
 {
-	return *pScoreMng_.lock();
+	return pStageMng_.lock();
 }
 
-CPlayer& CGameManager::GetPlayer()
+std::shared_ptr<CScoreMng> CGameManager::scoreMng()
 {
-	return *pPlayer_.lock();
+	return pScoreMng_.lock();
 }
 
-CEnemyMng& CGameManager::enemyMng()
+std::shared_ptr<CPlayer> CGameManager::GetPlayer()
 {
-	return *pEnemyMng_.lock();
+	return pPlayer_.lock();
+}
+
+std::shared_ptr<CEnemyMng> CGameManager::enemyMng()
+{
+	return pEnemyMng_.lock();
 }
 
 //*/

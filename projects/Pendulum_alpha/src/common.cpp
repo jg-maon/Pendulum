@@ -29,6 +29,54 @@ POINT operator+(const POINT& p1, const POINT& p2)
 
 namespace common
 {
+std::vector<charabase::CharBase> GetNumberImageObjects(int num, const charabase::CharBase& obj, Align align)
+{
+	// numの桁数を取得
+	int digit = 1;
+	{
+		int work = num;
+		while (work /= 10)
+		{
+			digit++;
+		}
+	}
+	// 桁毎にオブジェクト配置
+	std::vector<charabase::CharBase> retObjects(digit, obj);
+	if (align == Align::RIGHT)
+	{
+		// 右揃え
+		int work = num;
+		for (int i = 1; i <= digit; ++i)
+		{
+			// 下位桁から順に配置
+			auto& ret = retObjects[digit - i];
+			ret.pos.x -= i * obj.size.x;
+			//ret.pos.y -= 0.f;
+			ret.src.x = (work % 10);
+			ret.src.y = 0;
+
+			// 桁数上昇
+			work /= 10;
+		}
+	}
+	else
+	{
+		// 左揃え
+		std::string work = std::to_string(num);
+		for (int i = 0; i < digit; ++i)
+		{
+			// 上位桁から順に配置
+			auto& ret = retObjects[i];
+			ret.pos.x += i * obj.size.x;
+			//ret.pos.y -= 0.f;
+			ret.src.x = ((work[i] - '0') % 10);
+			ret.src.y = 0;
+		}
+	}
+
+	return retObjects;
+}
+
 //  文字列を置換する
 std::string StrReplace(const std::string& str, const std::string& search, const std::string& replace)
 {

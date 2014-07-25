@@ -74,6 +74,8 @@ void CFairy::init(const mymath::Vec3f& pos)
 	motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, 0.3f);
 	obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
 
+
+	turnFlag_ = math::GetRandom<int>(1, 100) <= 50;
 }
 
 void CFairy::step()

@@ -17,6 +17,10 @@
 #include "charBase.h"
 #endif
 
+#ifndef DEF_COMMON_H
+#include "common.h"
+#endif
+
 
 
 class CPlayer : public ICharacter
@@ -99,13 +103,7 @@ private:
 	float invincibleTime_;				// 無敵時間
 	float invincibleAnim_;				// 無敵点滅アニメーション時間
 
-	enum class ChainState				// Chain文字画像表示状態
-	{
-		HIDE,					// 非表示
-		APPEARING,				// 出現中
-		SHOW,					// 表示
-		DISAPPEARING,			// 消失中
-	}chainState_;
+	common::DispState chainState_;		// Chain文字画像表示状態
 	
 	//--------------------------------------------------
 	charabase::CharPtr chainMsg_;		// Chain文字画像
@@ -119,6 +117,7 @@ private:
 	int chainCnt_;				// Chain数
 
 	//--------------------------------------------------
+
 
 private:
 
@@ -260,6 +259,19 @@ public:
 	*/
 	virtual Collisions GetDamageAreas() const override;
 
+	/*
+		@brief	Chain数の取得
+		@return	Chain数
+	*/
+	int getChain() const;
+
+	/*
+		@brief	ボーナススコア用ノーダメージ
+		@return	ノーダメージクリアか
+		@retval	true	ノーダメージ
+		@retval	false	ダメージあり
+	*/
+	bool isNoDamage() const;
 
 };
 

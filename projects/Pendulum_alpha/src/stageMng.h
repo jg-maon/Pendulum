@@ -33,13 +33,19 @@ private:
 	
 	StageState stageState_;		// ステージアニメーション状態
 
-
+	float time_;				// ステージ内時間
 
 
 public:
 	CStageMng();
 	virtual void step() override;
 	virtual void draw() override;
+
+	/*
+		@brief	初期化
+		@return	なし
+	*/
+	void start() override;
 
 	/*
 		@brief	ステージマネージャーオブジェクトを取得
@@ -107,6 +113,15 @@ public:
 	*/
 	bool isExitAnimating() const;
 
+	//=====================================================================
+
+	/*
+		@brief	ボーナススコア用ノルマタイム以内にクリアしたか(FastClear)
+		@return	FastBonus
+		@retval	true	クリアした
+		@retval	false	クリアできなかった
+	*/
+	bool isNormaTimeClear() const;
 
 	//=====================================================================
 

@@ -24,7 +24,7 @@ IScene()
 
 	// メイン内で使うオブジェクトを始動させる
 	// プレイヤーや敵はStageクラスがやってくれる
-	auto& objs = gm()->GetObjects("StageMng Collision", ' ');
+	auto& objs = gm()->GetObjects("StageMng Collision ScoreMng", ' ');
 	for (auto& obj : objs)
 		obj->start();
 
@@ -62,7 +62,7 @@ IScene* CSceneMain::NextScene()
 {
 	// メイン内で使ったオブジェクトを停止させる
 	{
-		auto& objs = gm()->GetObjects("StageMng Collision Player EnemyMng", ' ');
+		auto& objs = gm()->GetObjects("StageMng Collision ScoreMng Player EnemyMng", ' ');
 		for (auto& obj : objs)
 			obj->stop();
 	}
@@ -73,11 +73,9 @@ IScene* CSceneMain::NextScene()
 			obj->kill();
 	}
 
-	{
-		// スコアマネージャにスコアを追加
-		auto& sm = std::dynamic_pointer_cast<CScoreMng>(gm()->GetObj(typeid(CScoreMng)));
-		sm->score(100);
-	}
+	// ボーナス計算
+	gm()->scoreMng()->CalcBonusScore();
+
 	return new CSceneEnd();
 }
 

@@ -54,6 +54,7 @@ public:
 		@return	‚È‚µ
 	*/
 	virtual void init(std::ifstream& f) override;
+
 };
 
 

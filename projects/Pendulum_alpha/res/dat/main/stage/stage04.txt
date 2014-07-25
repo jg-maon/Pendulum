@@ -7,6 +7,9 @@ img_clearAnnounce01	-1	-1
 Goal	3000	2000	200
 img_goalObj04	1	1
 
+#NormaTime
+120.0
+
 
 #Left	0
 #Top	0

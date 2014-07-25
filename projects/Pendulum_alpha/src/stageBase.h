@@ -45,7 +45,7 @@ public:
 		ANNIHILATION,	// 殲滅
 	};
 	/*
-		@brief	ステージ情報
+		@brief	ステージ情報	雑魚、ボス
 	*/
 	struct StageInfo
 	{
@@ -55,20 +55,22 @@ public:
 		std::vector<ActPtPtr> actionPoints;			// アクションポイント群
 	};
 protected:
-	std::string bgm_;							// BGM
+	std::string bgm_;								// BGM
 
-	charabase::CharPtr caObj_;					// クリア条件表示用オブジェクト
+	charabase::CharPtr caObj_;						// クリア条件表示用オブジェクト
 
-	IStage::Phase phase_;						// ステージフェーズ
-	IStage::Phase nextPhase_;					// フェードイン後のフェーズ
-	IStage::ClearType clearType_;				// クリア条件
+	IStage::Phase phase_;							// ステージフェーズ
+	IStage::Phase nextPhase_;						// フェードイン後のフェーズ
+	IStage::ClearType clearType_;					// クリア条件
 	
-	float fadeOutTime_;				// フェードアウト時間
-	float fadeInTime_;				// フェードイン時間
+	float fadeOutTime_;								// フェードアウト時間
+	float fadeInTime_;								// フェードイン時間
 
-	StageInfo stage_[2];		// [0]:雑魚, [1]:ボス
+	StageInfo stage_[2];							// [0]:雑魚, [1]:ボス
 
-	bool isBossKilled;			// ボスを倒したか
+	bool isBossKilled_;								// ボスを倒したか
+
+	float normaTime_;								// ノルマ時間
 
 public:
 	const std::string& bgm;
@@ -212,6 +214,19 @@ public:
 	*/
 	bool isEndStage() const;
 
+	//=====================================================================
+
+	
+	/*
+		@brief	ボーナススコア用ノルマタイム以内にクリアしたか(FastClear)
+		@param	[in]	elapsedTime	経過時間
+		@return	FastBonus
+		@retval	true	クリアした
+		@retval	false	クリアできなかった
+	*/
+	virtual bool isNormaTimeClear(float elapsedTime) const;
+
+	//=====================================================================
 	/*
 		@brief	現在のアクションポイントの取得
 		@return	アクションポイント

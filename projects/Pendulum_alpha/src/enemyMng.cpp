@@ -66,6 +66,16 @@ void CEnemyMng::SetStatusDisp()
 
 }
 
+bool CEnemyMng::isDestroyerBonus() const
+{
+	return enemies_.size() == 0;
+}
+
+bool CEnemyMng::isNoKillBonus() const
+{
+	return enemies_.size() == enemyNum_;
+}
+
 ObjPtr CEnemyMng::GetPtr()
 {
 	extern CGameManager* gm;
@@ -183,6 +193,8 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 	}
 	}
 	//*/
+
+	enemyNum_ = enemies_.size();
 }
 
 void CEnemyMng::CreateEnemy(const EnemyPtr& enemy)

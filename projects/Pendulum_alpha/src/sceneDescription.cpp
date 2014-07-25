@@ -32,7 +32,7 @@ void CSceneDescription::draw()
 // ˆ—
 bool CSceneDescription::update()
 {
-	if (input::CheckPush(input::KEY_MOUSE_RBTN))
+	if (input::CheckPush(input::KEY_MOUSE_LBTN))
 	{
 		return true;
 	}

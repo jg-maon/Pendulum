@@ -2640,6 +2640,7 @@ int system::DoWindow(HINSTANCE hInstance,HINSTANCE hPreInst,LPSTR lpszCmdLine,in
 	AdjustWindowRectEx(&rc, WS_OVERLAPPEDWINDOW, FALSE, 0);
 
 	DWORD style;
+	system::WindowMode = (MessageBox(NULL, "フルスクリーンで起動しますか？", "ウィンドウモード選択", MB_YESNO | MB_ICONQUESTION) == IDNO);
 	if (system::WindowMode) style = WS_OVERLAPPEDWINDOW;
 	else           style = WS_POPUP;
 	system::hWnd=CreateWindow(

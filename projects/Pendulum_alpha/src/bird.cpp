@@ -61,6 +61,7 @@ void CBird::init(const mymath::Vec3f& pos)
 
 	gm()->GetData(*this);
 
+
 	prePos_ = obj_.pos = pos;
 
 	startPos_ = obj_.pos;
@@ -73,8 +74,8 @@ void CBird::init(const mymath::Vec3f& pos)
 	motionType_ = MotionType::MOVE;
 	motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, 0.3f);
 	obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
-	//obj_.alpha = 200.f;
-
+	
+	turnFlag_ = math::GetRandom<int>(1, 100) <= 50;
 }
 
 void CBird::step()

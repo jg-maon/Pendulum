@@ -22,6 +22,8 @@ private:
 	std::vector<EnemyPtr> temp_;			// 敵テーブル追加用
 	std::vector<EnemyPtr> enemies_;			// 敵テーブル
 
+	size_t enemyNum_;							// 初期敵数
+
 
 public:
 	CEnemyMng();
@@ -57,6 +59,24 @@ public:
 		@return	なし
 	*/
 	virtual void SetStatusDisp() override;
+
+
+	/*	
+		@brief	ボーナススコア用全killしたか
+		@return	全滅させたか
+		@retval	true	全滅させた
+		@retval	false	全滅していない
+	*/
+	bool isDestroyerBonus() const;
+
+
+	/*
+		@brief	ボーナススコア用ノーKillか
+		@return	ノーKill
+		@retval	true	ノーkill
+		@retval	false	1体でもkillした
+	*/
+	bool isNoKillBonus() const;
 
 	/*
 		@brief	敵マネージャオブジェクトを取得

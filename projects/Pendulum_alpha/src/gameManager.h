@@ -32,7 +32,7 @@ using namespace gplib;
 #endif
 
 #ifndef DEF_STAGEMNG_H
-//#include "stageMng.h"
+#include "stageMng.h"
 #endif
 
 #ifndef DEF_SCOREMNG_H
@@ -63,7 +63,7 @@ private:
 	//*
 	std::weak_ptr<CPlayer> pPlayer_;		// プレイヤーポインタ
 	std::weak_ptr<CEnemyMng> pEnemyMng_;	// エネミーマネージャ
-	//std::weak_ptr<CStageMng> pStageMng_;	// ステージマネージャ
+	std::weak_ptr<CStageMng> pStageMng_;	// ステージマネージャ
 	std::weak_ptr<CScoreMng> pScoreMng_;	// スコアマネージャ
 	//*/
 #endif
@@ -159,14 +159,14 @@ public:
 	/*
 		@brief	与えられた名前のオブジェクトを取得
 				GetObjects("Collision");
-		@param	[in] taskName	探すオブジェクト名(前文一致)
+		@param	[in] taskName	探すオブジェクト名
 		@return	オブジェクト群
 	*/
 	std::vector<ObjPtr> GetObjects(const std::string& taskName);
 	/*
 		@brief	与えられた名前のオブジェクトを取得
 				GetObjects("Player,Enemy", ",");
-		@param	[in] taskName	探すオブジェクト名(前文一致)
+		@param	[in] taskName	探すオブジェクト名
 		@param	[in] delim		区切り文字
 		@return	オブジェクト群
 	*/
@@ -249,7 +249,7 @@ public:
 		@param	[in]	stagemng	ステージマネージャ
 		@return	なし
 	*/
-	//void SetStageMngPtr(const std::weak_ptr<CStageMng>& stagemng);
+	void SetStageMngPtr(const std::weak_ptr<CStageMng>& stagemng);
 
 	/*
 		@brief	スコアマネージャポインタの設定
@@ -262,25 +262,25 @@ public:
 		@brief	ステージマネージャの取得
 		@return	ステージマネージャ
 	*/
-	//CStageMng& stageMng();
-
+	std::shared_ptr<CStageMng> stageMng();
+	
 	/*
 		@brief	スコアマネージャの取得
 		@return	スコアマネージャ
 	*/
-	CScoreMng& scoreMng();
+	std::shared_ptr<CScoreMng> scoreMng();
 
 	/*
 		@brief	プレイヤーオブジェクトの取得
 		@return	プレイヤーオブジェクト
 	*/
-	CPlayer& GetPlayer();
+	std::shared_ptr<CPlayer> GetPlayer();
 
 	/*
 		@brief	エネミーマネージャの取得
 		@return	エネミーマネージャ
 	*/
-	CEnemyMng& enemyMng();
+	std::shared_ptr<CEnemyMng> enemyMng();
 #endif
 
 

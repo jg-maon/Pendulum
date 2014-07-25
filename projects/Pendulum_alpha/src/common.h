@@ -1,10 +1,15 @@
 #ifndef DEF_COMMON_H
 #define DEF_COMMON_H
 
-#ifndef DEF_DEFINE_H
-#include "define.h"
-#endif
+//ライブラリ
+#include "../../../lib/gplib.h"
+//3D処理外部ライブラリ
+#include "../../../lib/dx_media/dx_graphics3d.h"
+#include "../../../lib/dx_media/dx3dmeshmanager.h"
 
+#ifndef DEF_CHARBASE_H
+#include "charBase.h"
+#endif
 
 #include <vector>
 
@@ -19,6 +24,32 @@ extern POINT operator+(const POINT& p1, const POINT& p2);
 
 namespace common
 {
+	// 文字画像表示状態
+	enum class DispState				
+	{
+		HIDE,					// 非表示
+		APPEARING,				// 出現中
+		SHOW,					// 表示
+		DISAPPEARING,			// 消失中
+	};
+	// 文字配置
+	enum Align	
+	{
+		LEFT,					// 左揃え
+		RIGHT,					// 右揃え
+	};
+/*
+	@brief		数値に応じた画像情報オブジェクトの取得
+	@attention	配列番号は上位桁順
+				alignによって描画点指定が終点Xか始点Xになるので注意
+	@param		[in]	num		数値
+	@param		[in]	obj		描画点XY、画像情報(サイズ、管理名)を持ったオブジェクト
+	@param		[in]	align	並び順
+	@return		数値に合わせた連番画像オブジェクト
+*/
+std::vector<charabase::CharBase> GetNumberImageObjects(int num, const charabase::CharBase& obj, Align align);
+
+
 // 文字列の置換
 std::string StrReplace(const std::string& str, const std::string& search, const std::string& replace);
 

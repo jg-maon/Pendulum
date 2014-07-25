@@ -188,10 +188,10 @@ public:
 	/*
 		@brief	一時的に値を置き換えたベクトルを返す
 		@param	[in]	flag	置き換えるベクトルの要素(X,Y,Zで指定、|で複数指定可)
-		@param	[in]	v		元ベクトル
+		@param	[in]	v		置き換えるベクトル
 		@return	置き換えたベクトル
 	*/
-	Vec3<T>		TmpReplace(int flag, const Vec3<T>& v)
+	Vec3<T>		TmpReplace(int flag, const Vec3<T>& v) const
 	{
 		return Vec3<T>((flag&X) ? v.x : x, (flag&Y) ? v.y : y, (flag&Z) ? v.z : z);
 	}
@@ -311,12 +311,12 @@ public:
 	
 	/*
 		@brief	回転単位ベクトルの習得
-		@param	[in]	angle	角度(unit:radian)
+		@param	[in]	rad	角度(unit:radian)
 		@return 回転後の単位ベクトル
 	*/
-	static Vec3<T> Rotate(float angle)
+	static Vec3<T> Rotate(float rad)
 	{
-		return Vec3<T>(static_cast<T>(std::cosf(angle)), static_cast<T>(std::sinf(angle)));
+		return Vec3<T>(static_cast<T>(std::cosf(rad)), static_cast<T>(std::sinf(rad)));
 	}
 
 #pragma endregion // static methods
@@ -862,7 +862,7 @@ public:
 			vec.z = static_cast<float>(point.z);
 			D3DXVec3TransformCoord(&vec, &vec, &mt);
 			point.x = static_cast<T>(vec.x);
-			point.y = static_cast<T>(vec.y);
+			point.y = static_cast<T>(-vec.y);
 			point.z = static_cast<T>(vec.z);
 
 			//point = Vec3<T>::Rotate(angle) * point;
@@ -2781,7 +2781,7 @@ public:
 	*/
 	virtual void draw(DWORD color = -1, int size = 1, bool fill = true) const override
 	{
-		const float resolution = 40.f;
+		const float resolution = 60.f;
 		const int add = static_cast<int>(360.f / resolution);
 		for (int i = 0; i<360; i += add)
 		{

@@ -10,50 +10,28 @@
 #pragma region NameInput
 
 //定数
-const mymath::Vec3f CSceneNameInput::KEYBOARD_POS = { 600.f, 400.f, 0.5f };
-const mymath::Vec3f CSceneNameInput::CHANGE_POS = { 600.f, 350.f, 0.5f };
-const mymath::Vec3f CSceneNameInput::DISPLAY_POS = { 600.f, 100.f, 0.5f };
+const mymath::Vec3f CSceneNameInput::KEYBOARD_POS = { 800.f, 400.f, 0.5f };
+const mymath::Vec3f CSceneNameInput::CHANGE_POS = { 887.5f, 340.f, 0.5f };
+const mymath::Vec3f CSceneNameInput::DISPLAY_POS = { 840.f, 100.f, 0.5f };
 const float CSceneNameInput::FLASHING_TIME = 0.5f;
-const std::string CSceneNameInput::KEYBOARD_NAME[3] = { "img_letter", "img_select", "img_button" };
-const std::string CSceneNameInput::CHANGE_NAME[3] = { "img_letter", "img_select", "img_button" };
-const std::string CSceneNameInput::DISPLAY_NAME[2] = { "img_letter", "img_button" };
-const char CSceneNameInput::KEYBOARD_MARKDATA[4][7] = { { '0', '1', '2', '3', '4', '!','#' },
-														{ '5', '6', '7', '8', '9', '$', '%' },
-														{ '&', '(', ')', '>', '<', '=', '?' },
-														{ '[', ']', '^', '{', '}', } };
+const std::string CSceneNameInput::KEYBOARD_NAME[3] = { "img_kbletter", "img_kbselect", "img_kbbutton" };
+const std::string CSceneNameInput::CHANGE_NAME[3] = { "img_chgletter", "img_chgselect", "img_chgbutton" };
+const std::string CSceneNameInput::DISPLAY_NAME[2] = { "img_kbletter", "img_display" };
+const std::string CSceneNameInput::KEYBOARD_MARKDATA[4] = { "01234!#", "56789$%", "&()><_?", "[]^{} " };
 
 
 // コンストラクタ
 CSceneNameInput::CSceneNameInput() :
-IScene("img_end", "bgm_end")
-//, bg_(0.f, 0.f, 1.f, 0.f, 0.f, "img_endbg", system::WINW, system::WINH, 1.f, 1.f, 0.f, 0, 0)
+IScene("img_nameInput", "bgm_nameInput")
 {
-	// 必要なオブジェクトの始動
-	auto& objs = gm()->GetObjects("ScoreMng");
-	for (auto& obj : objs)
-		obj->start();
 
 	state_ = State::INPUT;
-	
-	std::string str = "abcdef";
-
-	std::string mapdata[4] =
-	{ "01234!#", "56789$!", "", "" };
-
-
-	str[0]; // 'a'
-	
-	str[1];	// 'b'
-
-	str.at(0);	// 'a'
 
 	wordcount_ = 0;			//文字数の初期化
 	name_ = "";				//名前の初期化
 
 	init();
 
-	//selectChar_ = -1;
-	//registerAnimTime_ = 0.f;
 
 }
 CSceneNameInput::~CSceneNameInput()
@@ -132,9 +110,8 @@ void CSceneNameInput::init()
 }
 void CSceneNameInput::draw()
 {
-
-	font::Draw_FontTextNC(100, 200, 0.5f, "名前登録(右ボタン：完了)", -1, 0);
-	font::Draw_FontTextNC(200, 300, 0.5f, name_, ARGB(255,0,0,0), 0);
+	font::Draw_FontTextNC(100, 100, 0.5f, "名前登録(右ボタン：完了)", ARGB(255, 0, 0, 0), 0);
+	//font::Draw_FontTextNC(200, 300, 0.5f, name_, ARGB(255,0,0,0), 0);
 
 	//bg_.drawNC(charabase::CharBase::MODE::LeftTop);
 	__super::draw();
@@ -166,7 +143,8 @@ bool CSceneNameInput::update()
 		stepInput();
 		if (input::CheckPush(input::KEY_MOUSE_RBTN))				//かつ、スコアがハイスコアの時
 		{
-			state_ = State::END;
+			if (!name_.empty())
+				state_ = State::END;
 		}
 		break;
 	case CSceneNameInput::State::CHECK:
@@ -178,6 +156,8 @@ bool CSceneNameInput::update()
 }
 IScene* CSceneNameInput::NextScene()
 {
+	// ランキング登録
+	gm()->scoreMng()->RegisterRanking(name_);
 	return new CSceneTitle();
 }
 void CSceneNameInput::IsRelease(const CButton& cb_)
@@ -252,15 +232,17 @@ void CSceneNameInput::IsRelease(const CButton& cb_)
 				//記号へ変換
 				else if (att == BtnAttribute::CHANGE_MARK)
 				{
-					if (kbAtt == BtnAttribute::KEYBOARD_DATA)
+					if (kbAtt == BtnAttribute::CHANGE_UP_LOW)
 					{
-						kb.ChangeMark(col, row);
+						kb.setAtt(BtnAttribute::KEYBOARD_DATA);
 					}
-					else if (kbAtt == BtnAttribute::CHANGE_UP_LOW)
+					if (kbAtt == BtnAttribute::KEYBOARD_DELETE)
 					{
-						kb.setAtt(BtnAttribute::NONE);
-						return;
+						break;
 					}
+
+					kb.ChangeMark(col, row);
+	
 				}
 				++row;
 			}
@@ -400,12 +382,15 @@ CSceneNameInput::CButton::~CButton()
 }
 void CSceneNameInput::CButton::init(const mymath::Vec3f& pos, int w, int h, BtnAttribute atr, const string resnames[3], int col, int row)
 {
-	obj_.pos = { pos.x + row * w, pos.y + col * h, pos.z };
-	btn_.pos = { pos.x + row * w, pos.y + col * h, pos.z+0.1f };
-	select_.pos = { pos.x + row * w, pos.y + col * h, pos.z -0.1f };
+	obj_.pos = { pos.x + row * (w + INTERVAL_W), pos.y + col * (h + INTERVAL_H), pos.z };
+	btn_.pos = { pos.x + row * (w + INTERVAL_W), pos.y + col * (h + INTERVAL_H), pos.z + 0.1f };
+	select_.pos = { pos.x + row * (w + INTERVAL_W), pos.y + col * (h + INTERVAL_H), pos.z - 0.1f };
 
-	obj_.size.x = btn_.size.x = select_.size.x = w;
-	obj_.size.y = btn_.size.y = select_.size.y = h;
+	obj_.size.x = btn_.size.x = w;
+	obj_.size.y = btn_.size.y = h;
+
+	select_.size.x = w + OFFSET_W;
+	select_.size.y = h + OFFSET_H;
 
 	attribute_ = atr;
 
@@ -444,7 +429,7 @@ void CSceneNameInput::CButton::init(const mymath::Vec3f& pos, int w, int h, BtnA
 
 	default:
 
-		obj_.src.x = obj_.size.x * col;
+		obj_.src.x = obj_.size.x * row;
 		break;
 
 	}
@@ -566,9 +551,7 @@ void CSceneNameInput::CButton::ChangeLetterUpLow()
 	{
 		obj_.src.y = obj_.size.y;
 	}
-	
-	charData_ = charData_ ^ 32; // 大文字小文字反転
-
+	charData_ = charData_ ^ 32;
 
 }
 void CSceneNameInput::CButton::ChangeLetter(int col, int row)

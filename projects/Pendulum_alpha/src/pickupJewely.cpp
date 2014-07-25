@@ -12,25 +12,26 @@ IPickup("PickupJewely")
 	status_ = Status::run;
 }
 
-CPickupJewely::CPickupJewely(const mymath::Vec3f& pos, int score, int type) :
+CPickupJewely::CPickupJewely(const mymath::Vec3f& pos, int type) :
 IPickup("PickupJewely")
 {
 	gm()->GetData(*this);
+	
 
 	if (type == -1)
-		init(pos, score, math::GetRandom<int>(0, 8));
+		init(pos, math::GetRandom<int>(0, 8));
 	else
-		init(pos, score, type);
+		init(pos, type);
 	
 }
 
-void CPickupJewely::init(const mymath::Vec3f& pos, int score, int type)
+void CPickupJewely::init(const mymath::Vec3f& pos, int type)
 {
-	score_ = score;
+
 	obj_.pos = startPos_ = pos;
 	obj_.src(type, 0);
 
-	obj_.pos.z += -0.1f;
+	obj_.pos.z -= 0.1f;
 
 
 }
@@ -47,6 +48,10 @@ void CPickupJewely::step()
 		{
 			time_ = 0.f;
 			state_ = IPickup::State::CHASE;
+			// ƒXƒRƒAÝ’è
+			auto& player = gm()->GetPlayer();
+			int chain = player->getChain();
+			score_ = static_cast<int>(UNIT_SCORE * CalcMagnification(chain));
 		}
 		//if ((obj_.angle += 2.f) > 360.f)
 		//	obj_.angle -= 360.f;
@@ -100,6 +105,28 @@ void CPickupJewely::draw()
 		ss.str(), -1, 1);
 
 #endif
+}
+
+float CPickupJewely::CalcMagnification(int chain)
+{
+	float mag = 1.0f;	// ”{—¦
+	// 2~5
+	if (chain < 2)
+		mag = 1.0f;
+	else if (chain <= 5)
+		mag += chain * 0.1f;
+	else if (chain <= 10)
+		mag += (chain - 5) * 0.3f;
+	else if (chain <= 20)
+		mag += 1.f;
+	else if (chain <= 30)
+		mag += 4.f;
+	else if (chain <= 50)
+		mag += chain * 0.1f;
+	else
+		mag = 10.f;
+
+	return mag;
 }
 
 void CPickupJewely::hit(const ObjPtr& rival)

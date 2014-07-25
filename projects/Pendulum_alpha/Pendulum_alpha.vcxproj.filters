@@ -33,24 +33,6 @@
     <Filter Include="ソース ファイル\CharBase">
       <UniqueIdentifier>{22994bfb-79b5-461d-bb0c-387ac62b6a02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Sequence">
-      <UniqueIdentifier>{e1e14c98-fe55-43a1-b90d-73f0fc95400a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Sequence\Base">
-      <UniqueIdentifier>{5a63a163-2f0b-4344-9161-50efc82ecde2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Sequence\Main">
-      <UniqueIdentifier>{21f65e23-1b97-42c1-9f24-3a7f6368150e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Sequence\Title">
-      <UniqueIdentifier>{67348fdf-d842-43cf-b0ca-0abbbaae0de2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Sequence\End">
-      <UniqueIdentifier>{91cff953-3e86-42e7-b8cc-b44f315e2e86}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Sequence\StageSelect">
-      <UniqueIdentifier>{b5a5164d-a37e-4f94-988f-68b7a06fe97c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Setting">
       <UniqueIdentifier>{e0d0b60a-a13d-458c-8bf8-539c13b6f5e0}</UniqueIdentifier>
     </Filter>
@@ -174,14 +156,44 @@
     <Filter Include="リソース ファイル\Main\Stage\boss">
       <UniqueIdentifier>{31427504-643f-4993-9775-3f8ffd5bb806}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Sequence\nameInput">
-      <UniqueIdentifier>{6b212bef-024f-4382-8024-36e61b01454b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\InGame\Character\Enemy\Griffon">
       <UniqueIdentifier>{f0db5b26-f62f-4470-b1d6-9133b8d91bf5}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\InGame\Attack\tackle">
       <UniqueIdentifier>{9c0e3ea3-b1d3-45d7-89f1-cf1b978b1642}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ヘッダー ファイル">
+      <UniqueIdentifier>{840c9697-3225-4c19-b763-f60264873354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Effect\MoveStar">
+      <UniqueIdentifier>{e55c5749-79d2-45cd-a93c-dd936e6a259d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence">
+      <UniqueIdentifier>{e1e14c98-fe55-43a1-b90d-73f0fc95400a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Base">
+      <UniqueIdentifier>{5a63a163-2f0b-4344-9161-50efc82ecde2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Main">
+      <UniqueIdentifier>{21f65e23-1b97-42c1-9f24-3a7f6368150e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Title">
+      <UniqueIdentifier>{67348fdf-d842-43cf-b0ca-0abbbaae0de2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\End">
+      <UniqueIdentifier>{91cff953-3e86-42e7-b8cc-b44f315e2e86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\StageSelect">
+      <UniqueIdentifier>{b5a5164d-a37e-4f94-988f-68b7a06fe97c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\nameInput">
+      <UniqueIdentifier>{6b212bef-024f-4382-8024-36e61b01454b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Description">
+      <UniqueIdentifier>{fe3422b6-5a51-4c79-9f64-6759197ab13f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Manager">
+      <UniqueIdentifier>{aa958623-8e7c-44a6-9e63-e1fe1c0469f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -297,16 +309,16 @@
       <Filter>ソース ファイル\CharBase</Filter>
     </ClInclude>
     <ClInclude Include="src\sceneEnd.h">
-      <Filter>ソース ファイル\Sequence\End</Filter>
+      <Filter>ソース ファイル\Scence\End</Filter>
     </ClInclude>
     <ClInclude Include="src\sceneMain.h">
-      <Filter>ソース ファイル\Sequence\Main</Filter>
+      <Filter>ソース ファイル\Scence\Main</Filter>
     </ClInclude>
     <ClInclude Include="src\sceneStageSelect.h">
-      <Filter>ソース ファイル\Sequence\StageSelect</Filter>
+      <Filter>ソース ファイル\Scence\StageSelect</Filter>
     </ClInclude>
     <ClInclude Include="src\sceneTitle.h">
-      <Filter>ソース ファイル\Sequence\Title</Filter>
+      <Filter>ソース ファイル\Scence\Title</Filter>
     </ClInclude>
     <ClInclude Include="src\setting.h">
       <Filter>ソース ファイル\Setting</Filter>
@@ -348,7 +360,7 @@
       <Filter>ソース ファイル\InGame\Character\Player</Filter>
     </ClInclude>
     <ClInclude Include="src\sceneBase.hpp">
-      <Filter>ソース ファイル\Sequence\Base</Filter>
+      <Filter>ソース ファイル\Scence\Base</Filter>
     </ClInclude>
     <ClInclude Include="src\scoreMng.h">
       <Filter>ソース ファイル\InGame\ScoreManager</Filter>
@@ -393,7 +405,7 @@
       <Filter>ソース ファイル\InGame\Character\Base</Filter>
     </ClInclude>
     <ClInclude Include="src\sceneNameInput.h">
-      <Filter>ソース ファイル\Sequence\nameInput</Filter>
+      <Filter>ソース ファイル\Scence\nameInput</Filter>
     </ClInclude>
     <ClInclude Include="src\tackle.h">
       <Filter>ソース ファイル\InGame\Attack\tackle</Filter>
@@ -401,7 +413,12 @@
     <ClInclude Include="src\griffon.h">
       <Filter>ソース ファイル\InGame\Character\Enemy\Griffon</Filter>
     </ClInclude>
-    <ClInclude Include="src\sceneDescription.h" />
+    <ClInclude Include="src\sceneDescription.h">
+      <Filter>ソース ファイル\Scence\Description</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effectMoveStar.h">
+      <Filter>ソース ファイル\InGame\Effect\MoveStar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -465,16 +482,16 @@
       <Filter>ソース ファイル\CharBase</Filter>
     </ClCompile>
     <ClCompile Include="src\sceneEnd.cpp">
-      <Filter>ソース ファイル\Sequence\End</Filter>
+      <Filter>ソース ファイル\Scence\End</Filter>
     </ClCompile>
     <ClCompile Include="src\sceneMain.cpp">
-      <Filter>ソース ファイル\Sequence\Main</Filter>
+      <Filter>ソース ファイル\Scence\Main</Filter>
     </ClCompile>
     <ClCompile Include="src\sceneStageSelect.cpp">
-      <Filter>ソース ファイル\Sequence\StageSelect</Filter>
+      <Filter>ソース ファイル\Scence\StageSelect</Filter>
     </ClCompile>
     <ClCompile Include="src\sceneTitle.cpp">
-      <Filter>ソース ファイル\Sequence\Title</Filter>
+      <Filter>ソース ファイル\Scence\Title</Filter>
     </ClCompile>
     <ClCompile Include="src\setting.cpp">
       <Filter>ソース ファイル\Setting</Filter>
@@ -546,7 +563,7 @@
       <Filter>ソース ファイル\GameManager</Filter>
     </ClCompile>
     <ClCompile Include="src\sceneNameInput.cpp">
-      <Filter>ソース ファイル\Sequence\nameInput</Filter>
+      <Filter>ソース ファイル\Scence\nameInput</Filter>
     </ClCompile>
     <ClCompile Include="src\characterBase.cpp">
       <Filter>ソース ファイル\InGame\Character\Base</Filter>
@@ -558,15 +575,15 @@
       <Filter>ソース ファイル\InGame\Character\Enemy\Griffon</Filter>
     </ClCompile>
     <ClCompile Include="src\sceneDescription.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Scence\Description</Filter>
+    </ClCompile>
+    <ClCompile Include="src\effectMoveStar.cpp">
+      <Filter>ソース ファイル\InGame\Effect\MoveStar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\dat\resdata.dat">
       <Filter>リソース ファイル</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\bird.txt">
-      <Filter>リソース ファイル\Main\Enemy</Filter>
     </Text>
     <Text Include="res\dat\main\enemy\enemies.txt">
       <Filter>リソース ファイル\Main\Enemy</Filter>
@@ -577,9 +594,6 @@
     <Text Include="res\dat\main\player.txt">
       <Filter>リソース ファイル\Main</Filter>
     </Text>
-    <Text Include="res\dat\main\enemy\fairy.txt">
-      <Filter>リソース ファイル\Main\Enemy</Filter>
-    </Text>
     <Text Include="res\dat\main\stage\stages.txt">
       <Filter>リソース ファイル\Main\Stage</Filter>
     </Text>
@@ -587,9 +601,6 @@
       <Filter>リソース ファイル\Main\E_Table</Filter>
     </Text>
     <Text Include="res\dat\main\enemy\enemyTable03.txt">
-      <Filter>リソース ファイル\Main\E_Table</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\debugTable01.txt">
       <Filter>リソース ファイル\Main\E_Table</Filter>
     </Text>
     <Text Include="res\dat\main\stage\bossStage01.txt">
@@ -616,6 +627,15 @@
     <Text Include="res\dat\main\stage\stage03.txt">
       <Filter>リソース ファイル\Main\Stage\normal</Filter>
     </Text>
+    <Text Include="res\dat\main\enemy\table\debugTable01.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\normal\bird.txt">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\normal\fairy.txt">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\dat\path.ini">
@@ -629,6 +649,9 @@
     </None>
     <None Include="res\dat\main\pickup\pickups.dat">
       <Filter>リソース ファイル\Main\pickup</Filter>
+    </None>
+    <None Include="res\dat\result\rank.dat">
+      <Filter>リソース ファイル\Result</Filter>
     </None>
   </ItemGroup>
 </Project>

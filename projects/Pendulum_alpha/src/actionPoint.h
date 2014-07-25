@@ -151,6 +151,11 @@ typedef std::shared_ptr<IActionPoint> ActPtPtr;
 #pragma region class CActionCircle
 class CActionCircle : public IActionPoint
 {
+private:
+	enum
+	{
+		adjust = 1000,	// unit[/10px]
+	};
 	std::shared_ptr<mymath::Circlef> circle_;
 public:
 	CActionCircle(float x, float y, float r);

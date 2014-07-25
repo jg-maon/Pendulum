@@ -65,6 +65,14 @@ public:
 		@return		なし
 	*/
 	void stop();
+
+	/*
+		@brief	アニメーションが終了しているか
+		@return	アニメーションが終了しているか
+		@retval	true	アニメーション終了
+		@ratval	false	アニメーション中
+	*/
+	bool isStoped() const;
 };
 
 // 画像情報
@@ -73,7 +81,8 @@ class BaseData
 public:
 	std::string resname;			// 使用イメージ名
 	mymath::Vec3i size;				// 1コマ幅高さ
-	BaseData();
+	BaseData(const std::string& resname = "", const mymath::Vec3i& size = mymath::Vec3i());
+	BaseData(const std::string& resname, int width, int height);
 	// ファイルストリームからの管理名とサイズ入力
 	friend std::ifstream& operator >> (std::ifstream& f, BaseData& d)
 	{

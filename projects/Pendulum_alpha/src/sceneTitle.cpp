@@ -255,16 +255,16 @@ void CSceneTitle::draw()
 
 		//titleBack_.draw(charabase::CharBase::LeftTop);
 
-		//ロゴ
+		// ロゴ
 		if (titleLogo_.CheckUse())
 			titleLogo_.draw(charabase::CharBase::Center);
 
-		//Pleas Click
+		// Pleas Click
 		if (clickPhase_ != ClickPhase::HIDDEN)
 			font::Draw_FontTextNC(system::WINW / 2 - 80, system::WINH / 3 * 2, 0.5f,
-			"Please Click!", ARGB(clickAlpha_, 0, 0, 0), setting::GetFontID("font_MSGOSICK20"));
+			"Please Click!", ARGB(clickAlpha_, 255, 255, 255), setting::GetFontID("font_MSGOSICK30"));
 
-		//玉アニメーション
+		// 玉アニメーション
 		if (titleAnim_.CheckUse())
 			titleAnim_.draw(charabase::CharBase::Center);
 

@@ -5,6 +5,8 @@
 
 #include "fade.h"
 
+#include "gameManager.h"
+
 //=============================================================================
 #pragma region public methods
 
@@ -12,7 +14,7 @@ IStage::IStage(const std::string& name) :
 Base(name)
 , phase_(IStage::Phase::CLEAR_ANNOUNCE)
 , bgm(bgm_)
-, isBossKilled(false)
+, isBossKilled_(false)
 {
 
 
@@ -73,7 +75,7 @@ void IStage::step()
 	case IStage::Phase::BOSS:
 		for (auto& ap : stage_[1].actionPoints)
 			ap->step();
-		if (isBossKilled = UpdateBoss())
+		if (isBossKilled_ = UpdateBoss())
 		{
 			phase_ = IStage::Phase::RESULT;
 			CFade::ChangeColor(0xffffffff);
@@ -83,6 +85,7 @@ void IStage::step()
 #ifdef _DEBUG
 	if (input::CheckPush(input::KEY_BTN0))
 	{
+		isBossKilled_ = true;
 		phase_ = IStage::Phase::RESULT;
 	}
 #endif
@@ -116,8 +119,17 @@ void IStage::init(std::ifstream& f)
 
 bool IStage::isEndStage() const
 {
-	return phase_ == Phase::RESULT && isBossKilled;
+	return phase_ == Phase::RESULT && isBossKilled_;
 }
+
+bool IStage::isNormaTimeClear(float elapsedTime) const
+{
+	return elapsedTime < normaTime_;
+}
+
+
+
+
 
 const std::vector<ActPtPtr>& IStage::getActionPoints() const
 {
@@ -143,7 +155,7 @@ const mymath::Recti& IStage::getCameraRect() const
 bool IStage::LoadEnv(std::ifstream& f)
 {
 	//--------------------------------------
-	// ステージ
+	// ステージBGM
 	if (common::FindChunk(common::SeekSet(f), "#Bgm"))
 	{
 		f >> bgm_;
@@ -155,6 +167,12 @@ bool IStage::LoadEnv(std::ifstream& f)
 		charabase::BaseData bd;
 		f >> bd;
 		caObj_ = charabase::CharPtr(new charabase::CharBase(bd));
+	}
+	//--------------------------------------
+	// ノルマ時間
+	if (common::FindChunk(common::SeekSet(f), "#NormaTime"))
+	{
+		f >> normaTime_;
 	}
 
 	return f.eof();

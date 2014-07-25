@@ -32,6 +32,10 @@ void CStage1::step()
 	// フェードインからフェードアウトに変わった瞬間
 	if (f && phase_ == Phase::FADE_IN)
 	{
+		// ボスステージをロードする前に雑魚ステージでのボーナススコア計算
+		auto& sm = gm()->scoreMng();
+		auto& em = gm()->enemyMng();
+		sm->CalcBonusScore(em);
 		std::ifstream bossF(bossFile_);
 		__super::init(bossF);
 		auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
@@ -52,11 +56,35 @@ void CStage1::draw()
 
 	auto s = graph::Draw_GetImageSize2("img_stage01");
 	mymath::Recti& rt = (phase_ == Phase::BOSS || phase_ == Phase::RESULT) ? stage_[1].cameraRect : stage_[0].cameraRect;
+	int w = (rt.right - rt.left);
+	int h = (rt.bottom - rt.top);
+	float sx = w / static_cast<float>(s.cx);
+	float sy = h / static_cast<float>(s.cy);
+	/*
+	for (int y = 0; y <= h / 1024; ++y)
+	{
+		for (int x = 0; x <= w / 1024; ++x)
+		{
+			graph::Draw_GraphicsLeftTop(
+				rt.left + x * 1024,
+				rt.top + y * 1024,
+				1.f,
+				"img_stage01",
+				0, 0,
+				x * 1024, y * 1024,
+				0, 0,
+				sx, sy
+				);
+		}
+	}
+	//*/
+	//*
 	graph::Draw_GraphicsLeftTop(
 		rt.left, rt.top, 1.f,
 		"img_stage01", 0, 0, s.cx, s.cy, 0, 0,
-		(rt.right - rt.left) / static_cast<float>(s.cx),
-		(rt.bottom - rt.top) / static_cast<float>(s.cy));
+		sx,
+		sy);
+	//*/
 
 }
 
@@ -263,7 +291,7 @@ bool CStage1::UpdateClearAnnounce()
 bool CStage1::UpdateNormal()
 {
 	const auto& player = gm()->GetPlayer();
-	auto& stacols = player.GetStageCollisions();
+	auto& stacols = player->GetStageCollisions();
 	for (auto& col : stacols)
 	{
 		if (goalArea_->Contains(col))
@@ -279,9 +307,9 @@ bool CStage1::UpdateNormal()
 
 bool CStage1::UpdateBoss()
 {
-	// ボスが倒されていたらクリア
+	// ボス
 	auto& em = gm()->enemyMng();
-	auto& enemies = em.getEnemies();
+	auto& enemies = em->getEnemies();
 	
 	for (auto& enemy : enemies)
 	{
@@ -290,11 +318,11 @@ bool CStage1::UpdateBoss()
 			return false;
 	}
 
+	// pickup(ボスが大量にドロップする可能性も兼ね)
+	auto& pickups = gm()->GetObjects("Pickup");
+	if (!pickups.empty())
+		return false;
 
-
-	auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
-	for (auto& obj : objs)
-		obj->stop();
 
 	return true;
 }

@@ -119,6 +119,8 @@ public:
 				CShot shot(shot_info);
 				f >> buf;	// 当たり判定ラベル読み飛ばし
 				shot.LoadCollisions(f);
+				f >> buf;	// ステージ当たり判定ラベル読み飛ばし
+				shot.LoadStageCollisions(f);
 				attack_ = AttackPtr(new CNWayShot(shot));
 			}
 		}

@@ -103,13 +103,12 @@ IObject::~IObject()
 
 bool IObject::InScreen(int border) const
 {
-	RECT rt = camera::GetScreenRect();
-	if (obj_.pos.x < rt.left - border || obj_.pos.y < rt.top - border
-		|| obj_.pos.x > rt.right + border || obj_.pos.y > rt.bottom + border)
-	{
-		return false;
-	}
-	return true;
+	mymath::Recti rt = camera::GetScreenRect();
+	rt.left += border;
+	rt.right -= border;
+	rt.top += border;
+	rt.bottom -= border;
+	return rt.Contains(obj_.GetRect());
 }
 
 

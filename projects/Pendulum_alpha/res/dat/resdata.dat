@@ -1,7 +1,6 @@
 //＿リソースファイル管理データ
 //＿#タグ{}の間に記述
 
-	img_circle		res/gra/circle_x96.png			0xff000000
 //＿画像＿管理名(img_でスタート)＿パス＿透過色(16進ARGB)
 #Img
 {
@@ -10,16 +9,18 @@
 	img_description	res/gra/description.png			0x00000000
 
 
-	img_cursor		res/gra/ui/cursor.png			0xff00ff00
-	img_UInumber	res/gra/ui/number.png			0xff000000
-	img_UIchain		res/gra/ui/chain.png			0xff000000
-	img_UIalphabet	res/gra/ui/abc.png				0xff000000
-	img_explosion	res/gra/effect/explosion.png	0xff000000
-	img_slash		res/gra/effect/slash.png		0xff000000
+	img_cursor			res/gra/ui/cursor.png			0xff00ff00
+	img_UInumber		res/gra/ui/number.png			0xff000000
+	img_UIchain			res/gra/ui/chain.png			0xff000000
+	img_UIalphabet		res/gra/ui/abc.png				0xff000000
+	img_effectWind		res/gra/effect/032.png			0x00000000
+	img_effectStar		res/gra/effect/010.png			0x00000000
+	img_effectExplosion	res/gra/effect/explosion.png	0xff000000
+	img_effectSlash		res/gra/effect/slash.png		0xff000000
 
 	img_jewely		res/gra/ui/jewely.png			0x00000000
 		
-	img_title		res/gra/title/title.png			0xff000000
+	img_title		res/gra/title/bg.jpg			0x00000000
 	img_logo		res/gra/title/logo.png			0xffffffff
 	img_titleSlash	res/gra/title/slash.png			0xffffffff
 
@@ -35,20 +36,35 @@
 
 	img_stage01			res/gra/main/stages/stage01/bg.png					0xff000000
 	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xff000000
-	img_player			res/gra/main/character/player/base.png				0xff00ff00
-	img_playerArm		res/gra/main/character/player/arm.png				0xffffffff
-	img_chain			res/gra/main/character/player/chain.png				0x00000000
-	img_bird			res/gra/main/character/enemy/bird/bird.png			0xff000000
-	img_birdShot		res/gra/main/character/enemy/bird/birdShot.png		0xff000000
-	img_fairy			res/gra/main/character/enemy/fairy/fairy.png		0xff000000
-	img_fairySing		res/gra/main/character/enemy/fairy/fairySing.png	0xff000000
-	
-	img_griffon			res/gra/main/character/enemy/griffon/griffon.png	0xff000000
+	img_actionCircle200	res/gra/main/stages/stage01/actionCircle_r200.png	0x00000000
 
-	img_end				res/gra/end/bg.png									0xff000000
-	img_button			res/gra/end/button.png								0xffffffff
-	img_letter			res/gra/end/letter.png								0xff00ff00
-	img_select			res/gra/end/select.png								0xffffffff
+	img_player		res/gra/main/character/player/base.png				0xff00ff00
+	img_playerArm	res/gra/main/character/player/arm.png				0xffffffff
+	img_chain		res/gra/main/character/player/chain.png				0x00000000
+	img_bird		res/gra/main/character/enemy/bird/bird.png			0xff000000
+	img_birdShot	res/gra/main/character/enemy/bird/birdShot.png		0xff000000
+	img_fairy		res/gra/main/character/enemy/fairy/fairy.png		0xff000000
+	img_fairySing	res/gra/main/character/enemy/fairy/fairySing.png	0xff000000
+	img_griffon		res/gra/main/character/enemy/griffon/griffon.png	0xff000000
+
+
+	img_end				res/gra/end/bg.jpg						0x00000000
+	img_stageClear		res/gra/end/stageClear.png				0x00000000
+	img_bonusDestroyer	res/gra/end/bonusDestroyer.png			0x00000000
+	img_bonusFastClear	res/gra/end/bonusFastClear.png			0x00000000
+	img_bonusNoDamage	res/gra/end/bonusNoDamage.png			0x00000000
+	img_bonusNoKill		res/gra/end/bonusNoKill.png				0x00000000
+	img_totalScore		res/gra/end/totalScore.png				0x00000000
+	img_rankin			res/gra/end/rankin.png					0x00000000
+
+	img_nameInput	res/gra/nameInput/bg.png				0xff000000
+	img_kbbutton	res/gra/nameInput/kbButton.png			0xffffffff
+	img_kbletter	res/gra/nameInput/kbLetter.png			0xff00ff00
+	img_kbselect	res/gra/nameInput/kbSelect.png			0xffffffff
+	img_chgbutton	res/gra/nameInput/chgButton.png			0xffffffff
+	img_chgletter	res/gra/nameInput/chgLetter.png			0xff00ff00
+	img_chgselect	res/gra/nameInput/chgSelect.png			0xffffffff
+	img_display		res/gra/nameInput/display.png			00ffffffff
 
 }
 
@@ -59,6 +75,7 @@
 	bgm_stageSelect	res/snd/bgm/stageSelect.wav
 	bgm_stage01		res/snd/bgm/stage01.wav
 	bgm_end			res/snd/bgm/result.wav
+	bgm_nameInput	res/snd/bgm/nameInput.wav
 }
 
 //＿SE＿管理名(se_でスタート)＿パス

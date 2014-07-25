@@ -12,7 +12,7 @@ IEffect("EffectSlash")
 	obj_.pos = pos;
 	obj_.scale = scale;
 
-	obj_.resname = "img_slash";
+	obj_.resname = "img_effectSlash";
 	obj_.size(500, 500);
 	
 	obj_.angle = angle + 45.f;

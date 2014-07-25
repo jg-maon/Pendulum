@@ -2,6 +2,7 @@
 #include "define.h"
 
 #include "MyMath.hpp"
+#include "gameManager.h"
 
 
 CNWaySing::CNWaySing(const CSing& base) :

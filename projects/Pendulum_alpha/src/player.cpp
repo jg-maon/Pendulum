@@ -9,8 +9,9 @@
 #define D_LINE_TEST		// 鎖Line補完
 #endif
 
-#define D_ACT_TEST			// マウスクリック座標でぶら下がる
-#define D_ATK_TEST	// 攻撃範囲拡大
+//#define D_ACT_TEST			// マウスクリック座標でぶら下がる
+#define D_RANGE_TEST	// 攻撃範囲拡大
+#define D_ATK_TEST		// クリック時攻撃判定
 #define DEF_SHAPE_DRAW
 
 #include "player.h"
@@ -35,6 +36,8 @@
 
 #include "common.h"
 
+#include "gameManager.h"
+
 
 #include "effectSlash.h"
 
@@ -48,7 +51,7 @@ bool gravityF = false;
 mymath::Vec3f vel_log;	// 最高速度
 #endif
 
-#ifdef D_ATK_TEST
+#ifdef D_RANGE_TEST
 mymath::Circlef atk_range(0.f, 0.f, 0.5f, 300.f);
 #endif
 
@@ -139,7 +142,7 @@ void CPlayer::init(float x, float y, float z)
 	invincibleAnim_ = 0.f;
 
 	//----------------------------------
-	chainState_ = ChainState::HIDE;
+	chainState_ = common::DispState::HIDE;
 	chainTime_ = 0.f;
 	chainAnimTime_ = 0.f;
 	chainStaPos_(system::WINW - 300.f, 30.f, 0.1f);
@@ -163,7 +166,7 @@ void CPlayer::init(float x, float y, float z)
 	//sm()->MoveCamera(obj_.pos.x, obj_.pos.y);
 	
 
-#ifdef D_ATK_TEST
+#ifdef D_RANGE_TEST
 	atk_range.radius = loadInfo_.attackRadius;
 #endif
 }
@@ -247,51 +250,51 @@ void CPlayer::step()
 		const float disappearTime = 0.2f;	// 消失アニメーション秒数
 		switch (chainState_)
 		{
-		case ChainState::HIDE:
+		case common::DispState::HIDE:
 			if ((chainTime_ -= system::ONEFRAME_TIME) <= 0.f)
 			{
 				// 消失
-				chainState_ = ChainState::HIDE;
+				chainState_ = common::DispState::HIDE;
 				chainAnimTime_ = 0.f;
 				chainCnt_ = 0;
 			}
 			break;
 
-		case ChainState::APPEARING:
+		case common::DispState::APPEARING:
 			chainMsg_->alpha = Easing::Linear(chainAnimTime_, 0.f, 255.f, appearTime);
 			chainMsg_->pos.x = Easing::QuadOut(chainAnimTime_, chainStaPos_.x, appearMoveX, appearTime);
 
 			if ((chainAnimTime_ += system::FrameTime) >= appearTime)
 			{
 				// 出現完了
-				chainState_ = ChainState::SHOW;
+				chainState_ = common::DispState::SHOW;
 			}
 			// 残り時間は出現中も減少していくためbreakは書かない
-		case ChainState::SHOW:
+		case common::DispState::SHOW:
 			// Chain時間は処理落ちなどに影響されて、一定のゲーム内秒数で終わる
 			if ((chainTime_ -= system::ONEFRAME_TIME) <= disappearTime)
 			{
 				// 消失開始
-				chainState_ = ChainState::DISAPPEARING;
+				chainState_ = common::DispState::DISAPPEARING;
 				chainAnimTime_ = 0.f;
 			}
 			numberPos_.x = chainMsg_->pos.x;
-			numberPos_.y = Easing::BackOut(numberAnimTime_, chainStaPos_.y + 20.f, -20.f, 0.2f);
+			numberPos_.y = Easing::BackOut(numberAnimTime_, chainStaPos_.y + 10.f, -20.f, 0.2f);
 			numberAnimTime_ += system::FrameTime;
 
-			if (chainState_ == ChainState::APPEARING) break;
+			if (chainState_ == common::DispState::APPEARING) break;
 			// SHOWのみの処理
 			chainMsg_->alpha = 255.f;
 			chainMsg_->pos.x = chainStaPos_.x + appearMoveX;
 			break;
 
-		case ChainState::DISAPPEARING:
+		case common::DispState::DISAPPEARING:
 			chainMsg_->alpha = Easing::Linear(chainAnimTime_, 255.f, -255.f, disappearTime);
 			chainMsg_->pos.x = Easing::QuadOut(chainAnimTime_, chainStaPos_.x + appearMoveX, 10.f, disappearTime);
 			if ((chainAnimTime_ += system::FrameTime) >= disappearTime)
 			{
 				// 消失完了
-				chainState_ = ChainState::HIDE;
+				chainState_ = common::DispState::HIDE;
 				chainMsg_->pos = chainStaPos_;
 				chainMsg_->alpha = 0.f;
 				chainAnimTime_ = 0.f;
@@ -344,7 +347,7 @@ void CPlayer::draw()
 	}
 #endif
 
-#ifdef D_ATK_TEST
+#ifdef D_RANGE_TEST
 	mymath::Circlef& circle_ = atk_range;
 	D3DCOLOR color = (isAttacking_) ? 0xfff0f020 : 0xa0efefef;
 	circle_.draw(color);
@@ -450,15 +453,20 @@ void CPlayer::draw()
 
 	//-----------------------------------------------------------
 	// Chain
-	if (chainState_ != ChainState::HIDE)
+	if (chainState_ != common::DispState::HIDE)
 	{
 		// Chain中
-		chainMsg_->drawNC(charabase::CharBase::MODE::LeftTop);
+		chainMsg_->drawNC(charabase::CharBase::LeftTop);
 		// Chain数を画像パターンに
-		int digit = (chainCnt_ / 100 == 0) ? ((chainCnt_ / 10 == 0) ? 1 : 2) : 3;
-		int work = chainCnt_;	// chain数を桁ごとに区切る
 		const int width = 32;
 		const int height = 64;
+		charabase::CharBase numBase(numberPos_, mymath::Vec3f(), "img_UInumber", width, height);
+		auto numObjs = common::GetNumberImageObjects(chainCnt_, numBase, common::RIGHT);
+		for (auto& nobj : numObjs)
+			nobj.drawNC(charabase::CharBase::LeftTop);
+		/*
+		int digit = (chainCnt_ / 100 == 0) ? ((chainCnt_ / 10 == 0) ? 1 : 2) : 3;
+		int work = chainCnt_;	// chain数を桁ごとに区切る
 		for (int i = 1; i <= digit; ++i)
 		{
 			// 下位桁から順に描画(Chain文字の左から減らしていく)
@@ -471,6 +479,7 @@ void CPlayer::draw()
 				width, height);
 			work /= 10;
 		}
+		//*/
 	}
 
 	//-----------------------------------------------------------
@@ -489,18 +498,27 @@ void CPlayer::draw()
 			draw_x, draw_y,
 			draw_x + width,
 			draw_y + height, 0.2f,
-			ARGB(200, 10, 10, 10), ARGB(255, 50, 150, 150),
+			ARGB(200, 10, 10, 10), ARGB(255, 20, 100, 100),
 			5, true);
 		//------------------------
 		// 中
 		// 体力に応じて幅を計算
 		float w = static_cast<float>(health_) / static_cast<float>(loadInfo_.health) * width;
+		// 下半分
 		graph::Draw_BoxNC(
 			draw_x, draw_y,
 			draw_x + static_cast<int>(w),
 			draw_y + height, 0.1f,
-			ARGB(255, 100, 200, 200), ARGB(255, 50, 150, 150),
-			5, true);
+			ARGB(255, 100, 200, 200)
+			, ARGB(255, 50, 150, 150),
+			0, true);
+		// 上半分
+		graph::Draw_BoxNC(
+			draw_x, draw_y,
+			draw_x + static_cast<int>(w),
+			draw_y + height / 2, 0.1f,
+			ARGB(255, 45, 150, 170), ARGB(255, 50, 150, 150),
+			0, true);
 
 	}
 	//-----------------------------------------------------------
@@ -685,19 +703,21 @@ void CPlayer::key()
 		UnHang();
 	}
 #endif
-#ifdef D_ATK_TEST
+#ifdef D_RANGE_TEST
 	atk_range.center = obj_.pos;
 #endif
-	if (CheckPress(KEY_MOUSE_LBTN))
+	if (CheckPress(KEY_MOUSE_RBTN))
 	{
 #ifdef D_ATK_TEST
+		isAttacking_ = true;
+#elif defined(D_RANGE_TEST)
 		isAttacking_ = atk_range.Contains(mouse);
 #else
 		mymath::Circlef range(obj_.pos, attackRange_->halfWidth());
 		isAttacking_ = range.Contains(mouse);
 #endif
 	}
-	if (CheckPull(KEY_MOUSE_LBTN))
+	if (CheckPull(KEY_MOUSE_RBTN))
 	{
 		isAttacking_ = false;
 	}
@@ -845,13 +865,21 @@ void CPlayer::move()
 	}
 	//----------------------------------------
 	// 移動速度制限
-	if (velocity.x >= loadInfo_.MAX_VX)
+	if (velocity.x > loadInfo_.MAX_VX)
 	{
 		velocity.x = loadInfo_.MAX_VX;
 	}
-	if (velocity.y >= loadInfo_.MAX_VY)
+	else if (velocity.x < -loadInfo_.MAX_VX)
+	{
+		velocity.x = -loadInfo_.MAX_VX;
+	}
+	if (velocity.y > loadInfo_.MAX_VY)
 	{
 		velocity.y = loadInfo_.MAX_VY;
+	}
+	else if (velocity.y < -loadInfo_.MAX_VY)
+	{
+		velocity.y = -loadInfo_.MAX_VY;
 	}
 	if (mymath::PYTHA(velocity.x, velocity.y) < mymath::POW2(1.f / system::FrameTime))
 	{
@@ -998,11 +1026,11 @@ bool CPlayer::ApplyDamage(int dam)
 
 void CPlayer::ApplyAttack(const mymath::Vec3f& pos)
 {
-	// 敵の場所に移動
-	//obj_.velocity += (pos - obj_.pos) / FrameTime / 3.f;
+	// 相手方向のベクトル
+	mymath::Vec3f vec = pos - obj_.pos;
+	
 
-
-	gm()->AddObject(ObjPtr(new CEffectSlash(pos,
+	gm()->AddObject(ObjPtr(new CEffectSlash(pos.TmpReplace(mymath::Vec3f::Z,pos+0.1f),
 		math::DegreeOfPoints2(
 		obj_.pos.x, obj_.pos.y,
 		pos.x, pos.y))));
@@ -1010,10 +1038,8 @@ void CPlayer::ApplyAttack(const mymath::Vec3f& pos)
 
 	obj_.src.y = static_cast<int>(MotionType::ATTACK);
 	obj_.src.x = 0;
-	motionAnim_.set(2, 0.15f);
+	motionAnim_.set(2, 0.25f);
 	
-	// 相手方向のベクトル
-	mymath::Vec3f vec = pos - obj_.pos;
 	obj_.add = vec / system::FrameTime;
 
 	//---------------------------------
@@ -1047,16 +1073,16 @@ void CPlayer::KilledEnemy()
 		numberAnimTime_ = 0.f;
 		switch (chainState_)
 		{
-		case ChainState::HIDE:
-		case ChainState::APPEARING:
+		case common::DispState::HIDE:
+		case common::DispState::APPEARING:
 			// 出現開始
-			chainState_ = ChainState::APPEARING;
+			chainState_ = common::DispState::APPEARING;
 			chainAnimTime_ = 0.f;
 			break;
-		case ChainState::SHOW:
-		case ChainState::DISAPPEARING:
+		case common::DispState::SHOW:
+		case common::DispState::DISAPPEARING:
 			// 表示継続
-			chainState_ = ChainState::SHOW;
+			chainState_ = common::DispState::SHOW;
 			break;
 		}
 	}
@@ -1075,6 +1101,16 @@ Base::Collisions CPlayer::GetDamageAreas() const
 		return Base::Collisions();
 	}
 	return __super::GetDamageAreas();
+}
+
+int CPlayer::getChain() const
+{
+	return chainCnt_;
+}
+
+bool CPlayer::isNoDamage() const
+{
+	return health_ == loadInfo_.health;
 }
 
 #pragma endregion // CPlayer methods
