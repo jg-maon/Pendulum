@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp" />
-    <ClInclude Include="..\..\lib\ci_ext\color.hpp" />
     <ClInclude Include="..\..\lib\ci_ext\Console.hpp" />
     <ClInclude Include="..\..\lib\ci_ext\define.hpp" />
     <ClInclude Include="..\..\lib\ci_ext\DrawObj.hpp" />
@@ -40,6 +39,53 @@
     <ClInclude Include="..\..\lib\dx_media\mesh_manager.h" />
     <ClInclude Include="..\..\lib\dx_media\texture_manager.h" />
     <ClInclude Include="..\..\lib\gplib.h" />
+    <ClInclude Include="src\actionPoint.h" />
+    <ClInclude Include="src\attackBase.hpp" />
+    <ClInclude Include="src\bird.h" />
+    <ClInclude Include="src\characterBase.h" />
+    <ClInclude Include="src\charBase.h" />
+    <ClInclude Include="src\collision.h" />
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\define.h" />
+    <ClInclude Include="src\easing.h" />
+    <ClInclude Include="src\effectBase.hpp" />
+    <ClInclude Include="src\effectExplosion.h" />
+    <ClInclude Include="src\effectMoveStar.h" />
+    <ClInclude Include="src\effectSlash.h" />
+    <ClInclude Include="src\enemyBase.hpp" />
+    <ClInclude Include="src\enemyMng.h" />
+    <ClInclude Include="src\fade.h" />
+    <ClInclude Include="src\fairy.h" />
+    <ClInclude Include="src\fileLoader.h" />
+    <ClInclude Include="src\fileMng.h" />
+    <ClInclude Include="src\gameManager.h" />
+    <ClInclude Include="src\gameover.h" />
+    <ClInclude Include="src\griffon.h" />
+    <ClInclude Include="src\myMath.hpp" />
+    <ClInclude Include="src\nWayShot.h" />
+    <ClInclude Include="src\nWaySing.h" />
+    <ClInclude Include="src\obj.h" />
+    <ClInclude Include="src\pickupBase.hpp" />
+    <ClInclude Include="src\pickupJewely.h" />
+    <ClInclude Include="src\player.h" />
+    <ClInclude Include="src\sceneBase.hpp" />
+    <ClInclude Include="src\sceneDescription.h" />
+    <ClInclude Include="src\sceneEnd.h" />
+    <ClInclude Include="src\sceneJecLogo.h" />
+    <ClInclude Include="src\sceneMain.h" />
+    <ClInclude Include="src\sceneMng.h" />
+    <ClInclude Include="src\sceneNameInput.h" />
+    <ClInclude Include="src\sceneStageSelect.h" />
+    <ClInclude Include="src\sceneTitle.h" />
+    <ClInclude Include="src\scoreMng.h" />
+    <ClInclude Include="src\setting.h" />
+    <ClInclude Include="src\stage1.h" />
+    <ClInclude Include="src\stage2.h" />
+    <ClInclude Include="src\stage3.h" />
+    <ClInclude Include="src\stage4.h" />
+    <ClInclude Include="src\stageBase.h" />
+    <ClInclude Include="src\stageMng.h" />
+    <ClInclude Include="src\tackle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx3dmeshmanager.cpp" />
@@ -56,6 +102,75 @@
     <ClCompile Include="..\..\lib\dx_media\mesh_manager.cpp" />
     <ClCompile Include="..\..\lib\dx_media\texture_manager.cpp" />
     <ClCompile Include="..\..\lib\gplib.cpp" />
+    <ClCompile Include="src\actionPoint.cpp" />
+    <ClCompile Include="src\bird.cpp" />
+    <ClCompile Include="src\characterBase.cpp" />
+    <ClCompile Include="src\charBase.cpp" />
+    <ClCompile Include="src\collision.cpp" />
+    <ClCompile Include="src\common.cpp" />
+    <ClCompile Include="src\easing.cpp" />
+    <ClCompile Include="src\effectExplosion.cpp" />
+    <ClCompile Include="src\effectMoveStar.cpp" />
+    <ClCompile Include="src\effectSlash.cpp" />
+    <ClCompile Include="src\enemyMng.cpp" />
+    <ClCompile Include="src\fade.cpp" />
+    <ClCompile Include="src\fairy.cpp" />
+    <ClCompile Include="src\fileLoader.cpp" />
+    <ClCompile Include="src\fileMng.cpp" />
+    <ClCompile Include="src\gameManager.cpp" />
+    <ClCompile Include="src\gameover.cpp" />
+    <ClCompile Include="src\griffon.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\nWayShot.cpp" />
+    <ClCompile Include="src\nWaySing.cpp" />
+    <ClCompile Include="src\obj.cpp" />
+    <ClCompile Include="src\pickupJewely.cpp" />
+    <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\sceneDescription.cpp" />
+    <ClCompile Include="src\sceneEnd.cpp" />
+    <ClCompile Include="src\sceneJecLogo.cpp" />
+    <ClCompile Include="src\sceneMain.cpp" />
+    <ClCompile Include="src\sceneMng.cpp" />
+    <ClCompile Include="src\sceneNameInput.cpp" />
+    <ClCompile Include="src\sceneStageSelect.cpp" />
+    <ClCompile Include="src\sceneTitle.cpp" />
+    <ClCompile Include="src\scoreMng.cpp" />
+    <ClCompile Include="src\setting.cpp" />
+    <ClCompile Include="src\stage1.cpp" />
+    <ClCompile Include="src\stage2.cpp" />
+    <ClCompile Include="src\stage3.cpp" />
+    <ClCompile Include="src\stage4.cpp" />
+    <ClCompile Include="src\stageBase.cpp" />
+    <ClCompile Include="src\stageMng.cpp" />
+    <ClCompile Include="src\tackle.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Pendulum_alpha\res\dat\main\enemy\table\debugTable01.txt" />
+    <Text Include="res\dat\main\enemy\boss\griffon.txt" />
+    <Text Include="res\dat\main\enemy\enemies.txt" />
+    <Text Include="res\dat\main\enemy\normal\bird.txt" />
+    <Text Include="res\dat\main\enemy\normal\fairy.txt" />
+    <Text Include="res\dat\main\enemy\table\debugTable01.txt" />
+    <Text Include="res\dat\main\enemy\table\enemyTable01.txt" />
+    <Text Include="res\dat\main\enemy\table\enemyTable01_b.txt" />
+    <Text Include="res\dat\main\enemy\table\enemyTable02.txt" />
+    <Text Include="res\dat\main\enemy\table\enemyTable03.txt" />
+    <Text Include="res\dat\main\enemy\table\enemyTable04.txt" />
+    <Text Include="res\dat\main\player.txt" />
+    <Text Include="res\dat\main\stage\bossStage01.txt" />
+    <Text Include="res\dat\main\stage\stage01.txt" />
+    <Text Include="res\dat\main\stage\stage02.txt" />
+    <Text Include="res\dat\main\stage\stage03.txt" />
+    <Text Include="res\dat\main\stage\stage04.txt" />
+    <Text Include="res\dat\main\stage\stages.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\dat\main\pickup\jewely.dat" />
+    <None Include="res\dat\main\pickup\pickups.dat" />
+    <None Include="res\dat\path.ini" />
+    <None Include="res\dat\resdata.dat" />
+    <None Include="res\dat\result\rank.dat" />
+    <None Include="res\dat\stageSelect\setting.dat" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{55C7C857-1A89-4EF0-8D7A-A671CE28C570}</ProjectGuid>

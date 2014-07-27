@@ -1,0 +1,7 @@
+“Gî•ñƒtƒ@ƒCƒ‹ˆê——
+
+#Bird	res/dat/main/enemy/normal/bird.txt
+
+#Fairy	res/dat/main/enemy/normal/fairy.txt
+
+#Griffon	res/dat/main/enemy/boss/griffon.txt

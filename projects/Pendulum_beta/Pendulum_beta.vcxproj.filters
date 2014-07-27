@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="リソース ファイル">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -18,12 +14,192 @@
     <Filter Include="ライブラリ\gplib">
       <UniqueIdentifier>{f9d66a6c-2cbd-4c03-8dd6-985863771964}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{854dc6da-eb52-43f1-a521-a7bda43f198a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Common">
+      <UniqueIdentifier>{08b362b9-d448-41e5-9c3f-dce1e2a31090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Easing">
+      <UniqueIdentifier>{98b94b9d-c4de-46aa-94b6-02e42b01ab73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameManager">
+      <UniqueIdentifier>{e75f6f0d-b408-4915-892a-23fb16b438b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameOver">
+      <UniqueIdentifier>{3f3b341d-67b0-4736-8c6b-957f72b3220f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\CharBase">
+      <UniqueIdentifier>{b5b5e1c0-cc08-4d97-973b-f04333204af7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Setting">
+      <UniqueIdentifier>{53e7655a-191e-410d-9c26-7ee6a53fe37a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame">
+      <UniqueIdentifier>{66ef213b-efb0-4abb-9179-c49692e90dfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\ActionPoint">
+      <UniqueIdentifier>{97639ed2-7091-4f0d-bded-6e8037dfb97e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Collision">
+      <UniqueIdentifier>{180ebb9a-c3f0-44e2-ac3f-b9dc69f543b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Effect">
+      <UniqueIdentifier>{caa97990-6882-4c86-9764-17407eb847c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Effect\Explosion">
+      <UniqueIdentifier>{4d0facff-05bb-4384-b5fe-9b56344873a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Effect\Slash">
+      <UniqueIdentifier>{c98572aa-d01b-4407-8705-b4efaffe6c89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Effect\MoveStar">
+      <UniqueIdentifier>{317ced2a-fa03-454c-a90f-981b49737bee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager">
+      <UniqueIdentifier>{67899cbb-e3a1-43e9-b328-d3cfae129ccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage">
+      <UniqueIdentifier>{dbe475bd-8a23-4945-83f2-8ae02bba7541}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage\Stage4">
+      <UniqueIdentifier>{1c51872c-2882-42aa-a741-a757d0315d2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage\Stage1">
+      <UniqueIdentifier>{14231d25-eb01-4a78-93cf-e08e38cfaf50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage\Stage2">
+      <UniqueIdentifier>{fa0a88e8-2f57-4c4e-8522-daec95f8c6e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage\Stage3">
+      <UniqueIdentifier>{ab2dde6e-87e3-4fec-b42e-d7fc9ef1142c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage\Base">
+      <UniqueIdentifier>{9475169a-7012-4168-b5c4-66417f6bcff8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack">
+      <UniqueIdentifier>{1e9fc59b-6775-4c3c-8dd0-596cf8bd5ffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack\nWayShot">
+      <UniqueIdentifier>{51aba758-470c-4f3a-9f3a-26896c7ffedf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack\nWaySing">
+      <UniqueIdentifier>{4cc99680-941a-4e16-b4f0-4202c6c8c4f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack\tackle">
+      <UniqueIdentifier>{8c5335de-a078-4226-be90-85b858cf340e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character">
+      <UniqueIdentifier>{362c5634-b7eb-4495-bd51-ddc0e95f02be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy">
+      <UniqueIdentifier>{d20e6c39-c992-49ae-ba53-79f3b3f23f9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy\Bird">
+      <UniqueIdentifier>{1a4663a8-65dd-4dea-983b-a05a7d38aa0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy\Manager">
+      <UniqueIdentifier>{132e1770-4f97-439e-939d-28ce75a34e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy\Fairy">
+      <UniqueIdentifier>{d8083024-eb5e-415b-9143-f503f7837c77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy\Griffon">
+      <UniqueIdentifier>{544c5c4e-c09f-408b-bb3f-a1677228c9a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Player">
+      <UniqueIdentifier>{43778b44-185d-4483-a02f-95453e535cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Base">
+      <UniqueIdentifier>{c11b2275-4fa6-4911-ab4a-4b8f37084eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\ScoreManager">
+      <UniqueIdentifier>{ff3793c5-209c-4f37-944b-760bdddead19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Pickup">
+      <UniqueIdentifier>{96452d87-b5df-4d24-a367-31a3257eef27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Pickup\Jewely">
+      <UniqueIdentifier>{be6e4100-25e8-4560-a6be-5b12965ef1a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Fade">
+      <UniqueIdentifier>{e08d32e8-4b73-4729-b82f-7bb27701e0d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\FileManager">
+      <UniqueIdentifier>{e0e4373f-24c2-4dec-bfdc-2c052bda2d5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\FileManager\Loader">
+      <UniqueIdentifier>{970137c0-f730-4d90-b2d2-bb530f199ca8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Obj">
+      <UniqueIdentifier>{24e2e55b-46ed-46a7-a61c-5d54d09667da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ヘッダー ファイル">
+      <UniqueIdentifier>{2ec31847-011a-4d71-91c1-e7bd37869d9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence">
+      <UniqueIdentifier>{0bcd8b67-3dc9-4d5e-899a-8dc5276f2a6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Base">
+      <UniqueIdentifier>{9df7e734-be2a-4c71-b659-299c858116cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Main">
+      <UniqueIdentifier>{2dd25c1f-3f14-4502-b240-2b822f33b201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Title">
+      <UniqueIdentifier>{a5f8374f-dee3-4ab9-8edf-47e570313f3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\End">
+      <UniqueIdentifier>{1151458d-b013-4cb1-a7f6-349883ac725b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\StageSelect">
+      <UniqueIdentifier>{4364f2f6-6f2e-491d-b232-6e1ac4827cbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Description">
+      <UniqueIdentifier>{100ab016-316c-4e64-8806-e967b827a99b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Manager">
+      <UniqueIdentifier>{280c436c-d3d4-46b4-b2ef-f1a5e849c701}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\NameInput">
+      <UniqueIdentifier>{0a6f8479-d394-4367-8fbb-496f42483f8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\JEC">
+      <UniqueIdentifier>{ae2c0f28-68d8-45c5-a39f-9a3977f31b62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main">
+      <UniqueIdentifier>{194a9906-7bdb-438a-a6fa-531234c954f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main\Enemy">
+      <UniqueIdentifier>{4c3b9fa4-9883-4313-b1ed-32bf39d0370d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main\Stage">
+      <UniqueIdentifier>{8f315964-b784-4317-b66a-c1d0a5dd25c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main\Stage\normal">
+      <UniqueIdentifier>{6e5124c7-15be-462f-af5f-4a9707bf78a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main\Stage\boss">
+      <UniqueIdentifier>{57e9eac5-7759-4ceb-b29a-647b726f5e54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main\E_Table">
+      <UniqueIdentifier>{9f3ed95a-d595-4a1b-8fc6-656eb12432c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main\pickup">
+      <UniqueIdentifier>{35627051-ccbc-411d-bf8c-117139230e51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Result">
+      <UniqueIdentifier>{01f129d5-bfb2-4f51-8ab5-9cfe850928c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\StageSelect">
+      <UniqueIdentifier>{bded6626-cfff-489c-bbf5-b14007d6afbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Title">
+      <UniqueIdentifier>{f789ed1e-454b-4c6f-8149-52026aef7ee4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
-      <Filter>ライブラリ\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\lib\ci_ext\color.hpp">
       <Filter>ライブラリ\3D</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lib\ci_ext\Console.hpp">
@@ -107,6 +283,147 @@
     <ClInclude Include="..\..\lib\gplib.h">
       <Filter>ライブラリ\gplib</Filter>
     </ClInclude>
+    <ClInclude Include="src\actionPoint.h">
+      <Filter>ソース ファイル\InGame\ActionPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\attackBase.hpp">
+      <Filter>ソース ファイル\InGame\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bird.h">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Bird</Filter>
+    </ClInclude>
+    <ClInclude Include="src\characterBase.h">
+      <Filter>ソース ファイル\InGame\Character\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\charBase.h">
+      <Filter>ソース ファイル\CharBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\collision.h">
+      <Filter>ソース ファイル\InGame\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common.h">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\easing.h">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\define.h">
+      <Filter>ソース ファイル\ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effectBase.hpp">
+      <Filter>ソース ファイル\InGame\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effectExplosion.h">
+      <Filter>ソース ファイル\InGame\Effect\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effectMoveStar.h">
+      <Filter>ソース ファイル\InGame\Effect\MoveStar</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effectSlash.h">
+      <Filter>ソース ファイル\InGame\Effect\Slash</Filter>
+    </ClInclude>
+    <ClInclude Include="src\enemyBase.hpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\enemyMng.h">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fade.h">
+      <Filter>ソース ファイル\Fade</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fairy.h">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Fairy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fileLoader.h">
+      <Filter>ソース ファイル\FileManager\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fileMng.h">
+      <Filter>ソース ファイル\FileManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gameManager.h">
+      <Filter>ソース ファイル\GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gameover.h">
+      <Filter>ソース ファイル\GameOver</Filter>
+    </ClInclude>
+    <ClInclude Include="src\griffon.h">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Griffon</Filter>
+    </ClInclude>
+    <ClInclude Include="src\myMath.hpp">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nWayShot.h">
+      <Filter>ソース ファイル\InGame\Attack\nWayShot</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nWaySing.h">
+      <Filter>ソース ファイル\InGame\Attack\tackle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tackle.h">
+      <Filter>ソース ファイル\InGame\Attack\tackle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\obj.h">
+      <Filter>ソース ファイル\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pickupBase.hpp">
+      <Filter>ソース ファイル\InGame\Pickup</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pickupJewely.h">
+      <Filter>ソース ファイル\InGame\Pickup\Jewely</Filter>
+    </ClInclude>
+    <ClInclude Include="src\player.h">
+      <Filter>ソース ファイル\InGame\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneBase.hpp">
+      <Filter>ソース ファイル\Scence\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneDescription.h">
+      <Filter>ソース ファイル\Scence\Description</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneEnd.h">
+      <Filter>ソース ファイル\Scence\End</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneMain.h">
+      <Filter>ソース ファイル\Scence\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneNameInput.h">
+      <Filter>ソース ファイル\Scence\NameInput</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneStageSelect.h">
+      <Filter>ソース ファイル\Scence\StageSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneTitle.h">
+      <Filter>ソース ファイル\Scence\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scoreMng.h">
+      <Filter>ソース ファイル\InGame\ScoreManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\setting.h">
+      <Filter>ソース ファイル\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stage1.h">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage1</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stage2.h">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stage4.h">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage4</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stageBase.h">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stage3.h">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage3</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stageMng.h">
+      <Filter>ソース ファイル\InGame\StageManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneMng.h">
+      <Filter>ソース ファイル\Scence\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sceneJecLogo.h">
+      <Filter>ソース ファイル\Scence\JEC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -151,5 +468,204 @@
     <ClCompile Include="..\..\lib\gplib.cpp">
       <Filter>ライブラリ\gplib</Filter>
     </ClCompile>
+    <ClCompile Include="src\actionPoint.cpp">
+      <Filter>ソース ファイル\InGame\ActionPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bird.cpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Bird</Filter>
+    </ClCompile>
+    <ClCompile Include="src\characterBase.cpp">
+      <Filter>ソース ファイル\InGame\Character\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\charBase.cpp">
+      <Filter>ソース ファイル\CharBase</Filter>
+    </ClCompile>
+    <ClCompile Include="src\collision.cpp">
+      <Filter>ソース ファイル\InGame\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\easing.cpp">
+      <Filter>ソース ファイル\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\effectExplosion.cpp">
+      <Filter>ソース ファイル\InGame\Effect\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="src\effectMoveStar.cpp">
+      <Filter>ソース ファイル\InGame\Effect\MoveStar</Filter>
+    </ClCompile>
+    <ClCompile Include="src\effectSlash.cpp">
+      <Filter>ソース ファイル\InGame\Effect\Slash</Filter>
+    </ClCompile>
+    <ClCompile Include="src\enemyMng.cpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fade.cpp">
+      <Filter>ソース ファイル\Fade</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fairy.cpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Fairy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fileLoader.cpp">
+      <Filter>ソース ファイル\FileManager\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fileMng.cpp">
+      <Filter>ソース ファイル\FileManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameManager.cpp">
+      <Filter>ソース ファイル\GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gameover.cpp">
+      <Filter>ソース ファイル\GameOver</Filter>
+    </ClCompile>
+    <ClCompile Include="src\griffon.cpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Griffon</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nWayShot.cpp">
+      <Filter>ソース ファイル\InGame\Attack\nWayShot</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nWaySing.cpp">
+      <Filter>ソース ファイル\InGame\Attack\nWaySing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tackle.cpp">
+      <Filter>ソース ファイル\InGame\Attack\tackle</Filter>
+    </ClCompile>
+    <ClCompile Include="src\obj.cpp">
+      <Filter>ソース ファイル\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pickupJewely.cpp">
+      <Filter>ソース ファイル\InGame\Pickup\Jewely</Filter>
+    </ClCompile>
+    <ClCompile Include="src\player.cpp">
+      <Filter>ソース ファイル\InGame\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneDescription.cpp">
+      <Filter>ソース ファイル\Scence\Description</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneEnd.cpp">
+      <Filter>ソース ファイル\Scence\End</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneMain.cpp">
+      <Filter>ソース ファイル\Scence\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneNameInput.cpp">
+      <Filter>ソース ファイル\Scence\NameInput</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneStageSelect.cpp">
+      <Filter>ソース ファイル\Scence\StageSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneTitle.cpp">
+      <Filter>ソース ファイル\Scence\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scoreMng.cpp">
+      <Filter>ソース ファイル\InGame\ScoreManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\setting.cpp">
+      <Filter>ソース ファイル\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stage1.cpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stage2.cpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stage3.cpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage3</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stage4.cpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Stage4</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stageBase.cpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stageMng.cpp">
+      <Filter>ソース ファイル\InGame\StageManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneMng.cpp">
+      <Filter>ソース ファイル\Scence\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sceneJecLogo.cpp">
+      <Filter>ソース ファイル\Scence\JEC</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Pendulum_alpha\res\dat\main\enemy\table\debugTable01.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\player.txt">
+      <Filter>リソース ファイル\Main</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stages.txt">
+      <Filter>リソース ファイル\Main\Stage</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage03.txt">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage04.txt">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage01.txt">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\stage02.txt">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\bossStage01.txt">
+      <Filter>リソース ファイル\Main\Stage\boss</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\enemies.txt">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\normal\bird.txt">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\normal\fairy.txt">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\boss\griffon.txt">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\table\enemyTable01.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\table\enemyTable01_b.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\table\enemyTable02.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\table\enemyTable03.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\table\enemyTable04.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\table\debugTable01.txt">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\dat\resdata.dat">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="res\dat\path.ini">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="res\dat\main\pickup\pickups.dat">
+      <Filter>リソース ファイル\Main\pickup</Filter>
+    </None>
+    <None Include="res\dat\main\pickup\jewely.dat">
+      <Filter>リソース ファイル\Main\pickup</Filter>
+    </None>
+    <None Include="res\dat\result\rank.dat">
+      <Filter>リソース ファイル\Result</Filter>
+    </None>
+    <None Include="res\dat\stageSelect\setting.dat">
+      <Filter>リソース ファイル\StageSelect</Filter>
+    </None>
   </ItemGroup>
 </Project>

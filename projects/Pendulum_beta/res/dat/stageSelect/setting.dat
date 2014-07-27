@@ -1,0 +1,57 @@
+
+//＿元画像サイズ
+#BGWidth	2941
+#BGHeight	1692
+
+//＿描画始点、サイズ
+#BGLeft		0
+#BGTop		0
+#BGRight	2500
+#BGBottom	1500
+
+//＿カメラ投影可能領域(基本画像描画サイズと同じにしておけば良い)
+#Left	0
+#Top	0
+#Right	2500
+#Bottom	1500
+
+#StartCameraPos
+1250	750
+
+
+//_ステージオブジェクト(※並び順固定)____________
+ステージ名
+座標XY
+ステージ画像管理名
+画像サイズWH
+ステージ説明画像管理名
+画像サイズWH
+//__________________________________________
+
+#Stage01
+1600	750
+img_ss01
+200	200
+img_stageDescription01
+300	400
+
+#Stage02
+360	1000
+img_ss02
+200	200
+img_stageDescription02
+300	400
+
+#Stage03
+250	350
+img_ss03
+200	200
+img_stageDescription03
+300	400
+
+＃Stage04
+3000	2800
+img_ss04
+200	200
+img_stageDescription04
+300	400

@@ -1,0 +1,43 @@
+#ifndef DEF_FILEMNG_H
+#define DEF_FILEMNG_H
+
+#ifndef DEF_ENEMYBASE_HPP
+#include "enemyBase.hpp"
+#endif
+
+#include <vector>
+#include <typeinfo>
+
+/*
+	@brief	ファイル管理クラス
+			ゲームマネージャより呼び出される
+*/
+class CFileMng
+{
+private:
+	std::vector<EnemyPtr> enemiesData_;		// 敵情報
+
+public:
+
+	/*
+		@brief	敵情報の設定
+		@param	[in]	enemy	敵クラスid
+		@return	敵情報
+	*/
+	template<class ENEMY>
+	void GetEnemyData(const ENEMY& enemy) const;
+
+	//IEnemy
+
+};
+
+/*
+	@brief	ファイル読み込みクラス
+			ファイルマネージャ内で使用
+*/
+class CFileLoader
+{
+
+};
+
+#endif

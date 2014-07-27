@@ -1,0 +1,67 @@
+#Bgm	bgm_stage01
+
+#ClearAnnounce
+img_clearAnnounce01	-1	-1
+
+
+#StageClear
+Goal	3000	2000	200
+img_goalObj01	1	1
+
+#NormaTime
+120.0
+
+
+#Left	0
+#Top	0
+#Right	5000
+#Bottom	5000
+
+#CameraLeft		0
+#CameraTop		200
+#CameraRight	5000
+#CameraBottom	4600
+
+
+#Player
+1483	1929
+
+#Enemy
+res/dat/main/enemy/debugTable01.txt
+res/dat/main/enemy/enemyTable01.txt
+
+#Boss
+res/dat/main/stage/bossStage01.txt
+
+
+#ActionCircle
+{
+2863	2748	361
+1522	2975	295
+1533	3734	111
+700	2982	185
+1028	2476	200
+1007	1859	288
+}
+
+#ActionPolygon
+{
+4
+3308	3053
+3302	3373
+3421	3362
+3354	3006
+
+4
+1439	2464
+1198	2783
+1144	2736
+1390	2343
+
+4
+551	1756
+786	2213
+688	2180
+477	1792
+
+}

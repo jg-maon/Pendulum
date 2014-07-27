@@ -1,0 +1,55 @@
+
+#Img	img_player
+
+#Size	128		128
+
+#Collision
+{
+
+#Rect	-7 -30		7 30
+
+}
+
+
+#StageCollision
+{
+
+motion01
+{
+#Rect	-20	-60	20	60
+}
+motion02
+{
+
+}
+
+}
+
+
+
+//===========================================================
+#ArmImg			img_playerArm
+#ArmRotateX		2.8
+#ArmRotateY		7.1
+#ArmOffsetX		3.0
+#ArmOffsetY		-30.0
+
+#ChainImg		img_chain
+
+#GravityAcc		25.0
+#MaxGravity		100.0
+#Tension		1500.0
+#DownTension	0.85
+#DownSpeed		0.92
+#MaxVelocityX	2500.0
+#MaxVelocityY	1500.0
+
+#ChainTime1		1.0
+#ChainTime2		2.0
+//#MaxChain	999
+#InvincibleTime	1.0
+
+
+#Health			150
+#Power			5
+#AttackRadius	300.0

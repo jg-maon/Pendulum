@@ -1,0 +1,8 @@
+#Img		img_jewely
+
+#Size		32	32
+
+#Collision
+{
+#Circle	0	0	halfWidth
+}

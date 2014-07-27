@@ -2580,6 +2580,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT	ps;
 	HRESULT res;
+
+
 	switch (msg) {
 		case WM_KEYDOWN: 
 			if(wParam == VK_ESCAPE){ DestroyWindow(hWnd);}
@@ -2640,14 +2642,27 @@ int system::DoWindow(HINSTANCE hInstance,HINSTANCE hPreInst,LPSTR lpszCmdLine,in
 	AdjustWindowRectEx(&rc, WS_OVERLAPPEDWINDOW, FALSE, 0);
 
 	DWORD style;
-	system::WindowMode = (MessageBox(NULL, "フルスクリーンで起動しますか？", "ウィンドウモード選択", MB_YESNO | MB_ICONQUESTION) == IDNO);
+	system::WindowMode = (MessageBox(NULL, TEXT("フルスクリーンで起動しますか？"), TEXT("ウィンドウモード選択"), MB_YESNO | MB_ICONQUESTION) == IDNO);
 	if (system::WindowMode) style = WS_OVERLAPPEDWINDOW;
 	else           style = WS_POPUP;
+
+
+	int x = 0, y = 0;
+	if (system::WindowMode)
+	{
+		// 画面中央にウィンドウ生成
+		HWND hDesktopWnd = GetDesktopWindow();
+		RECT deskrc;
+		GetWindowRect(hDesktopWnd, (LPRECT)&deskrc);
+		x = (deskrc.right - (rc.right - rc.left)) / 2;
+		y = (deskrc.bottom - (rc.bottom - rc.top)) / 2;
+	}
 	system::hWnd=CreateWindow(
 		(Name), 
 		(system::USERNAME),
 		style,
-		0, 0,
+		//0, 0,
+		x, y,
 		rc.right - rc.left,
 		rc.bottom - rc.top,
 		NULL,
@@ -2655,7 +2670,7 @@ int system::DoWindow(HINSTANCE hInstance,HINSTANCE hPreInst,LPSTR lpszCmdLine,in
 		hInstance,
 		NULL);
 
-
+	
 	system::InitDx();
 	//resource table init
 	Draw_InitImgTable();
@@ -2704,6 +2719,24 @@ int system::DoWindow(HINSTANCE hInstance,HINSTANCE hPreInst,LPSTR lpszCmdLine,in
 
 	ShowWindow(system::hWnd,nCmdShow);
 	UpdateWindow(system::hWnd);
+
+	//--------------------------------------------------
+	// マウスカーソルが出ないように
+	if (system::WindowMode)
+	{
+		GetClientRect(system::hWnd, &rc);
+		// クライアント領域を画面座標に変換する
+		POINT pt = { rc.left, rc.top };
+		POINT pt2 = { rc.right, rc.bottom };
+		ClientToScreen(system::hWnd, &pt);
+		ClientToScreen(system::hWnd, &pt2);
+		SetRect(&rc, pt.x, pt.y, pt2.x, pt2.y);
+		// カーソルの動作範囲を制限する
+		ClipCursor(&rc);
+	}
+	//--------------------------------------------------
+
+
 	while(true){
 		if(PeekMessage(&lpMsg,NULL,0,0,PM_REMOVE)){			//メッセージ処理
 			if(lpMsg.message == WM_QUIT)	break;		
@@ -2756,6 +2789,9 @@ int system::DoWindow(HINSTANCE hInstance,HINSTANCE hPreInst,LPSTR lpszCmdLine,in
 	DeletePlayerInput();
 	//memory leaks dump
 //	_CrtDumpMemoryLeaks();
+
+	// カーソル
+	ClipCursor(NULL);
 	}
 	return static_cast<int>(lpMsg.wParam);
 }

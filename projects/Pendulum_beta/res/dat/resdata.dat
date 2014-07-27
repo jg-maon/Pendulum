@@ -1,0 +1,119 @@
+//＿リソースファイル管理データ
+//＿#タグ{}の間に記述
+
+//＿画像＿管理名(img_でスタート)＿パス＿透過色(16進ARGB)
+#Img
+{
+
+
+	img_description	res/gra/description.png			0x00000000
+
+
+	img_cursor			res/gra/ui/cursor.png			0xff00ff00
+	img_UInumber		res/gra/ui/number.png			0xff000000
+	img_UIchain			res/gra/ui/chain.png			0xff000000
+	img_UIalphabet		res/gra/ui/abc.png				0xff000000
+	img_effectWind		res/gra/effect/032.png			0x00000000
+	img_effectStar		res/gra/effect/010.png			0x00000000
+	img_effectExplosion	res/gra/effect/explosion.png	0xff000000
+	img_effectSlash		res/gra/effect/slash.png		0xff000000
+
+	img_jewely		res/gra/ui/jewely.png			0x00000000
+		
+	img_title		res/gra/title/bg.jpg			0x00000000
+	img_logo		res/gra/title/logo.png			0xffffffff
+	img_titleSlash	res/gra/title/slash.png			0xffffffff
+
+	img_stageSelect	res/gra/stageSelect/bg.png		0xff00ff00
+	img_ss01			res/gra/stageSelect/stage01.png			0xff000000
+	img_stageDescription01	res/gra/stageSelect/stageDesc01.png	0xff00ff00
+	img_ss02			res/gra/stageSelect/stage02.png			0xff000000
+	img_stageDescription02	res/gra/stageSelect/stageDesc02.png	0xff00ff00
+	img_ss03			res/gra/stageSelect/stage03.png			0xff000000
+	img_stageDescription03	res/gra/stageSelect/stageDesc03.png	0xff00ff00
+	img_ss04			res/gra/stageSelect/stage04.png			0xff000000
+	img_stageDescription04	res/gra/stageSelect/stageDesc04.png	0xff00ff00
+
+	img_stage01			res/gra/main/stages/stage01/bg.png					0xff000000
+	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xff000000
+	img_actionCircle200	res/gra/main/stages/stage01/actionCircle_r200.png	0x00000000
+
+	img_player		res/gra/main/character/player/base.png				0xff00ff00
+	img_playerArm	res/gra/main/character/player/arm.png				0xffffffff
+	img_chain		res/gra/main/character/player/chain.png				0x00000000
+	img_bird		res/gra/main/character/enemy/bird/bird.png			0xff000000
+	img_birdShot	res/gra/main/character/enemy/bird/birdShot.png		0xff000000
+	img_fairy		res/gra/main/character/enemy/fairy/fairy.png		0xff000000
+	img_fairySing	res/gra/main/character/enemy/fairy/fairySing.png	0xff000000
+	img_griffon		res/gra/main/character/enemy/griffon/griffon.png	0xff000000
+
+
+	img_end				res/gra/end/bg.jpg						0x00000000
+	img_stageClear		res/gra/end/stageClear.png				0x00000000
+	img_bonusDestroyer	res/gra/end/bonusDestroyer.png			0x00000000
+	img_bonusFastClear	res/gra/end/bonusFastClear.png			0x00000000
+	img_bonusNoDamage	res/gra/end/bonusNoDamage.png			0x00000000
+	img_bonusNoKill		res/gra/end/bonusNoKill.png				0x00000000
+	img_totalScore		res/gra/end/totalScore.png				0x00000000
+	img_rankin			res/gra/end/rankin.png					0x00000000
+
+	img_nameInput	res/gra/nameInput/bg.png				0xff000000
+	img_kbbutton	res/gra/nameInput/kbButton.png			0xffffffff
+	img_kbletter	res/gra/nameInput/kbLetter.png			0xff00ff00
+	img_kbselect	res/gra/nameInput/kbSelect.png			0xffffffff
+	img_chgbutton	res/gra/nameInput/chgButton.png			0xffffffff
+	img_chgletter	res/gra/nameInput/chgLetter.png			0xff00ff00
+	img_chgselect	res/gra/nameInput/chgSelect.png			0xffffffff
+	img_display		res/gra/nameInput/display.png			00ffffffff
+
+}
+
+//＿BGM＿管理名(bgm_でスタート)＿パス
+#Bgm
+{
+	bgm_title		res/snd/bgm/title.wav
+	bgm_stageSelect	res/snd/bgm/stageSelect.wav
+	bgm_stage01		res/snd/bgm/stage01.wav
+	bgm_end			res/snd/bgm/result.wav
+	bgm_nameInput	res/snd/bgm/nameInput.wav
+}
+
+//＿SE＿管理名(se_でスタート)＿パス
+#Se
+{
+	se_explosion	res/snd/se/explosion.wav
+	se_enter		res/snd/se/enter2.wav
+	se_drain		res/snd/se/drain2.wav
+	se_slash		res/snd/se/slash.wav
+
+	
+	se_wind			res/snd/se/wind.wav
+
+	se_slash01		res/snd/se/slash/slash01.wav
+	se_slash02		res/snd/se/slash/slash02.wav
+	se_slash03		res/snd/se/slash/slash03.wav
+	se_slash04		res/snd/se/slash/slash04.wav
+	se_slash05		res/snd/se/slash/slash05.wav
+	se_slash06		res/snd/se/slash/slash06.wav
+	se_slash07		res/snd/se/slash/slash07.wav
+	se_slash08		res/snd/se/slash/slash08.wav
+	se_slash09		res/snd/se/slash/slash09.wav
+	se_slash10		res/snd/se/slash/slash10.wav
+	se_slash11		res/snd/se/slash/slash11.wav
+	se_slash12		res/snd/se/slash/slash12.wav
+	se_slash13		res/snd/se/slash/slash13.wav
+	se_slash14		res/snd/se/slash/slash14.wav
+	se_slash15		res/snd/se/slash/slash15.wav
+}
+
+//＿フォント＿管理名(font_でスタート)＿フォント名(スペースは'＿'、'_'を使う)＿サイズ
+#Font
+{
+	font_MSGOSICK30	MS_ゴシック		30
+	font_MSGOSICK20	MS_ゴシック		20
+	font_MSGOSICK10	MS_ゴシック		10
+	font_POP30		HG創英角ﾎﾟｯﾌﾟ体	30
+	font_POP25		HG創英角ﾎﾟｯﾌﾟ体	25
+	font_POP12		HG創英角ﾎﾟｯﾌﾟ体	12
+	font_MSG15		MS_ゴシック		15
+}
