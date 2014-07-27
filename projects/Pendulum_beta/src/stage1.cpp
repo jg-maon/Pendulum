@@ -55,11 +55,13 @@ void CStage1::draw()
 
 
 	auto s = graph::Draw_GetImageSize2("img_stage01");
-	mymath::Recti& rt = (phase_ == Phase::BOSS || phase_ == Phase::RESULT) ? stage_[1].cameraRect : stage_[0].cameraRect;
-	int w = (rt.right - rt.left);
-	int h = (rt.bottom - rt.top);
-	float sx = w / static_cast<float>(s.cx);
-	float sy = h / static_cast<float>(s.cy);
+	mymath::Rectf rc = (phase_ == Phase::BOSS || phase_ == Phase::RESULT) ? stage_[1].cameraRect : stage_[0].cameraRect;
+	
+#if 0
+	rc.draw(-1, 1, false);
+#endif
+	float sx = rc.width() / static_cast<float>(s.cx);
+	float sy = rc.height() / static_cast<float>(s.cy);
 	/*
 	for (int y = 0; y <= h / 1024; ++y)
 	{
@@ -80,7 +82,7 @@ void CStage1::draw()
 	//*/
 	//*
 	graph::Draw_GraphicsLeftTop(
-		rt.left, rt.top, 1.f,
+		rc.left, rc.top, 1.f,
 		"img_stage01", 0, 0, s.cx, s.cy, 0, 0,
 		sx,
 		sy);

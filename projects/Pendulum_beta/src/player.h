@@ -64,6 +64,7 @@ private:
 	};
 	enum
 	{
+		ZOOM_TIME = 7,				// カメラズームウェイト時間(unit[/10sec])
 		MAX_SLASH = 15,				// 最高斬撃音階数
 		MAX_CHAIN = 999,			// 最高Chain数
 	};
@@ -83,6 +84,8 @@ private:
 	LoadInfo loadInfo_;					// ファイルから取得する可変値
 
 	float animTime_;					// アニメーション用カウンタ
+	bool isCameraZoom_;					// カメラズームフラグ
+	float zoomTime_;					// カメラズームウェイト時間
 
 	mymath::Vec3f startPos_;			// ステージ開始時座標
 

@@ -174,11 +174,17 @@ void CStageMng::LoadStage(const std::string& stageName)
 void CStageMng::MoveCamera(const mymath::Vec3f& lookAt, float adjust) const
 {
 	mymath::Vec3f cameraPos = camera::GetLookAt();
-	const auto& cameraRect = getCameraRect();
+	auto cameraRect = getCameraRect();
+
+	//cameraRect.Scale(1.f / camera::GetScale());
+
+	float s = camera::GetScale();
 
 	mymath::Vec3f newPos;
-	newPos.x = static_cast<float>(clamp(lookAt.x, (cameraRect.left + system::WINW / 2), (cameraRect.right - system::WINW / 2)));
-	newPos.y = static_cast<float>(clamp(lookAt.y, (cameraRect.top + system::WINH / 2), (cameraRect.bottom - system::WINH / 2)));
+	//newPos.x = static_cast<float>(clamp(lookAt.x, (cameraRect.left + system::WINW / 2), (cameraRect.right - system::WINW / 2)));
+	//newPos.y = static_cast<float>(clamp(lookAt.y, (cameraRect.top + system::WINH / 2), (cameraRect.bottom - system::WINH / 2)));
+	newPos.x = static_cast<float>(clamp(lookAt.x, (cameraRect.left + system::WINW / 2 / s), (cameraRect.right - system::WINW / 2 / s)));
+	newPos.y = static_cast<float>(clamp(lookAt.y, (cameraRect.top + system::WINH / 2 / s), (cameraRect.bottom - system::WINH / 2 / s)));
 
 	
 	if (mymath::POW2(cameraPos.x - newPos.x) > mymath::POW2(adjust))

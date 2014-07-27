@@ -2,6 +2,11 @@
 //#define D_SCALE_TEST	// 拡大、カメラ移動テスト
 #define D_EFFECT_TEST	// エフェクト生成テスト
 //#define D_PICKUP_TEST	//  ピックアップアイテムテスト
+//#define D_SHAPE_TEST	// 図形テスト
+#endif
+
+#ifdef D_SHAPE_TEST
+#define DEF_SHAPE_DRAW
 #endif
 
 //=================================================================================
@@ -32,6 +37,12 @@
 namespace titleDebug
 {
 	mymath::Vec3f pt;
+#ifdef D_SHAPE_TEST
+	float scale = 1.f + 0.01f;
+	mymath::Rectf rc(400.f, 200.f, 700.f, 400.f);
+	mymath::Circlef ci(600.f, 100.f, 0.f, 50.f);
+	mymath::Polyf pl(0);
+#endif
 
 }
 using namespace titleDebug;
@@ -102,7 +113,19 @@ IScene("SceneTitle", "img_title", "bgm_title")
 , titleAnim_(LOGO_A_X, LOGO_A_Y, 0.4f, 0.f, 0.f, "img_logo", 400, 200, 1.f, 1.f, 0.f, 0, 1)
 , titleSlash_(SLASH_A_X, SLASH_A_Y, 0.f, 0.f, 0.f, "img_titleSlash", 240, 360, 2.f, 3.f, 0.f, 0, 0)
 {
-
+#ifdef D_SHAPE_TEST
+	std::vector<mymath::Vec3f> points =
+	{
+		mymath::Vec3f(10.f, 20.f),
+		mymath::Vec3f(90.f, 20.f),
+		mymath::Vec3f(50.f, 90.f),
+		mymath::Vec3f(30.f, 50.f),
+		mymath::Vec3f(10.f, 10.f),
+	};
+	
+	titleDebug::pl = mymath::Polyf(points);
+	titleDebug::pl.Offset(mymath::Vec3f(100.f, 200.f));
+#endif
 }
 
 CSceneTitle::~CSceneTitle()
@@ -133,12 +156,18 @@ void CSceneTitle::start()
 // 処理
 bool CSceneTitle::update()
 {
-	//タイトルデモ間のフェードアウト、イン
+#ifdef D_SHAPE_TEST
+	titleDebug::ci.Scale(titleDebug::scale);
+	titleDebug::rc.Scale(titleDebug::scale);
+	titleDebug::pl.Scale(titleDebug::scale);
+#endif
+
+	// タイトルデモ間のフェードアウト、イン
 	switch (fadeState_)
 	{
 
 	case IScene::State::INNING:
-		//フェードイン処理
+		// フェードイン処理
 		if (CFade::FadeIn(255.f / 0.3f * system::FrameTime))
 		{
 			fadeState_ = State::MAIN;
@@ -221,6 +250,11 @@ bool CSceneTitle::update()
 // 描画
 void CSceneTitle::draw()
 {
+#ifdef D_SHAPE_TEST
+	titleDebug::rc.draw();
+	titleDebug::ci.draw();
+	titleDebug::pl.draw();
+#endif
 
 	//-------------------------
 	//Title
@@ -229,7 +263,7 @@ void CSceneTitle::draw()
 	if (phase_ == Phase::TITLE)
 	{
 
-		//背景
+		// 背景
 		__super::draw();
 
 #ifdef D_SCALE_TEST
@@ -271,7 +305,7 @@ void CSceneTitle::draw()
 			titleAnim_.draw(charabase::CharBase::Center);
 
 
-		//剣アニメーション
+		// 剣アニメーション
 		if (titleSlash_.CheckUse())
 			titleSlash_.draw(charabase::CharBase::Center);
 
@@ -300,10 +334,10 @@ int CSceneTitle::NextScene() const
 //-------------------------
 //Title
 //-------------------------
-//タイトル初期化
+// タイトル初期化
 void CSceneTitle::TitleInit()
 {
-	//アニメーション初期化
+	// アニメーション初期化
 	titleLogo_.src(0, 0, 0);
 	titleAnim_.pos(LOGO_A_X, LOGO_A_Y);
 	titleAnim_.add(0.f);
@@ -314,24 +348,24 @@ void CSceneTitle::TitleInit()
 	titleSlash_.pos(SLASH_A_X, SLASH_A_Y, 0.f);
 	titleSlash_.angle = SLASH_A_DEG;
 
-	//フェーズ初期化
+	// フェーズ初期化
 	logoPhase_ = LogoPhase::RED;
 	animPhase_ = AnimPhase::LOGO;
 	clickPhase_ = ClickPhase::HIDDEN;
 	slashPhase_ = SlashPhase::HIDDEN1;
 	flashPhase_ = FlashPhase::FADEOUT;
 
-	//タイマ初期化
+	// タイマ初期化
 	phaseTime_ = 0.f;
 	offTime_ = 0.f;
 	nextTime_ = 0.f;
 
-	//初期化フラグ
+	// 初期化フラグ
 
 	sePlaying_ = true;
 	flashFlag_ = true;
 
-	//可視不可視
+	// 可視不可視
 	//titleBack_.SetUse(true);
 	titleLogo_.SetUse(true);
 	titleAnim_.SetUse(false);

@@ -196,7 +196,17 @@ void CPlayer::step()
 		move();
 
 		//----------------------------------------
-		// ÉJÉÅÉâà⁄ìÆ
+		// ÉJÉÅÉâ
+		if (isCameraZoom_)
+		{
+			if ((zoomTime_ -= system::ONEFRAME_TIME) <= 0.f)
+			{
+				float s = camera::GetScale();
+				s = min(1.f, (s + 0.02f));
+				camera::SetScale(s);
+				zoomTime_ = 0.f;
+			}
+		}
 		sm()->MoveCamera(obj_.pos);
 	}
 
@@ -706,7 +716,7 @@ void CPlayer::key()
 #ifdef D_RANGE_TEST
 	atk_range.center = obj_.pos;
 #endif
-	if (CheckPress(KEY_MOUSE_RBTN || KEY_MOUSE_LBTN))
+	if (CheckPress(KEY_MOUSE_RBTN) || CheckPull(KEY_MOUSE_LBTN))
 	{
 #ifdef D_ATK_TEST
 		isAttacking_ = true;
@@ -717,7 +727,7 @@ void CPlayer::key()
 		isAttacking_ = range.Contains(mouse);
 #endif
 	}
-	if (CheckPull(KEY_MOUSE_RBTN || KEY_MOUSE_LBTN))
+	if (CheckPull(KEY_MOUSE_RBTN) && CheckPull(KEY_MOUSE_LBTN))
 	{
 		isAttacking_ = false;
 	}
@@ -809,10 +819,30 @@ void CPlayer::move()
 		mymath::Vec3f tensionForce = mymath::Vec3f::Rotate(angle) * tensionAcc_;
 		velocity += tensionForce;
 		tensionAcc_ *= loadInfo_.DOWN_TENSION;
+
+		const float CAMERA_SCALE_MIN = 0.75f;
+		if (mymath::POW2(tensionAcc_) < mymath::POW2(0.5f))
+		{
+			// à¯Ç¡í£ÇÁÇÍÇ»Ç≠Ç»Ç¡ÇƒÇ¢ÇÈä‘
+			tensionAcc_ = 0.f;
+			if (!isCameraZoom_)
+				zoomTime_ = ZOOM_TIME / 10.f;
+			isCameraZoom_ = true;
+		}
+		else
+		{
+			// à¯Ç¡í£ÇÁÇÍÇƒÇÈä‘
+			isCameraZoom_ = false;
+			float s = camera::GetScale();
+			s = max(CAMERA_SCALE_MIN, (s - 0.04f));
+			camera::SetScale(s);
+		}
+
 #ifdef _DEBUG
 		if (mymath::PYTHA(velocity.x, velocity.y) > mymath::PYTHA(vel_log.x, vel_log.y))
 			vel_log = velocity;
 #endif
+
 		{/*
 			hangAcc_ *= 0.98f;
 			if (hangAcc_ < 1.f)
@@ -912,6 +942,9 @@ void CPlayer::move()
 void CPlayer::UnHang()
 {
 	isHanging_ = false;
+	if (!isCameraZoom_)
+		zoomTime_ = ZOOM_TIME / 10.f;
+	isCameraZoom_ = true;
 	gravity_ = 0.f;
 	gravityF_ = true;
 	motionAnim_.set(2, 0.2f);
