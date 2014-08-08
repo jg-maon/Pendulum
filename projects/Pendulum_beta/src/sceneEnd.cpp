@@ -280,6 +280,8 @@ void CSceneEnd::start()
 {
 	__super::start();
 
+	camera::SetScale(1.f);
+
 	phase_ = (CSceneEnd::Phase::CLEAR);
 	anim_.set(8, 0.3f);
 	animTime_ = (0.f);
@@ -505,7 +507,8 @@ void CSceneEnd::InitBonus()
 {
 	totalScore_ = gm()->scoreMng()->score();
 	const auto& bonus = gm()->scoreMng()->getBonusScore();
-
+	
+	bonusObjs_.clear();
 	bonusObjs_.reserve(bonus.size());
 	mymath::Vec3f drawPos(static_cast<float>(system::WINW), BONUS_Y / 10.f + BONUS_MOVE_Y / 10.f);
 	bool f = true;		// スタートフラグ　最初のみtrue

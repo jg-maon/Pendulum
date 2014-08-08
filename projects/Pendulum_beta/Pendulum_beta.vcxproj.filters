@@ -197,6 +197,9 @@
     <Filter Include="リソース ファイル\Title">
       <UniqueIdentifier>{f789ed1e-454b-4c6f-8149-52026aef7ee4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\InGame\GameStatus">
+      <UniqueIdentifier>{60bc30d0-ab4b-45b8-a84b-46b97b5b4be6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -423,6 +426,9 @@
     </ClInclude>
     <ClInclude Include="src\sceneJecLogo.h">
       <Filter>ソース ファイル\Scence\JEC</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gameStatus.h">
+      <Filter>ソース ファイル\InGame\GameStatus</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

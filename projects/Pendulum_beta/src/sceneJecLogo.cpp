@@ -27,6 +27,7 @@ bool CSceneJecLogo::update()
 void CSceneJecLogo::start()
 {
 	__super::start();
+	camera::SetScale(1.f);
 	time::Time_ResetTimer(0);
 }
 

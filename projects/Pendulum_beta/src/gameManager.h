@@ -43,6 +43,10 @@ using namespace gplib;
 #include "scoreMng.h"
 #endif
 
+#ifndef DEF_GAMESTATUS_H
+#include "gameStatus.h"
+#endif
+
 
 //*/
 #endif
@@ -67,10 +71,11 @@ private:
 	// よく使うオブジェクトは別で確保しておく
 #ifdef DEF_GM_PTR
 	//*
-	std::weak_ptr<CPlayer> pPlayer_;		// プレイヤーポインタ
-	std::weak_ptr<CEnemyMng> pEnemyMng_;	// エネミーマネージャ
-	std::weak_ptr<CStageMng> pStageMng_;	// ステージマネージャ
-	std::weak_ptr<CScoreMng> pScoreMng_;	// スコアマネージャ
+	std::weak_ptr<CPlayer> pPlayer_;			// プレイヤーポインタ
+	std::weak_ptr<CEnemyMng> pEnemyMng_;		// エネミーマネージャ
+	std::weak_ptr<CStageMng> pStageMng_;		// ステージマネージャ
+	std::weak_ptr<CScoreMng> pScoreMng_;		// スコアマネージャ
+	std::weak_ptr<CGameStatus> pGameStatus_;	// ゲームステータス
 	//*/
 #endif
 	//=============================================================
@@ -267,28 +272,45 @@ public:
 	void SetScoreMngPtr(const std::weak_ptr<CScoreMng>& scoremng);
 
 	/*
-		@brief	ステージマネージャの取得
-		@return	ステージマネージャ
+		@brief	ゲームステータス
+		@param	[in]	gamestatus	ゲームステータス
+		@return	なし
 	*/
-	std::shared_ptr<CStageMng> stageMng();
-	
-	/*
-		@brief	スコアマネージャの取得
-		@return	スコアマネージャ
-	*/
-	std::shared_ptr<CScoreMng> scoreMng();
+	void SetGameStatusPtr(const std::weak_ptr<CGameStatus>& gamestatus);
+
+
 
 	/*
 		@brief	プレイヤーオブジェクトの取得
 		@return	プレイヤーオブジェクト
 	*/
-	std::shared_ptr<CPlayer> GetPlayer();
+	std::shared_ptr<CPlayer> GetPlayer() const;
 
 	/*
 		@brief	エネミーマネージャの取得
 		@return	エネミーマネージャ
 	*/
-	std::shared_ptr<CEnemyMng> enemyMng();
+	std::shared_ptr<CEnemyMng> enemyMng() const;
+
+	
+	/*
+		@brief	ステージマネージャの取得
+		@return	ステージマネージャ
+	*/
+	std::shared_ptr<CStageMng> stageMng() const;
+	
+	/*
+		@brief	スコアマネージャの取得
+		@return	スコアマネージャ
+	*/
+	std::shared_ptr<CScoreMng> scoreMng() const;
+
+	/*
+		@brief	ゲームステータスの取得
+		@return	ゲームステータス
+	*/
+	std::shared_ptr<CGameStatus> gameStatus() const;
+
 #endif
 
 

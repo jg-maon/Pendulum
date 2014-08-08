@@ -30,6 +30,7 @@ CSceneNameInput::~CSceneNameInput()
 void CSceneNameInput::start()
 {
 	__super::start();
+	camera::SetScale(1.f);
 
 	state_ = State::INPUT;
 	wordcount_ = 0;			//•¶š”‚Ì‰Šú‰»

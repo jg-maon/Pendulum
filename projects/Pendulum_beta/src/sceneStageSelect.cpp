@@ -44,6 +44,7 @@ void CSceneStageSelect::start()
 	descHeight_ = 0.f;
 
 	camera::SetLookAt(startCameraPos_.x, startCameraPos_.y);
+	camera::SetScale(1.f);
 
 }
 CSceneStageSelect::~CSceneStageSelect()

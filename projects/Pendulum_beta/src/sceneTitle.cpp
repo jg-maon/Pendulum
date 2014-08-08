@@ -141,6 +141,8 @@ void CSceneTitle::start()
 	slashAnim_.set(9, 0.9f);
 
 	camera::SetLookAt(system::WINW / 2.f, system::WINH / 2.f);
+	camera::SetScale(1.f);
+
 	CFade::ChangeColor(0xffffffff);
 	TitleInit();
 

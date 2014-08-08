@@ -60,6 +60,7 @@
     <ClInclude Include="src\fileMng.h" />
     <ClInclude Include="src\gameManager.h" />
     <ClInclude Include="src\gameover.h" />
+    <ClInclude Include="src\gameStatus.h" />
     <ClInclude Include="src\griffon.h" />
     <ClInclude Include="src\myMath.hpp" />
     <ClInclude Include="src\nWayShot.h" />

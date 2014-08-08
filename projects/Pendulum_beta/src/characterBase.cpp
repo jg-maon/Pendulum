@@ -1,14 +1,17 @@
 
 #include "characterBase.h"
 
+#include "gameManager.h"
+
 std::weak_ptr<CStageMng> ICharacter::sm_;
 
 
 ICharacter::ICharacter(const std::string& name) :
-	IColObject(name)
-	, health_(1)
-	, power_(0)
-	, prePos_(obj_.pos)
+IColObject(name)
+, updateCnt_(0)
+, health_(1)
+, power_(0)
+, prePos_(obj_.pos)
 {}
 
 ICharacter::~ICharacter()
@@ -16,7 +19,8 @@ ICharacter::~ICharacter()
 
 void ICharacter::step()
 {
-	prePos_ = obj_.pos; 
+	prePos_ = obj_.pos;
+	updateCnt_ = (updateCnt_ + 1) % MAX_UPDATE_CNT;
 }
 
 void ICharacter::draw()
@@ -32,8 +36,16 @@ void ICharacter::sm(const std::shared_ptr<CStageMng>& sm)
 {
 	sm_ = sm;
 }
-
-
+/*
+bool ICharacter::isUpdatable() const
+{
+	if (gm()->gameStatus()->isHitStopping())
+	{
+		return (updateCnt_ % SLOW_UPDATE_INTERVAL == 0);
+	}
+	return true;
+}
+//*/
 
 
 

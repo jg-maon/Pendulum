@@ -75,6 +75,16 @@ void CGameManager::start()
 	if (!GetObj(typeid(CCollision)))
 		AddObject2(ObjPtr(new CCollision()));
 
+	if (!GetObj(typeid(CGameStatus)))
+	{
+		auto gs = std::shared_ptr<CGameStatus>(new CGameStatus());
+		AddObject2(gs);
+#ifdef DEF_GM_PTR
+		
+#endif
+	}
+		
+
 }
 
 
@@ -405,25 +415,35 @@ void CGameManager::SetScoreMngPtr(const std::weak_ptr<CScoreMng>& scoremng)
 	pScoreMng_ = scoremng;
 }
 
+void CGameManager::SetGameStatusPtr(const std::weak_ptr<CGameStatus>& gamestatus)
+{
+	pGameStatus_ = gamestatus;
+}
 
-std::shared_ptr<CStageMng> CGameManager::stageMng()
+
+std::shared_ptr<CStageMng> CGameManager::stageMng() const
 {
 	return pStageMng_.lock();
 }
 
-std::shared_ptr<CScoreMng> CGameManager::scoreMng()
+std::shared_ptr<CScoreMng> CGameManager::scoreMng() const
 {
 	return pScoreMng_.lock();
 }
 
-std::shared_ptr<CPlayer> CGameManager::GetPlayer()
+std::shared_ptr<CPlayer> CGameManager::GetPlayer() const
 {
 	return pPlayer_.lock();
 }
 
-std::shared_ptr<CEnemyMng> CGameManager::enemyMng()
+std::shared_ptr<CEnemyMng> CGameManager::enemyMng() const
 {
 	return pEnemyMng_.lock();
+}
+
+std::shared_ptr<CGameStatus> CGameManager::gameStatus() const
+{
+	return pGameStatus_.lock();
 }
 
 //*/

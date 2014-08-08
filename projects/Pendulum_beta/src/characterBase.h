@@ -26,7 +26,14 @@ class ICharacter : public IColObject
 {
 private:
 	static std::weak_ptr<CStageMng> sm_;			// ステージマネージャへの参照
+	enum
+	{
+		SLOW_UPDATE_INTERVAL = 5,
+		MAX_UPDATE_CNT = SLOW_UPDATE_INTERVAL * 10 - 1,		// 0 ~ cnt倍-1
+	};
 protected:
+	int updateCnt_;							// 更新計算フレーム数(0->MAX)
+
 	int health_;							// 体力
 	int power_;								// 攻撃力
 #ifdef DEF_PREPOS
@@ -48,6 +55,14 @@ protected:
 		@return	なし
 	*/
 	void sm(const std::shared_ptr<CStageMng>& sm);
+
+	/*
+		@brief	更新をかけることができるか
+		@return	更新をかけられるか
+		@retval	true	更新
+		@retval	false	更新できない
+	*/
+	bool isUpdatable() const;
 
 public:
 

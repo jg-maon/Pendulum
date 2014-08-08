@@ -170,9 +170,9 @@ public:
 		@brief	座標指定したオブジェクト生成
 		@param	[in]	x	X座標
 		@param	[in]	y	Y座標
-		@param	[in]	z	奥行き(デフォルト:0.6f)
+		@param	[in]	z	奥行き(デフォルト:0.7f)
 	*/
-	CGriffon(float x, float y, float z = 0.6f);
+	CGriffon(float x, float y, float z = 0.7f);
 	~CGriffon();
 	/*
 		@brief	更新処理
