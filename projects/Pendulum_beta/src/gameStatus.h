@@ -36,6 +36,9 @@ public:
 	*/
 	void StartHitStop();
 
+
+	bool isHitStopping() const;
+
 };
 
 CGameStatus::CGameStatus():
