@@ -155,7 +155,7 @@ int CSceneNameInput::NextScene() const
 {
 	// ƒ‰ƒ“ƒLƒ“ƒO“o˜^
 	gm()->scoreMng()->RegisterRanking(name_);
-	return CSceneMng::Scene::TITLE;
+	return CSceneMng::Scene::JEC;
 }
 void CSceneNameInput::IsRelease(const CButton& cb_)
 {

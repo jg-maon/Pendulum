@@ -8,7 +8,6 @@ std::weak_ptr<CStageMng> ICharacter::sm_;
 
 ICharacter::ICharacter(const std::string& name) :
 IColObject(name)
-, updateCnt_(0)
 , health_(1)
 , power_(0)
 , prePos_(obj_.pos)
@@ -19,12 +18,14 @@ ICharacter::~ICharacter()
 
 void ICharacter::step()
 {
+	__super::step();	// 更新フレーム
 	prePos_ = obj_.pos;
-	updateCnt_ = (updateCnt_ + 1) % MAX_UPDATE_CNT;
 }
 
 void ICharacter::draw()
-{}
+{
+	__super::draw();
+}
 
 
 std::shared_ptr<CStageMng> ICharacter::sm()
@@ -39,11 +40,14 @@ void ICharacter::sm(const std::shared_ptr<CStageMng>& sm)
 /*
 bool ICharacter::isUpdatable() const
 {
+	
 	if (gm()->gameStatus()->isHitStopping())
 	{
 		return (updateCnt_ % SLOW_UPDATE_INTERVAL == 0);
 	}
 	return true;
+	
+	return !gm()->gameStatus()->isHitStopping();
 }
 //*/
 
@@ -250,6 +254,11 @@ void ICharacter::hit(const ObjPtr& rival)
 Base::Collisions ICharacter::GetDamageAreas() const
 {
 	return __super::GetDamageAreas(); 
+}
+
+Base::Collisions ICharacter::GetAttackAreas() const
+{
+	return Base::Collisions();
 }
 
 int ICharacter::getPower() const

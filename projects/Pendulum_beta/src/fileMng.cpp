@@ -50,9 +50,9 @@ void CFileMng::Load()
 }
 
 
-std::string CFileMng::GetFile(const std::string& tag) const
+std::string CFileMng::GetPath(const std::string& tag) const
 {
-	return fileLoader_.GetFile(tag);
+	return fileLoader_.GetPath(tag);
 }
 
 int CFileMng::GetFontID(const std::string& resname) const

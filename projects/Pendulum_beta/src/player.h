@@ -26,6 +26,17 @@
 class CPlayer : public ICharacter
 {
 public:
+
+	enum class AttackType	// UŒ‚‚Ìí—Ş
+	{
+		SLASH, 
+		TACKLE,
+	};	
+	enum UseBtn	// g—pƒ{ƒ^ƒ“
+	{
+		MOVE_BTN =	gplib::input::KEY_MOUSE_LBTN,	// ˆÚ“®
+		ATK_BTN	=	gplib::input::KEY_MOUSE_RBTN,	// UŒ‚
+	};
 	struct LoadInfo
 	{
 		std::string armImg;		// ˜r‰æ‘œ
@@ -50,7 +61,8 @@ public:
 		int health;				// ‰ŠúHP
 		int power;				// ‰ŠúUŒ‚—Í
 
-		float attackRadius;		// UŒ‚”ÍˆÍ
+		float maxAttackRadius;	// Å‘åUŒ‚”ÍˆÍ
+		float addRadius;		// UŒ‚”ÍˆÍ‘‰Á—Ê
 	};
 private:
 	enum class MotionType		// ƒ‚[ƒVƒ‡ƒ“”Ô†
@@ -99,7 +111,8 @@ private:
 	
 	charabase::Anim motionAnim_;		// ƒ‚[ƒVƒ‡ƒ“ƒAƒjƒ[ƒVƒ‡ƒ“—p
 
-	charabase::CharPtr attackRange_;	// UŒ‚”ÍˆÍ
+	charabase::CharPtr attackObj_;		// UŒ‚”ÍˆÍ‰æ‘œ
+	float attackRadius_;				// UŒ‚”ÍˆÍ
 	bool isAttacking_;					// UŒ‚’†‚©
 
 	//bool invincible_;					// –³“G’†‚©
@@ -195,6 +208,18 @@ public:
 		@return	‚È‚µ
 	*/
 	virtual void hit(const ObjPtr& rival) override;
+	
+	/*
+		@brief	“–‚½‚è”»’è—Ìˆæ‚Ìæ“¾
+		@return	“–‚½‚è”»’è—Ìˆæ
+	*/
+	virtual Collisions GetDamageAreas() const override;
+	
+	/*
+		@brief	UŒ‚‚Ì“–‚½‚è”»’è—Ìˆæ‚Ìæ“¾
+		@return	UŒ‚‚Ì“–‚½‚è”»’è—Ìˆæ
+	*/
+	virtual Collisions GetAttackAreas() const override;
 
 	/*
 		@brief	ƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg‚ğæ“¾
@@ -245,10 +270,11 @@ public:
 	
 	/*
 		@brief	UŒ‚
-		@param	[in]	pos	“G‚ÌÀ•W
+		@param	[in]	type	UŒ‚‚Ìí—Ş
+		@param	[in]	pos		“G‚ÌÀ•W
 		@return	‚È‚µ
 	*/
-	void ApplyAttack(const mymath::Vec3f& pos);
+	void ApplyAttack(AttackType type, const mymath::Vec3f& pos);
 
 	/*
 		@brief	“G‚ğ“|‚µ‚½
@@ -256,11 +282,6 @@ public:
 	*/
 	void KilledEnemy();
 	
-	/*
-		@brief	“–‚½‚è”»’è—Ìˆæ‚Ìæ“¾
-		@return	“–‚½‚è”»’è—Ìˆæ
-	*/
-	virtual Collisions GetDamageAreas() const override;
 
 	/*
 		@brief	Chain”‚Ìæ“¾

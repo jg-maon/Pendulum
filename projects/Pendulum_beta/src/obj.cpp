@@ -111,6 +111,18 @@ bool IObject::InScreen(int border) const
 	return rt.Contains(obj_.GetRect());
 }
 
+bool IObject::isUpdatable() const
+{
+	return (gm()->gameStatus()->isUpdatable());
+}
+
+void IObject::step()
+{
+}
+void IObject::draw()
+{
+	obj_.draw(charabase::CharBase::MODE::Center, turnFlag_);
+}
 
 void IObject::kill()
 {
@@ -141,6 +153,11 @@ void IObject::obj(const charabase::CharBase& o)
 	obj_ = o;
 }
 
+bool IObject::isTurn() const
+{
+	return turnFlag_;
+}
+
 #pragma endregion // IObject methods
 
 //=============================================================
@@ -157,6 +174,16 @@ IObject(name)
 IColObject::~IColObject()
 {
 }
+
+void IColObject::step()
+{
+	__super::step();
+}
+void IColObject::draw()
+{
+	__super::draw();
+}
+
 
 void IColObject::ClearCollisions()
 {

@@ -26,14 +26,8 @@ class ICharacter : public IColObject
 {
 private:
 	static std::weak_ptr<CStageMng> sm_;			// ステージマネージャへの参照
-	enum
-	{
-		SLOW_UPDATE_INTERVAL = 5,
-		MAX_UPDATE_CNT = SLOW_UPDATE_INTERVAL * 10 - 1,		// 0 ~ cnt倍-1
-	};
-protected:
-	int updateCnt_;							// 更新計算フレーム数(0->MAX)
 
+protected:
 	int health_;							// 体力
 	int power_;								// 攻撃力
 #ifdef DEF_PREPOS
@@ -56,13 +50,6 @@ protected:
 	*/
 	void sm(const std::shared_ptr<CStageMng>& sm);
 
-	/*
-		@brief	更新をかけることができるか
-		@return	更新をかけられるか
-		@retval	true	更新
-		@retval	false	更新できない
-	*/
-	bool isUpdatable() const;
 
 public:
 
@@ -99,6 +86,12 @@ public:
 		@return	ワールド座標の当たり判定領域
 	*/
 	virtual Collisions GetDamageAreas() const;
+
+	/*
+		@brief	攻撃の当たり判定領域の取得
+		@return	攻撃の当たり判定領域
+	*/
+	virtual Collisions GetAttackAreas() const;
 
 	/*
 		@brief	攻撃力の取得

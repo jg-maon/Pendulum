@@ -39,6 +39,10 @@ void CPickupJewely::init(const mymath::Vec3f& pos, int type)
 
 void CPickupJewely::step()
 {
+	// ヒットストップ中はスキップ
+	if (gm()->gameStatus()->isHitStopping())
+		return;
+
 	switch (state_)
 	{
 	case IPickup::State::POP:

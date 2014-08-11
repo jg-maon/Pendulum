@@ -60,7 +60,7 @@ bool CStageMng::load()
 {
 	//----------------------------------------------------
 	// ステージのロード
-	std::string stages = gm()->fm().GetFile("#StageFile");
+	std::string stages = gm()->fm()->GetPath("#StageFile");
 	ifstream stageF(stages);
 	if (stageF.fail())
 	{
@@ -127,7 +127,7 @@ void CStageMng::LoadStage(const std::string& stageName)
 	stageState_ = StageState::ENTER;
 	nowStage_ = stageName;
 
-	std::string stages = gm()->fm().GetFile("#StageFile");
+	std::string stages = gm()->fm()->GetPath("#StageFile");
 	ifstream stageF(stages);
 	if (stageF.fail())
 	{

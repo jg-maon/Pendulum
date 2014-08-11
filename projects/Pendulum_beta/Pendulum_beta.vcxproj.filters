@@ -122,9 +122,6 @@
     <Filter Include="ソース ファイル\InGame\Pickup\Jewely">
       <UniqueIdentifier>{be6e4100-25e8-4560-a6be-5b12965ef1a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Fade">
-      <UniqueIdentifier>{e08d32e8-4b73-4729-b82f-7bb27701e0d8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\FileManager">
       <UniqueIdentifier>{e0e4373f-24c2-4dec-bfdc-2c052bda2d5d}</UniqueIdentifier>
     </Filter>
@@ -199,6 +196,12 @@
     </Filter>
     <Filter Include="ソース ファイル\InGame\GameStatus">
       <UniqueIdentifier>{60bc30d0-ab4b-45b8-a84b-46b97b5b4be6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Fade">
+      <UniqueIdentifier>{e08d32e8-4b73-4729-b82f-7bb27701e0d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Effect\AfterImage">
+      <UniqueIdentifier>{dabf4962-a2d5-4e38-a0bc-bc331675db6a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -358,9 +361,6 @@
     <ClInclude Include="src\nWayShot.h">
       <Filter>ソース ファイル\InGame\Attack\nWayShot</Filter>
     </ClInclude>
-    <ClInclude Include="src\nWaySing.h">
-      <Filter>ソース ファイル\InGame\Attack\tackle</Filter>
-    </ClInclude>
     <ClInclude Include="src\tackle.h">
       <Filter>ソース ファイル\InGame\Attack\tackle</Filter>
     </ClInclude>
@@ -429,6 +429,12 @@
     </ClInclude>
     <ClInclude Include="src\gameStatus.h">
       <Filter>ソース ファイル\InGame\GameStatus</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nWaySing.h">
+      <Filter>ソース ファイル\InGame\Attack\nWaySing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effectAfterImage.h">
+      <Filter>ソース ファイル\InGame\Effect\AfterImage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -597,11 +603,14 @@
     <ClCompile Include="src\sceneJecLogo.cpp">
       <Filter>ソース ファイル\Scence\JEC</Filter>
     </ClCompile>
+    <ClCompile Include="src\gameStatus.cpp">
+      <Filter>ソース ファイル\InGame\GameStatus</Filter>
+    </ClCompile>
+    <ClCompile Include="src\effectAfterImage.cpp">
+      <Filter>ソース ファイル\InGame\Effect\AfterImage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\Pendulum_alpha\res\dat\main\enemy\table\debugTable01.txt">
-      <Filter>リソース ファイル\Main\E_Table</Filter>
-    </Text>
     <Text Include="res\dat\main\player.txt">
       <Filter>リソース ファイル\Main</Filter>
     </Text>
@@ -672,6 +681,9 @@
     </None>
     <None Include="res\dat\stageSelect\setting.dat">
       <Filter>リソース ファイル\StageSelect</Filter>
+    </None>
+    <None Include="res\dat\main\gameStatus.dat">
+      <Filter>リソース ファイル\Main</Filter>
     </None>
   </ItemGroup>
 </Project>

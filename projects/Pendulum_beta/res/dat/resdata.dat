@@ -5,10 +5,6 @@
 #Img
 {
 
-
-	img_description	res/gra/description.png			0x00000000
-
-
 	img_cursor			res/gra/ui/cursor.png			0xff00ff00
 	img_UInumber		res/gra/ui/number.png			0xff000000
 	img_UIchain			res/gra/ui/chain.png			0xff000000
@@ -18,13 +14,15 @@
 	img_effectExplosion	res/gra/effect/explosion.png	0xff000000
 	img_effectSlash		res/gra/effect/slash.png		0xff000000
 
-	img_jewely		res/gra/ui/jewely.png			0x00000000
+	img_jewely			res/gra/ui/jewely.png			0x00000000
 		
-	img_title		res/gra/title/bg.jpg			0x00000000
-	img_logo		res/gra/title/logo.png			0xffffffff
-	img_titleSlash	res/gra/title/slash.png			0xffffffff
+	img_jecLogo			res/gra/jecLogo/logo.png		0x00000000
 
-	img_stageSelect	res/gra/stageSelect/bg.png		0xff00ff00
+	img_title			res/gra/title/bg.jpg			0x00000000
+	img_logo			res/gra/title/logo.png			0xffffffff
+	img_titleSlash		res/gra/title/slash.png			0xffffffff
+
+	img_stageSelect		res/gra/stageSelect/bg.png		0xff00ff00
 	img_ss01			res/gra/stageSelect/stage01.png			0xff000000
 	img_stageDescription01	res/gra/stageSelect/stageDesc01.png	0xff00ff00
 	img_ss02			res/gra/stageSelect/stage02.png			0xff000000
@@ -38,14 +36,14 @@
 	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xff000000
 	img_actionCircle200	res/gra/main/stages/stage01/actionCircle_r200.png	0x00000000
 
-	img_player		res/gra/main/character/player/base.png				0xff00ff00
-	img_playerArm	res/gra/main/character/player/arm.png				0xffffffff
-	img_chain		res/gra/main/character/player/chain.png				0x00000000
-	img_bird		res/gra/main/character/enemy/bird/bird.png			0xff000000
-	img_birdShot	res/gra/main/character/enemy/bird/birdShot.png		0xff000000
-	img_fairy		res/gra/main/character/enemy/fairy/fairy.png		0xff000000
-	img_fairySing	res/gra/main/character/enemy/fairy/fairySing.png	0xff000000
-	img_griffon		res/gra/main/character/enemy/griffon/griffon.png	0xff000000
+	img_player			res/gra/main/character/player/base.png				0xff00ff00
+	img_playerArm		res/gra/main/character/player/arm.png				0xffffffff
+	img_chain			res/gra/main/character/player/chain.png				0x00000000
+	img_bird			res/gra/main/character/enemy/bird/bird.png			0xff000000
+	img_birdShot		res/gra/main/character/enemy/bird/birdShot.png		0xff000000
+	img_fairy			res/gra/main/character/enemy/fairy/fairy.png		0xff000000
+	img_fairySing		res/gra/main/character/enemy/fairy/fairySing.png	0xff000000
+	img_griffon			res/gra/main/character/enemy/griffon/griffon.png	0xff000000
 
 
 	img_end				res/gra/end/bg.jpg						0x00000000
@@ -57,14 +55,14 @@
 	img_totalScore		res/gra/end/totalScore.png				0x00000000
 	img_rankin			res/gra/end/rankin.png					0x00000000
 
-	img_nameInput	res/gra/nameInput/bg.png				0xff000000
-	img_kbbutton	res/gra/nameInput/kbButton.png			0xffffffff
-	img_kbletter	res/gra/nameInput/kbLetter.png			0xff00ff00
-	img_kbselect	res/gra/nameInput/kbSelect.png			0xffffffff
-	img_chgbutton	res/gra/nameInput/chgButton.png			0xffffffff
-	img_chgletter	res/gra/nameInput/chgLetter.png			0xff00ff00
-	img_chgselect	res/gra/nameInput/chgSelect.png			0xffffffff
-	img_display		res/gra/nameInput/display.png			00ffffffff
+	img_nameInput		res/gra/nameInput/bg.png				0xff000000
+	img_kbbutton		res/gra/nameInput/kbButton.png			0xffffffff
+	img_kbletter		res/gra/nameInput/kbLetter.png			0xff00ff00
+	img_kbselect		res/gra/nameInput/kbSelect.png			0xffffffff
+	img_chgbutton		res/gra/nameInput/chgButton.png			0xffffffff
+	img_chgletter		res/gra/nameInput/chgLetter.png			0xff00ff00
+	img_chgselect		res/gra/nameInput/chgSelect.png			0xffffffff
+	img_display			res/gra/nameInput/display.png			00ffffffff
 
 }
 

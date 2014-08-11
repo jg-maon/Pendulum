@@ -679,8 +679,9 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 		{ "#InvincibleTime", &(lf.INV_TIME), typeid(float) },
 		{ "#Health", &(lf.health), typeid(int) },
 		{ "#Power", &(lf.power), typeid(int) },
-		{ "#AttackRadius", &(lf.attackRadius), typeid(float) },
-		//{ "#MaxVelocityX", &(lf.MAX_VX) , typeid(float)},
+		{ "#AttackRadius", &(lf.maxAttackRadius), typeid(float) },
+		{ "#AddAttackRadius", &(lf.addRadius), typeid(float) },
+
 	};
 	for (auto& lv : loadValues)
 	{
@@ -693,8 +694,6 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 				f >> *((float*)(lv).value);
 			else if (lv.inf == typeid(std::string))
 				f >> *((std::string*)(lv).value);
-			//else if (lv.inf == typeid(ttt))
-			//	f >> *((ttt*)(lv).value);
 		}
 		else break;
 	}
@@ -881,7 +880,7 @@ bool CFileLoader::LoadPickupData(std::vector<PickupPtr>& pickups)
 //=====================================================================================
 
 
-std::string CFileLoader::GetFile(const std::string& tag) const
+std::string CFileLoader::GetPath(const std::string& tag) const
 {
 	std::ifstream iniF(iniFile_);
 	if (iniF.fail())

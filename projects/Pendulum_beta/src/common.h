@@ -44,7 +44,7 @@ namespace common
 				alignによって描画点指定が終点Xか始点Xになるので注意
 	@param		[in]	num		数値
 	@param		[in]	obj		描画点XY、画像情報(サイズ、管理名)を持ったオブジェクト
-	@param		[in]	align	並び順
+	@param		[in]	align	並び順(LEFT or RIGHT)
 	@return		数値に合わせた連番画像オブジェクト
 */
 std::vector<charabase::CharBase> GetNumberImageObjects(int num, const charabase::CharBase& obj, Align align);

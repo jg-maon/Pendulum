@@ -184,6 +184,7 @@ public:
 */
 class IObject : public Base
 {
+private:
 protected:
 	bool turnFlag_;				// 反転描画するか
 	charabase::CharBase obj_;
@@ -196,6 +197,15 @@ protected:
 		@retval	false	画面外
 	*/
 	bool InScreen(int border = 0) const;
+	
+	/*
+		@brief	更新をかけることができるか
+		@return	更新をかけられるか
+		@retval	true	更新
+		@retval	false	更新できない
+	*/
+	bool isUpdatable() const;
+
 	/*
 		@brief		ファイルから数値を格納
 					halfWidth、halfHeight対応
@@ -228,7 +238,7 @@ public:
 		@brief	描画処理
 		@return	なし
 	*/
-	virtual void draw() = 0;
+	virtual void draw();
 	/*
 		@brief	オブジェクトを消す
 		@return	なし
@@ -260,6 +270,14 @@ public:
 		@return	なし
 	*/
 	void obj(const charabase::CharBase& o);
+
+	/*
+		@brief	画像反転描画させるかのフラグを返す
+		@return	反転描画フラグ
+		@retval	true	反転描画する
+		@retval	false	反転描画しない
+	*/
+	bool isTurn() const;
 };
 
 /*

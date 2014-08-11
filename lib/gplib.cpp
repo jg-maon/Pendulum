@@ -581,9 +581,9 @@ float math::Distance2(float x1, float y1, float x2, float y2)
 //				高精度タイマー　関連関数
 //
 //********************************************************************//
-const int	_TIMER_MAX = 10;
+//const int	_TIMER_MAX = 10;
 //経過時間観測用
-LARGE_INTEGER _start[_TIMER_MAX];
+std::unordered_map<int, LARGE_INTEGER> _start;
 LARGE_INTEGER _systimer;
 LARGE_INTEGER _now;
 LARGE_INTEGER _sys;
@@ -606,6 +606,8 @@ LARGE_INTEGER _lastFrame;
 //---------------------------------------------------------------------------------------
 void time::Time_ResetTimer(int id)
 {
+	if (!_start.count(id))
+		_start.insert(std::unordered_map<int, LARGE_INTEGER>::value_type(id, LARGE_INTEGER()));
 	QueryPerformanceCounter( &_start[id] );
 }
 //---------------------------------------------------------------------------------------
@@ -613,6 +615,8 @@ void time::Time_ResetTimer(int id)
 //---------------------------------------------------------------------------------------
 void time::Time_StartTimer(int id)
 {
+	if (!_start.count(id))
+		_start.insert(std::unordered_map<int, LARGE_INTEGER>::value_type(id, LARGE_INTEGER()));
 	QueryPerformanceCounter( &_start[id] );
 }
 
@@ -1917,10 +1921,10 @@ void		graph::Draw_CkRectNC(const RECT& rt, D3DCOLOR color)
 //				90,1.0f,1.0f,255,255,255,255);
 //---------------------------------------------------------------------------------------
 void graph::Draw_GraphicsNC(
-	int x, int y, float z,
+	float x, float y, float z,
 	const std::string& resname,
 	int srcX, int srcY, int sizeX,int sizeY,
-	int	degree, POINT *center,
+	float	degree, POINT *center,
 	float	scaleX,float scaleY,
 	u_char a, u_char r, u_char g, u_char b)
 {
@@ -1939,7 +1943,7 @@ void graph::Draw_GraphicsNC(
 	D3DXMATRIX matDraw;	//	座標変換マトリックスの格納先
 	D3DXVECTOR3 ptCenter(centerPos.x, centerPos.y, 0.0f);	//	描画の基準値の設定
 	D3DXVECTOR3 position(0.0f, 0.0f, z);	//	表示する位置を指定
-	D3DXVECTOR2 draw(static_cast<float>(x),static_cast<float>(y));	//	描画先座標（演算前）
+	D3DXVECTOR2 draw(x, y);	//	描画先座標（演算前）
 	D3DXVECTOR2 scale(scaleX, scaleY);	//	スケーリング係数（倍率を指定）
 	
 	D3DXVECTOR2	 sCenter;
@@ -1973,16 +1977,16 @@ void graph::Draw_GraphicsNC(
 //	pSprite->SetTransform(&matDraw);
 }
 void graph::Draw_GraphicsNC(
-	float x, float y, float z,
+	int x, int y, float z,
 	const std::string& resname,
 	int srcX, int srcY, int sizeX,int sizeY,
-	int	degree, POINT *center,
+	float	degree, POINT *center,
 	float	scaleX,float scaleY,
 	u_char a, u_char r, u_char g, u_char b)
 {
 	graph::Draw_GraphicsNC(
-		static_cast<int>(x), 
-		static_cast<int>(y),
+		static_cast<float>(x), 
+		static_cast<float>(y),
 		z, resname,
 		srcX, srcY, sizeX, sizeY,
 		degree, center, scaleX, scaleY,
@@ -2010,10 +2014,10 @@ void graph::Draw_GraphicsNC(
 //				90,&pt,1.0f,1.0f,255,255,255,255);
 //---------------------------------------------------------------------------------------
 void graph::Draw_GraphicsLeftTopNC(
-	int x, int y, float z,
+	float x, float y, float z,
 	const std::string& resname,
 	int srcX, int srcY, int sizeX,int sizeY,
-	int	degree, POINT *center,
+	float	degree, POINT *center,
 	float	scaleX,float scaleY,
 	u_char a, u_char r, u_char g, u_char b)
 {
@@ -2042,7 +2046,7 @@ void graph::Draw_GraphicsLeftTopNC(
 	D3DXMATRIX matDraw;	//	座標変換マトリックスの格納先
 	D3DXVECTOR3 ptCenter(0, 0, 0.0f);	//	描画の基準値の設定
 	D3DXVECTOR3 position(0.0f, 0.0f, z);	//	表示する位置を指定
-	D3DXVECTOR2 draw(static_cast<float>(x),static_cast<float>(y));	//	描画先座標（演算前）
+	D3DXVECTOR2 draw(x, y);	//	描画先座標（演算前）
 	D3DXVECTOR2 scale(scaleX, scaleY);	//	スケーリング係数（倍率を指定）
 
 	D3DXMatrixTransformation2D(
@@ -2066,16 +2070,16 @@ void graph::Draw_GraphicsLeftTopNC(
 //	pSprite->SetTransform(&matDraw);
 }
 void graph::Draw_GraphicsLeftTopNC(
-	float x, float y, float z,
+	int x, int y, float z,
 	const std::string& resname,
 	int srcX, int srcY, int sizeX, int sizeY,
-	int	degree, POINT *center,
+	float	degree, POINT *center,
 	float	scaleX,float scaleY,
 	u_char a, u_char r, u_char g, u_char b)
 {
 	graph::Draw_GraphicsLeftTopNC(
-		static_cast<int>(x), 
-		static_cast<int>(y),
+		static_cast<float>(x), 
+		static_cast<float>(y),
 		z, resname,
 		srcX, srcY, sizeX, sizeY,
 		degree, center, scaleX, scaleY,
@@ -2250,12 +2254,12 @@ void graph::Draw_Graphics(
 	int x, int y, float z,
 	const std::string& resname,
 	int srcX, int srcY, int sizeX,int sizeY,
-	int	degree, POINT *center,
+	float	degree, POINT *center,
 	float	scaleX,float scaleY,
 	u_char a, u_char r, u_char g, u_char b)
 {
 	graph::Draw_GraphicsNC(
-		camera::camera->ixchange(x), camera::camera->iychange(y),
+		camera::camera->xchange(x), camera::camera->ychange(y),
 		z, resname,
 		srcX, srcY, sizeX, sizeY,
 		degree, center,
@@ -2267,12 +2271,12 @@ void graph::Draw_Graphics(
 	float x, float y, float z,
 	const std::string& resname,
 	int srcX, int srcY, int sizeX,int sizeY,
-	int	degree, POINT *center,
+	float	degree, POINT *center,
 	float	scaleX,float scaleY,
 	u_char a, u_char r, u_char g, u_char b)
 {
 	graph::Draw_GraphicsNC(
-		camera::camera->ixchange(x), camera::camera->iychange(y),
+		camera::camera->xchange(x), camera::camera->ychange(y),
 		z, resname,
 		srcX, srcY, sizeX, sizeY,
 		degree, center,
@@ -2305,12 +2309,12 @@ void graph::Draw_GraphicsLeftTop(
 	int x, int y, float z,
 	const std::string& resname,
 	int srcX, int srcY, int sizeX,int sizeY,
-	int	degree, POINT *center,
+	float	degree, POINT *center,
 	float	scaleX,float scaleY,
 	u_char a, u_char r, u_char g, u_char b)
 {
 	graph::Draw_GraphicsLeftTopNC(
-		camera::camera->ixchange(x), camera::camera->iychange(y),
+		camera::camera->xchange(x), camera::camera->ychange(y),
 		z, resname,
 		srcX, srcY, sizeX, sizeY,
 		degree, center, 
@@ -2322,12 +2326,12 @@ void graph::Draw_GraphicsLeftTop(
 	float x, float y, float z,
 	const std::string& resname,
 	int srcX, int srcY, int sizeX,int sizeY,
-	int	degree, POINT *center,
+	float	degree, POINT *center,
 	float	scaleX,float scaleY,
 	u_char a, u_char r, u_char g, u_char b)
 {
 	graph::Draw_GraphicsLeftTopNC(
-		camera::camera->ixchange(x), camera::camera->iychange(y),
+		camera::camera->xchange(x), camera::camera->ychange(y),
 		z, resname,
 		srcX, srcY, sizeX, sizeY,
 		degree, center,

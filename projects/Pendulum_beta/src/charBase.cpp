@@ -199,7 +199,7 @@ void CharBase::draw(MODE mode, bool turnFlag) const
 					size.x * src.x,
 					size.y * src.y,
 					size.x, size.y,
-					static_cast<int>(angle), nullptr,
+					angle, nullptr,
 					sx, scale.y,
 					static_cast<u_char>(alpha),
 					static_cast<u_char>(r),
@@ -214,7 +214,7 @@ void CharBase::draw(MODE mode, bool turnFlag) const
 					size.x * src.x,
 					size.y * src.y,
 					size.x, size.y,
-					static_cast<int>(angle), nullptr,
+					angle, nullptr,
 					sx, scale.y,
 					static_cast<u_char>(alpha),
 					static_cast<u_char>(r),
@@ -234,7 +234,7 @@ void CharBase::drawNC(MODE mode, bool turnFlag) const
 			size.x * src.x,
 			size.y * src.y,
 			size.x, size.y,
-			static_cast<int>(angle), nullptr,
+			angle, nullptr,
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),
@@ -249,7 +249,7 @@ void CharBase::drawNC(MODE mode, bool turnFlag) const
 			size.x * src.x,
 			size.y * src.y,
 			size.x, size.y,
-			static_cast<int>(angle), nullptr,
+			angle, nullptr,
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),
@@ -269,7 +269,7 @@ void CharBase::draw2(MODE mode, bool turnFlag) const
 			src.x,
 			src.y,
 			size.x, size.y,
-			static_cast<int>(angle), nullptr,
+			angle, nullptr,
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),
@@ -284,7 +284,7 @@ void CharBase::draw2(MODE mode, bool turnFlag) const
 			src.x,
 			src.y,
 			size.x, size.y,
-			static_cast<int>(angle), nullptr,
+			angle, nullptr,
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),
@@ -304,7 +304,7 @@ void CharBase::draw2NC(MODE mode, bool turnFlag) const
 			src.x,
 			src.y,
 			size.x, size.y,
-			static_cast<int>(angle), nullptr,
+			angle, nullptr,
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),
@@ -319,7 +319,7 @@ void CharBase::draw2NC(MODE mode, bool turnFlag) const
 			src.x,
 			src.y,
 			size.x, size.y,
-			static_cast<int>(angle), nullptr,
+			angle, nullptr,
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),
@@ -342,7 +342,7 @@ void CharBase::Move(bool b3D)
 	}
 }
 
-bool CharBase::CheckUse()
+bool CharBase::CheckUse() const
 {
 	return (show);
 }

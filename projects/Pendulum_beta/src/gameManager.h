@@ -59,6 +59,47 @@ using namespace gplib;
 //Objectを継承しているクラスは全て管理される。
 class CGameManager : public Base
 {
+public:
+
+	struct Cursor
+	{
+		enum class AnimType
+		{
+			MOVE_X,		// 移動
+			MOVE_Y,		// 移動
+			ROTATE,		// 回転
+			ANIM_X,		// 画像アニメーション
+			ANIM_Y,		// 画像アニメーション
+		}animType;
+		charabase::CharPtr obj;			// カーソル
+		charabase::Anim anim;			// カーソルアニメーション用
+		std::vector<float> animTbl;		// アニメーションテーブル
+		void step()
+		{
+			switch (animType)
+			{
+			case CGameManager::Cursor::AnimType::MOVE_X:
+				obj->pos.x += animTbl[anim.no];
+				break;
+			case CGameManager::Cursor::AnimType::MOVE_Y:
+				obj->pos.y += animTbl[anim.no];
+				break;
+			case CGameManager::Cursor::AnimType::ROTATE:
+				obj->angle += animTbl[anim.no];
+				if (obj->angle >= 360.f)
+					obj->angle -= 360.f;
+				break;
+			case CGameManager::Cursor::AnimType::ANIM_X:
+				obj->src.x = static_cast<int>(animTbl[anim.no]);
+				break;
+			case CGameManager::Cursor::AnimType::ANIM_Y:
+				obj->src.y = static_cast<int>(animTbl[anim.no]);
+				break;
+			default:
+				break;
+			}
+		}
+	};
 private:
 	static mymath::Recti* winRect_;		// ウィンドウサイズ
 
@@ -86,18 +127,19 @@ private:
 	float count_;
 	//*/
 
-	bool showCursor_;					// true:カーソルの表示
+	bool showCursor_;					// true:マウスカーソルの表示
 
 	enum CursorSize
 	{
 		width = 48,
 		height = 48,
 	};
-	charabase::CharPtr cursor_;			// カーソル
-	//charabase::Anim cursorAnim_;		// カーソルアニメーション用
 
 	
-	std::unique_ptr<CFileMng> fileMng_;					// ファイルマネージャ
+	Cursor cursor_;
+
+	
+	std::shared_ptr<CFileMng> fileMng_;					// ファイルマネージャ
 
 	std::unique_ptr<CSceneMng> sceneMng_;				// シーンマネージャ
 
@@ -231,6 +273,20 @@ public:
 	mymath::Vec3f GetCursorPosNC() const;
 
 	/*
+		@brief	マウスカーソルオブジェクトの取得
+		@return	マウスカーソルオブジェクト
+	*/
+	const Cursor& cursor() const;
+
+	/*
+		@brief	マウスカーソルオブジェクトの設定
+		@param	[in]	newCursor	新しいカーソルオブジェクト
+		@return	なし
+	*/
+	void cursor(const Cursor& newCursor);
+
+
+	/*
 		@brief	プレイヤー座標の取得
 		@return	プレイヤーオブジェクトの座標
 	*/
@@ -240,7 +296,7 @@ public:
 		@brief	ファイルマネージャの取得
 		@return	ファイルマネージャ
 	*/
-	CFileMng& fm();
+	std::shared_ptr<CFileMng> fm();
 
 #ifdef DEF_GM_PTR
 	/*

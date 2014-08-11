@@ -25,7 +25,7 @@ public:
 		IColObject(name),force_(0)
 	{}
 	virtual ~IAttack() = 0{}
-	virtual void step() = 0{}
+	virtual void step() = 0{ __super::step(); }
 	virtual void draw() = 0{}
 	
 	/*

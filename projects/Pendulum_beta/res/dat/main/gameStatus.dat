@@ -1,0 +1,5 @@
+//＿ゲームステータス関連
+
+#HitStopTime	3.0
+
+#SlowInterval	60

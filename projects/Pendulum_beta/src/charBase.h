@@ -214,7 +214,7 @@ public:
 		@retval	true	使用中
 		@retval	false	未使用
 	*/
-	bool CheckUse();
+	bool CheckUse() const;
 
 	/*
 		@brief	使用フラグを設定

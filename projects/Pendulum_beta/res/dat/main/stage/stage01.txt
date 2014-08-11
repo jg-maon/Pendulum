@@ -36,6 +36,7 @@ res/dat/main/stage/bossStage01.txt
 
 #ActionCircle
 {
+}
 200	200	200
 1000	200	200
 1800	200	200
@@ -280,6 +281,7 @@ res/dat/main/stage/bossStage01.txt
 
 #ActionPolygon
 {
+}
 4
 -400	5200
 800	5200

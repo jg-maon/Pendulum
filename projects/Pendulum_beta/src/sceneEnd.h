@@ -30,10 +30,10 @@ private:
 
 	enum
 	{
-		TOTAL_Y = 4700,						// トータルスコア画像表示Y(unit[/10px])
+		TOTAL_Y = 4600,						// トータルスコア画像表示Y(unit[/10px])
 		TOTALSCORE_MARGIN = 100,			// トータルスコア画像との間隔(unit[/10px])
 		BONUS_X = 6000,						// ボーナス整列始点X(unit[/10px])
-		BONUS_Y = 2000,						// ボーナス整列始点Y(unit[/10px])
+		BONUS_Y = 1500,						// ボーナス整列始点Y(unit[/10px])
 		BONUS_MOVE_Y = 150,					// ボーナス移動量Y(unit[/10px])
 		BONUS_MARGIN = 300,					// ボーナス間隔(unit[/10px])
 

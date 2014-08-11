@@ -15,7 +15,7 @@ void OnCreateSetup()
 
 int GetFontID(const std::string& resname)
 {
-	return gm->fm().GetFontID(resname);
+	return gm->fm()->GetFontID(resname);
 }
 
 

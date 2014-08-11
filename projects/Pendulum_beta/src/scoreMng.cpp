@@ -16,7 +16,7 @@ Base("ScoreMng")
 , scoreObj_(charabase::BaseData("img_UInumber", 32, 64))
 , scoreState_(common::DispState::HIDE)
 {
-	std::string rankingFile = gm()->fm().GetFile("#RankingFile");
+	std::string rankingFile = gm()->fm()->GetPath("#RankingFile");
 	// ƒ‰ƒ“ƒLƒ“ƒOî•ñ“Ç‚İ‚İ
 	ranking_.clear();
 	ranking_.reserve(RANK_NUM + 1);
@@ -213,7 +213,7 @@ const std::vector<CScoreMng::BonusScore>& CScoreMng::getBonusScore() const
 
 void CScoreMng::RegisterRanking(const std::string& name)
 {
-	std::string rankingFile = gm()->fm().GetFile("#RankingFile");
+	std::string rankingFile = gm()->fm()->GetPath("#RankingFile");
 	Ranking tmp = { common::StrReplace(name," ", std::to_string(Ranking::SPACE)), score_ };
 	ranking_.push_back(tmp);
 

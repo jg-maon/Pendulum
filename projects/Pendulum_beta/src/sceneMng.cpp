@@ -14,7 +14,7 @@
 
 CSceneMng::CSceneMng() :
 Base("SceneMng")
-, nowScene_(TITLE)
+, nowScene_(JEC)
 {
 	scenes_.resize(SCENE_NUM);
 	scenes_[JEC]			= ScenePtr(new CSceneJecLogo());

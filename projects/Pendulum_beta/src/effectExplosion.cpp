@@ -26,6 +26,10 @@ CEffectExplosion::CEffectExplosion(const mymath::Vec3f& pos, float scale):
 
 void CEffectExplosion::step()
 {
+	// ヒットストップ中はスキップ
+	if (!isUpdatable())
+		return;
+
 	const int animRow = 3;
 	const float animMax = 12.f;
 	const float animTime = 0.5f;	// 0.5秒

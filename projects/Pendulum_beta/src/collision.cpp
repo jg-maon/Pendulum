@@ -1,20 +1,6 @@
 #ifdef _DEBUG
-//#define D_CIRCLE_TEST
-//#define D_POLY_TEST
 #define D_COLLISION_DRAW	// 当たり判定描画
 #define D_STAGECOL_DRAW		// ステージ当たり判定描画
-#endif
-
-#if defined(D_COLLISION_DRAW) || defined(D_STAGECOL_DRAW)
-#define DEF_SHAPE_DRAW
-#endif
-
-
-#if defined(D_POLY_TEST) || defined(D_CIRCLE_TEST)
-std::vector<mymath::Vec3f> vertexes;
-#ifdef D_POLY_TEST
-mymath::Linef line(0.f,0.f,0.5f, 500.f,1000.f,0.5f);
-#endif
 #endif
 
 
@@ -41,46 +27,42 @@ CCollision::CCollision() :
 IObject("Collision")
 {
 	status_ = Status::idle;
-#ifdef D_CIRCLE_TEST
-	std::tuple<int, int, float> acs[] =
-	{
-		std::tuple<int, int, float>(100, 100, 50.f),
-		std::tuple<int, int, float>(200, 200, 50.f),
-		std::tuple<int, int, float>(300, 300, 10.f),
-		std::tuple<int, int, float>(400, 500, 100.f),
-		std::tuple<int, int, float>(200, 100, 50.f),
-		std::tuple<int, int, float>(100, 200, 20.f),
-		std::tuple<int, int, float>(1000, 1000, 150.f),
-	};
-	for (auto& ac : acs)
-		gm()->AddObject(ObjPtr(new CActionCircle(
-		static_cast<float>(std::get<0>(ac)),
-		static_cast<float>(std::get<1>(ac)),
-		std::get<2>(ac))));
-
-#endif
 }
 
 void CCollision::step()
 {
+	// スクリーン
 	const mymath::Rectf screen = camera::GetScreenRect();
 
+	// カーソル
+	auto mouse = gm()->GetCursorPos();
+
+	// プレイヤーオブジェクト
 	auto& player = CPlayer::GetPtr();
 
-	const auto& em = CEnemyMng::GetPtr();
-	auto& enemies = std::dynamic_pointer_cast<CEnemyMng>(em)->getEnemies();
+	// エネミーマネージャ
+	const auto& em = gm()->enemyMng();
+	// 敵群
+	auto& enemies = em->getEnemies();
 
+	// 遠距離攻撃オブジェクト
 	auto& atk_shots = gm()->GetObjects("Atk_Shot,Atk_Sing", ',');
-	const auto& sm = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
+	
+	// ステージマネージャ
+	const auto& sm = gm()->stageMng();
 
+	// actionPoint
 	const auto& actionPoints = sm->getActionPoints();
 
+	// pickupアイテムオブジェクト
 	const auto& pickups = gm()->GetObjects("Pickup");
+
 
 	//-----------------------------------------------------
 	// プレイヤー
 	if (player != nullptr)
 	{
+		// プレイヤー
 		auto& pl = std::dynamic_pointer_cast<CPlayer>(player);
 		const mymath::Vec3f& plpos = pl->obj().pos;
 		auto& plstageCollisions = pl->GetStageCollisions();
@@ -130,6 +112,84 @@ void CCollision::step()
 
 		//-----------------------------------------
 		// 攻撃
+		typedef std::pair<EnemyPtr, CPlayer::AttackType> EnemySet;	// 攻撃候補の敵
+		std::vector<EnemySet> hitEnemies;	// 攻撃候補の敵配列(斬り攻撃 > 体当たりの一番近い敵 > 他の敵)
+		hitEnemies.reserve(enemies.size());
+		auto& plAtk = std::dynamic_pointer_cast<mymath::Circlef>(pl->GetAttackAreas()[0]);	// プレイヤー体当たり範囲
+		for (auto& enemy : enemies)
+		{
+			mouse.z = enemy->obj().pos.z;
+			const auto& enemyCollisions = enemy->GetDamageAreas();
+
+			EnemySet ins;	// 追加用敵セット
+			// 当たり判定
+			for (const auto& col : enemyCollisions)
+			{
+				// 攻撃できるか
+				bool isAttackable = false;
+
+				// 優先順位を考慮し攻撃方法を決める
+				// 斬り攻撃
+				if (pl->isAttacking() && col->Contains(mouse))
+				{
+					ins.second = CPlayer::AttackType::SLASH;
+					isAttackable = true;
+				}
+				else if (col->Contains(plAtk))
+				{
+					// 体当たり
+					ins.second = CPlayer::AttackType::TACKLE;
+					isAttackable = true;
+				}
+
+				// 攻撃失敗時はスキップ
+				if (!isAttackable) continue;
+				//-------------------------
+				// 攻撃候補配列に追加
+				ins.first = enemy;
+				hitEnemies.push_back(ins);
+				// 1体に攻撃したので以降の当たり判定領域の判定を終了させる
+				break;
+			}
+		}
+		if (!hitEnemies.empty())
+		{
+			// 一番近い敵の算出(斬りがあればそっちを優先)
+			EnemySet tmp = hitEnemies[0];
+			for (size_t i = 1; i < hitEnemies.size(); ++i)
+			{
+				auto& enemy = hitEnemies[i];
+				if (enemy.second == CPlayer::AttackType::SLASH)
+				{
+					// 斬り攻撃だった場合優先して算出。以降の判定をスキップ
+					tmp = enemy;
+					break;
+				}
+				else
+				{
+					auto& pos0 = pl->obj().pos;
+					// 距離判定
+					auto& pos1 = tmp.first->obj().pos;
+					auto& pos2 = enemy.first->obj().pos;
+					auto dist1 = pos1 - pos0;	// 今までで一番近い敵都の距離
+					auto dist2 = pos2 - pos0;	// 新たに判定する敵との距離
+					if (mymath::PYTHA(dist1.x, dist1.y) > mymath::PYTHA(dist2.x, dist2.y))
+					{
+						// 一番近い敵を更新
+						tmp = enemy;
+					}
+				}
+			}
+			
+			// 敵と攻撃方法が決まったので処理をする
+			pl->ApplyAttack(tmp.second, tmp.first->obj().pos);
+			if (tmp.first->ApplyDamage(pl->getPower()))
+			{
+				pl->KilledEnemy();
+			}
+			
+		}
+		/*
 		if (pl->isAttacking())
 		{
 			POINT m = camera::GetCursorPosition();
@@ -194,6 +254,7 @@ void CCollision::step()
 				}
 			}
 		}
+		//*/
 
 
 		//-----------------------------------------
@@ -213,7 +274,6 @@ void CCollision::step()
 					//-----------------------------------------
 					// 敵攻撃 
 					auto& enemyAtks = enemy->GetAttackAreas();
-					int i = 0;
 					for (auto& col : enemyAtks)
 					{
 						// 敵攻撃 vs プレイヤー

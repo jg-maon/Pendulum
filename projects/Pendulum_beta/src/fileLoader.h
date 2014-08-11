@@ -176,11 +176,11 @@ public:
 
 	/*
 		@brief	ファイルパス取得
-			GetFile("#File");
+			GetPath("#File");
 		@param	[in]	tag	取得ファイル識別名(#タグ)
 		@return ファイルパス
 	*/
-	std::string GetFile(const std::string& tag) const;
+	std::string GetPath(const std::string& tag) const;
 };
 
 

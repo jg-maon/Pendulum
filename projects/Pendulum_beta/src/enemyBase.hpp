@@ -47,7 +47,7 @@ public:
 		@param	[in]	name	名前("E_"から始める)
 		@attention	nameは"E_"から始めること
 	*/
-	IEnemy(const std::string& name):
+	IEnemy(const std::string& name) :
 		ICharacter(name)
 		, attack_(nullptr)
 	{}
@@ -65,7 +65,7 @@ public:
 		@brief	描画処理
 		@return	なし
 	*/
-	virtual void draw() = 0{}
+	virtual void draw() = 0{ __super::draw(); }
 	/*
 		@brief	ダメージ加算
 		@param	[in]	dam	ダメージ量
@@ -85,7 +85,7 @@ public:
 		@brief	攻撃の当たり判定領域の取得
 		@return	攻撃の当たり判定領域
 	*/
-	virtual Collisions GetAttackAreas() const {return attack_->GetDamageAreas();}
+	virtual Collisions GetAttackAreas() const override { return attack_->GetDamageAreas(); }
 
 	/*
 		@brief	攻撃手段情報の格納

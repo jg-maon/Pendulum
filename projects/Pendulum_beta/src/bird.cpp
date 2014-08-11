@@ -81,9 +81,13 @@ void CBird::init(const mymath::Vec3f& pos)
 void CBird::step()
 {
 	ICharacter::step();
-	elapsedTime_ += system::FrameTime;
 
 	DecideState();
+
+	// ヒットストップ中はスキップ
+	if (!isUpdatable()) return;
+
+	elapsedTime_ += system::FrameTime;
 
 	// アニメーション処理
 	if (motionAnim_.step())

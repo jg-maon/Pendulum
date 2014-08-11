@@ -9,8 +9,7 @@
 #define D_LINE_TEST		// 鎖Line補完
 #endif
 
-//#define D_ACT_TEST			// マウスクリック座標でぶら下がる
-#define D_RANGE_TEST	// 攻撃範囲拡大
+#define D_ACT_TEST			// マウスクリック座標でぶら下がる
 #define D_ATK_TEST		// クリック時攻撃判定
 #define DEF_SHAPE_DRAW
 
@@ -39,6 +38,7 @@
 #include "gameManager.h"
 
 
+#include "effectAfterImage.h"		// 残像
 #include "effectSlash.h"
 
 #include "griffon.h"
@@ -51,10 +51,6 @@ bool gravityF = false;
 mymath::Vec3f vel_log;	// 最高速度
 #endif
 
-#ifdef D_RANGE_TEST
-mymath::Circlef atk_range(0.f, 0.f, 0.5f, 300.f);
-#endif
-
 #ifdef D_LOG_TEST
 #include <deque>
 std::deque<POINT> logs;
@@ -65,30 +61,11 @@ std::deque<POINT> logs;
 #define JUMP_TIME	(1.f)		// ジャンプ時間
 #define JUMP_G		(100.f)		// ジャンプ中重力
 
-// Y = v0*T + 1/2*G*T^2
-// A = (Y,T) = (JUMP_Y,JUMP_TIME)
-// B = (Y,T) = (0, JUMP_TIME/2)
-// A = Bより
-//#define JUMP_VY		((JUMP_G*JUMP_TIME)/4.f - 1.f)	// ジャンプ初速度
-//#define JUMP_VY			((JUMP_G*system::ONEFRAME_TIME) * JUMP_TIME * system::ONEFRAME_TIME)
-// ジャンプ力 = 最高到達点 + ( ループカウンタ - １) × 重力
-//#define JUMP_VY		(JUMP_Y + (JUMP_TIME/system::ONEFRAME_TIME-1)*JUMP_G)
 
 //Max = (n - 0) + (n - g) + (n - 2g) + ・・・ + (n - αg)
 //⇒n = { Max / (α + 1) }+αg / 2
 #define JUMP_VY		(JUMP_Y / (JUMP_TIME/system::ONEFRAME_TIME + 1) + JUMP_TIME/system::ONEFRAME_TIME*JUMP_G/2.f)
 
-/*
-const float CPlayer::GRAVITY_ACC = 25.f;	// 最大重力速度
-const float CPlayer::MAX_G = 100.f;			// 重力加速度
-const float CPlayer::TENSION = 1500.f;		// フックの張力(初速)
-const float CPlayer::DOWN_TENSION = 0.85f;	// 張力減速率
-const float CPlayer::DOWN_SPEED = 0.92f;		// 移動減速率(1-DOWN_SPEED)
-const float CPlayer::MAX_VX = 2500.f;		// 鉛直方向の最大速度(ゲームとして成り立つバランス調整用)
-const float CPlayer::MAX_VY = 1500.f;		// 水平方向の最大速度(ゲームとして成り立つバランス調整用)
-
-const float CPlayer::CHAIN_TIME[2] = {1.0f,2.0f};	// Chain猶予時間[0]:1体目から2体目まで [1]:それ以降
-//*/
 
 #pragma region CPlayer methods
 
@@ -127,14 +104,15 @@ void CPlayer::init(float x, float y, float z)
 	gravity_ = 0.f;
 	gravityF_ = false;
 	hangAcc_ = 0.f;
-	attackRange_ = charabase::CharPtr(new charabase::CharBase(
+	attackObj_ = charabase::CharPtr(new charabase::CharBase(
 		obj_.pos,
 		mymath::Vec3f(),
 		"img_circle",
 		96, 96));
-	attackRange_->pos.z -= 0.1f;
-	attackRange_->g = 0.f;
-	attackRange_->b = 0.f;
+	attackObj_->pos.z -= 0.1f;
+	attackObj_->g = 0.f;
+	attackObj_->b = 0.f;
+	attackRadius_ = loadInfo_.maxAttackRadius;
 	isAttacking_ = false;
 
 	//invincible_ = false;
@@ -173,9 +151,10 @@ void CPlayer::init(float x, float y, float z)
 
 void CPlayer::step()
 {
+	__super::step();			// 更新フレーム数加算
+
 	mymath::Vec3f& pos = obj_.pos;
 	mymath::Vec3f& velocity = obj_.add;
-	ICharacter::step();
 
 	if (sm()->isEnterAnimating())
 	{
@@ -190,10 +169,97 @@ void CPlayer::step()
 	else
 	{
 		// 通常時
+
+		// キー入力のみ随時受け付け
 		key();
 
+		// Chain文字
+#pragma region Chain文字
+		{
+			const float appearTime = 0.5f;		// 出現アニメーション秒数
+			const float appearMoveX = 30.f;		// X移動量
+			const float disappearTime = 0.2f;	// 消失アニメーション秒数
+			switch (chainState_)
+			{
+			case common::DispState::HIDE:
+				/*
+				if ((chainTime_ -= system::ONEFRAME_TIME) <= 0.f)
+				{
+					// 消失
+					chainState_ = common::DispState::HIDE;
+					chainAnimTime_ = 0.f;
+					chainCnt_ = 0;
+				}
+				//*/
+				break;
+
+			case common::DispState::APPEARING:
+				chainMsg_->alpha = Easing::Linear(chainAnimTime_, 0.f, 255.f, appearTime);
+				chainMsg_->pos.x = Easing::QuadOut(chainAnimTime_, chainStaPos_.x, appearMoveX, appearTime);
+
+				if ((chainAnimTime_ += system::FrameTime) >= appearTime)
+				{
+					// 出現完了
+					chainState_ = common::DispState::SHOW;
+				}
+				// 残り時間は出現中も減少していくためbreakは書かない
+			case common::DispState::SHOW:
+				if (chainTime_ <= disappearTime)
+				{
+					// 消失開始
+					chainState_ = common::DispState::DISAPPEARING;
+					chainAnimTime_ = 0.f;
+				}
+				numberPos_.x = chainMsg_->pos.x;
+				numberPos_.y = Easing::BackOut(numberAnimTime_, chainStaPos_.y + 10.f, -20.f, 0.2f);
+				numberAnimTime_ += system::FrameTime;
+
+				if (chainState_ == common::DispState::APPEARING) break;
+				// SHOWのみの処理
+				chainMsg_->alpha = 255.f;
+				chainMsg_->pos.x = chainStaPos_.x + appearMoveX;
+				break;
+
+			case common::DispState::DISAPPEARING:
+				chainMsg_->alpha = Easing::Linear(chainAnimTime_, 255.f, -255.f, disappearTime);
+				chainMsg_->pos.x = Easing::QuadOut(chainAnimTime_, chainStaPos_.x + appearMoveX, 10.f, disappearTime);
+				if ((chainAnimTime_ += system::FrameTime) >= disappearTime)
+				{
+					// 消失完了
+					chainState_ = common::DispState::HIDE;
+					chainMsg_->pos = chainStaPos_;
+					chainMsg_->alpha = 0.f;
+					chainAnimTime_ = 0.f;
+					chainCnt_ = 0;
+				}
+				break;
+			}
+		}
+#pragma endregion // Chain文字
+
+
+		// 更新フレームでない場合はスキップ
+		if (!isUpdatable())
+		{
+			attackRadius_ = 0.f;
+			return;
+		}
+		
+		//----------------------------------------
+		// Chain
+		// Chain時間は処理落ちなどに影響されて、一定のゲーム内秒数で終わる
+		chainTime_ -= system::ONEFRAME_TIME;
+
+		//----------------------------------------
 		// 移動処理
 		move();
+
+		//----------------------------------------
+		// 攻撃範囲
+		if (attackRadius_ < loadInfo_.maxAttackRadius)
+			attackRadius_ += loadInfo_.addRadius * system::FrameTime;
+		else
+			attackRadius_ = loadInfo_.maxAttackRadius;
 
 		//----------------------------------------
 		// カメラ
@@ -210,6 +276,7 @@ void CPlayer::step()
 		sm()->MoveCamera(obj_.pos);
 	}
 
+	//----------------------------------------
 	// アニメーション処理
 	if (motionAnim_.step())
 	{
@@ -251,69 +318,6 @@ void CPlayer::step()
 		turnFlag_ ^= 1;
 	else if (turnFlag_ && velocity.x > 0.f)
 		turnFlag_ ^= 1;
-
-	// Chain文字
-#pragma region Chain文字
-	{
-		const float appearTime = 0.5f;		// 出現アニメーション秒数
-		const float appearMoveX = 30.f;		// X移動量
-		const float disappearTime = 0.2f;	// 消失アニメーション秒数
-		switch (chainState_)
-		{
-		case common::DispState::HIDE:
-			if ((chainTime_ -= system::ONEFRAME_TIME) <= 0.f)
-			{
-				// 消失
-				chainState_ = common::DispState::HIDE;
-				chainAnimTime_ = 0.f;
-				chainCnt_ = 0;
-			}
-			break;
-
-		case common::DispState::APPEARING:
-			chainMsg_->alpha = Easing::Linear(chainAnimTime_, 0.f, 255.f, appearTime);
-			chainMsg_->pos.x = Easing::QuadOut(chainAnimTime_, chainStaPos_.x, appearMoveX, appearTime);
-
-			if ((chainAnimTime_ += system::FrameTime) >= appearTime)
-			{
-				// 出現完了
-				chainState_ = common::DispState::SHOW;
-			}
-			// 残り時間は出現中も減少していくためbreakは書かない
-		case common::DispState::SHOW:
-			// Chain時間は処理落ちなどに影響されて、一定のゲーム内秒数で終わる
-			if ((chainTime_ -= system::ONEFRAME_TIME) <= disappearTime)
-			{
-				// 消失開始
-				chainState_ = common::DispState::DISAPPEARING;
-				chainAnimTime_ = 0.f;
-			}
-			numberPos_.x = chainMsg_->pos.x;
-			numberPos_.y = Easing::BackOut(numberAnimTime_, chainStaPos_.y + 10.f, -20.f, 0.2f);
-			numberAnimTime_ += system::FrameTime;
-
-			if (chainState_ == common::DispState::APPEARING) break;
-			// SHOWのみの処理
-			chainMsg_->alpha = 255.f;
-			chainMsg_->pos.x = chainStaPos_.x + appearMoveX;
-			break;
-
-		case common::DispState::DISAPPEARING:
-			chainMsg_->alpha = Easing::Linear(chainAnimTime_, 255.f, -255.f, disappearTime);
-			chainMsg_->pos.x = Easing::QuadOut(chainAnimTime_, chainStaPos_.x + appearMoveX, 10.f, disappearTime);
-			if ((chainAnimTime_ += system::FrameTime) >= disappearTime)
-			{
-				// 消失完了
-				chainState_ = common::DispState::HIDE;
-				chainMsg_->pos = chainStaPos_;
-				chainMsg_->alpha = 0.f;
-				chainAnimTime_ = 0.f;
-				chainCnt_ = 0;
-			}
-			break;
-		}
-	}
-#pragma endregion // Chain文字
 
 #ifdef D_COLOR_TEST
 	static float c_cnt = 0.f;
@@ -459,8 +463,16 @@ void CPlayer::draw()
 #endif
 
 
+	//-----------------------------------------------------------
+	// AttackRange
 	//attackRange_->draw();
-
+	mymath::Circlef circle_(obj_.pos, attackRadius_);
+	
+	circle_.draw(ARGB(
+		static_cast<int>(attackObj_->alpha),
+		static_cast<int>(attackObj_->r),
+		static_cast<int>(attackObj_->g),
+		static_cast<int>(attackObj_->b)));
 	//-----------------------------------------------------------
 	// Chain
 	if (chainState_ != common::DispState::HIDE)
@@ -572,7 +584,7 @@ void CPlayer::draw()
 			armPos.z,
 			loadInfo_.armImg,
 			0, 0, armsz.cx, armsz.cy,
-			static_cast<int>(angle), &c);
+			angle, &c);
 
 		//----------------------------------------------
 		// 鎖
@@ -598,7 +610,7 @@ void CPlayer::draw()
 				hangPoint_.y,
 				z + 0.1f, "img_chain",
 				0, 0, chainsz.cx, chainsz.cy,
-				static_cast<int>(angle), &c,
+				angle, &c,
 				sx);
 #ifdef D_LINE_TEST
 			graph::Draw_Line(
@@ -653,8 +665,13 @@ void CPlayer::key()
 	using namespace input;
 	POINT pt = camera::GetCursorPosition();
 	mymath::Vec3f mouse(float(pt.x), float(pt.y), obj_.pos.z);
-	if (CheckPush(KEY_MOUSE_RBTN))
+
+
+	//-------------------------------------------
+	// 移動
+	if (CheckPush(MOVE_BTN))
 	{
+		gm()->gameStatus()->EndHitStop();
 #ifndef D_MOVE_TEST
 #ifdef D_ACT_TEST
 		hangPoint_ = mouse;
@@ -662,6 +679,7 @@ void CPlayer::key()
 		tensionAcc_ = loadInfo_.TENSION;
 		isHanging_ = true;
 		motionAnim_.set(0, 0.f);
+		obj_.src.y = static_cast<int>(MotionType::HANG);
 #else
 		const auto& aps = sm()->getActionPoints();
 		for(const auto& act : aps)
@@ -707,29 +725,44 @@ void CPlayer::key()
 		//isHanging_ = false;
 	}
 #else
-	if (isHanging_ && CheckPull(KEY_MOUSE_RBTN))
+
+	if (isHanging_ && CheckPull(MOVE_BTN))
 	{
 		// 掴んでる状態から離した時
 		UnHang();
 	}
 #endif
+
 #ifdef D_RANGE_TEST
 	atk_range.center = obj_.pos;
 #endif
-	if (CheckPress(KEY_MOUSE_RBTN) || CheckPull(KEY_MOUSE_LBTN))
+
+	//-------------------------------------------
+	// 攻撃
+	isAttacking_ = false;
+	// ヒットストップ中かで条件を変える
+	if (gm()->gameStatus()->isHitStopping())
 	{
+		// ヒットストップ中は移動or攻撃ボタン押し
+		if (CheckPush(MOVE_BTN) || CheckPush(ATK_BTN))
+		{
+			/*
 #ifdef D_ATK_TEST
-		isAttacking_ = true;
+			isAttacking_ = true;
 #elif defined(D_RANGE_TEST)
-		isAttacking_ = atk_range.Contains(mouse);
+			isAttacking_ = atk_range.Contains(mouse);
 #else
-		mymath::Circlef range(obj_.pos, attackRange_->halfWidth());
-		isAttacking_ = range.Contains(mouse);
+			mymath::Circlef range(obj_.pos, attackRange_->halfWidth());
+			isAttacking_ = range.Contains(mouse);
 #endif
+			//*/
+			isAttacking_ = true;
+		}
 	}
-	if (CheckPull(KEY_MOUSE_RBTN) && CheckPull(KEY_MOUSE_LBTN))
+	// ヒットストップ中以外は攻撃ボタン押下
+	else if (CheckPress(ATK_BTN))
 	{
-		isAttacking_ = false;
+		isAttacking_ = true;
 	}
 
 #ifdef _DEBUG
@@ -738,6 +771,7 @@ void CPlayer::key()
 		obj_.pos.x = 0.f;
 		obj_.pos.y = 0.f;
 		obj_.add = 0.f;
+		prePos_ = obj_.pos;
 	}
 #endif
 
@@ -935,7 +969,7 @@ void CPlayer::move()
 		pos.x = clamp(pos.x, stageRect.left + size.x, stageRect.right - size.x);
 		pos.y = clamp(pos.y, stageRect.top + size.y, stageRect.bottom - size.y);
 	}
-	attackRange_->pos = attackRange_->pos.TmpReplace(mymath::Vec3f::X | mymath::Vec3f::Y, pos);
+	attackObj_->pos = attackObj_->pos.TmpReplace(mymath::Vec3f::X | mymath::Vec3f::Y, pos);
 
 }
 
@@ -1003,12 +1037,32 @@ void CPlayer::hit(const ObjPtr& rival)
 }
 
 
+Base::Collisions CPlayer::GetDamageAreas() const
+{
+	if (isInvincible())
+	{
+		// 無敵処理中は当たり判定を消す
+		return Base::Collisions();
+	}
+	return __super::GetDamageAreas();
+}
+
+Base::Collisions CPlayer::GetAttackAreas() const
+{
+	Base::Collisions cols(1);
+	cols[0] = mymath::ShapefPtr(new mymath::Circlef(obj_.pos, attackRadius_));
+	return cols;
+}
+
 ObjPtr CPlayer::GetPtr()
 {
 	extern CGameManager *gm;
+	return gm->GetPlayer();
+	/*
 	auto& pl = gm->GetObjects("Player");
 	if (pl.empty()) return nullptr;
 	return pl[0];
+	//*/
 }
 
 bool CPlayer::isAttacking() const
@@ -1023,19 +1077,6 @@ bool CPlayer::isInvincible() const
 
 void CPlayer::SetInfo(const LoadInfo& info)
 {
-	/*
-	MAX_G = info.MAX_G;
-	GRAVITY_ACC = info.GRAVITY_ACC;
-	TENSION = info.TENSION;
-	DOWN_TENSION = info.DOWN_TENSION;
-	DOWN_SPEED = info.DOWN_SPEED;
-	MAX_VX = info.MAX_VX;
-	MAX_VY = info.MAX_VY;
-	for (int i = 0; i < arrayof(info.CHAIN_TIME); ++i)
-		CHAIN_TIME[i] = info.CHAIN_TIME[i];
-	MAX_CHAIN = info.MAX_CHAIN;
-	//*/
-
 	loadInfo_ = info;
 }
 
@@ -1059,22 +1100,56 @@ bool CPlayer::ApplyDamage(int dam)
 }
 //*/
 
-void CPlayer::ApplyAttack(const mymath::Vec3f& pos)
+void CPlayer::ApplyAttack(CPlayer::AttackType type, const mymath::Vec3f& pos)
 {
+	//---------------------------------
+	// ヒットストップ開始
+	gm()->gameStatus()->BeginHitStop();
+
+	//---------------------------------
+	// 体当たり範囲縮小
+	attackRadius_ = -50.f;
+
 	// 相手方向のベクトル
 	mymath::Vec3f vec = pos - obj_.pos;
-	
 
+	//---------------------------------
+	// 相手の方を向く
+	turnFlag_ = vec.x < 0.f;
+
+	//---------------------------------
+	// 斬り攻撃時残像処理
+	if (type == AttackType::SLASH)
+	{
+		// 残っている残像の削除
+		auto& afterImages = gm()->GetObjects("EffectAfterImage");
+		for (auto& img : afterImages)
+			img->kill();
+		// 新しい残像の追加
+		gm()->AddObject(ObjPtr(new CEffectAfterImage(obj_, turnFlag_, pos, obj_.pos, 10)));
+	}
+
+	//---------------------------------
+	// 斬撃エフェクト
 	gm()->AddObject(ObjPtr(new CEffectSlash(pos.TmpReplace(mymath::Vec3f::Z,pos+0.1f),
 		math::DegreeOfPoints2(
 		obj_.pos.x, obj_.pos.y,
 		pos.x, pos.y))));
-	obj_.pos = pos;
 
+	//---------------------------------
+	// 移動
+	obj_.pos.x = pos.x;
+	obj_.pos.y = pos.y;
+	sm()->MoveCamera(obj_.pos);	// 移動後座標にカメラを向かせる
+
+	//---------------------------------
+	// アニメーション
 	obj_.src.y = static_cast<int>(MotionType::ATTACK);
 	obj_.src.x = 0;
 	motionAnim_.set(2, 0.25f);
-	
+
+	//---------------------------------
+	// 敵方向へ進むフォロースルー
 	obj_.add = vec / system::FrameTime;
 
 	//---------------------------------
@@ -1128,15 +1203,6 @@ void CPlayer::KilledEnemy()
 	se::DSound_Play(slash.str());
 }
 
-Base::Collisions CPlayer::GetDamageAreas() const
-{
-	if (isInvincible())
-	{
-		// 無敵処理中は当たり判定を消す
-		return Base::Collisions();
-	}
-	return __super::GetDamageAreas();
-}
 
 int CPlayer::getChain() const
 {

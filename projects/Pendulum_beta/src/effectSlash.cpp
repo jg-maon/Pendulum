@@ -33,6 +33,10 @@ IEffect("EffectSlash")
 
 void CEffectSlash::step()
 {
+	// ヒットストップ中はスキップ
+	if (!isUpdatable())
+		return;
+
 	const int animRow = 8;
 	const float animMax = 8.f;
 	const float animTime = 0.5f;	// 0.5秒

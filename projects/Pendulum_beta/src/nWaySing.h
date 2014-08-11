@@ -63,6 +63,10 @@ public:
 
 	virtual void step() override
 	{
+		__super::step();
+
+		// ヒットストップ中はスキップ
+		if (!isUpdatable()) return;
 		//obj_.add += acceleration_;
 
 		obj_.angle += addAngle_ * system::FrameTime;

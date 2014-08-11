@@ -65,6 +65,10 @@ public:
 	}
 	virtual void step() override
 	{
+		__super::step();
+		// ヒットストップ中はスキップ
+		if (!isUpdatable()) return;
+
 		obj_.Move();
 		obj_.add += acceleration_;
 		if(++cnt_ > 300)

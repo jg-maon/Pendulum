@@ -15,23 +15,26 @@ mymath::Recti* CGameManager::winRect_ = nullptr;
 CGameManager::CGameManager() :
 Base("GameManager")
 , showCursor_(false)
-//, cursorAnim_(360.f,10.f)
+//, cursor_.anim(360.f,10.f)
 {
 	ShowCursor(showCursor_ == true);
 	init();
 
 
-	cursor_ = charabase::CharPtr(new charabase::CharBase(
+	cursor_.obj = charabase::CharPtr(new charabase::CharBase(
 		mymath::Vec3f(), mymath::Vec3f(),
 		"img_cursor",
 		CursorSize::width,
 		CursorSize::height));
-	cursor_->alpha = 200.f;
+	cursor_.obj->alpha = 200.f;
+	cursor_.animTbl.push_back(4.f);
+	cursor_.anim.set(1, 1.f);
+	cursor_.animType = Cursor::AnimType::ROTATE;
 
 	if (winRect_)
 		winRect_ = new mymath::Recti(0, 0, system::WINW, system::WINH);
 
-	fileMng_ = std::unique_ptr<CFileMng>(new CFileMng("res/dat/path.ini"));
+	fileMng_ = std::shared_ptr<CFileMng>(new CFileMng("res/dat/path.ini"));
 
 }
 
@@ -80,26 +83,10 @@ void CGameManager::start()
 		auto gs = std::shared_ptr<CGameStatus>(new CGameStatus());
 		AddObject2(gs);
 #ifdef DEF_GM_PTR
-		
+		SetGameStatusPtr(gs);
 #endif
 	}
 		
-
-}
-
-
-void CGameManager::MargeObjects()
-{
-	objs_.erase(
-		std::remove_if(objs_.begin(), objs_.end(),
-		std::mem_fn(&Base::isDestroy)),
-		objs_.end());
-
-	if (!addObjs_.empty())
-	{
-		objs_.insert(objs_.end(), addObjs_.begin(), addObjs_.end());
-		addObjs_.clear();
-	}
 
 }
 
@@ -121,14 +108,12 @@ void CGameManager::step()
 	}
 	//-------------------------------------
 	// カーソルアニメーション
-	//cursorAnim_.step();
-	if ((cursor_->angle += 4.f) >= 360.f)
-		cursor_->angle -= 360.f;
+	cursor_.step();
 	//-------------------------------------
 	// ウィンドウ外へ出ないように
-	mymath::Vec3f& cursorPos = cursor_->pos;
-	const float& halfWidth = cursor_->HalfWidth();
-	const float& halfHeight = cursor_->HalfHeight();
+	mymath::Vec3f& cursorPos = cursor_.obj->pos;
+	const float& halfWidth = cursor_.obj->HalfWidth();
+	const float& halfHeight = cursor_.obj->HalfHeight();
 	cursorPos = camera::GetCursorPosition();
 	RECT rt = camera::GetScreenRect();
 	if (cursorPos.x - halfWidth < rt.left)
@@ -180,8 +165,25 @@ void CGameManager::draw()
 	// カーソル
 	graph::Draw_SetRenderMode(ADD);
 	for (int i = 0; i < 5; ++i)
-		cursor_->draw();
+		cursor_.obj->draw();
 	graph::Draw_EndRenderMode();
+}
+
+
+
+void CGameManager::MargeObjects()
+{
+	objs_.erase(
+		std::remove_if(objs_.begin(), objs_.end(),
+		std::mem_fn(&Base::isDestroy)),
+		objs_.end());
+
+	if (!addObjs_.empty())
+	{
+		objs_.insert(objs_.end(), addObjs_.begin(), addObjs_.end());
+		addObjs_.clear();
+	}
+
 }
 
 void CGameManager::AllStop()
@@ -352,18 +354,27 @@ void CGameManager::winRect(mymath::Recti* newRect)
 
 const mymath::Vec3f& CGameManager::GetCursorPos() const
 {
-	return cursor_->pos;
+	return cursor_.obj->pos;
 }
 
 mymath::Vec3f CGameManager::GetCursorPosNC() const
 {
 	RECT rt = camera::GetScreenRect();
-	mymath::Vec3f pos = cursor_->pos;
+	mymath::Vec3f pos = cursor_.obj->pos;
 	pos.x -= rt.left;
 	pos.y -= rt.top;
 	return pos;
 }
 
+const CGameManager::Cursor& CGameManager::cursor() const
+{
+	return cursor_;
+}
+
+void CGameManager::cursor(const CGameManager::Cursor& newCursor)
+{
+	cursor_ = newCursor;
+}
 
 mymath::Vec3f CGameManager::GetPlayerPos() const
 {
@@ -385,9 +396,9 @@ mymath::Vec3f CGameManager::GetPlayerPos() const
 	return v;
 }
 
-CFileMng& CGameManager::fm()
+std::shared_ptr<CFileMng> CGameManager::fm()
 {
-	return *fileMng_;
+	return fileMng_;
 }
 
 #ifdef DEF_GM_PTR

@@ -80,6 +80,10 @@ void CGriffon::init(const mymath::Vec3f& pos)
 void CGriffon::step()
 {
 	ICharacter::step();
+
+	// ヒットストップ中はスキップ
+	if (!isUpdatable()) return;
+
 	elapsedTime_ += system::FrameTime;
 
 	// 無敵
