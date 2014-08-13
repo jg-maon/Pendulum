@@ -10,7 +10,10 @@
 #include "sceneNameInput.h"
 //------------------------
 
-
+bool IScene::isSoftReset_ = false;
+float IScene::resetTime_;
+int IScene::bgmVolume_ = 100;
+IScene::State IScene::state_;
 
 CSceneMng::CSceneMng() :
 Base("SceneMng")
@@ -34,10 +37,17 @@ CSceneMng::~CSceneMng()
 void CSceneMng::step()
 {
 	scenes_[nowScene_]->step();
-	if (scenes_[nowScene_]->isChangeScene())
+	if (IScene::isChangeScene())
 	{
+		// 最中のシーン終了
 		scenes_[nowScene_]->stop();
+
 		nowScene_ = scenes_[nowScene_]->NextScene();
+		
+		if (IScene::isSoftReset())	// ソフトリセット
+			nowScene_ = JEC;
+		
+		// 次のシーン開始
 		scenes_[nowScene_]->start();
 	}
 }

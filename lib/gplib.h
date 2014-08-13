@@ -141,6 +141,7 @@
 				KEY_BTNMAX,			//キーボードの最大数　キー追加の際はこの上に記述
 				KEY_MOUSE_LBTN = KEY_BTNMAX,//マウスの左ボタン
 				KEY_MOUSE_RBTN,		//マウスの右ボタン
+				KEY_MOUSE_MBTN,		//マウスの中央ボタン
 				KEY_MAX				//最大数
 			};
 		}

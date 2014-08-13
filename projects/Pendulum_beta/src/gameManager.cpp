@@ -216,7 +216,7 @@ void CGameManager::AddObject2(const ObjPtr& obj)
 
 
 //指定のクラスを見つけ出して返す
-ObjPtr CGameManager::GetObj(const type_info& objinfo)
+ObjPtr CGameManager::GetObj(const type_info& objinfo) const
 {
 	for (auto& obj : objs_)
 	{
@@ -243,7 +243,7 @@ std::vector<ObjPtr>& CGameManager::GetObjects()
 	return objs_;
 }
 
-std::vector<ObjPtr> CGameManager::GetObjects(const std::string& taskName)
+std::vector<ObjPtr> CGameManager::GetObjects(const std::string& taskName) const
 {
 	std::vector<ObjPtr> ret;
 	for (const auto& obj : objs_)
@@ -260,7 +260,7 @@ std::vector<ObjPtr> CGameManager::GetObjects(const std::string& taskName)
 	return ret;
 }
 
-std::vector<ObjPtr> CGameManager::GetObjects(const std::string& taskName, const char delim)
+std::vector<ObjPtr> CGameManager::GetObjects(const std::string& taskName, const char delim) const
 {
 	std::vector<ObjPtr> ret;
 	std::vector<std::string> taskNames;
@@ -434,26 +434,51 @@ void CGameManager::SetGameStatusPtr(const std::weak_ptr<CGameStatus>& gamestatus
 
 std::shared_ptr<CStageMng> CGameManager::stageMng() const
 {
+	if (!pStageMng_.lock())
+	{
+		// ポインタに登録がない場合、オブジェクト群のチェック
+		return std::dynamic_pointer_cast<CStageMng>(GetObj(typeid(CStageMng)));
+	}
 	return pStageMng_.lock();
 }
 
 std::shared_ptr<CScoreMng> CGameManager::scoreMng() const
 {
+	if (!pScoreMng_.lock())
+	{
+		// ポインタに登録がない場合、オブジェクト群のチェック
+		return std::dynamic_pointer_cast<CScoreMng>(GetObj(typeid(CScoreMng)));
+	}
 	return pScoreMng_.lock();
 }
 
 std::shared_ptr<CPlayer> CGameManager::GetPlayer() const
 {
+	if (!pPlayer_.lock())
+	{
+		// ポインタに登録がない場合、オブジェクト群のチェック
+		return std::dynamic_pointer_cast<CPlayer>(GetObj(typeid(CPlayer)));
+	}
 	return pPlayer_.lock();
 }
 
 std::shared_ptr<CEnemyMng> CGameManager::enemyMng() const
 {
+	if (!pEnemyMng_.lock())
+	{
+		// ポインタに登録がない場合、オブジェクト群のチェック
+		return std::dynamic_pointer_cast<CEnemyMng>(GetObj(typeid(CEnemyMng)));
+	}
 	return pEnemyMng_.lock();
 }
 
 std::shared_ptr<CGameStatus> CGameManager::gameStatus() const
 {
+	if (!pGameStatus_.lock())
+	{
+		// ポインタに登録がない場合、オブジェクト群のチェック
+		return std::dynamic_pointer_cast<CGameStatus>(GetObj(typeid(CGameStatus)));
+	}
 	return pGameStatus_.lock();
 }
 

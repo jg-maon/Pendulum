@@ -62,7 +62,7 @@ namespace gplib{
 		//const int	WINW	=	640;
 		//const int	WINH	=	480;
 		bool		WindowMode = true;
-		int			KeyboardMode = 0;	//pad disable:1 pad enable:0
+		int			KeyboardMode = 1;	//pad disable:1 pad enable:0
 #ifdef _DEBUG
 		HINSTANCE hInstance;
 		HINSTANCE hPreInst;
@@ -95,14 +95,6 @@ void system::GameLoop()
 	main::Step();
 	main::Disp();
 
-#ifdef _DEBUG
-	if (input::CheckPress(input::KEY_SHIFT) && input::CheckPush(input::KEY_F1))
-	{
-		WindowMode ^= 1;
-		DoWindow(hInstance, hPreInst, lpszCmdLine, nCmdShow);
-	}
-
-#endif
 }
 
 //---------------------------------------------------------------------------------------

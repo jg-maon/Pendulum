@@ -5,7 +5,7 @@
 
 
 CSceneJecLogo::CSceneJecLogo() :
-IScene("SceneJecLogo", "img_jecLogo", "")
+IScene("SceneJecLogo", "img_jecLogo", "", 1.f, 1.f)
 {
 	
 }

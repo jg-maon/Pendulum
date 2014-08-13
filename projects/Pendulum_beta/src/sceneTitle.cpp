@@ -223,7 +223,7 @@ bool CSceneTitle::update()
 
 
 #ifdef D_EFFECT_TEST
-	if (input::CheckPress(input::KEY_SHIFT))
+	if (input::CheckPress(input::KEY_LSHIFT))
 	{
 		if (input::CheckPush(input::KEY_BTN0))
 			gm()->AddObject(ObjPtr(new CEffectSlash(gm()->GetCursorPos(), math::GetRandom(0.f, 360.f))));

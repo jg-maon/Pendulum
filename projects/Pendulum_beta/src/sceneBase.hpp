@@ -18,16 +18,7 @@
 
 class IScene : public Base
 {
-private:
-
-	const float FADE_IN_TIME;			// フェードインにかける時間
-	const float FADE_OUT_TIME;			// フェードアウトにかける時間
-
-protected:
-
-	const std::string BACK_RESNAME;		// 背景
-	std::string bgmResname_;			// BGM音源
-
+public:
 	enum class State		// シーン内部状態
 	{
 		INNING,		// シーン移り始め(INだとdefineされているので区別)
@@ -35,12 +26,61 @@ protected:
 		OUTING,		// シーン移り終わり(OUTだとdefineされているので区別)
 		END,		// シーン終了
 	};
-	State state_;
+private:
+	const float FADE_IN_TIME;			// フェードインにかける時間
+	const float FADE_OUT_TIME;			// フェードアウトにかける時間
 
-	int bgmVolume_;		// BGM音量
+protected:
+	static bool isSoftReset_;			// ソフトリセットしたか 実体宣言はsceneMng.cppで
+	static float resetTime_;			// ソフトリセット用 実体宣言はsceneMng.cppで
+
+	static int bgmVolume_;				// BGM音量
+
+	enum
+	{
+		SOFT_RESET_TIME = 30,			// ソフトリセット時間[unit:/10sec]
+	};
+
+	const std::string BACK_RESNAME;		// 背景
+	std::string bgmResname_;			// BGM音源
+
+	static State state_;
+
 	//std::string name_;
 
 protected:
+
+	/*
+		@brief	ソフトリセット(JECロゴまで戻る)
+		@return	ソフトリセットするか
+		@retval	true	ソフトリセットする
+		@retval	false	ソフトリセットしない
+	*/
+	bool SoftReset()
+	{
+		// 左右ボタン押し始めでリセット
+		if (input::CheckPush(input::KEY_MOUSE_LBTN) || input::CheckPush(input::KEY_MOUSE_RBTN))
+		{
+			resetTime_ = 0.f;
+		}
+		// 3つボタン押しっぱなしでカウント増加
+		if (input::CheckPress(input::KEY_MOUSE_LBTN) 
+			&&
+			input::CheckPress(input::KEY_MOUSE_RBTN)
+			&&
+			input::CheckPress(input::KEY_MOUSE_MBTN))
+		{
+			resetTime_ += system::FrameTime;
+			if (resetTime_ >= SOFT_RESET_TIME / 10.f)
+			{
+				// ロゴ画面へ
+				isSoftReset_ = true;
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	/*
 		@brief	メイン更新処理
@@ -95,7 +135,7 @@ public:
 			}
 			break;
 		case IScene::State::MAIN:
-			if (update())
+			if (SoftReset() || update())
 			{
 				// フェードアウト開始
 				CFade::StartFadeOut();
@@ -141,6 +181,7 @@ public:
 	virtual void start() = 0
 	{
 		__super::start();
+		isSoftReset_ = false;
 		state_ = (IScene::State::INNING);
 		bgmVolume_ = (100);
 		if (!bgmResname_.empty())
@@ -151,8 +192,12 @@ public:
 		}
 		CFade::StartFadeIn();
 	}
-
-
+	
+	/*
+		@brief	次のシーンに切り替わる瞬間に呼ばれる
+		@return	次のシーン
+	*/
+	virtual int NextScene() const = 0;
 
 	/*
 		@brief	シーンを変えるか
@@ -160,16 +205,21 @@ public:
 		@retval	true	シーンを変える
 		@retval	false	シーンを変えない
 	*/
-	bool isChangeScene() const
+	static bool isChangeScene()
 	{
 		return state_ == State::END;
 	}
 	
 	/*
-		@brief	次のシーンに切り替わる瞬間に呼ばれる
-		@return	次のシーン
+		@brief	ソフトリセットするか
+		@return	ソフトリセットするか
+		@retval	true	ソフトリセットする
+		@retval	false	ソフトリセットしない
 	*/
-	virtual int NextScene() const = 0;
+	static bool isSoftReset()
+	{
+		return isSoftReset_;
+	}
 	
 };
 typedef std::shared_ptr<IScene> ScenePtr;

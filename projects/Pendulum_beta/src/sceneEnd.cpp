@@ -280,6 +280,9 @@ void CSceneEnd::start()
 {
 	__super::start();
 
+	// ボーナス計算
+	gm()->scoreMng()->CalcBonusScore();
+
 	camera::SetScale(1.f);
 
 	phase_ = (CSceneEnd::Phase::CLEAR);

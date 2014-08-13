@@ -1,6 +1,10 @@
 #ifndef DEF_SCENESTAGESELECT_H
 #define DEF_SCENESTAGESELECT_H
 
+#ifndef DEF_SCENEMNG_H
+#include "sceneMng.h"
+#endif
+
 #ifndef DEF_SCENEBASE_HPP
 #include "sceneBase.hpp"
 #endif
@@ -21,17 +25,9 @@ private:
 
 	std::string stageName_;			// プレイするステージ名
 
-	enum class NextSceneType
-	{
-		TITLE,		// タイトル画面へ
-		MAIN,		// メインステージ画面へ
-	}nextScene_;
-	enum
-	{
-		TO_TITLE_TIME = 30,		// タイトル画面へ移行する時間[unit:/10sec]
-	};
-	float toTitleTime_;				// タイトル画面へ移行する時間
+	CSceneMng::Scene nextScene_;
 
+	
 private:
 	/*
 		@brief	情報読み込み

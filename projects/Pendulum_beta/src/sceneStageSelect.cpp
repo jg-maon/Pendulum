@@ -1,4 +1,4 @@
-#define ALPHA_VER		// α発表会バージョン
+//#define ALPHA_VER		// α発表会バージョン
 
 #include "sceneStageSelect.h"
 #include "define.h"
@@ -46,6 +46,7 @@ void CSceneStageSelect::start()
 	camera::SetLookAt(startCameraPos_.x, startCameraPos_.y);
 	camera::SetScale(1.f);
 
+	nextScene_ = CSceneMng::Scene::STAGESELECT;
 }
 CSceneStageSelect::~CSceneStageSelect()
 {
@@ -101,17 +102,13 @@ void CSceneStageSelect::draw()
 bool CSceneStageSelect::update()
 {
 	// タイトル画面へ移行するかのチェック
-	if (input::CheckPush(input::KEY_MOUSE_LBTN) && input::CheckPush(input::KEY_MOUSE_RBTN))
-	{
-		toTitleTime_ = 0.f;
-	}
 	if (input::CheckPress(input::KEY_MOUSE_LBTN) && input::CheckPress(input::KEY_MOUSE_RBTN))
 	{
-		toTitleTime_ += system::FrameTime;
-		if (toTitleTime_ >= TO_TITLE_TIME / 10.f)
+		resetTime_ += system::FrameTime;
+		if (resetTime_ >= SOFT_RESET_TIME / 10.f)
 		{
 			// タイトル画面へ
-			nextScene_ = NextSceneType::TITLE;
+			nextScene_ = CSceneMng::Scene::JEC;
 			CFade::ChangeColor(0xff000000);
 			return true;
 		}
@@ -218,7 +215,7 @@ bool CSceneStageSelect::update()
 					std::stringstream ss;
 					ss << "Stage" << std::setw(2) << std::setfill('0') << (i + 1);
 					stageName_ = ss.str();
-					nextScene_ = NextSceneType::MAIN;
+					nextScene_ = CSceneMng::Scene::MAIN;
 					return true;
 				}
 			}
@@ -239,27 +236,30 @@ int CSceneStageSelect::NextScene() const
 {
 	switch (nextScene_)
 	{
-	case CSceneStageSelect::NextSceneType::TITLE:
-		return CSceneMng::Scene::TITLE;
-	case CSceneStageSelect::NextSceneType::MAIN:
+	case CSceneMng::Scene::MAIN:
 		{
-			const auto& sm = gm()->GetObjects("StageMng");
-			if (!sm.empty())
+			// ステージマネージャからステージを呼び出す
+			const auto& sm = gm()->stageMng();
+			if (sm)
 			{
-				std::dynamic_pointer_cast<CStageMng>(sm[0])->LoadStage(stageName_);
+				// ステージマネージャが登録されていればそれを使う
+				sm->LoadStage(stageName_);
 			}
 			else
 			{
+				// 登録されていない場合、自分で作る
 				ObjPtr stage(new CStageMng());
 				//InsertObject(stage);
 				gm()->AddObject(stage);
-				std::dynamic_pointer_cast<CStageMng>(stage)->LoadStage(stageName_);
+				auto& sm = std::dynamic_pointer_cast<CStageMng>(stage);
+				sm->load();
+				sm->LoadStage(stageName_);
+				gm()->SetStageMngPtr(sm);
 			}
-			return CSceneMng::Scene::MAIN;
 		}
 		break;
 	}
-	return CSceneMng::Scene::STAGESELECT;
+	return nextScene_;
 }
 
 

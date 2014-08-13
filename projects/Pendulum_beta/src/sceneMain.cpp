@@ -50,13 +50,14 @@ void CSceneMain::draw()
 // 処理
 bool CSceneMain::update()
 {
-	const auto& sm = CStageMng::GetPtr();
+	const auto& sm = gm()->stageMng();
 
 	// 何かアクションを起こしてシーンが切り替わるとき
 	if (sm->isEndStage())
 	{
 		return true;
 	}
+
 	return false;
 }
 
@@ -64,7 +65,7 @@ int CSceneMain::NextScene() const
 {
 	// メイン内で使ったオブジェクトを停止させる
 	{
-		auto& objs = gm()->GetObjects("StageMng Collision ScoreMng Player EnemyMng", ' ');
+		auto& objs = gm()->GetObjects("StageMng Collision ScoreMng Player EnemyMng Pickup", ' ');
 		for (auto& obj : objs)
 			obj->stop();
 	}
@@ -75,8 +76,6 @@ int CSceneMain::NextScene() const
 			obj->kill();
 	}
 
-	// ボーナス計算
-	gm()->scoreMng()->CalcBonusScore();
 
 	return CSceneMng::Scene::END;
 }

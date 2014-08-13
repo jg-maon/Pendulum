@@ -1006,8 +1006,12 @@ static KEYINFO padbase[input::KEY_MAX] =
 	{ JOY_BUTTON4, input::FREE_KEY, 0 }, //SPACE,
 	{ VK_F1, input::FREE_KEY, 0 }, //F1,
 	{ VK_F2, input::FREE_KEY, 0 }, //F2,
-	{ MK_LBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_LBTN,
-	{ MK_RBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_RBTN,
+	{ JOY_BUTTON5, input::FREE_KEY, 0 }, //SHIFT,
+	{ JOY_BUTTON6, input::FREE_KEY, 0 }, //LSHIFT,
+	{ JOY_BUTTON7, input::FREE_KEY, 0 }, //RSHIFT,
+	{ VK_LBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_LBTN,
+	{ VK_RBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_RBTN,
+	{ VK_MBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_MBTN,
 };
 
 //ÉLÅ[äÑÇËìñÇƒ
@@ -1029,8 +1033,9 @@ static KEYINFO keybase[system::PLAYER_NUM][input::KEY_MAX] =
 		{ VK_SHIFT, input::FREE_KEY, 0 }, //SHIFT,
 		{ VK_LSHIFT, input::FREE_KEY, 0 }, //LSHIFT,
 		{ VK_RSHIFT, input::FREE_KEY, 0 }, //RSHIFT,
-		{ MK_LBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_LBTN,
-		{ MK_RBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_RBTN,
+		{ VK_LBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_LBTN,
+		{ VK_RBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_RBTN,
+		{ VK_MBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_MBTN,
 	},
 	{
 		//2P
@@ -1047,8 +1052,9 @@ static KEYINFO keybase[system::PLAYER_NUM][input::KEY_MAX] =
 		{ VK_SHIFT, input::FREE_KEY, 0 }, //SHIFT,
 		{ VK_LSHIFT, input::FREE_KEY, 0 }, //LSHIFT,
 		{ VK_RSHIFT, input::FREE_KEY, 0 }, //RSHIFT,
-		{ MK_LBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_LBTN,
-		{ MK_RBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_RBTN,
+		{ VK_LBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_LBTN,
+		{ VK_RBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_RBTN,
+		{ VK_MBUTTON, input::FREE_KEY, 0 }, //KEY_MOUSE_MBTN,
 	}
 };
 
@@ -2584,7 +2590,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT	ps;
 	HRESULT res;
-
 
 	switch (msg) {
 		case WM_KEYDOWN: 

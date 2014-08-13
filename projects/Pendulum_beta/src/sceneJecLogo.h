@@ -11,7 +11,7 @@ private:
 	//float time_;
 	enum
 	{
-		WAIT_TIME = 15,		// シーン遷移待ち時間(unit[/10sec])
+		WAIT_TIME = 20,		// シーン遷移待ち時間(unit[/10sec])
 	};
 
 protected:

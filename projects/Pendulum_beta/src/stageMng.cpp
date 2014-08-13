@@ -79,7 +79,9 @@ bool CStageMng::load()
 	for (int i = 1; i <= 4; ++i)
 	{
 		std::stringstream tag;
-		tag << "#Stage" << std::setw(2) << std::setfill('0') << i;
+		std::stringstream name;
+		name << "Stage" << std::setw(2) << std::setfill('0') << i;
+		tag << "#" << name.str();
 		if (FindChunk(SeekSet(stageF), tag.str()))
 		{
 			std::string stage;
@@ -94,19 +96,19 @@ bool CStageMng::load()
 			switch (i)
 			{
 			case 1:
-				stages_.insert(StageMap::value_type("Stage01", StagePtr(new CStage1(f))));
+				stages_.insert(StageMap::value_type(name.str(), StagePtr(new CStage1(f))));
 				break;
 
 			case 2:
-				stages_.insert(StageMap::value_type("Stage02", StagePtr(new CStage2(f))));
+				stages_.insert(StageMap::value_type(name.str(), StagePtr(new CStage2(f))));
 				break;
 
 			case 3:
-				stages_.insert(StageMap::value_type("Stage03", StagePtr(new CStage3(f))));
+				stages_.insert(StageMap::value_type(name.str(), StagePtr(new CStage3(f))));
 				break;
 
 			case 4:
-				stages_.insert(StageMap::value_type("Stage04", StagePtr(new CStage4(f))));
+				stages_.insert(StageMap::value_type(name.str(), StagePtr(new CStage4(f))));
 				break;
 
 			}

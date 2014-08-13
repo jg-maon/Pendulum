@@ -38,7 +38,7 @@ void CEffectAfterImage::Create(const std::weak_ptr<IObject>& obj, const mymath::
 	{
 		// 距離を割合にして位置を計算 staを1番目、endが本体位置
 		charabase::CharBase cb = obj.lock()->obj();
-		cb.pos = sta + (dist * i) / num;
+		cb.pos = sta + dist * (static_cast<float>(i) / num);
 		cb.pos.z = obj_.pos.z;
 		// 透明度
 		cb.alpha = (alpha*(i + 1)) / num;

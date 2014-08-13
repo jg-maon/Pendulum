@@ -203,7 +203,7 @@ public:
 		@param	[in]	objinfo	クラスのID(typeid)
 		@return	オブジェクト
 	*/
-	ObjPtr GetObj(const type_info& objinfo);
+	ObjPtr GetObj(const type_info& objinfo) const;
 
 	/*
 		@brief	追加されている全オブジェクトを取得
@@ -217,7 +217,7 @@ public:
 		@param	[in] taskName	探すオブジェクト名
 		@return	オブジェクト群
 	*/
-	std::vector<ObjPtr> GetObjects(const std::string& taskName);
+	std::vector<ObjPtr> GetObjects(const std::string& taskName) const;
 	/*
 		@brief	与えられた名前のオブジェクトを取得
 				GetObjects("Player,Enemy", ",");
@@ -225,7 +225,7 @@ public:
 		@param	[in] delim		区切り文字
 		@return	オブジェクト群
 	*/
-	std::vector<ObjPtr> GetObjects(const std::string& taskName, const char delim);
+	std::vector<ObjPtr> GetObjects(const std::string& taskName, const char delim) const;
 	
 	/*
 		@brief	オブジェクトの全消去
