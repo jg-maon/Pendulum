@@ -36,7 +36,6 @@ motion02
 
 #ChainImg			img_chain
 
-#GravityAcc			25.0
 #MaxGravity			100.0
 #Tension			1500.0
 #DownTension		0.85

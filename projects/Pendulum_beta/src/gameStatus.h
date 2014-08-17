@@ -14,6 +14,14 @@
 */
 class CGameStatus : public Base
 {
+public:
+	/*
+		@brief	環境、システム系
+	*/
+	struct Environment
+	{
+		float gravityAcc;			// 重力加速度
+	};
 private:
 
 	/*
@@ -77,6 +85,7 @@ private:
 	int slowInterval_;			// ヒットストップ中更新フレーム
 	int updateCnt_;				// 更新計算フレーム数(0->MAX)
 
+	Environment environment_;	// システム
 
 public:
 	/*
@@ -101,6 +110,12 @@ public:
 	*/
 	virtual void draw() override;
 
+
+	/*
+		@brief	環境情報取得
+		@return	環境情報
+	*/
+	const Environment& getEnv() const;
 
 	/*
 		@brief	ヒットストップ開始
@@ -130,6 +145,7 @@ public:
 		@retval	false	更新しない
 	*/
 	bool isUpdatable() const;
+
 
 };
 

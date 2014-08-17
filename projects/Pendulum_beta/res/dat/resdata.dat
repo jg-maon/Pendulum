@@ -5,7 +5,8 @@
 #Img
 {
 
-	img_cursor			res/gra/ui/cursor.png			0xff00ff00
+	img_cursor0			res/gra/ui/cursor0.png			0xff000000
+	img_cursor1			res/gra/ui/cursor1.png			0xff000000
 	img_UInumber		res/gra/ui/number.png			0xff000000
 	img_UIchain			res/gra/ui/chain.png			0xff000000
 	img_UIalphabet		res/gra/ui/abc.png				0xff000000
@@ -13,6 +14,7 @@
 	img_effectStar		res/gra/effect/010.png			0x00000000
 	img_effectExplosion	res/gra/effect/explosion.png	0xff000000
 	img_effectSlash		res/gra/effect/slash.png		0xff000000
+	img_effectFlash		res/gra/effect/flash.png		0x00000000
 
 	img_jewely			res/gra/ui/jewely.png			0x00000000
 		
@@ -44,6 +46,10 @@
 	img_fairy			res/gra/main/character/enemy/fairy/fairy.png		0xff000000
 	img_fairySing		res/gra/main/character/enemy/fairy/fairySing.png	0xff000000
 	img_griffon			res/gra/main/character/enemy/griffon/griffon.png	0xff000000
+
+	img_raybit			res/gra/main/character/enemy/raybit/raybit.png		0x00000000
+	img_raybitEye		res/gra/main/character/enemy/raybit/raybitEye.png	0x00000000
+	img_raybitShot		res/gra/main/character/enemy/raybit/raybitShot.png	0x00000000
 
 
 	img_end				res/gra/end/bg.jpg						0x00000000
@@ -80,10 +86,13 @@
 #Se
 {
 	se_explosion	res/snd/se/explosion.wav
-	se_enter		res/snd/se/enter2.wav
+	se_enter0		res/snd/se/enter0.wav
+	se_enter1		res/snd/se/enter1.wav
 	se_drain		res/snd/se/drain2.wav
 	se_slash		res/snd/se/slash.wav
 
+	se_shot0		res/snd/se/shot0.wav
+	se_shot1		res/snd/se/shot1.wav
 	
 	se_wind			res/snd/se/wind.wav
 

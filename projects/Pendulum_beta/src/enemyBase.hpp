@@ -21,6 +21,10 @@
 #include "nWaySing.h"
 #endif
 
+#ifndef DEF_TACKLE_H
+#include "tackle.h"
+#endif
+
 #ifndef DEF_EFFECTEXPLOSION_H
 #include "effectExplosion.h"
 #endif
@@ -93,9 +97,9 @@ public:
 					if (FindChunk(f,"#Attack"))
 						LoadAttack(f);
 		@param	[in/out]	f	オープン済みファイル
-		@return		EOFか
-		@retval		true		EOF
-		@retval		false		EOFでない
+		@return	読み込み成功したか
+		@retval	true	読み込み成功
+		@retval	false	読み込み失敗
 	*/
 	bool LoadAttack(std::ifstream& f)
 	{
@@ -104,7 +108,7 @@ public:
 		if (buf == "NWayShot")
 		{
 			f >> buf;
-			if (buf != "{") return f.eof();
+			if (buf != "{") return false;
 			else
 			{
 				charabase::CharBase shot_info;
@@ -127,7 +131,7 @@ public:
 		else if (buf == "NWaySing")
 		{
 			f >> buf;
-			if (buf != "{") return f.eof();
+			if (buf != "{") return false;
 			else
 			{
 				charabase::CharBase sing_info;
@@ -146,8 +150,17 @@ public:
 			}
 
 		}
+		else if (buf == "Tacke")
+		{
+			f >> buf;
+			if (buf != "{") return false;
+			else
+			{
+				attack_ = AttackPtr(new CTackle());
+			}
+		}
 		
-		return f.eof();
+		return true;
 	}
 
 	/*

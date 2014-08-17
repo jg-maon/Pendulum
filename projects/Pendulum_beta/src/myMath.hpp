@@ -257,14 +257,23 @@ public:
 	*/
 	static T Angle(const Vec3<T>& v1, const Vec3<T>& v2)
 	{
-		/*
+		//*
 		float l1 = v1.Length();
 		float l2 = v2.Length();
 		if (l1 == 0.0f || l2 == 0.0f) return 0.0f;
 		return std::acosf(Dot(v1, v2) / (l1 * l2));
-		*/
+		//*/
+	}
+	/*
+		@brief ベクトルv1とv2のなす角 2Dグラフィックス用
+		@param	[in]	v1	ベクトル
+		@param	[in]	v2	ベクトル
+		@return	なす角 [ unit:radian ]
+	*/
+	static T Angle2(const Vec3<T>& v1, const Vec3<T>& v2)
+	{
 		Vec3<T> v = v2 - v1;
-		return std::atan2(v.y, v.x);
+		return std::atan2(-v.y, v.x);
 	}
 
 	/*
@@ -2954,9 +2963,10 @@ public:
 	*/
 	static void draw(T1 center_x, T1 center_y, T1 center_z, T2 radius, D3DCOLOR color = 0xffffffff, int size = 1)
 	{
+		if (radius <= 0.f) return;
 		const float resolution = 120.f;
 		const int add = static_cast<int>(360.f / resolution);
-		for (int i = 0; i<360; i += add)
+		for (int i = 0; i < 360; i += add)
 		{
 			float rad = static_cast<float>(i)* 2.0f * PI / 360.0f;
 			float ra2 = static_cast<float>(i + add) * 2.0f * PI / 360.0f;
@@ -2983,9 +2993,10 @@ public:
 	*/
 	virtual void draw(DWORD color = -1, int size = 1, bool fill = true) const override
 	{
+		if (radius <= 0.f) return;
 		const float resolution = 60.f;
 		const int add = static_cast<int>(360.f / resolution);
-		for (int i = 0; i<360; i += add)
+		for (int i = 0; i < 360; i += add)
 		{
 			float rad = static_cast<float>(i)* 2.0f * PI / 360.0f;
 			float ra2 = static_cast<float>(i + add) * 2.0f * PI / 360.0f;

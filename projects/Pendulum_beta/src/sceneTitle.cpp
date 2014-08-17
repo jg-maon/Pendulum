@@ -3,6 +3,8 @@
 #define D_EFFECT_TEST	// エフェクト生成テスト
 //#define D_PICKUP_TEST	//  ピックアップアイテムテスト
 //#define D_SHAPE_TEST	// 図形テスト
+#define D_TURN_TEST	// 反転描画テスト
+#define D_SOUND_TEST	// 音テスト パン振り
 #endif
 
 #ifdef D_SHAPE_TEST
@@ -23,9 +25,11 @@
 #include "fade.h"
 
 
+
 #ifdef D_EFFECT_TEST
 #include "effectExplosion.h"
 #include "effectSlash.h"
+#include "effectFlash.h"
 #endif
 
 #ifdef D_PICKUP_TEST
@@ -43,7 +47,93 @@ namespace titleDebug
 	mymath::Circlef ci(600.f, 100.f, 0.f, 50.f);
 	mymath::Polyf pl(0);
 #endif
+#ifdef D_TURN_TEST
+	struct TurnObject : public IObject
+	{
+		static int i;
+		int my;
+		TurnObject(mymath::Vec3f& pos):
+		IObject("TurnObject")
+		{
+			my = i++;
+			obj_ = charabase::CharBase(charabase::BaseData("img_bird", 192, 192));
+			obj_.pos = pos;
+			obj_.pos.z = 0.5f;
+		}
+		void step()
+		{
+			mymath::Vec3f mouse = gm()->GetCursorPos();
+			/*
+			if (input::CheckPress(input::KEY_UP) || input::CheckPress(input::KEY_LEFT))
+			{
+				obj_.angle -= 10.f;
+			}
+			if (input::CheckPress(input::KEY_DOWN) || input::CheckPress(input::KEY_RIGHT))
+			{
+				obj_.angle += 10.f;
+			}
+			//*/
+			obj_.angle = math::Calc_RadToDegree(mymath::Vec3f::Angle2(obj_.pos, mouse));
+			if (obj_.angle >= 360.f)
+				obj_.angle -= 360.f;
+			else if (obj_.angle < 0.f)
+				obj_.angle += 360.f;
+			if (my == 0)
+			{
+				
+				if (obj_.angle < 90.f || 270.f < obj_.angle)
+				{
+					turnFlag_ = false;
+				}
+				if (90.f <= obj_.angle && 270.f <= obj_.angle)
+				{
+					if (!turnFlag_)
+					{
+						turnFlag_ = true;
+						obj_.angle = 180.f - obj_.angle;
+						//if (obj_.angle <= 0.f)
+					//		obj_.angle += 360.f;
+					}
+				}
+			}
+			else if (my == 1)
+			{
+				Look(mouse);
+			}
+			else if (my == 2)
+			{
+				if (90.f < obj_.angle && obj_.angle <= 270.f)
+				{
+					turnFlag_ = true;
+					obj_.angle = obj_.angle - 180.f;
+					if (obj_.angle <= 0.f)
+						obj_.angle += 360.f;
+				}
+				else
+				{
+					turnFlag_ = false;
+				}
+				
+			}
+			
+		}
 
+		void draw()
+		{
+			__super::draw();
+			std::stringstream ss;
+			ss << std::boolalpha << turnFlag_ << " " << obj_.angle;
+			font::Draw_FontText(
+				(int)(obj_.pos.x + obj_.HalfSize().x),
+				(int)(obj_.pos.y),
+				obj_.pos.z - 0.1f,
+				ss.str(), -1, 1);
+		}
+	};
+	int TurnObject::i = 0;
+	std::vector<TurnObject> turnObjs_;
+#endif
+	
 }
 using namespace titleDebug;
 
@@ -114,17 +204,32 @@ IScene("SceneTitle", "img_title", "bgm_title")
 , titleSlash_(SLASH_A_X, SLASH_A_Y, 0.f, 0.f, 0.f, "img_titleSlash", 240, 360, 2.f, 3.f, 0.f, 0, 0)
 {
 #ifdef D_SHAPE_TEST
-	std::vector<mymath::Vec3f> points =
 	{
-		mymath::Vec3f(10.f, 20.f),
-		mymath::Vec3f(90.f, 20.f),
-		mymath::Vec3f(50.f, 90.f),
-		mymath::Vec3f(30.f, 50.f),
-		mymath::Vec3f(10.f, 10.f),
-	};
-	
-	titleDebug::pl = mymath::Polyf(points);
-	titleDebug::pl.Offset(mymath::Vec3f(100.f, 200.f));
+		std::vector<mymath::Vec3f> points =
+		{
+			mymath::Vec3f(10.f, 20.f),
+			mymath::Vec3f(90.f, 20.f),
+			mymath::Vec3f(50.f, 90.f),
+			mymath::Vec3f(30.f, 50.f),
+			mymath::Vec3f(10.f, 10.f),
+		};
+
+		titleDebug::pl = mymath::Polyf(points);
+		titleDebug::pl.Offset(mymath::Vec3f(100.f, 200.f));
+	}
+#endif
+
+#ifdef D_TURN_TEST
+	{
+		std::vector<mymath::Vec3f> points =
+		{
+			mymath::Vec3f(100.f, 200.f),
+			mymath::Vec3f(400.f, 200.f),
+			mymath::Vec3f(700.f, 200.f),
+		};
+		for (auto& point : points)
+			titleDebug::turnObjs_.push_back(TurnObject(point));
+	}
 #endif
 }
 
@@ -136,6 +241,8 @@ CSceneTitle::~CSceneTitle()
 void CSceneTitle::start()
 {
 	__super::start();
+
+
 	phase_ = (Phase::TITLE);
 	fadeState_ = (State::MAIN);
 	slashAnim_.set(9, 0.9f);
@@ -158,11 +265,16 @@ void CSceneTitle::start()
 // 処理
 bool CSceneTitle::update()
 {
+#ifdef _DEBUG
+	titleDebug::pt = gm()->GetCursorPos();
+#endif
+
 #ifdef D_SHAPE_TEST
 	titleDebug::ci.Scale(titleDebug::scale);
 	titleDebug::rc.Scale(titleDebug::scale);
 	titleDebug::pl.Scale(titleDebug::scale);
 #endif
+
 
 	// タイトルデモ間のフェードアウト、イン
 	switch (fadeState_)
@@ -189,7 +301,7 @@ bool CSceneTitle::update()
 				|| input::CheckPush(input::KEY_MOUSE_RBTN))
 			{
 				bgm::DShow_Stop("bgm_title");
-				se::DSound_Play("se_enter");
+				se::DSound_Play("se_enter0");
 				return true;
 			}
 			break;
@@ -220,23 +332,45 @@ bool CSceneTitle::update()
 		break;
 	}
 
+#ifdef D_TURN_TEST
+	for (auto& obj : turnObjs_)
+		obj.step();
+#endif
 
 
 #ifdef D_EFFECT_TEST
 	if (input::CheckPress(input::KEY_LSHIFT))
 	{
 		if (input::CheckPush(input::KEY_BTN0))
-			gm()->AddObject(ObjPtr(new CEffectSlash(gm()->GetCursorPos(), math::GetRandom(0.f, 360.f))));
+			gm()->AddObject(ObjPtr(new CEffectSlash(pt, math::GetRandom(0.f, 360.f))));
+		if (input::CheckPush(input::KEY_BTN1))
+			gm()->AddObject(ObjPtr(new CEffectFlash(pt, mymath::Vec3f(0.f, 0.f, 0.f), 1.f, 1.f)));
+		if (input::CheckPush(input::KEY_BTN2))
+			gm()->AddObject(ObjPtr(new CEffectFlash(pt, mymath::Vec3f(200.f,-200.f,0.f), 1.f, 1.f)));
+
 	}
 	else
 	{
 		if (input::CheckPush(input::KEY_BTN0))
-			gm()->AddObject(ObjPtr(new CEffectSlash(gm()->GetCursorPos())));
+			gm()->AddObject(ObjPtr(new CEffectSlash(pt)));
 		if (input::CheckPush(input::KEY_BTN1))
-			gm()->AddObject(ObjPtr(new CEffectExplosion(gm()->GetCursorPos())));
+			gm()->AddObject(ObjPtr(new CEffectExplosion(pt)));
 	}
 #endif
+#ifdef D_SOUND_TEST
+	if (input::CheckPush(input::KEY_SPACE))
+	{
+		int i = se::DSound_Play("se_shot1");
 
+		// パン振り
+		mymath::Vec3f cameraCenter = camera::GetLookAt();
+		auto stageWidth = gm()->winRect()->width();
+		mymath::Vec3f dist = pt - cameraCenter;
+		long pan = static_cast<long>(10000.f * dist.x / (stageWidth / 2.f));
+		se::DSound_SetPan("se_shot1", i, pan);
+	}
+
+#endif
 
 
 	return false;
@@ -257,6 +391,11 @@ void CSceneTitle::draw()
 	titleDebug::ci.draw();
 	titleDebug::pl.draw();
 #endif
+#ifdef D_TURN_TEST
+	for (auto& obj : turnObjs_)
+		obj.draw();
+#endif
+
 
 	//-------------------------
 	//Title
@@ -692,7 +831,7 @@ void CSceneTitle::SlashAnime()
 		titleSlash_.SetUse(true);
 		if (sePlaying_)
 		{
-			se::DSound_Play("se_slash");
+			se::DSound_Play("se_shot0");
 			sePlaying_ = false;
 		}
 		if (slashAnim_.step())
@@ -728,7 +867,7 @@ void CSceneTitle::SlashAnime()
 
 		if (sePlaying_)
 		{
-			se::DSound_Play("se_slash");
+			se::DSound_Play("se_shot0");
 			sePlaying_ = false;
 		}
 

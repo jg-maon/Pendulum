@@ -8,7 +8,7 @@
 #Collision
 {
 円	pos(画像の中心)からの相対座標X	相対座標Y	半径(halfWidth,halfHeightで自動計算)
-#Circle	0	0	halfWidth
+#Circle	0	0	halfHeight
 
 ポリゴン	頂点数	相対座標X1 相対座標Y1	X2 Y2……
 //#Polygon	3	-10 -10		10 -10		5 10	
@@ -32,7 +32,7 @@
 {
 ショット画像管理名	img_birdShot
 ショット画像幅	32
-ショット画像高	12
+ショット画像高	16
 ショット当たり判定
 {
 #Polygon	4

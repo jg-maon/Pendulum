@@ -48,7 +48,6 @@ public:
 		std::string chainImg;	// 鎖画像
 
 		float MAX_G;			// 最大重力速度
-		float GRAVITY_ACC;		// 重力加速度
 		float TENSION;			// フックの張力(初速)
 		float DOWN_TENSION;		// 張力減速率
 		float DOWN_SPEED;		// 移動減速率(1-DOWN_SPEED)
@@ -56,7 +55,7 @@ public:
 		float MAX_VY;			// 鉛直方向の最大速度(ゲームとして成り立つバランス調整用)
 		float CHAIN_TIME[2];	// Chain猶予時間
 		
-		float INV_TIME;			// 無敵時間
+		float invincibleTime;			// 無敵時間
 		
 		int health;				// 初期HP
 		int power;				// 初期攻撃力

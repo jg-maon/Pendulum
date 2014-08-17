@@ -105,6 +105,7 @@ inline string getFloatString(T_ f, int val = 8, int w = 8, char fill = '0');
 ///////////////////////////////////////////////////////////////
 namespace color
 {
+	
 /*
 	@brief	ARGBを各色に分解
 	@param	[in]	argb	分解させる色
@@ -121,7 +122,43 @@ template <class T> void Color_SeparateARGB(D3DCOLOR argb, T& a, T& r, T& g, T& b
 	g = static_cast<T>(argb >> 8 & 0xff);
 	b = static_cast<T>(argb & 0xff);
 }
-
+struct ColorARGB
+{
+	float a, r, g, b;
+	ColorARGB(float _a = 0.f, float _r = 0.f, float  _g = 0.f, float _b = 0.f) :
+		a(_a), r(_r), g(_g), b(_b)
+	{}
+	ColorARGB(D3DCOLOR argb)
+	{
+		Color_SeparateARGB(argb, a, r, g, b);
+	}
+	ColorARGB& set(D3DCOLOR argb)
+	{
+		Color_SeparateARGB(argb, a, r, g, b);
+		return *this;
+	}
+	D3DCOLOR get() const
+	{
+		return D3DCOLOR_ARGB(
+			static_cast<int>(a),
+			static_cast<int>(r),
+			static_cast<int>(g),
+			static_cast<int>(b));
+	}
+	ColorARGB& operator = (D3DCOLOR argb)
+	{
+		Color_SeparateARGB(argb, a, r, g, b);
+		return *this;
+	}
+	operator D3DCOLOR()
+	{
+		return D3DCOLOR_ARGB(
+			static_cast<int>(a),
+			static_cast<int>(r),
+			static_cast<int>(g),
+			static_cast<int>(b));
+	}
+};
 /*
 	@brief	AHSVのHチャンネルのみ加算
 	@return AHSV(D3DCOLOR)

@@ -27,16 +27,15 @@ img_goalObj01	1	1
 
 
 #Enemy
-res/dat/main/enemy/table/debugTable01.txt
-res/dat/main/enemy/table/enemyTable01.txt
+res/dat/main/enemy/table/enemyTable01.dat
+res/dat/main/enemy/table/debugTable01.dat
 
 
 #BossStage
-res/dat/main/stage/bossStage01.txt
+res/dat/main/stage/bossStage01.dat
 
 #ActionCircle
 {
-}
 200	200	200
 1000	200	200
 1800	200	200
@@ -281,7 +280,7 @@ res/dat/main/stage/bossStage01.txt
 
 #ActionPolygon
 {
-}
+
 4
 -400	5200
 800	5200

@@ -65,7 +65,9 @@ resname(resname)
 BaseData::BaseData(const std::string& resname, int width, int height) :
 resname(resname)
 , size(width, height)
-{}
+{
+	ImageSize(*this);
+}
 
 
 void BaseData::ImageSize(BaseData& bd)
@@ -165,8 +167,7 @@ float CharBase::HalfHeight() const
 }
 mymath::Vec3f CharBase::HalfSize() const
 {
-	float s = camera::GetScale();
-	return GetSize() / 2.0f / s;
+	return GetSize() / 2.0f;
 }
 
 mymath::Rectf CharBase::GetRect(MODE mode) const
@@ -354,6 +355,37 @@ void CharBase::SetUse(bool useFlag)
 
 #pragma endregion // CharBase methods
 
+
+
+//==========================================================
+#pragma region AnimObject methods
+void AnimObject::step()
+{
+	anim.step();
+	switch (animType)
+	{
+	case AnimType::MOVE_X:
+		obj.pos.x += animTbl[anim.no];
+		break;
+	case AnimType::MOVE_Y:
+		obj.pos.y += animTbl[anim.no];
+		break;
+	case AnimType::ROTATE:
+		obj.angle += animTbl[anim.no];
+		if (obj.angle >= 360.f)
+			obj.angle -= 360.f;
+		break;
+	case AnimType::ANIM_X:
+		obj.src.x = static_cast<int>(animTbl[anim.no]);
+		break;
+	case AnimType::ANIM_Y:
+		obj.src.y = static_cast<int>(animTbl[anim.no]);
+		break;
+	default:
+		break;
+	}
+}
+#pragma endregion	// AnimObject
 //------------------------------------------------------
 //------------------------------------------------------
 //------------------------------------------------------

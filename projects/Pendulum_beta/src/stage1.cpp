@@ -20,7 +20,10 @@ IStage("Stage1")
 		//std::string bossFile;
 		f >> bossFile_;
 		std::ifstream bossF(bossFile_);
-		load(bossF, 1);
+		if (f)
+			load(bossF, 1);
+		else
+			debug::BToMF("bossFile_ not found path:%s", bossFile_.c_str());
 	}
 	//------------------------------------
 }
@@ -122,7 +125,7 @@ void CStage1::LoadClear(std::ifstream& f, mymath::ShapefPtr& area)
 {
 	if (!common::FindChunk(common::SeekSet(f), "#StageClear"))
 	{
-		debug::BToM("CStage1::LoadGoal #StageClear not found");
+		debug::BToMF("CStage1::LoadGoal #StageClear not found");
 		return;
 	}
 	std::string label;

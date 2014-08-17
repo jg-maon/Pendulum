@@ -12,19 +12,28 @@ Base("GameStatus")
 , updateCnt_(0)
 {
 	std::ifstream f(gm()->fm()->GetPath("#StatusFile"));
-	if (!f) return;
-	
-	if (common::FindChunk(common::SeekSet(f), "#HitStopTime"))
+	if (!f)
 	{
-		float stopTime;
-		f >> stopTime;
-		hitStop_.init(stopTime);
+		debug::BToMF("CGameStatus::CGameStatus StatusFile open error");
 	}
-	if (common::FindChunk(common::SeekSet(f), "#SlowInterval"))
+	else
 	{
-		f >> slowInterval_;
-	}
+		if (common::FindChunk(common::SeekSet(f), "#GravityAcc"))
+		{
+			f >> environment_.gravityAcc;
+		}
+		if (common::FindChunk(common::SeekSet(f), "#HitStopTime"))
+		{
+			float stopTime;
+			f >> stopTime;
+			hitStop_.init(stopTime);
+		}
+		if (common::FindChunk(common::SeekSet(f), "#SlowInterval"))
+		{
+			f >> slowInterval_;
+		}
 
+	}
 	start();
 
 }
@@ -52,6 +61,11 @@ void CGameStatus::draw()
 {
 	if (hitStop_.isStopping())
 		hitStop_.draw();
+}
+
+const CGameStatus::Environment& CGameStatus::getEnv() const
+{
+	return environment_;
 }
 
 void CGameStatus::BeginHitStop(float extendTime)

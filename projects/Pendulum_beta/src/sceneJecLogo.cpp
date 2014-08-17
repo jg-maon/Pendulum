@@ -31,6 +31,10 @@ void CSceneJecLogo::start()
 	camera::SetScale(1.f);
 	time::Time_ResetTimer(0);
 	CFade::ChangeColor(0xff000000);
+
+	auto cursor = gm()->cursor();
+	cursor.obj.SetUse(false);
+	gm()->cursor(cursor);
 }
 
 int CSceneJecLogo::NextScene() const

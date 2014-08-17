@@ -89,7 +89,7 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 	std::ifstream f(fileName);
 	if (f.fail())
 	{
-		debug::BToM("CEnemyMng::LoadEnemyTable path:%s", fileName.c_str());
+		debug::BToMF("CEnemyMng::LoadEnemyTable path:%s", fileName.c_str());
 		return;
 	}
 	enemies_.clear();
@@ -145,7 +145,6 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 
 	//---------------------------------------
 	// グリフォン
-	//*
 	if (common::FindChunk(common::SeekSet(f), "#Griffon"))
 	{
 		std::string label;
@@ -167,32 +166,29 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 			}
 		}
 	}
-	//*/
 	//---------------------------------------
-	// 別敵
-	/*
-	if (common::FindChunk(common::SeekSet(f), "#EnemyName"))
+	// レイビット
+	if (common::FindChunk(common::SeekSet(f), "#Raybit"))
 	{
-	std::string label;
-	f >> label;
-	if (label == "{")
-	{
-	while (!f.eof())
-	{
-	float pos[2];	// [0]:x [1]:y
-	for (auto& p : pos)
-	{
-	f >> label;
-	// エラーチェック
-	if (label == "}" || f.eof()) break;
-	p = static_cast<float>(std::atof(label.c_str()));
+		std::string label;
+		f >> label;
+		if (label == "{")
+		{
+			while (!f.eof())
+			{
+				float pos[2];	// [0]:x [1]:y
+				for (auto& p : pos)
+				{
+					f >> label;
+					// エラーチェック
+					if (label == "}" || f.eof()) break;
+					p = static_cast<float>(std::atof(label.c_str()));
+				}
+				if (label == "}") break;
+				enemies_.push_back(EnemyPtr(new CRaybit(pos[0], pos[1])));
+			}
+		}
 	}
-	if (label == "}") break;
-	enemies_.push_back(EnemyPtr(new CEnemyName(pos[0], pos[1])));
-	}
-	}
-	}
-	//*/
 
 	enemyNum_ = enemies_.size();
 }

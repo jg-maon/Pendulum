@@ -10,11 +10,11 @@ class CFairy : public IEnemy
 public:
 	struct LoadInfo
 	{
-		float SEARCH_RANGE;		// 索敵範囲(現在座標からどれだけ策敵するか)
-		float CHASE_RANGE;		// 追跡範囲(初期座標からどれだけ追跡するか)
-		float ATTACK_RANGE;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
-		float RETURN_RANGE;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
-		float MOVE_SPEED;		// 移動速度
+		float searchRange;		// 索敵範囲(現在座標からどれだけ策敵するか)
+		float chaseRange;		// 追跡範囲(初期座標からどれだけ追跡するか)
+		float attackRange;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
+		float returnRange;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
+		float moveSpeed;		// 移動速度
 		float attackInterval;		// 攻撃間隔
 		int attackRatio;		// 攻撃確立(百分率)
 	};
@@ -36,11 +36,11 @@ private:
 	};
 private:
 	/*
-	static const float SEARCH_RANGE;		// 索敵範囲(現在座標からどれだけ策敵するか)
-	static const float CHASE_RANGE;			// 追跡範囲(初期座標からどれだけ追跡するか)
-	static const float ATTACK_RANGE;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
-	static const float RETURN_RANGE;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
-	static const float MOVE_SPEED;			// 移動速度
+	static const float searchRange;		// 索敵範囲(現在座標からどれだけ策敵するか)
+	static const float chaseRange;			// 追跡範囲(初期座標からどれだけ追跡するか)
+	static const float attackRange;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
+	static const float returnRange;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
+	static const float moveSpeed;			// 移動速度
 	//*/
 	static void (CFairy::*StateStep_[])();	// 状態によるstep処理
 

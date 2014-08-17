@@ -241,7 +241,7 @@ void CPlayer::step()
 		// 更新フレームでない場合はスキップ
 		if (!isUpdatable())
 		{
-			attackRadius_ = 0.f;
+			attackRadius_ = -50.f;
 			return;
 		}
 		
@@ -294,7 +294,7 @@ void CPlayer::step()
 	{
 		// 点滅アニメ
 		invincibleAnim_ += system::ONEFRAME_TIME;
-		if (invincibleAnim_ >= loadInfo_.INV_TIME / 20.f)
+		if (invincibleAnim_ >= loadInfo_.invincibleTime / 20.f)
 		{
 			invincibleAnim_ = 0.f;
 			if (obj_.alpha > 200.f)
@@ -833,7 +833,7 @@ void CPlayer::move()
 	// 重力
 	if (gravityF_)
 	{
-		gravity_ += loadInfo_.GRAVITY_ACC;
+		gravity_ += gm()->gameStatus()->getEnv().gravityAcc;
 		if (gravity_ >= loadInfo_.MAX_G)
 		{
 			gravity_ = loadInfo_.MAX_G;
@@ -884,7 +884,7 @@ void CPlayer::move()
 			hangAcc_ = 0.f;
 			obj_.velocity = 0.f;
 			}*/
-			hangAcc_ += loadInfo_.GRAVITY_ACC;
+			hangAcc_ += gm()->gameStatus()->getEnv().gravityAcc;
 			if (hangAcc_ > loadInfo_.MAX_G)
 			{
 				hangAcc_ = loadInfo_.MAX_G;
@@ -1023,7 +1023,7 @@ void CPlayer::hit(const ObjPtr& rival)
 			obj_.src.y = static_cast<int>(MotionType::DAMAGE);
 			obj_.src.x = 0;
 			motionAnim_.set(2, 0.1f);
-			invincibleTime_ = loadInfo_.INV_TIME;
+			invincibleTime_ = loadInfo_.invincibleTime;
 		}
 	}
 	else if (rival->FindName("PickupJewely"))
@@ -1118,6 +1118,12 @@ void CPlayer::ApplyAttack(CPlayer::AttackType type, const mymath::Vec3f& pos)
 	turnFlag_ = vec.x < 0.f;
 
 	//---------------------------------
+	// アニメーション
+	obj_.src.y = static_cast<int>(MotionType::ATTACK);
+	obj_.src.x = 0;
+	motionAnim_.set(2, 0.25f);
+
+	//---------------------------------
 	// 斬り攻撃時残像処理
 	if (type == AttackType::SLASH)
 	{
@@ -1126,7 +1132,7 @@ void CPlayer::ApplyAttack(CPlayer::AttackType type, const mymath::Vec3f& pos)
 		for (auto& img : afterImages)
 			img->kill();
 		// 新しい残像の追加
-		gm()->AddObject(ObjPtr(new CEffectAfterImage(obj_, turnFlag_, pos, obj_.pos, 10)));
+		gm()->AddObject(ObjPtr(new CEffectAfterImage(obj_, turnFlag_, obj_.pos, pos, 10)));
 	}
 
 	//---------------------------------
@@ -1142,11 +1148,6 @@ void CPlayer::ApplyAttack(CPlayer::AttackType type, const mymath::Vec3f& pos)
 	obj_.pos.y = pos.y;
 	sm()->MoveCamera(obj_.pos);	// 移動後座標にカメラを向かせる
 
-	//---------------------------------
-	// アニメーション
-	obj_.src.y = static_cast<int>(MotionType::ATTACK);
-	obj_.src.x = 0;
-	motionAnim_.set(2, 0.25f);
 
 	//---------------------------------
 	// 敵方向へ進むフォロースルー

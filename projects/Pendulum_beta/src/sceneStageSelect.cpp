@@ -27,20 +27,30 @@ IScene("SceneStageSelect", "img_stageSelect", "bgm_stageSelect")
 	back_->pos.z = 1.f;
 	if (f.fail())
 	{
-		debug::BToM("CSceneStageSelect::CSceneStageSelect path:%s", settingFile.c_str());
+		debug::BToMF("CSceneStageSelect::CSceneStageSelect path:%s", settingFile.c_str());
 		fieldRect_.top = fieldRect_.left = 0;
 		fieldRect_.right = system::WINW;
 		fieldRect_.bottom = system::WINH;
 	}
 	else
 	{
-		LoadInfo(f);
+		LoadStageInfo(f);
 	}
 }
 
 void CSceneStageSelect::start()
 {
 	__super::start();
+
+
+	auto cursor = gm()->cursor();
+	cursor.obj.SetUse(true);
+	cursor.obj.r = 0.f;
+	cursor.obj.g = 0.f;
+	cursor.obj.b = 0.f;
+	gm()->cursor(cursor);
+
+
 	descHeight_ = 0.f;
 
 	camera::SetLookAt(startCameraPos_.x, startCameraPos_.y);
@@ -216,6 +226,7 @@ bool CSceneStageSelect::update()
 					ss << "Stage" << std::setw(2) << std::setfill('0') << (i + 1);
 					stageName_ = ss.str();
 					nextScene_ = CSceneMng::Scene::MAIN;
+					se::DSound_Play("se_enter1");
 					return true;
 				}
 			}
@@ -264,7 +275,7 @@ int CSceneStageSelect::NextScene() const
 
 
 
-void CSceneStageSelect::LoadInfo(std::ifstream& f)
+void CSceneStageSelect::LoadStageInfo(std::ifstream& f)
 {
 	//====================================================-
 	// ”wŒi‰æ‘œ

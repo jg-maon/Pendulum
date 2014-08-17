@@ -111,7 +111,7 @@ struct PlayBuffer{
 	bool					Loop;			//ループフラグ
 };
 
-const int				DSPLAYMAX = 10;
+const int				DSPLAYMAX = 100;
 struct SoundBuffer{
 	LPDIRECTSOUNDBUFFER     sBuffer;	//セカンダリバッファ
 	WORD										BufferSize;		//バッファのサイズ
@@ -2872,12 +2872,12 @@ void	bgm::DShow_LoadFile(const std::string& resname, const std::string& filename
 	HRESULT	hr = CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER,
 		IID_IGraphBuilder, (void **)&bgmObj.bgm.pBuilder);
 	if (FAILED(hr)){
-		debug::BToM("DShow:GraphBuilderオブジェクトの生成に失敗しました");
+		debug::BToMR("DShow:GraphBuilderオブジェクトの生成に失敗しました");
 		goto error;
 	}
 
 	if (FAILED(bgmObj.bgm.pBuilder->RenderFile(name, NULL))){
-		debug::BToM("DShow\nファイル読み込みに失敗しました\nファイル名、コーデックの確認をお願いします。");
+		debug::BToMR("DShow\nファイル読み込みに失敗しました\nファイル名、コーデックの確認をお願いします。");
 		goto error;
 	}
 	if (FAILED(bgmObj.bgm.pBuilder->QueryInterface(IID_IMediaControl,
@@ -2952,21 +2952,21 @@ bool	bgm::DShow_Play(const std::string& resname)
 //--------------------------------------------------------------------------------------------
 void bgm::DShow_RateControl(const std::string& resname, float rate)
 {
-	if (BgmTable.at(resname).bgm.use == 0) return;
-	if (rate < 0)	return;
+	if (!BgmTable.at(resname).bgm.use) return;
+	if (rate < 0.f)	return;
 	BgmTable.at(resname).bgm.pMediaSeeking->SetRate(rate);
 }
 //--------------------------------------------------------------------------------------------
 // 再生音量の設定
 // 0から100で設定　0は無音 100は最大 
 //--------------------------------------------------------------------------------------------
-void bgm::DShow_VolumeControl(const std::string& resname, int volume)
+void bgm::DShow_VolumeControl(const std::string& resname, long volume)
 {
-	if (BgmTable.at(resname).bgm.use == 0) return;
-	if (volume < 0 || volume > 100)	return;
+	if (!BgmTable.at(resname).bgm.use) return;
+	if (volume < 0l || volume > 100l)	return;
 	//0から-10000で設定 0が最大　-10000は無音
 	//100で割った値がデシベル
-	long vol = (long)(-10000 + (volume*100));
+	long vol = (-10000L + (volume*100L));
 	BgmTable.at(resname).bgm.pBasicAudio->put_Volume(vol);
 }
 //--------------------------------------------------------------------------------------------
@@ -3123,7 +3123,7 @@ void se::DSound_CreateSecondaryBuffer()
 //--------------------------------------------------------------------------------------------
 // サウンド再生
 //--------------------------------------------------------------------------------------------
-void se::DSound_Play(const std::string& resname)
+int se::DSound_Play(const std::string& resname)
 {
 	int i;
 	auto& se = SeTable.at(resname).se;
@@ -3134,10 +3134,24 @@ void se::DSound_Play(const std::string& resname)
 			se.PlayBuffer[i].State = DSPLAY;
 			se.PlayBuffer[i].pBuffer->Play(0, 0, 0);
 			se.PlayBuffer[i].Loop = 0;
-			break;
+			//break;
+			return i;
 		}
 	}
-	debug::TToM("%d", se.PlayBuffer[0].State);
+	return -1;
+	//debug::TToM("%d", se.PlayBuffer[0].State);
+}
+void se::DSound_Play(const std::string& resname, int index)
+{
+	auto& se = SeTable.at(resname).se;
+	if (se.PlayBuffer[index].State == DSNONE)
+	{
+		//再生開始
+		se.PlayBuffer[index].State = DSPLAY;
+		se.PlayBuffer[index].pBuffer->Play(0, 0, 0);
+		se.PlayBuffer[index].Loop = false;
+	}
+	//debug::TToM("%d", se.PlayBuffer[0].State);
 }
 
 //--------------------------------------------------------------------------------------------
@@ -3153,7 +3167,7 @@ void se::DSound_PlayLoop(const std::string& resname)
 //			se.PlayBuffer[i].ID = SoundNo;
 			se.PlayBuffer[i].State = DSPLAY;
 			se.PlayBuffer[i].pBuffer->Play(0, 0, 0);
-			se.PlayBuffer[i].Loop = 1;
+			se.PlayBuffer[i].Loop = true;
 			break;
 		}
 	}
@@ -3369,7 +3383,7 @@ void se::DSound_LoadFile(const std::string& resname, const std::string& filename
 	DSBUFFERDESC dsdesc;
 	ZeroMemory( &dsdesc,sizeof(DSBUFFERDESC) );
 	dsdesc.dwSize = sizeof( DSBUFFERDESC );
-	dsdesc.dwFlags = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_STATIC | DSBCAPS_LOCDEFER | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLVOLUME;
+	dsdesc.dwFlags = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_STATIC | DSBCAPS_LOCDEFER | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLPAN;
 	dsdesc.dwBufferBytes = mSrcWaveData.cksize;
 	dsdesc.lpwfxFormat = wf;
 	dsdesc.guid3DAlgorithm = DS3DALG_DEFAULT;
@@ -3428,7 +3442,7 @@ void se::DSound_LoadFile(const std::string& resname, const std::string& filename
 //--------------------------------------------------------------------------------------------
 void se::DSound_SetFrequency(const std::string& resname, int Fre)
 {
-	auto se = SeTable.at(resname).se;
+	auto& se = SeTable.at(resname).se;
 	se.sBuffer->SetFrequency(se.Fre + Fre);
 }
 
@@ -3446,6 +3460,61 @@ void se::DSound_SetVolume(const std::string& resname, int Vol)
 
 	HRESULT hr = se.sBuffer->SetVolume(volume);
 }
+//--------------------------------------------------------------------------------------------
+// 再生音量の設定
+// 0から10000で設定　0は無音 10000は最大 
+//--------------------------------------------------------------------------------------------
+void se::DSound_SetVolume(const std::string& resname, int index, long Vol)
+{
+	auto& se = SeTable.at(resname).se;
+
+	// 0から-10000で設定 0が最大　-10000は無音
+	long volume = static_cast<long>((10.0 * log10(static_cast<double>(Vol) / 10000.0)) * 100.0);
+
+	if (volume > DSBVOLUME_MAX){
+		volume = DSBVOLUME_MAX;
+	}
+	else if (Vol < DSBVOLUME_MIN){
+		volume = DSBVOLUME_MIN;
+	}
+
+	HRESULT hr = se.PlayBuffer[index].pBuffer->SetVolume(volume);
+}
+//--------------------------------------------------------------------------------------------
+// 左右のチャンネルの相対ボリュームの設定
+// -10000から10000で設定　-10000は左(右チャンネル無音) 10000は右(左チャンネル無音) 
+//--------------------------------------------------------------------------------------------
+void se::DSound_SetPan(const std::string& resname, int index, long lPan)
+{
+	auto& se = SeTable.at(resname).se;
+	
+	long pan = lPan;
+	if (pan > DSBPAN_RIGHT)
+		pan = DSBPAN_RIGHT;
+	else if (pan < DSBPAN_LEFT)
+		pan = DSBPAN_LEFT;
+	HRESULT hr = se.PlayBuffer[index].pBuffer->SetPan(pan);
+	
+	switch (hr)
+	{
+	case DS_OK:
+		pan = pan;
+		break;
+	case DSERR_CONTROLUNAVAIL:
+		pan = pan; 
+		break;
+	case DSERR_GENERIC:
+		pan = pan;
+		break;
+	case DSERR_INVALIDPARAM:
+		pan = pan;
+		break;
+	case DSERR_PRIOLEVELNEEDED:
+		pan = pan;
+		break;
+	}
+}
+
 //********************************************************************//
 //
 //				SE再生　関連関数 ここまで

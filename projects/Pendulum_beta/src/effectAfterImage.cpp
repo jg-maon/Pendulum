@@ -1,34 +1,29 @@
 #include "effectAfterImage.h"
-#include "setting.h"
-
-#include "common.h"
 
 #include "define.h"
 
 
 
-CEffectAfterImage::CEffectAfterImage(const charabase::CharBase& obj, bool turnFlag, const mymath::Vec3f& sta, const mymath::Vec3f& end, int num, float alpha, float dec) :
+CEffectAfterImage::CEffectAfterImage(const charabase::CharBase& obj, bool turnFlag, const mymath::Vec3f& sta, const mymath::Vec3f& end, int num, int renderMode, float alpha, float time, float scale) :
 IEffect("EffectAfterImage")
 {
 	obj_ = obj;
 	Create(
 		std::shared_ptr<IObject>(new CAfterImageObject(obj, turnFlag)),
-		sta, end, num, alpha, dec);
+		sta, end, num, renderMode, alpha, time, scale);
 }
 
-CEffectAfterImage::CEffectAfterImage(const std::weak_ptr<IObject>& obj, const mymath::Vec3f& sta, const mymath::Vec3f& end, int num, float alpha, float dec) :
+CEffectAfterImage::CEffectAfterImage(const std::weak_ptr<IObject>& obj, const mymath::Vec3f& sta, const mymath::Vec3f& end, int num, int renderMode, float alpha, float time, float scale) :
 IEffect("EffectAfterImage")
 {
 	obj_ = obj.lock()->obj();
-	Create(obj, sta, end, num, alpha, dec);
+	Create(obj, sta, end, num, renderMode, alpha, time, scale);
 }
 
-void CEffectAfterImage::Create(const std::weak_ptr<IObject>& obj, const mymath::Vec3f& sta, const mymath::Vec3f& end, int num, float alpha, float dec)
+void CEffectAfterImage::Create(const std::weak_ptr<IObject>& obj, const mymath::Vec3f& sta, const mymath::Vec3f& end, int num, int renderMode, float alpha, float time, float scale)
 {
 	bool turnFlag = obj.lock()->isTurn();
-	float decrease = dec;
-	if (dec < 0.f)
-		decrease = alpha * system::ONEFRAME_TIME;
+	float decrease = alpha * system::ONEFRAME_TIME / time;
 
 	//---------------------------------------------
 	// Žc‘œ¶¬
@@ -42,8 +37,10 @@ void CEffectAfterImage::Create(const std::weak_ptr<IObject>& obj, const mymath::
 		cb.pos.z = obj_.pos.z;
 		// “§–¾“x
 		cb.alpha = (alpha*(i + 1)) / num;
+		// Šg‘å—¦
+		float addScale = (scale - 1.f) * system::ONEFRAME_TIME / time;
 		
-		CAfterImageObject ins(obj, turnFlag, decrease);
+		CAfterImageObject ins(obj, turnFlag, decrease, renderMode, addScale);
 		
 		ins.obj(cb);
 

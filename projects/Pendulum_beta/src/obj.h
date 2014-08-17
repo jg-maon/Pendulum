@@ -189,6 +189,14 @@ protected:
 	bool turnFlag_;				// 反転描画するか
 	charabase::CharBase obj_;
 protected:
+
+	/*
+		@brief	(頭が下に来ないように)指定座標を向く
+		@param	[in]	lookAt	注視点
+		@return	なし
+	*/
+	void Look(const mymath::Vec3f& lookAt);
+
 	/*
 		@brief	objが画面内か判断
 		@param	[in]	border	画面端からの余白
@@ -196,7 +204,7 @@ protected:
 		@retval	true	画面内
 		@retval	false	画面外
 	*/
-	bool InScreen(int border = 0) const;
+	bool InScreen(float border = 0) const;
 	
 	/*
 		@brief	更新をかけることができるか
@@ -396,9 +404,9 @@ public:
 					if(FindChunk(f,"#Collision"))
 						LoadCollisions(f);
 		@param	[in/out]	f			オープン済みファイル
-		@return		EOFか
-		@retval		true		EOF
-		@retval		false		EOFでない
+		@return		読み込みが成功したか
+		@retval		true		読み込み成功
+		@retval		false		読み込み失敗
 	*/
 	bool LoadCollisions(std::ifstream& f);
 	
@@ -408,9 +416,9 @@ public:
 					if(FindChunk(f,"#StageCollision"))
 						LoadStageCollisions(f);
 		@param	[in/out]	f			オープン済みファイル
-		@return		EOFか
-		@retval		true		EOF
-		@retval		false		EOFでない
+		@return		読み込みが成功したか
+		@retval		true		読み込み成功
+		@retval		false		読み込み失敗
 	*/
 	bool LoadStageCollisions(std::ifstream& f);
 

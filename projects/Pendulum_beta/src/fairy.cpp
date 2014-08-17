@@ -15,11 +15,11 @@
 #include "actionPoint.h"
 
 /*
-const float CFairy::SEARCH_RANGE = 500.0f;
-const float CFairy::CHASE_RANGE = 300.0f;
-const float CFairy::ATTACK_RANGE = 100.f;
-const float CFairy::RETURN_RANGE = 3.f;
-const float CFairy::MOVE_SPEED = 100.f;
+const float CFairy::searchRange = 500.0f;
+const float CFairy::chaseRange = 300.0f;
+const float CFairy::attackRange = 100.f;
+const float CFairy::returnRange = 3.f;
+const float CFairy::moveSpeed = 100.f;
 //*/
 
 void (CFairy::*CFairy::StateStep_[])() =
@@ -144,7 +144,7 @@ void CFairy::ChaseStep()
 	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
 	const mymath::Vec3f dist = plPos - obj_.pos;
 	float angle = std::atan2f(dist.y, dist.x);
-	obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.MOVE_SPEED;
+	obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.moveSpeed;
 	obj_.Move();
 }
 
@@ -152,10 +152,10 @@ void CFairy::ReturnStep()
 {
 	mymath::Vec3f dist = startPos_ - obj_.pos;
 
-	if (mymath::PYTHA(dist.x, dist.y) > mymath::POW2(loadInfo_.RETURN_RANGE))
+	if (mymath::PYTHA(dist.x, dist.y) > mymath::POW2(loadInfo_.returnRange))
 	{
 		float angle = std::atan2f(dist.y, dist.x);
-		obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.MOVE_SPEED;
+		obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.moveSpeed;
 	}
 	else
 	{
@@ -202,7 +202,7 @@ void CFairy::DecideState()
 	// ‰ŠúˆÊ’u‚©‚ç‚ÌƒxƒNƒgƒ‹ start -> now
 	Vdist = obj_.pos - startPos_;
 	const float staDist = mymath::PYTHA(Vdist.x, Vdist.y);
-	if (plyDist < mymath::POW2(loadInfo_.ATTACK_RANGE) || state_ == State::ATTACK)
+	if (plyDist < mymath::POW2(loadInfo_.attackRange) || state_ == State::ATTACK)
 	{
 		// UŒ‚”ÍˆÍ“à or UŒ‚’†
 		if (state_ != State::ATTACK)
@@ -210,10 +210,10 @@ void CFairy::DecideState()
 		state_ = State::ATTACK;
 		motionType_ = MotionType::ATTACK;
 	}
-	else if (plyDist < mymath::POW2(loadInfo_.SEARCH_RANGE))
+	else if (plyDist < mymath::POW2(loadInfo_.searchRange))
 	{
 		// UŒ‚”ÍˆÍŠO õ“G”ÍˆÍ“à
-		if (staDist < mymath::POW2(loadInfo_.CHASE_RANGE))
+		if (plyDist < mymath::POW2(loadInfo_.chaseRange))
 		{
 			// ’ÇÕ‰Â”\”ÍˆÍ“à
 			state_ = State::CHASE;
@@ -224,7 +224,7 @@ void CFairy::DecideState()
 			state_ = State::ATTACK;
 		}
 	}
-	else if (staDist > mymath::POW2(loadInfo_.RETURN_RANGE))
+	else if (staDist > mymath::POW2(loadInfo_.returnRange))
 	{
 		// õ“G”ÍˆÍŠO
 		state_ = State::RETURN;

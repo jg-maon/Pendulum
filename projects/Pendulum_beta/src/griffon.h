@@ -12,15 +12,15 @@ public:
 	{
 		float MAX_G;			// 最大重力速度
 		float GRAVITY_ACC;		// 重力加速度
-		float SEARCH_RANGE;		// 索敵範囲(現在座標からどれだけ策敵するか)
-		float CHASE_RANGE;		// 追跡範囲(初期座標からどれだけ追跡するか)
-		float ATTACK_RANGE;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
-		//float RETURN_RANGE;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
+		float searchRange;		// 索敵範囲(現在座標からどれだけ策敵するか)
+		float chaseRange;		// 追跡範囲(初期座標からどれだけ追跡するか)
+		float attackRange;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
+		//float returnRange;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
 	
-		float MOVE_SPEED;		// 移動速度
-		float ATTACK_SPEED;		// 攻撃時移動速度
+		float moveSpeed;		// 移動速度
+		float attackSpeed;		// 攻撃時移動速度
 
-		float INV_TIME;			// 無敵時間
+		float invincibleTime;			// 無敵時間
 
 		float backDist;				// バック距離
 		float damageTime;			// 怯み時間

@@ -14,6 +14,7 @@
 #include "bird.h"
 #include "fairy.h"
 #include "griffon.h"
+#include "raybit.h"
 //==================================
 
 class CEnemyMng : public Base
@@ -22,7 +23,7 @@ private:
 	std::vector<EnemyPtr> temp_;			// 敵テーブル追加用
 	std::vector<EnemyPtr> enemies_;			// 敵テーブル
 
-	size_t enemyNum_;							// 初期敵数
+	size_t enemyNum_;						// 初期敵数
 
 
 public:

@@ -13,11 +13,11 @@
 #include "actionPoint.h"
 
 /*
-const float CBird::SEARCH_RANGE = 500.0f;
-const float CBird::CHASE_RANGE = 300.0f;
-const float CBird::ATTACK_RANGE = 100.f;
-const float CBird::RETURN_RANGE = 3.f;
-const float CBird::MOVE_SPEED = 100.f;
+const float CBird::searchRange = 500.0f;
+const float CBird::chaseRange = 300.0f;
+const float CBird::attackRange = 100.f;
+const float CBird::returnRange = 3.f;
+const float CBird::moveSpeed = 100.f;
 //*/
 
 void (CBird::*CBird::StateStep_[])() =
@@ -142,7 +142,7 @@ void CBird::ChaseStep()
 	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
 	const mymath::Vec3f dist = plPos - obj_.pos;
 	float angle = std::atan2f(dist.y, dist.x);
-	obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.MOVE_SPEED;
+	obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.moveSpeed;
 	obj_.Move();
 
 }
@@ -151,10 +151,10 @@ void CBird::ReturnStep()
 {
 	mymath::Vec3f dist = startPos_ - obj_.pos;
 
-	if (mymath::PYTHA(dist.x, dist.y) > mymath::POW2(loadInfo_.RETURN_RANGE))
+	if (mymath::PYTHA(dist.x, dist.y) > mymath::POW2(loadInfo_.returnRange))
 	{
 		float angle = std::atan2f(dist.y, dist.x);
-		obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.MOVE_SPEED;
+		obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.moveSpeed;
 	}
 	else
 	{
@@ -175,6 +175,14 @@ void CBird::AttackStep()
 	{
 		motionAnim_.start();		// アニメーション再開
 		CreateAttack();
+		
+		int i = se::DSound_Play("se_shot0");
+		// パン振り
+		mymath::Vec3f cameraCenter = camera::GetLookAt();
+		auto screenWidth = gm()->winRect()->width();
+		mymath::Vec3f dist = obj_.pos - cameraCenter;
+		se::DSound_SetPan("se_shot0", i, static_cast<long>(10000.f * dist.x / (screenWidth / 2.f)));
+
 		state_ = State::WAIT;
 		nextActTime_ = elapsedTime_ + loadInfo_.attackInterval;		// 連続間隔
 	}
@@ -228,7 +236,7 @@ void CBird::DecideState()
 	// 初期位置からのベクトル start -> now
 	Vdist = obj_.pos - startPos_;
 	const float staDist = mymath::PYTHA(Vdist.x, Vdist.y);
-	if (plyDist < mymath::POW2(loadInfo_.ATTACK_RANGE) || state_ == State::ATTACK)
+	if (plyDist < mymath::POW2(loadInfo_.attackRange) || state_ == State::ATTACK)
 	{
 		// 攻撃範囲内 or 攻撃中
 		if (state_ != State::ATTACK)
@@ -236,10 +244,10 @@ void CBird::DecideState()
 		state_ = State::ATTACK;
 		motionType_ = MotionType::ATTACK;
 	}
-	else if (plyDist < mymath::POW2(loadInfo_.SEARCH_RANGE))
+	else if (plyDist < mymath::POW2(loadInfo_.searchRange))
 	{
 		// 攻撃範囲外 索敵範囲内
-		if (staDist < mymath::POW2(loadInfo_.CHASE_RANGE))
+		if (plyDist < mymath::POW2(loadInfo_.chaseRange))
 		{
 			// 追跡可能範囲内
 			state_ = State::CHASE;
@@ -250,7 +258,7 @@ void CBird::DecideState()
 			state_ = State::ATTACK;
 		}
 	}
-	else if (staDist > mymath::POW2(loadInfo_.RETURN_RANGE))
+	else if (staDist > mymath::POW2(loadInfo_.returnRange))
 	{
 		// 索敵範囲外
 		state_ = State::RETURN;

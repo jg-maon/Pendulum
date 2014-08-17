@@ -13,9 +13,6 @@
 #include	"charBase.h"
 #endif
 
-#ifndef DEF_GAMEOVER_H
-#include	"gameover.h"
-#endif
 
 #ifndef DEF_COMMON_H
 #include	"common.h"
@@ -63,12 +60,6 @@ namespace gplib{
 		//const int	WINH	=	480;
 		bool		WindowMode = true;
 		int			KeyboardMode = 1;	//pad disable:1 pad enable:0
-#ifdef _DEBUG
-		HINSTANCE hInstance;
-		HINSTANCE hPreInst;
-		LPSTR lpszCmdLine;
-		int nCmdShow;
-#endif
 	}
 }
 
@@ -144,50 +135,10 @@ void system::OnDestroy()
 	TerminateGame();
 }
 
-/*
-//----------------------
-//文字表示
-void Draw_TextToBmp(int x, int y, const string& msg, int size, int type)
-{
-	int i;
-	//フォントデータの横並び数
-	const int GRAPHIC_CELL_LENGTH = 16;
-	//フォントデータの元サイズ
-	const int GRAPHIC_SIZEXY = 8;
-	int draw_x, draw_y;
-	int font_x, font_y;
-	//初期描画位置作成
-	draw_x = x; draw_y = y;
-	if (size <= 0)	size = 1;
-	for (i = 0; i < (int)msg.length(); i++){
-		//描画文字決定
-		font_x = (int)msg[i] % GRAPHIC_CELL_LENGTH * GRAPHIC_SIZEXY;
-		font_y = (int)msg[i] / GRAPHIC_CELL_LENGTH * GRAPHIC_SIZEXY;
-		//文字描画
-		graph::Draw_Graphics(draw_x, draw_y, 0.5f, "font",
-			font_x, font_y, GRAPHIC_SIZEXY, GRAPHIC_SIZEXY,
-			0, 0, (float)size, (float)size);
-		//文字描画位置更新
-		if (type == WORDBREAK && msg[i] == '\n'){
-			draw_y += GRAPHIC_SIZEXY * size;
-			draw_x = x;
-		}
-		else{
-			draw_x += GRAPHIC_SIZEXY * size;
-		}
-	}
-}
-//*/
 //======================================================================================//
 //WINDOW　メイン
 //======================================================================================//
 int WINAPI WinMain (HINSTANCE hInstance,HINSTANCE hPreInst,LPSTR lpszCmdLine,int nCmdShow)
 {
-#ifdef _DEBUG
-	system::hInstance = hInstance;
-	system::hPreInst = hPreInst;
-	system::lpszCmdLine = lpszCmdLine;
-	system::nCmdShow = nCmdShow;
-#endif
 	return system::DoWindow(hInstance,hPreInst,lpszCmdLine,nCmdShow);
 }

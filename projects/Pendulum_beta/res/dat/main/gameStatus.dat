@@ -1,5 +1,8 @@
 //＿ゲームステータス関連
 
-#HitStopTime	3.0
+//＿環境
+#GravityAcc		25.0
 
+//＿ヒットストップ
+#HitStopTime	3.0
 #SlowInterval	60

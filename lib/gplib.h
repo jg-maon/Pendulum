@@ -153,6 +153,7 @@
 #define	TToM Dbg_TilteToMessage
 #define	FToM Dbg_FileOut
 #define	BToM Dbg_BoxToMessage
+#define	BToMF(str, ...) Dbg_BoxToMessage("%s\n%s\n" ##str, __FILE__, __FUNCTION__, __VA_ARGS__)
 #define	SToM Dbg_DisplayToMessage
 #define	SToMNC Dbg_DisplayToMessageNC
 #define	DFPS Draw_ShowFps
@@ -160,6 +161,7 @@
 #define	TToM Dbg_ReleaseDammy
 #define	FToM Dbg_ReleaseDammy
 #define	BToM Dbg_ReleaseDammy
+#define	BToMF Dbg_ReleaseDammy
 #define	SToM Dbg_ReleaseDammy
 #define	SToMNC Dbg_ReleaseDammy
 #define	DFPS Dbg_ReleaseDammy
@@ -171,7 +173,7 @@
 #define	SToMR	Dbg_DisplayToMessage
 #define	SToMNCR Dbg_DisplayToMessageNC
 
-	  enum
+	  enum RENDER_MODE
 	  {
 		  NORMAL,	//îºìßñæï`âÊ
 		  ADD,	//â¡éZçáê¨
@@ -493,7 +495,7 @@
 		  void DShow_AllStop();
 		  LONGLONG DShow_GetCurrentPos(const std::string& resname);
 		  void DShow_SetStartPos(const std::string& resname);
-		  void DShow_VolumeControl(const std::string& resname, int volume);
+		  void DShow_VolumeControl(const std::string& resname, long volume);
 			void DShow_Pause(const std::string& resname);
 			LONGLONG DShow_GetEndPosition(const std::string& resname);
 #endif
@@ -507,7 +509,8 @@
 		  void DSound_CreateSecondaryBuffer();
 		  bool DSound_CreatePrimaryBuffer();
 		  bool DSound_Del();
-		  void DSound_Play(const std::string& resname);
+		  int DSound_Play(const std::string& resname);
+		  void DSound_Play(const std::string& resname, int index);
 		  void DSound_PlayLoop(const std::string& resname);
 		  bool DSound_Del();
 		  void DSound_LoadFile(const std::string& resname, const std::string& filename);
@@ -516,6 +519,8 @@
 		  void DSound_EndCheck();
 		  void DSound_SetFrequency(const std::string& resname, int Fre);
 		  void DSound_SetVolume(const std::string& resname, int Vol);
+		  void DSound_SetVolume(const std::string& resname, int index, long Vol);
+		  void DSound_SetPan(const std::string& resname, int index, long lPan);
 #endif
 	  }
 	  namespace math{

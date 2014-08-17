@@ -1,7 +1,4 @@
 #include "effectExplosion.h"
-#include "setting.h"
-
-#include "common.h"
 
 #include "define.h"
 

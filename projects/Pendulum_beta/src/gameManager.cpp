@@ -1,6 +1,5 @@
 
 #include "GameManager.h"
-#include "gameover.h"
 
 #include "Collision.h"
 
@@ -21,17 +20,18 @@ Base("GameManager")
 	init();
 
 
-	cursor_.obj = charabase::CharPtr(new charabase::CharBase(
+	cursor_.obj = charabase::CharBase(
 		mymath::Vec3f(), mymath::Vec3f(),
-		"img_cursor",
+		"img_cursor0",
 		CursorSize::width,
-		CursorSize::height));
-	cursor_.obj->alpha = 200.f;
-	cursor_.animTbl.push_back(4.f);
-	cursor_.anim.set(1, 1.f);
-	cursor_.animType = Cursor::AnimType::ROTATE;
+		CursorSize::height);
+	cursor_.animTbl.resize(11);
+	for (size_t i = 0; i < cursor_.animTbl.size(); ++i)
+		cursor_.animTbl[i] = (static_cast<float>(i));
+	cursor_.anim.set(10, 0.1f);
+	cursor_.animType = Cursor::AnimType::ANIM_X;
 
-	if (winRect_)
+	if (!winRect_)
 		winRect_ = new mymath::Recti(0, 0, system::WINW, system::WINH);
 
 	fileMng_ = std::shared_ptr<CFileMng>(new CFileMng("res/dat/path.ini"));
@@ -42,7 +42,7 @@ CGameManager::~CGameManager()
 {
 	objs_.clear();
 	addObjs_.clear();
-	if (winRect_ != nullptr)
+	if (winRect_)
 		delete winRect_;
 }
 
@@ -108,12 +108,13 @@ void CGameManager::step()
 	}
 	//-------------------------------------
 	// カーソルアニメーション
-	cursor_.step();
+	if (cursor_.obj.CheckUse())
+		cursor_.step();
 	//-------------------------------------
 	// ウィンドウ外へ出ないように
-	mymath::Vec3f& cursorPos = cursor_.obj->pos;
-	const float& halfWidth = cursor_.obj->HalfWidth();
-	const float& halfHeight = cursor_.obj->HalfHeight();
+	mymath::Vec3f& cursorPos = cursor_.obj.pos;
+	const float& halfWidth = cursor_.obj.HalfWidth();
+	const float& halfHeight = cursor_.obj.HalfHeight();
 	cursorPos = camera::GetCursorPosition();
 	RECT rt = camera::GetScreenRect();
 	if (cursorPos.x - halfWidth < rt.left)
@@ -124,17 +125,12 @@ void CGameManager::step()
 		cursorPos.y = rt.top + halfHeight;
 	else if (cursorPos.y + halfHeight > rt.bottom)
 		cursorPos.y = rt.bottom - halfHeight;
-	//-------------------------------------
+
+	//=======================================================
 	// シーン
 	sceneMng_->step();
+
 	//=======================================================
-
-	//ゲームオーバー時、クリア時に判定処理は行わない。
-	if (gameover::isGameOver()) return;
-
-	//ClearToChangeScreen(CLEARSCREEN);
-	//if (getClear()) return;
-
 	//各種更新
 	for (const auto& obj : objs_)
 	{
@@ -163,10 +159,8 @@ void CGameManager::draw()
 	}
 	//-------------------------------------
 	// カーソル
-	graph::Draw_SetRenderMode(ADD);
-	for (int i = 0; i < 5; ++i)
-		cursor_.obj->draw();
-	graph::Draw_EndRenderMode();
+	if (cursor_.obj.CheckUse())
+		cursor_.obj.draw();
 }
 
 
@@ -354,13 +348,13 @@ void CGameManager::winRect(mymath::Recti* newRect)
 
 const mymath::Vec3f& CGameManager::GetCursorPos() const
 {
-	return cursor_.obj->pos;
+	return cursor_.obj.pos;
 }
 
 mymath::Vec3f CGameManager::GetCursorPosNC() const
 {
 	RECT rt = camera::GetScreenRect();
-	mymath::Vec3f pos = cursor_.obj->pos;
+	mymath::Vec3f pos = cursor_.obj.pos;
 	pos.x -= rt.left;
 	pos.y -= rt.top;
 	return pos;

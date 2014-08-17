@@ -16,7 +16,7 @@ namespace charabase
 class Anim
 {
 private:
-	enum class State{play, stop};
+	enum class State{ play, stop };
 	State state_;
 public:
 	int		no;				// 現在のアニメNO　この値は0,1,2,3,4,とカウントするだけ
@@ -226,6 +226,27 @@ public:
 
 };
 
+// アニメーションオブジェクト
+class AnimObject
+{
+public:
+	enum class AnimType
+	{
+		MOVE_X,		// 移動
+		MOVE_Y,		// 移動
+		ROTATE,		// 回転
+		ANIM_X,		// 画像アニメーション
+		ANIM_Y,		// 画像アニメーション
+	}animType;
+	charabase::CharBase obj;		// オブジェクト
+	charabase::Anim anim;			// アニメーション用
+	std::vector<float> animTbl;		// アニメーションテーブル
+	/*
+		@brief	アニメーション更新
+		@return	なし
+	*/
+	void step();
+};
 
 #ifdef DEF_CHARBASE_EXT
 #include <wtypes.h>	//  RECT用

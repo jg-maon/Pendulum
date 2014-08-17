@@ -279,6 +279,10 @@ CSceneEnd::~CSceneEnd()
 void CSceneEnd::start()
 {
 	__super::start();
+	// カーソル非表示
+	auto cursor = gm()->cursor();
+	cursor.obj.SetUse(false);
+	gm()->cursor(cursor);
 
 	// ボーナス計算
 	gm()->scoreMng()->CalcBonusScore();

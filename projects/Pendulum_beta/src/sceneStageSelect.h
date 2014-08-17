@@ -34,7 +34,7 @@ private:
 		@param	[in/out]	f	ファイル
 		@return	なし
 	*/
-	void LoadInfo(std::ifstream& f);
+	void LoadStageInfo(std::ifstream& f);
 	/*
 		@brief	ステージ読み込み
 		@param	[in/out]	f	ファイル

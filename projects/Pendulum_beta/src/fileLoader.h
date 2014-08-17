@@ -19,6 +19,16 @@ class CPlayer;
 */
 class CFileLoader
 {
+	/*
+		@brief		LoadInfo読み込み
+		@attension	fはオープン済み
+		@param	[in/out]	f			ファイル
+		@param	[in/out]	loadValues	読み込む対象
+		@return	読み込み成功したか
+		@retval	true	読み込み成功
+		@retval	false	読み込み失敗
+	*/
+#define LoadInfo(f, loadValues)		LoadInfoFunc(__FILE__##" "##__FUNCTION__, f, loadValues);
 public:
 	typedef std::unordered_map<std::string, int> FontTable;
 	// リソースファイル用
@@ -29,6 +39,15 @@ public:
 	};
 private:
 	const std::string iniFile_;		// 各種設定記述ファイルパス
+
+	//------------------------------------------
+	// LoadInfo用
+	struct LoadValue
+	{
+		char* tag;				// #タグ
+		void* value;			// 格納する値
+		std::string type;		// 型情報
+	};
 
 private:
 	//---------------------------------
@@ -69,6 +88,20 @@ private:
 	//---------------------------------
 
 	//---------------------------------
+	/*
+		@brief		LoadInfo読み込み
+		@attension	fはオープン済み
+		@param	[in]		from		呼び出し元
+		@param	[in/out]	f			ファイル
+		@param	[in/out]	loadValues	読み込む対象
+		@return	読み込み成功したか
+		@retval	true	読み込み成功
+		@retval	false	読み込み失敗
+	*/
+	bool LoadInfoFunc(const std::string& from, std::ifstream& f, std::vector<LoadValue>& loadValues);
+	
+
+	//---------------------------------
 #pragma region 敵テーブル読み込み
 	/*
 		@brief	CBirdロード
@@ -99,6 +132,17 @@ private:
 		@retval	false	設定失敗
 	*/
 	bool LoadGriffon(const std::string& fileName, std::vector<EnemyPtr>& enemies);
+	
+	/*
+		@brief	CRaybitロード
+		@param	[in]	fileName	敵ファイルパス
+		@param	[out]	enemies		ロードした敵情報を格納する配列
+		@return	情報を設定できたか
+		@retval	true	設定成功
+		@retval	false	設定失敗
+	*/
+	bool LoadRaybit(const std::string& fileName, std::vector<EnemyPtr>& enemies);
+
 
 #pragma endregion	// 敵テーブル読み込み
 	//---------------------------------

@@ -59,47 +59,8 @@ using namespace gplib;
 //Objectを継承しているクラスは全て管理される。
 class CGameManager : public Base
 {
-public:
-
-	struct Cursor
-	{
-		enum class AnimType
-		{
-			MOVE_X,		// 移動
-			MOVE_Y,		// 移動
-			ROTATE,		// 回転
-			ANIM_X,		// 画像アニメーション
-			ANIM_Y,		// 画像アニメーション
-		}animType;
-		charabase::CharPtr obj;			// カーソル
-		charabase::Anim anim;			// カーソルアニメーション用
-		std::vector<float> animTbl;		// アニメーションテーブル
-		void step()
-		{
-			switch (animType)
-			{
-			case CGameManager::Cursor::AnimType::MOVE_X:
-				obj->pos.x += animTbl[anim.no];
-				break;
-			case CGameManager::Cursor::AnimType::MOVE_Y:
-				obj->pos.y += animTbl[anim.no];
-				break;
-			case CGameManager::Cursor::AnimType::ROTATE:
-				obj->angle += animTbl[anim.no];
-				if (obj->angle >= 360.f)
-					obj->angle -= 360.f;
-				break;
-			case CGameManager::Cursor::AnimType::ANIM_X:
-				obj->src.x = static_cast<int>(animTbl[anim.no]);
-				break;
-			case CGameManager::Cursor::AnimType::ANIM_Y:
-				obj->src.y = static_cast<int>(animTbl[anim.no]);
-				break;
-			default:
-				break;
-			}
-		}
-	};
+	typedef charabase::AnimObject Cursor;
+	
 private:
 	static mymath::Recti* winRect_;		// ウィンドウサイズ
 
@@ -131,8 +92,8 @@ private:
 
 	enum CursorSize
 	{
-		width = 48,
-		height = 48,
+		width = 64,
+		height = 64,
 	};
 
 	

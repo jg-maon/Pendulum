@@ -101,9 +101,29 @@ IObject::~IObject()
 {
 }
 
-bool IObject::InScreen(int border) const
+void IObject::Look(const mymath::Vec3f& lookAt)
 {
-	mymath::Recti rt = camera::GetScreenRect();
+	obj_.angle = math::Calc_RadToDegree(mymath::Vec3f::Angle2(obj_.pos, lookAt));
+	if (obj_.angle >= 360.f)
+		obj_.angle -= 360.f;
+	else if (obj_.angle < 0.f)
+		obj_.angle += 360.f;
+	if (90.f < obj_.angle && obj_.angle <= 270.f)
+	{
+		turnFlag_ = true;
+		obj_.angle = obj_.angle - 180.f;
+		if (obj_.angle <= 0.f)
+			obj_.angle += 360.f;
+	}
+	else
+	{
+		turnFlag_ = false;
+	}
+}
+
+bool IObject::InScreen(float border) const
+{
+	mymath::Rectf rt = camera::GetScreenRect();
 	rt.left += border;
 	rt.right -= border;
 	rt.top += border;
@@ -195,7 +215,7 @@ bool IColObject::LoadCollisions(std::ifstream& f, Base::Collisions& collisions)
 {
 	std::string buf;
 	f >> buf;
-	if (buf != "{") return f.eof();
+	if (buf != "{") return false;
 	int openNum = 0;	// {ŠK‘w”
 	Collisions temp;
 	collisions.clear();
@@ -254,7 +274,7 @@ bool IColObject::LoadCollisions(std::ifstream& f, Base::Collisions& collisions)
 		}
 		f >> buf;
 	}
-	return f.eof();
+	return true;
 }
 
 Base::Collisions IColObject::GetWorldCollisions(const Base::Collisions& collisions) const
@@ -302,12 +322,18 @@ void IColObject::hit(const ObjPtr& rival)
 
 bool IColObject::LoadCollisions(std::ifstream& f)
 {
-	return this->LoadCollisions(f, collisions_);
+	if (this->LoadCollisions(f, collisions_))
+		return true;
+	debug::BToMF("collisions_ load error");
+	return false;
 }
 
 bool IColObject::LoadStageCollisions(std::ifstream& f)
 {
-	return this->LoadCollisions(f, stageCollisions_);
+	if (this->LoadCollisions(f, stageCollisions_))
+		return true;
+	debug::BToMF("stageCollisions_ load error");
+	return false;
 }
 
 Base::Collisions IColObject::GetDamageAreas() const

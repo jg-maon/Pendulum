@@ -187,6 +187,11 @@ void CCollision::step()
 			{
 				pl->KilledEnemy();
 			}
+			else
+			{
+				// ƒm[ƒ}ƒ‹aŒ‚‰¹
+				se::DSound_Play("se_slash");
+			}
 			
 		}
 		/*

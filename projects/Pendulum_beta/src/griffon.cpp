@@ -91,7 +91,7 @@ void CGriffon::step()
 	{
 		// 点滅アニメ
 		invincibleAnim_ += system::ONEFRAME_TIME;
-		if (invincibleAnim_ >= loadInfo_.INV_TIME / 20.f)
+		if (invincibleAnim_ >= loadInfo_.invincibleTime / 20.f)
 		{
 			invincibleAnim_ = 0.f;
 			if (obj_.alpha > 200.f)
@@ -174,7 +174,7 @@ void CGriffon::ChaseStep()
 	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
 	const mymath::Vec3f dist = plPos - obj_.pos;
 	float angle = std::atan2f(dist.y, dist.x);
-	obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.MOVE_SPEED;
+	obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.moveSpeed;
 	obj_.Move();
 }
 
@@ -182,10 +182,10 @@ void CGriffon::ChaseStep()
 //{
 //	mymath::Vec3f dist = startPos_ - obj_.pos;
 //
-//	if (mymath::PYTHA(dist.x, dist.y) > mymath::POW2(loadInfo_.RETURN_RANGE))
+//	if (mymath::PYTHA(dist.x, dist.y) > mymath::POW2(loadInfo_.returnRange))
 //	{
 //		float angle = std::atan2f(dist.y, dist.x);
-//		obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.MOVE_SPEED;
+//		obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.moveSpeed;
 //	}
 //	else
 //	{
@@ -222,7 +222,7 @@ void CGriffon::AttackStep()
 	{
 		if (obj_.pos.x < backPos_.x && obj_.pos.y < backPos_.y)
 		{
-			obj_.add = backPos_.Normalize2() * loadInfo_.MOVE_SPEED;
+			obj_.add = backPos_.Normalize2() * loadInfo_.moveSpeed;
 			obj_.Move();
 		}
 		else
@@ -236,7 +236,7 @@ void CGriffon::AttackStep()
 	{
 		if (obj_.pos.x < endPos_.x && obj_.pos.y < endPos_.y)
 		{
-			obj_.add = endPos_.Normalize2() * loadInfo_.ATTACK_SPEED;
+			obj_.add = endPos_.Normalize2() * loadInfo_.attackSpeed;
 			obj_.Move();
 		}
 		else
@@ -274,16 +274,16 @@ void CGriffon::DecideState()
 	// 初期位置からのベクトル start -> now
 	Vdist = obj_.pos - startPos_;
 	const float staDist = mymath::PYTHA(Vdist.x, Vdist.y);
-	if (plyDist < mymath::POW2(loadInfo_.ATTACK_RANGE)
+	if (plyDist < mymath::POW2(loadInfo_.attackRange)
 		|| battleState_ == BattleState::ATTACK)
 	{
 		// 攻撃中
 		battleState_ = BattleState::ATTACK;
 	}
-	else if (plyDist < mymath::POW2(loadInfo_.SEARCH_RANGE))
+	else if (plyDist < mymath::POW2(loadInfo_.searchRange))
 	{
 		// 攻撃範囲外 索敵範囲内
-		if (staDist < mymath::POW2(loadInfo_.CHASE_RANGE))
+		if (plyDist < mymath::POW2(loadInfo_.chaseRange))
 		{
 			// 追跡可能範囲内
 			battleState_ = BattleState::CHASE;
@@ -293,7 +293,7 @@ void CGriffon::DecideState()
 			battleState_ = BattleState::ATTACK;
 		}
 	}
-	//else if (staDist > mymath::POW2(loadInfo_.RETURN_RANGE))
+	//else if (staDist > mymath::POW2(loadInfo_.returnRange))
 	//{
 	//	// 索敵範囲外
 	//	battleState_ = BattleState::RETURN;
@@ -314,9 +314,9 @@ void CGriffon::CreateAttack()
 	const float c = std::cosf(angle);
 	const float s = std::sinf(angle);
 
-	//obj_.add.y = loadInfo_.ATTACK_SPEED * -s;
+	//obj_.add.y = loadInfo_.attackSpeed * -s;
 	//obj_.add.z = 0.f;
-	//obj_.add.x = loadInfo_.ATTACK_SPEED *  c;
+	//obj_.add.x = loadInfo_.attackSpeed *  c;
 
 	// バック距離
 	backPos_.x = -(loadInfo_.backDist * c) + obj_.pos.x;
@@ -357,7 +357,7 @@ bool CGriffon::ApplyDamage(int dam)
 	// ひるみ処理
 	battleState_ = BattleState::DAMAGE;
 
-	invincibleTime_ = loadInfo_.INV_TIME;
+	invincibleTime_ = loadInfo_.invincibleTime;
 
 	nextActTime_ = elapsedTime_ + loadInfo_.damageTime;
 

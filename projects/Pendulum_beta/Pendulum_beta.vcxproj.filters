@@ -26,9 +26,6 @@
     <Filter Include="ソース ファイル\GameManager">
       <UniqueIdentifier>{e75f6f0d-b408-4915-892a-23fb16b438b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\GameOver">
-      <UniqueIdentifier>{3f3b341d-67b0-4736-8c6b-957f72b3220f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\CharBase">
       <UniqueIdentifier>{b5b5e1c0-cc08-4d97-973b-f04333204af7}</UniqueIdentifier>
     </Filter>
@@ -140,9 +137,6 @@
     <Filter Include="ソース ファイル\Scence\Base">
       <UniqueIdentifier>{9df7e734-be2a-4c71-b659-299c858116cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Scence\Main">
-      <UniqueIdentifier>{2dd25c1f-3f14-4502-b240-2b822f33b201}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Scence\Title">
       <UniqueIdentifier>{a5f8374f-dee3-4ab9-8edf-47e570313f3d}</UniqueIdentifier>
     </Filter>
@@ -202,6 +196,15 @@
     </Filter>
     <Filter Include="ソース ファイル\InGame\Effect\AfterImage">
       <UniqueIdentifier>{dabf4962-a2d5-4e38-a0bc-bc331675db6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy\Raybit">
+      <UniqueIdentifier>{183506c4-7a8d-44a8-bb1e-88ee1dacdd05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Main">
+      <UniqueIdentifier>{2dd25c1f-3f14-4502-b240-2b822f33b201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Effect\Flash">
+      <UniqueIdentifier>{8517a7f3-84b1-454c-90c1-659faaf572a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -349,9 +352,6 @@
     <ClInclude Include="src\gameManager.h">
       <Filter>ソース ファイル\GameManager</Filter>
     </ClInclude>
-    <ClInclude Include="src\gameover.h">
-      <Filter>ソース ファイル\GameOver</Filter>
-    </ClInclude>
     <ClInclude Include="src\griffon.h">
       <Filter>ソース ファイル\InGame\Character\Enemy\Griffon</Filter>
     </ClInclude>
@@ -435,6 +435,12 @@
     </ClInclude>
     <ClInclude Include="src\effectAfterImage.h">
       <Filter>ソース ファイル\InGame\Effect\AfterImage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\raybit.h">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Raybit</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effectFlash.h">
+      <Filter>ソース ファイル\InGame\Effect\Flash</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -528,9 +534,6 @@
     <ClCompile Include="src\gameManager.cpp">
       <Filter>ソース ファイル\GameManager</Filter>
     </ClCompile>
-    <ClCompile Include="src\gameover.cpp">
-      <Filter>ソース ファイル\GameOver</Filter>
-    </ClCompile>
     <ClCompile Include="src\griffon.cpp">
       <Filter>ソース ファイル\InGame\Character\Enemy\Griffon</Filter>
     </ClCompile>
@@ -609,58 +612,67 @@
     <ClCompile Include="src\effectAfterImage.cpp">
       <Filter>ソース ファイル\InGame\Effect\AfterImage</Filter>
     </ClCompile>
+    <ClCompile Include="src\raybit.cpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Raybit</Filter>
+    </ClCompile>
+    <ClCompile Include="src\effectFlash.cpp">
+      <Filter>ソース ファイル\InGame\Effect\Flash</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="res\dat\main\player.txt">
+    <Text Include="res\dat\main\enemy\normal\bird.dat">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\normal\fairy.dat">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\boss\griffon.dat">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\enemies.dat">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
+    </Text>
+    <Text Include="res\dat\main\player.dat">
       <Filter>リソース ファイル\Main</Filter>
     </Text>
-    <Text Include="res\dat\main\stage\stages.txt">
+    <Text Include="res\dat\main\stage\stages.dat">
       <Filter>リソース ファイル\Main\Stage</Filter>
     </Text>
-    <Text Include="res\dat\main\stage\stage03.txt">
+    <Text Include="res\dat\main\stage\debugStage01.dat">
       <Filter>リソース ファイル\Main\Stage\normal</Filter>
     </Text>
-    <Text Include="res\dat\main\stage\stage04.txt">
-      <Filter>リソース ファイル\Main\Stage\normal</Filter>
+    <Text Include="res\dat\main\enemy\table\debugTable01.dat">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
     </Text>
-    <Text Include="res\dat\main\stage\stage01.txt">
-      <Filter>リソース ファイル\Main\Stage\normal</Filter>
+    <Text Include="res\dat\main\enemy\table\enemyTable01.dat">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
     </Text>
-    <Text Include="res\dat\main\stage\stage02.txt">
-      <Filter>リソース ファイル\Main\Stage\normal</Filter>
+    <Text Include="res\dat\main\enemy\table\enemyTable01_b.dat">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
     </Text>
-    <Text Include="res\dat\main\stage\bossStage01.txt">
+    <Text Include="res\dat\main\enemy\table\enemyTable02.dat">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\table\enemyTable03.dat">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\table\enemyTable04.dat">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
+    </Text>
+    <Text Include="res\dat\main\stage\bossStage01.dat">
       <Filter>リソース ファイル\Main\Stage\boss</Filter>
     </Text>
-    <Text Include="res\dat\main\enemy\enemies.txt">
-      <Filter>リソース ファイル\Main\Enemy</Filter>
+    <Text Include="res\dat\main\stage\stage01.dat">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
     </Text>
-    <Text Include="res\dat\main\enemy\normal\bird.txt">
-      <Filter>リソース ファイル\Main\Enemy</Filter>
+    <Text Include="res\dat\main\stage\stage02.dat">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
     </Text>
-    <Text Include="res\dat\main\enemy\normal\fairy.txt">
-      <Filter>リソース ファイル\Main\Enemy</Filter>
+    <Text Include="res\dat\main\stage\stage03.dat">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
     </Text>
-    <Text Include="res\dat\main\enemy\boss\griffon.txt">
-      <Filter>リソース ファイル\Main\Enemy</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\table\enemyTable01.txt">
-      <Filter>リソース ファイル\Main\E_Table</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\table\enemyTable01_b.txt">
-      <Filter>リソース ファイル\Main\E_Table</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\table\enemyTable02.txt">
-      <Filter>リソース ファイル\Main\E_Table</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\table\enemyTable03.txt">
-      <Filter>リソース ファイル\Main\E_Table</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\table\enemyTable04.txt">
-      <Filter>リソース ファイル\Main\E_Table</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\table\debugTable01.txt">
-      <Filter>リソース ファイル\Main\E_Table</Filter>
+    <Text Include="res\dat\main\stage\stage04.dat">
+      <Filter>リソース ファイル\Main\Stage\normal</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
@@ -684,6 +696,9 @@
     </None>
     <None Include="res\dat\main\gameStatus.dat">
       <Filter>リソース ファイル\Main</Filter>
+    </None>
+    <None Include="res\dat\main\enemy\normal\raybit.dat">
+      <Filter>リソース ファイル\Main\Enemy</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -27,6 +27,12 @@ CSceneMain::~CSceneMain()
 }
 void CSceneMain::start()
 {
+	auto cursor = gm()->cursor();
+	cursor.obj.SetUse(true);
+	cursor.obj.r = 255.f;
+	cursor.obj.g = 255.f;
+	cursor.obj.b = 0.f;
+	gm()->cursor(cursor);
 
 	// メイン内で使うオブジェクトを始動させる
 	// プレイヤーや敵はStageクラスがやってくれる
