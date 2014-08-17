@@ -1,0 +1,58 @@
+#Img		img_raybit
+
+#Size		128	128
+
+#Collision
+{
+#Circle	0	0	halfWidth
+}
+
+#StageCollision
+{
+
+#Rect	0	0	0	0
+
+}
+
+
+
+#Attack NWayShot
+{
+ショット画像管理名	img_raybitShot
+ショット画像幅	32
+ショット画像高	16
+ショット当たり判定
+{
+#Polygon	4
+-10 -5
+ 10 -5
+ 10  5
+-10  5
+}
+ショットステージ当たり判定
+{
+#Polygon	4
+-10 -5
+ 10 -5
+ 10  5
+-10  5
+}
+
+}
+
+
+//==================================================
+#SearchRect		-400.0	-400.0	400.0	400.0
+#ChaseRect		-300.0	-300.0	300.0	300.0
+#AttackRect		-300.0	-300.0	300.0	300.0
+
+#MoveSpeed			1000.0
+#MoveInterval		1.0
+#MoveTime			1.0
+
+#AttackInterval		5.0
+#AttackNum			3
+#OneAttackInterval	0.2
+
+#AttackPos1		100.0	80.0
+#AttackPos2		95.0	85.0

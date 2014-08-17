@@ -1,0 +1,44 @@
+#Bgm	bgm_stage01
+
+#ClearAnnounce
+img_clearAnnounce01	-1	-1
+
+
+#StageClear
+Goal	6580	-49	700	7049
+img_goalObj01	1	1
+
+
+#NormaTime
+180.0
+
+#Left	0
+#Top	0
+#Right	7000
+#Bottom	5000
+
+#CameraLeft		0
+#CameraTop		400
+#CameraRight	6600
+#CameraBottom	4400
+
+#Player
+300	4140
+
+
+#Enemy
+res/dat/main/enemy/table/debugTable01.dat
+res/dat/main/enemy/table/enemyTable01.dat
+
+
+#BossStage
+res/dat/main/stage/bossStage01.dat
+
+#ActionCircle
+{
+}
+
+#ActionPolygon
+{
+
+}
