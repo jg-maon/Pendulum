@@ -77,15 +77,6 @@
     <Filter Include="ソース ファイル\InGame\Attack">
       <UniqueIdentifier>{1e9fc59b-6775-4c3c-8dd0-596cf8bd5ffc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\InGame\Attack\nWayShot">
-      <UniqueIdentifier>{51aba758-470c-4f3a-9f3a-26896c7ffedf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\InGame\Attack\nWaySing">
-      <UniqueIdentifier>{4cc99680-941a-4e16-b4f0-4202c6c8c4f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\InGame\Attack\tackle">
-      <UniqueIdentifier>{8c5335de-a078-4226-be90-85b858cf340e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\InGame\Character">
       <UniqueIdentifier>{362c5634-b7eb-4495-bd51-ddc0e95f02be}</UniqueIdentifier>
     </Filter>
@@ -205,6 +196,27 @@
     </Filter>
     <Filter Include="ソース ファイル\InGame\Effect\Flash">
       <UniqueIdentifier>{8517a7f3-84b1-454c-90c1-659faaf572a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main\Enemy\normal">
+      <UniqueIdentifier>{2063d010-0878-4e59-9d26-fcaf06038846}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main\Enemy\boss">
+      <UniqueIdentifier>{7d5d0b85-8b67-4fcf-90da-79e82a778241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy\RoboticArm">
+      <UniqueIdentifier>{d43aa33e-0d67-44b7-9163-426e950472c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack\NWayShot">
+      <UniqueIdentifier>{51aba758-470c-4f3a-9f3a-26896c7ffedf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack\NWaySing">
+      <UniqueIdentifier>{4cc99680-941a-4e16-b4f0-4202c6c8c4f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack\Tackle">
+      <UniqueIdentifier>{8c5335de-a078-4226-be90-85b858cf340e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack\ArmAttack">
+      <UniqueIdentifier>{5f706e32-6172-4d90-a7aa-a24604941144}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -359,10 +371,10 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\nWayShot.h">
-      <Filter>ソース ファイル\InGame\Attack\nWayShot</Filter>
+      <Filter>ソース ファイル\InGame\Attack\NWayShot</Filter>
     </ClInclude>
     <ClInclude Include="src\tackle.h">
-      <Filter>ソース ファイル\InGame\Attack\tackle</Filter>
+      <Filter>ソース ファイル\InGame\Attack\Tackle</Filter>
     </ClInclude>
     <ClInclude Include="src\obj.h">
       <Filter>ソース ファイル\Obj</Filter>
@@ -431,7 +443,7 @@
       <Filter>ソース ファイル\InGame\GameStatus</Filter>
     </ClInclude>
     <ClInclude Include="src\nWaySing.h">
-      <Filter>ソース ファイル\InGame\Attack\nWaySing</Filter>
+      <Filter>ソース ファイル\InGame\Attack\NWaySing</Filter>
     </ClInclude>
     <ClInclude Include="src\effectAfterImage.h">
       <Filter>ソース ファイル\InGame\Effect\AfterImage</Filter>
@@ -441,6 +453,12 @@
     </ClInclude>
     <ClInclude Include="src\effectFlash.h">
       <Filter>ソース ファイル\InGame\Effect\Flash</Filter>
+    </ClInclude>
+    <ClInclude Include="src\roboticArm.h">
+      <Filter>ソース ファイル\InGame\Character\Enemy\RoboticArm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\armAttack.h">
+      <Filter>ソース ファイル\InGame\Attack\ArmAttack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -541,13 +559,13 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\nWayShot.cpp">
-      <Filter>ソース ファイル\InGame\Attack\nWayShot</Filter>
+      <Filter>ソース ファイル\InGame\Attack\NWayShot</Filter>
     </ClCompile>
     <ClCompile Include="src\nWaySing.cpp">
-      <Filter>ソース ファイル\InGame\Attack\nWaySing</Filter>
+      <Filter>ソース ファイル\InGame\Attack\NWaySing</Filter>
     </ClCompile>
     <ClCompile Include="src\tackle.cpp">
-      <Filter>ソース ファイル\InGame\Attack\tackle</Filter>
+      <Filter>ソース ファイル\InGame\Attack\Tackle</Filter>
     </ClCompile>
     <ClCompile Include="src\obj.cpp">
       <Filter>ソース ファイル\Obj</Filter>
@@ -618,17 +636,14 @@
     <ClCompile Include="src\effectFlash.cpp">
       <Filter>ソース ファイル\InGame\Effect\Flash</Filter>
     </ClCompile>
+    <ClCompile Include="src\roboticArm.cpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy\RoboticArm</Filter>
+    </ClCompile>
+    <ClCompile Include="src\armAttack.cpp">
+      <Filter>ソース ファイル\InGame\Attack\ArmAttack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="res\dat\main\enemy\normal\bird.dat">
-      <Filter>リソース ファイル\Main\Enemy</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\normal\fairy.dat">
-      <Filter>リソース ファイル\Main\Enemy</Filter>
-    </Text>
-    <Text Include="res\dat\main\enemy\boss\griffon.dat">
-      <Filter>リソース ファイル\Main\Enemy</Filter>
-    </Text>
     <Text Include="res\dat\main\enemy\enemies.dat">
       <Filter>リソース ファイル\Main\Enemy</Filter>
     </Text>
@@ -674,6 +689,15 @@
     <Text Include="res\dat\main\stage\stage04.dat">
       <Filter>リソース ファイル\Main\Stage\normal</Filter>
     </Text>
+    <Text Include="res\dat\main\enemy\normal\bird.dat">
+      <Filter>リソース ファイル\Main\Enemy\normal</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\normal\fairy.dat">
+      <Filter>リソース ファイル\Main\Enemy\normal</Filter>
+    </Text>
+    <Text Include="res\dat\main\enemy\boss\griffon.dat">
+      <Filter>リソース ファイル\Main\Enemy\boss</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\dat\resdata.dat">
@@ -698,7 +722,10 @@
       <Filter>リソース ファイル\Main</Filter>
     </None>
     <None Include="res\dat\main\enemy\normal\raybit.dat">
-      <Filter>リソース ファイル\Main\Enemy</Filter>
+      <Filter>リソース ファイル\Main\Enemy\normal</Filter>
+    </None>
+    <None Include="res\dat\main\enemy\roboticArm\roboticArm.dat">
+      <Filter>リソース ファイル\Main\Enemy\normal</Filter>
     </None>
   </ItemGroup>
 </Project>

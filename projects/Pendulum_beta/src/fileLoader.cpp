@@ -577,6 +577,110 @@ bool CFileLoader::LoadRaybit(const std::string& fileName, std::vector<EnemyPtr>&
 
 	return success;
 }
+//=====================================================================================
+//=====================================================================================
+//=====================================================================================
+//=====================================================================================
+bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyPtr>& enemies)
+{
+	using common::FindChunk;
+	using common::SeekSet;
+	std::ifstream eneF(fileName);
+	if (eneF.fail())
+	{
+		debug::BToMF("eneF open error path:%s", fileName.c_str());
+		return false;
+	}
+	// 情報ロード用
+	CRoboticArm tmp;
+	CRoboticArm::LoadInfo lf;
+	charabase::CharBase cb;
+	// ファイルから情報を抜き取る際のタグ検索用
+	bool success;
+	// success が一度でもfalseになったら他処理スキップ
+	// if (success){
+	// 	ロード
+	// }
+	// else {
+	// 	return;
+	// }みたいな感じ
+
+	//-----------------------------------------------
+	// 画像情報
+	//-----------------------------------------------
+
+	//-----------------------------------------------
+	if (success = LoadCharBase(eneF, cb))
+	{
+		// 画像情報設定
+		//bd.resname = cb.resname;
+		//bd.size = cb.size;
+		tmp.obj(cb);
+	}
+	//-----------------------------------------------
+	// クラス情報
+	//-----------------------------------------------
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#Collision")))
+	{
+		tmp.LoadCollisions(eneF);
+	}
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#StageCollision")))
+	{
+		tmp.LoadStageCollisions(eneF);
+	}
+	// 攻撃
+	if (success && (success = FindChunk(SeekSet(eneF), "#Attack")))
+	{
+		tmp.LoadAttack(eneF);
+	}
+	//-------------------------------------
+	if (success && (success = FindChunk(SeekSet(eneF), "#ParentSrc")))
+	{
+		eneF >> lf.parentSrcPos.x >> lf.parentSrcPos.y >> lf.parentSrcSize.x >> lf.parentSrcSize.y;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#SupportParent")))
+	{
+		eneF >> lf.supportParent.x >> lf.supportParent.y;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#SupportChild")))
+	{
+		eneF >> lf.supportChild.x >> lf.supportChild.y;
+	}
+	//-------------------------------------
+	std::vector<LoadValue> loadValues = {
+		{ "#AttackRange", &(lf.attackRange), "float" },
+		{ "#AttackInterval", &(lf.attackInterval), "float" },
+		{ "#ParentImg", &(lf.parentResname), "float" },
+		{ "#RotateSpeed", &(lf.rotateSpeed), "float" },
+		{ "#MaxAngle", &(lf.maxAngle), "float" },
+		{ "#MinAngle", &(lf.minAngle), "float" },
+	};
+	success = LoadInfo(eneF, loadValues);
+	
+
+	//-------------------------------------
+
+	if (success)
+	{
+		//-----------------------------------------------
+		// 全ての情報が正しく読み込めた際のみここに入る
+		// パラメータ
+		tmp.SetInfo(lf);
+		tmp.SetArmDirection(CRoboticArm::ArmDirectin::RIGHT_UP);
+
+		// コピーコンストラクタを用いオリジナル作成
+		enemies.push_back(EnemyPtr(new CRoboticArm(tmp)));
+	}
+	else
+	{
+		debug::BToMF("load failed");
+	}
+
+	return success;
+}
+
 
 
 #pragma endregion	// 敵テーブル読み込み

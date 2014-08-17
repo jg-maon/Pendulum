@@ -15,6 +15,7 @@
 #include "fairy.h"
 #include "griffon.h"
 #include "raybit.h"
+#include "roboticArm.h"
 //==================================
 
 class CEnemyMng : public Base

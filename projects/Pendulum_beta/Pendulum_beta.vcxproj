@@ -40,6 +40,7 @@
     <ClInclude Include="..\..\lib\dx_media\texture_manager.h" />
     <ClInclude Include="..\..\lib\gplib.h" />
     <ClInclude Include="src\actionPoint.h" />
+    <ClInclude Include="src\armAttack.h" />
     <ClInclude Include="src\attackBase.hpp" />
     <ClInclude Include="src\bird.h" />
     <ClInclude Include="src\characterBase.h" />
@@ -71,6 +72,7 @@
     <ClInclude Include="src\pickupJewely.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\raybit.h" />
+    <ClInclude Include="src\roboticArm.h" />
     <ClInclude Include="src\sceneBase.hpp" />
     <ClInclude Include="src\sceneDescription.h" />
     <ClInclude Include="src\sceneEnd.h" />
@@ -106,6 +108,7 @@
     <ClCompile Include="..\..\lib\dx_media\texture_manager.cpp" />
     <ClCompile Include="..\..\lib\gplib.cpp" />
     <ClCompile Include="src\actionPoint.cpp" />
+    <ClCompile Include="src\armAttack.cpp" />
     <ClCompile Include="src\bird.cpp" />
     <ClCompile Include="src\characterBase.cpp" />
     <ClCompile Include="src\charBase.cpp" />
@@ -132,6 +135,7 @@
     <ClCompile Include="src\pickupJewely.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\raybit.cpp" />
+    <ClCompile Include="src\roboticArm.cpp" />
     <ClCompile Include="src\sceneDescription.cpp" />
     <ClCompile Include="src\sceneEnd.cpp" />
     <ClCompile Include="src\sceneJecLogo.cpp" />
@@ -172,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\dat\main\enemy\normal\raybit.dat" />
+    <None Include="res\dat\main\enemy\roboticArm\roboticArm.dat" />
     <None Include="res\dat\main\gameStatus.dat" />
     <None Include="res\dat\main\pickup\jewely.dat" />
     <None Include="res\dat\main\pickup\pickups.dat" />

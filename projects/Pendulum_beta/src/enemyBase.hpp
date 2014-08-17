@@ -25,6 +25,10 @@
 #include "tackle.h"
 #endif
 
+#ifndef DEF_ARMATTACK_H
+#include "armAttack.h"
+#endif
+
 #ifndef DEF_EFFECTEXPLOSION_H
 #include "effectExplosion.h"
 #endif
@@ -150,7 +154,7 @@ public:
 			}
 
 		}
-		else if (buf == "Tacke")
+		else if (buf == "Tackle")
 		{
 			f >> buf;
 			if (buf != "{") return false;
@@ -158,6 +162,27 @@ public:
 			{
 				attack_ = AttackPtr(new CTackle());
 			}
+		}
+		else if (buf == "ArmAttack")
+		{
+			f >> buf;
+			if (buf != "{") return false;
+			else
+			{
+				charabase::CharBase arm_info;
+				int force;
+				f >> buf;	// UŒ‚—Íƒ‰ƒxƒ‹“Ç‚Ý”ò‚Î‚µ
+				LoadValue(f, obj_, force);
+				CArmAttack arm(force);
+				f >> buf;	// “–‚½‚è”»’èƒ‰ƒxƒ‹“Ç‚Ý”ò‚Î‚µ
+				arm.LoadCollisions(f);
+				attack_ = AttackPtr(new CArmAttack(arm));
+			}
+		}
+		else
+		{
+			debug::BToMF("attack load failed : %s", buf.c_str());
+			return false;
 		}
 		
 		return true;

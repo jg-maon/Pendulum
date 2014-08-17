@@ -50,7 +50,9 @@
 	img_raybit			res/gra/main/character/enemy/raybit/raybit.png		0x00000000
 	img_raybitEye		res/gra/main/character/enemy/raybit/raybitEye.png	0x00000000
 	img_raybitShot		res/gra/main/character/enemy/raybit/raybitShot.png	0x00000000
-
+	img_roboticArm_Child	res/gra/main/character/enemy/roboticArm/roboticArmChild.png		0xff000000
+	img_roboticArm_Parent	res/gra/main/character/enemy/roboticArm/roboticArmParent.png	0xff000000
+	
 
 	img_end				res/gra/end/bg.jpg						0x00000000
 	img_stageClear		res/gra/end/stageClear.png				0x00000000
