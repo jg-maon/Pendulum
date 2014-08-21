@@ -38,7 +38,12 @@ void CCollision::step()
 	auto mouse = gm()->GetCursorPos();
 
 	// プレイヤーオブジェクト
-	auto& player = CPlayer::GetPtr();
+	auto& players = gm()->GetObjects("Player");
+	ObjPtr player;
+	if (!players.empty())
+		player = players[0];
+	else
+		player = nullptr;
 
 	// エネミーマネージャ
 	const auto& em = gm()->enemyMng();

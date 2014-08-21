@@ -88,12 +88,13 @@ void BaseData::ImageSize(BaseData& bd)
 
 CharBase::CharBase(const mymath::Vec3f& _pos,		// 座標
 	const mymath::Vec3f& _add,						// 移動量
-	const std::string& name,				// 画像
-	int w, int h,							// 画像サイズ
-	float sx, float sy,						// 拡大率
-	float deg,								// 回転角
-	int srcX,								// 横要素番号(列), 抽出始点X座標
-	int srcY								// 縦要素番号(行), 抽出始点Y座標
+	const std::string& name,						// 画像
+	int w, int h,									// 画像サイズ
+	float sx, float sy,								// 拡大率
+	float deg,										// 回転角
+	int srcX,										// 横要素番号(列), 抽出始点X座標
+	int srcY,										// 縦要素番号(行), 抽出始点Y座標
+	const std::weak_ptr<POINT>& center				// 中心点
 	) :
 	pos(_pos)
 	, add(_add)
@@ -102,6 +103,7 @@ CharBase::CharBase(const mymath::Vec3f& _pos,		// 座標
 	, scale(sx, sy)
 	, angle(deg)
 	, src(srcX, srcY)
+	, center(center)
 	, show(true)
 {
 	alpha = r = g = b = 255.f;
@@ -114,7 +116,8 @@ CharBase::CharBase(float x, float y, float z,		// 座標
 	float sx, float sy,								// 拡大率
 	float deg,										// 回転角
 	int srcX,										// 横要素番号(列), 抽出始点X座標
-	int srcY										// 縦要素番号(行), 抽出始点Y座標
+	int srcY,										// 縦要素番号(行), 抽出始点Y座標
+	const std::weak_ptr<POINT>& center				// 中心点
 	) :
 	pos(x, y, z)
 	, add(adx, ady)
@@ -123,6 +126,7 @@ CharBase::CharBase(float x, float y, float z,		// 座標
 	, scale(sx, sy)
 	, angle(deg)
 	, src(srcX, srcY)
+	, center(center)
 	, show(true)
 {
 	alpha = r = g = b = 255.f;
@@ -131,12 +135,13 @@ CharBase::CharBase(float x, float y, float z,		// 座標
 CharBase::CharBase(const BaseData& bd):
 pos(0.f,0.f,0.f)
 , add(0.f,0.f,0.f)
-, resname(bd.resname)
+, resname(bd.resname.c_str(), bd.resname.length())
 , size(bd.size)
 , scale(1.f, 1.f)
 , angle(0.f)
 , src(0, 0)
 , show(true)
+, center(std::shared_ptr<POINT>(nullptr))
 {
 	alpha = r = g = b = 255.f;
 }
@@ -200,7 +205,7 @@ void CharBase::draw(MODE mode, bool turnFlag) const
 					size.x * src.x,
 					size.y * src.y,
 					size.x, size.y,
-					angle, nullptr,
+					angle, center.lock().get(),
 					sx, scale.y,
 					static_cast<u_char>(alpha),
 					static_cast<u_char>(r),
@@ -215,7 +220,7 @@ void CharBase::draw(MODE mode, bool turnFlag) const
 					size.x * src.x,
 					size.y * src.y,
 					size.x, size.y,
-					angle, nullptr,
+					angle, center.lock().get(),
 					sx, scale.y,
 					static_cast<u_char>(alpha),
 					static_cast<u_char>(r),
@@ -235,7 +240,7 @@ void CharBase::drawNC(MODE mode, bool turnFlag) const
 			size.x * src.x,
 			size.y * src.y,
 			size.x, size.y,
-			angle, nullptr,
+			angle, center.lock().get(),
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),
@@ -250,7 +255,7 @@ void CharBase::drawNC(MODE mode, bool turnFlag) const
 			size.x * src.x,
 			size.y * src.y,
 			size.x, size.y,
-			angle, nullptr,
+			angle, center.lock().get(),
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),
@@ -270,7 +275,7 @@ void CharBase::draw2(MODE mode, bool turnFlag) const
 			src.x,
 			src.y,
 			size.x, size.y,
-			angle, nullptr,
+			angle, center.lock().get(),
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),
@@ -285,7 +290,7 @@ void CharBase::draw2(MODE mode, bool turnFlag) const
 			src.x,
 			src.y,
 			size.x, size.y,
-			angle, nullptr,
+			angle, center.lock().get(),
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),
@@ -305,7 +310,7 @@ void CharBase::draw2NC(MODE mode, bool turnFlag) const
 			src.x,
 			src.y,
 			size.x, size.y,
-			angle, nullptr,
+			angle, center.lock().get(),
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),
@@ -320,7 +325,7 @@ void CharBase::draw2NC(MODE mode, bool turnFlag) const
 			src.x,
 			src.y,
 			size.x, size.y,
-			angle, nullptr,
+			angle, center.lock().get(),
 			sx, scale.y,
 			static_cast<u_char>(alpha),
 			static_cast<u_char>(r),

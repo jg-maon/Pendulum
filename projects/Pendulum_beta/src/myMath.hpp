@@ -741,7 +741,13 @@ public:
 		left((T)rect.left), top((T)rect.top),
 		right((T)rect.right), bottom((T)rect.bottom)
 	{}
-	
+
+	template<class T1>
+	Rect(const Rect<T1>& rect) :
+		left((T)rect.left), top((T)rect.top),
+		right((T)rect.right), bottom((T)rect.bottom)
+	{}
+
 
 	template<class T1>
 	Rect<T>& operator = (const Rect<T1>& rt)

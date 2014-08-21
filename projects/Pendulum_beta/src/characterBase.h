@@ -51,6 +51,12 @@ protected:
 	void sm(const std::shared_ptr<CStageMng>& sm);
 
 
+	/*
+		@brief	CharBaseオブジェクト移動
+		@return	なし
+	*/
+	virtual void MoveObject();
+
 public:
 
 	/*

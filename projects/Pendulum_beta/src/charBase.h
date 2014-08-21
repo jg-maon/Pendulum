@@ -110,18 +110,21 @@ public:
 	std::string	resname;			// 使用イメージ名
 	mymath::Vec3f	scale;			// 拡大率
 	float	angle;					// 角度
+	std::weak_ptr<POINT>	center;	// 中心点
 	float	alpha;					// アルファ
 	float	r,g,b;					// RGB
 	bool	show;					// 利用フラグ
 	
-	CharBase(const mymath::Vec3f& _pos,					// 座標
-			const mymath::Vec3f& _add,					// 移動量
-			const std::string& name="",					// 画像
-			int w=0,int h=0,							// 画像サイズ
-			float sx=1.0f,float sy=1.0f,				// 拡大率
-			float deg=0.f,								// 回転角
-			int srcX=0,									// 横要素番号(列), 抽出始点X座標
-			int srcY=0);								// 縦要素番号(行), 抽出始点Y座標
+	CharBase(const mymath::Vec3f& _pos,				// 座標
+		const mymath::Vec3f& _add,					// 移動量
+		const std::string& name = "",				// 画像
+		int w = 0, int h = 0,						// 画像サイズ
+		float sx = 1.0f, float sy = 1.0f,			// 拡大率
+		float deg = 0.f,							// 回転角
+		int srcX = 0,								// 横要素番号(列), 抽出始点X座標
+		int srcY = 0,								// 縦要素番号(行), 抽出始点Y座標
+		const std::weak_ptr<POINT>& center = std::shared_ptr<POINT>(nullptr)	// 中心点
+		);
 
 	CharBase(float x=0.f,float y=0.f,float z=0.f,		// 座標
 			float adx=0.f,float ady=0.f,				// 移動量
@@ -130,7 +133,9 @@ public:
 			float sx=1.0f,float sy=1.0f,				// 拡大率
 			float deg=0.f,								// 回転角
 			int srcX = 0,								// 横要素番号(列), 抽出始点X座標
-			int srcY = 0);								// 縦要素番号(行), 抽出始点Y座標
+			int srcY = 0,								// 縦要素番号(行), 抽出始点Y座標
+			const std::weak_ptr<POINT>& center = std::shared_ptr<POINT>(nullptr)	// 中心点
+		);
 
 	// 画像情報以外初期値
 	CharBase(const BaseData& bd);

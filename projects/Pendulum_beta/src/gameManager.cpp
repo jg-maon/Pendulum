@@ -112,20 +112,22 @@ void CGameManager::step()
 		cursor_.step();
 	//-------------------------------------
 	// ウィンドウ外へ出ないように
-	mymath::Vec3f& cursorPos = cursor_.obj.pos;
-	const float& halfWidth = cursor_.obj.HalfWidth();
-	const float& halfHeight = cursor_.obj.HalfHeight();
-	cursorPos = camera::GetCursorPosition();
-	RECT rt = camera::GetScreenRect();
-	if (cursorPos.x - halfWidth < rt.left)
-		cursorPos.x = rt.left + halfWidth;
-	else if (cursorPos.x + halfWidth > rt.right)
-		cursorPos.x = rt.right - halfWidth;
-	if (cursorPos.y - halfHeight < rt.top)
-		cursorPos.y = rt.top + halfHeight;
-	else if (cursorPos.y + halfHeight > rt.bottom)
-		cursorPos.y = rt.bottom - halfHeight;
-
+	if (isCursorSyncMouse_)
+	{
+		mymath::Vec3f& cursorPos = cursor_.obj.pos;
+		const float& halfWidth = cursor_.obj.HalfWidth();
+		const float& halfHeight = cursor_.obj.HalfHeight();
+		cursorPos = camera::GetCursorPosition();
+		RECT rt = camera::GetScreenRect();
+		if (cursorPos.x - halfWidth < rt.left)
+			cursorPos.x = rt.left + halfWidth;
+		else if (cursorPos.x + halfWidth > rt.right)
+			cursorPos.x = rt.right - halfWidth;
+		if (cursorPos.y - halfHeight < rt.top)
+			cursorPos.y = rt.top + halfHeight;
+		else if (cursorPos.y + halfHeight > rt.bottom)
+			cursorPos.y = rt.bottom - halfHeight;
+	}
 	//=======================================================
 	// シーン
 	sceneMng_->step();
@@ -346,9 +348,20 @@ void CGameManager::winRect(mymath::Recti* newRect)
 	winRect_ = newRect;
 }
 
+void CGameManager::SetCursorSynchronicity(bool sync)
+{
+	isCursorSyncMouse_ = sync;
+}
+
 const mymath::Vec3f& CGameManager::GetCursorPos() const
 {
 	return cursor_.obj.pos;
+}
+
+void CGameManager::SetCursorPos(const mymath::Vec3f& pos)
+{
+	isCursorSyncMouse_ = false;
+	cursor_.obj.pos = pos;
 }
 
 mymath::Vec3f CGameManager::GetCursorPosNC() const
@@ -451,7 +464,18 @@ std::shared_ptr<CPlayer> CGameManager::GetPlayer() const
 	if (!pPlayer_.lock())
 	{
 		// ポインタに登録がない場合、オブジェクト群のチェック
-		return std::dynamic_pointer_cast<CPlayer>(GetObj(typeid(CPlayer)));
+		auto& player = std::dynamic_pointer_cast<CPlayer>(GetObj(typeid(CPlayer)));
+		if (player)
+		{
+			return player;
+		}
+		else
+		{
+			// プレイヤーと名のつくオブジェクト(デモプレイヤーの取得)
+			auto& players = GetObjects("Player");
+			if (!players.empty())
+				return std::dynamic_pointer_cast<CPlayer>(players[0]);
+		}
 	}
 	return pPlayer_.lock();
 }

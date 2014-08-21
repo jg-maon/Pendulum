@@ -179,21 +179,21 @@ void CRoboticArm::step()
 
 void CRoboticArm::draw()
 {
-	if (attack_.get())
+	if (attack_)
 		attack_->draw();
 	mymath::Rectf rect = camera::GetScreenRect();
 	if (rect.Contains(obj_.GetRect()))
 	{
 		if (armDir_ == ArmDirectin::LEFT_DOWN || armDir_ == ArmDirectin::RIGHT_DOWN)
 		{
-			parentObj_.scale.y *= -1;
+			parentObj_.scale.y = -parentObj_.scale.y;
 		}
 		//固定アーム
 		parentObj_.draw(charabase::CharBase::MODE::Center, turnParentFlag_);
 
 		if (armDir_ == ArmDirectin::LEFT_DOWN || armDir_ == ArmDirectin::RIGHT_DOWN)
 		{
-			parentObj_.scale.y *= -1;
+			parentObj_.scale.y = -parentObj_.scale.y;
 		}
 
 		//可動アーム
@@ -250,9 +250,6 @@ void CRoboticArm::DecideState()
 	// プレイヤーとの距離ベクトル e -> p
 	mymath::Vec3f Vdist = plPos - obj_.pos;
 	const float plyDist = mymath::PYTHA(Vdist.x, Vdist.y);
-	// 初期位置からのベクトル start -> now
-	Vdist = obj_.pos - startPos_;
-	const float staDist = mymath::PYTHA(Vdist.x, Vdist.y);
 	if (plyDist < mymath::POW2(loadInfo_.attackRange) || state_ == State::ATTACK)
 	{
 		// 攻撃範囲内 or 攻撃中

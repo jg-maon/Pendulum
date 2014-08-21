@@ -8,7 +8,7 @@ CGameManager* Base::gm_ = nullptr;
 
 Base::Base(const std::string& name) :
 name_(name)
-, status_(Status::idle)
+, status_(Status::disp)
 {
 }
 Base::~Base()

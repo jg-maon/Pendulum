@@ -53,6 +53,7 @@ public:
 		mymath::Recti stageRect;					// ステージの大きさ
 		std::vector<std::string> backgroundIMG;		// 背景画像
 		std::vector<ActPtPtr> actionPoints;			// アクションポイント群
+		std::vector<charabase::CharBase> stageObjects;	//	ステージオブジェクト群
 	};
 protected:
 	std::string bgm_;								// BGM
@@ -85,9 +86,9 @@ private:
 		@brief		ステージサイズ,カメラ可動範囲の読み込み
 		@attension	fはオープン済み
 		@param	[in/out]	f	ステージファイル
-		@return	EOFか
-		@retval	true	EOF
-		@retval	false	EOFでない
+		@return	読み込み成功したか
+		@retval	true	読み込み成功
+		@retval	false	読み込み失敗
 	*/
 	bool LoadRect(std::ifstream& f, int stage);
 	/*
@@ -95,9 +96,9 @@ private:
 		@attension	fはオープン済み
 		@param	[in/out]	f		ステージファイル
 		@param	[in]		stage	ステージタイプ(0:雑魚 1:ボス)
-		@return	EOFか
-		@retval	true	EOF
-		@retval	false	EOFでない
+		@return	読み込み成功したか
+		@retval	true	読み込み成功
+		@retval	false	読み込み失敗
 	*/
 	bool LoadActionCircles(std::ifstream& f, int stage);
 	/*
@@ -105,11 +106,22 @@ private:
 		@attension	fはオープン済み
 		@param	[in/out]	f	ステージファイル
 		@param	[in]		stage	ステージタイプ(0:雑魚 1:ボス)
-		@return	EOFか
-		@retval	true	EOF
-		@retval	false	EOFでない
+		@return	読み込み成功したか
+		@retval	true	読み込み成功
+		@retval	false	読み込み失敗
 	*/
 	bool LoadActionPolygons(std::ifstream& f, int stage);
+
+	/*
+		@brief		ステージオブジェクトの読み込み
+		@attension	fはオープン済み
+		@param	[in/out]	f	ステージファイル
+		@param	[in]		stage	ステージタイプ(0:雑魚 1:ボス)
+		@return	読み込み成功したか
+		@retval	true	読み込み成功
+		@retval	false	読み込み失敗
+	*/
+	bool LoadStageObjects(std::ifstream& f, int stage);
 
 #pragma endregion	// private methods
 
@@ -144,7 +156,7 @@ protected:
 		@retval	true	EOF
 		@retval	false	EOFでない
 	*/
-	bool LoadPlayer(std::ifstream& f);
+	virtual bool LoadPlayer(std::ifstream& f);
 	
 	/*
 		@brief		敵情報の読み込み

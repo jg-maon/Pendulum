@@ -2,6 +2,7 @@
 
 #StagePath	res/dat/main/stage/
 
+#DemoStage	demoStage.dat
 
 #Stage01	debugStage01.dat
 

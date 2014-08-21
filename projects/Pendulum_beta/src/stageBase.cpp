@@ -94,11 +94,19 @@ void IStage::step()
 void IStage::draw()
 {
 	if (phase_ == Phase::BOSS || phase_ == Phase::RESULT)
+	{
 		for (auto& ap : stage_[1].actionPoints)
 			ap->draw();
+		for (auto& obj : stage_[1].stageObjects)
+			obj.draw2(charabase::CharBase::LeftTop);
+	}
 	else
+	{
 		for (auto& ap : stage_[0].actionPoints)
 			ap->draw();
+		for (auto& obj : stage_[0].stageObjects)
+			obj.draw2(charabase::CharBase::LeftTop);
+	}
 
 }
 
@@ -180,9 +188,22 @@ bool IStage::LoadEnv(std::ifstream& f)
 
 bool IStage::LoadRect(std::ifstream& f, int stage)
 {
-	//--------------------------------------
-	// ステージ
-	if (common::FindChunk(common::SeekSet(f), "#Left"))
+	std::vector<CFileLoader::LoadValue> loadValues =
+	{
+		//--------------------------------------
+		// ステージ
+		{ "#Left", &stage_[stage].stageRect.left, "int" },
+		{ "#Top", &stage_[stage].stageRect.top, "int" },
+		{ "#Right", &stage_[stage].stageRect.right, "int" },
+		{ "#Bottom", &stage_[stage].stageRect.bottom, "int" },
+		//--------------------------------------
+		// カメラ
+		{ "#CameraLeft", &stage_[stage].cameraRect.left, "int" },
+		{ "#CameraTop", &stage_[stage].cameraRect.top, "int" },
+		{ "#CameraRight", &stage_[stage].cameraRect.right, "int" },
+		{ "#CameraBottom", &stage_[stage].cameraRect.bottom, "int" },
+	};
+	/*if (common::FindChunk(common::SeekSet(f), "#Left"))
 	{
 		f >> stage_[stage].stageRect.left;
 	}
@@ -197,10 +218,10 @@ bool IStage::LoadRect(std::ifstream& f, int stage)
 	if (common::FindChunk(common::SeekSet(f), "#Bottom"))
 	{
 		f >> stage_[stage].stageRect.bottom;
-	}
+	}*/
 	//--------------------------------------
 	// カメラ
-	if (common::FindChunk(common::SeekSet(f), "#CameraLeft"))
+	/*if (common::FindChunk(common::SeekSet(f), "#CameraLeft"))
 	{
 		f >> stage_[stage].cameraRect.left;
 	}
@@ -215,8 +236,8 @@ bool IStage::LoadRect(std::ifstream& f, int stage)
 	if (common::FindChunk(common::SeekSet(f), "#CameraBottom"))
 	{
 		f >> stage_[stage].cameraRect.bottom;
-	}
-	return f.eof();
+	}*/
+	return LoadInfo(f, loadValues);
 }
 
 
@@ -226,7 +247,7 @@ bool IStage::LoadActionCircles(std::ifstream& f, int stage)
 	{
 		std::string label;
 		f >> label;
-		if (label != "{" || f.eof()) return f.eof();
+		if (label != "{" || f.eof()) return false;
 		while (!f.eof())
 		{
 			std::vector<float> info;
@@ -244,7 +265,12 @@ bool IStage::LoadActionCircles(std::ifstream& f, int stage)
 			}
 		}
 	}
-	return f.eof();
+	else
+	{
+		debug::BToMF("#ActionCircle not found");
+		return false;
+	}
+	return true;
 }
 
 bool IStage::LoadActionPolygons(std::ifstream& f, int stage)
@@ -253,7 +279,7 @@ bool IStage::LoadActionPolygons(std::ifstream& f, int stage)
 	{
 		std::string label;
 		f >> label;
-		if (label != "{" || f.eof()) return f.eof();
+		if (label != "{" || f.eof()) return false;
 		while (!f.eof())
 		{
 			f >> label;
@@ -278,7 +304,55 @@ bool IStage::LoadActionPolygons(std::ifstream& f, int stage)
 
 		}
 	}
-	return f.eof();
+	else
+	{
+		debug::BToMF("#ActionPolygon not found");
+		return false;
+	}
+	return true;
+}
+
+bool IStage::LoadStageObjects(std::ifstream& f, int stage)
+{
+	if (common::FindChunk(common::SeekSet(f), "#StageObject"))
+	{
+		std::string label;
+		f >> label;
+		if (label != "{" || f.eof()) return false;
+		stage_[stage].stageObjects.clear();
+		while (!f.eof())
+		{
+			f >> label;
+			if (label == "}") break;
+			charabase::CharBase cb;
+			cb.pos.x = static_cast<float>(std::atof(label.c_str()));
+			f >> cb.pos.y >> cb.pos.z;
+			f >> cb.resname;
+			f >> cb.src.x >> cb.src.y >> cb.size.x >> cb.size.y;
+			f >> cb.angle;
+			f >> label;
+			if (label != "null")
+			{
+				cb.center = std::shared_ptr<POINT>(new POINT);
+				cb.center.lock()->x = std::atol(label.c_str());
+				f >> cb.center.lock()->y;
+			}
+			f >> cb.scale.x;
+			f >> cb.scale.y;
+			f >> cb.alpha;
+			f >> cb.r;
+			f >> cb.g;
+			f >> cb.b;
+			stage_[stage].stageObjects.push_back(cb);
+
+		}
+	}
+	else
+	{
+		debug::BToMF("#StageObject not found");
+		return false;
+	}
+	return true;
 }
 
 #pragma endregion	// private methods
@@ -301,6 +375,7 @@ void IStage::load(std::ifstream& f, int stage)
 	stage_[stage].actionPoints.clear();
 	LoadActionCircles(f, stage);
 	LoadActionPolygons(f, stage);
+	LoadStageObjects(f, stage);
 }
 
 bool IStage::LoadPlayer(std::ifstream& f)
@@ -317,7 +392,6 @@ bool IStage::LoadPlayer(std::ifstream& f)
 		}
 		// プレイヤーオブジェクトを追加
 		auto& pl = gm()->GetObj(typeid(CPlayer));
-		auto& sm = gm()->GetObj(typeid(CStageMng));
 		std::shared_ptr<CPlayer> player;
 		if (!pl)
 		{

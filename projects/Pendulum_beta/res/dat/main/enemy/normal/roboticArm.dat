@@ -1,0 +1,76 @@
+読み込み画像	画像管理名
+#Img img_roboticArm_Child
+
+画像サイズ＿幅＿高さ＿可動アーム側＿※整数のみ
+#Size		384	192
+
+当たり判定＿＿＿{}内に収めること＿＿＿※値は実数可
+#Collision
+{
+円	pos(画像の中心)からの相対座標X	相対座標Y	半径(halfWidth,halfHeightで自動計算)
+//#Circle	0	0	halfWidth
+
+ポリゴン	頂点数	相対座標X1 相対座標Y1	X2 Y2……
+#Polygon	4
+	-96 -96
+	 96 -96
+	 96  96
+	-96  96
+
+四角(そのうちPolygonに吸収)	左	上	右	下座標
+//#Rect	-halfWidth	-halfHeight		halfWidth	halfHeight
+}
+
+ステージ当たり判定＿#Collisionと同じ書式
+#StageCollision
+{
+
+#Rect	-96	-96	96	96
+
+}
+
+
+
+攻撃＿＿攻撃方法{攻撃方法別値}＿＿NWayShotの書式は固定で以下の通り
+#Attack ArmAttack
+{
+	攻撃力
+	10
+
+	ショット当たり判定
+	{
+		#Polygon	4
+		-96 -96
+		 96 -96
+		 96  96
+		-96  96
+	}
+}
+
+
+//==================================================
+
+//＿固定アームの読み込み画像＿画像管理名
+#ParentImg	img_roboticArm_Parent
+
+//＿固定アーム画像抽出位置＿X＿Y＿W＿H
+#ParentSrc       0 0   192 192
+
+//＿固定アームの支点(親側)(回転中心座標)
+#SupportParent	150.0  48.0
+
+//＿可動アームの支点(子側)(回転中心座標)
+#SupportChild	96.0 96.0
+
+//＿回転する速さ
+#RotateSpeed 2.0
+
+//＿回転角の最大値
+#MaxAngle 170.0
+
+//＿回転角の最小値
+#MinAngle -170.0
+
+#AttackRange	800.0
+
+#AttackInterval	2.0

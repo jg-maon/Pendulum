@@ -63,7 +63,7 @@ public:
 		float maxAttackRadius;	// 最大攻撃範囲
 		float addRadius;		// 攻撃範囲増加量
 	};
-private:
+protected:
 	enum class MotionType		// モーション番号
 	{
 		FALL,			// 落下(通常時)
@@ -79,7 +79,7 @@ private:
 		MAX_SLASH = 15,				// 最高斬撃音階数
 		MAX_CHAIN = 999,			// 最高Chain数
 	};
-private:
+protected:
 	/*
 	static const float MAX_G;		// 最大重力速度
 	static const float GRAVITY_ACC;	// 重力加速度
@@ -111,6 +111,7 @@ private:
 	charabase::Anim motionAnim_;		// モーションアニメーション用
 
 	charabase::CharPtr attackObj_;		// 攻撃範囲画像
+	std::vector<float> attackObjAngle_;	// 攻撃画像角度
 	float attackRadius_;				// 攻撃範囲
 	bool isAttacking_;					// 攻撃中か
 
@@ -134,7 +135,7 @@ private:
 	//--------------------------------------------------
 
 
-private:
+protected:
 
 	/*
 		@brief	登場アニメーション
@@ -152,7 +153,7 @@ private:
 		@brief	キー入力
 		@return	なし
 	*/
-	void key();
+	virtual void key();
 
 	/*
 		@brief	キャラの移動
@@ -161,10 +162,18 @@ private:
 	void move();
 
 	/*
-		@brief	フックを外す
+		@brief	攻撃範囲画像調整計算更新処理
 		@return	なし
 	*/
-	void UnHang();
+	void UpdateAttackObject();
+
+
+	/*
+		@brief	攻撃範囲画像描画
+		@return	なし
+	*/
+	void DrawAttackObject() const;
+
 public:
 	/*
 		@brief	空オブジェクト生成
@@ -257,6 +266,11 @@ public:
 		@return	なし
 	*/
 	void SetHangPoint(const mymath::Vec3f& pos);
+	/*
+		@brief	フックを外す
+		@return	なし
+	*/
+	void UnHang();
 
 	/*
 		@brief	ダメージ加算

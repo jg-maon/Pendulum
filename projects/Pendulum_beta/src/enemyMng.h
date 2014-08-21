@@ -110,5 +110,11 @@ public:
 	*/
 	std::vector<EnemyPtr>& getEnemies();
 
+	/*
+		@brief	“G‘SÁ‹
+		@return	‚È‚µ
+	*/
+	void ClearEnemies();
+
 };
 #endif

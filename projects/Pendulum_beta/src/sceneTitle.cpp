@@ -182,8 +182,8 @@ const float CSceneTitle::CLICK_ON = 1.f;
 //const int CSceneTitle::CLICK_MIN_ALPHA = 50;
 
 //表示時間
-const float CSceneTitle::TITLETIME = 30.f;
-const float CSceneTitle::DEMOTIME = 0.f;
+//const float CSceneTitle::TITLETIME = 30.f;
+const float CSceneTitle::TITLETIME = 1.f;
 
 #pragma endregion // 変数定数定義
 //=================================================================================
@@ -247,8 +247,6 @@ void CSceneTitle::start()
 	fadeState_ = (State::MAIN);
 	slashAnim_.set(9, 0.9f);
 
-	camera::SetLookAt(system::WINW / 2.f, system::WINH / 2.f);
-	camera::SetScale(1.f);
 
 	CFade::ChangeColor(0xffffffff);
 	TitleInit();
@@ -460,7 +458,7 @@ void CSceneTitle::draw()
 	//-------------------------
 	else if (phase_ == Phase::DEMO)
 	{
-
+		demo_.draw();
 	}
 
 }
@@ -513,6 +511,8 @@ void CSceneTitle::TitleInit()
 	titleSlash_.SetUse(false);
 
 
+	camera::SetLookAt(system::WINW / 2.f, system::WINH / 2.f);
+	camera::SetScale(1.f);
 
 }
 
@@ -598,28 +598,23 @@ void CSceneTitle::TitleStep()
 //デモ初期化
 void CSceneTitle::DemoInit()
 {
-	phaseTime_ = 0.f;
+	demo_.start();
 
 }
 
 //デモ処理
 void CSceneTitle::DemoStep()
 {
-	phaseTime_ += system::FrameTime;
-
-
-
 	// デモプレイ終了
-	if (input::CheckPush(input::KEY_MOUSE_LBTN))
+	if (input::CheckPush(input::KEY_MOUSE_LBTN) ||
+		input::CheckPush(input::KEY_MOUSE_RBTN) ||
+		demo_.update())
 	{
-		phaseTime_ = DEMOTIME;
-	}
-
-
-	if (phaseTime_ >= DEMOTIME)
-	{
+		demo_.stop();
 		ChangePhase();
 	}
+
+
 }
 
 

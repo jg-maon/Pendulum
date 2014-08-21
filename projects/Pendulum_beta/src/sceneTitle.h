@@ -9,10 +9,14 @@
 #include "myMath.hpp"
 #endif
 
+#ifndef DEF_SCENEDEMOPLAY_H
+#include "sceneDemoPlay.h"
+#endif
+
 class CSceneTitle : public IScene
 {
 	//======================================
-	//定数宣言
+	// 定数宣言
 	//======================================
 
 private:
@@ -54,7 +58,6 @@ private:
 
 
 	static const float TITLETIME;			// デモプレイに移動するまでの時間
-	static const float DEMOTIME;			// タイトルに移動するまでの時間
 
 private:
 	//======================================
@@ -118,7 +121,7 @@ private:
 	//======================================
 	//変数宣言
 	//======================================
-
+	CSceneDemoPlay demo_;
 
 	//charabase::CharBase titleBack_;		// 背景
 	charabase::CharBase titleLogo_;			// ロゴ

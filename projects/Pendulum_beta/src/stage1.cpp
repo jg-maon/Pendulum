@@ -20,7 +20,7 @@ IStage("Stage1")
 		//std::string bossFile;
 		f >> bossFile_;
 		std::ifstream bossF(bossFile_);
-		if (f)
+		if (bossF)
 			load(bossF, 1);
 		else
 			debug::BToMF("bossFile_ not found path:%s", bossFile_.c_str());
@@ -56,23 +56,25 @@ void CStage1::draw()
 	if (caObj_->CheckUse())
 		caObj_->drawNC();
 
+	//if (goalObj_->CheckUse())
+	//	goalObj_->draw();
+
 
 	auto s = graph::Draw_GetImageSize2("img_stage01");
-	mymath::Recti rc = getCameraRect();
-	
-#if 0
-	rc.draw(-1, 1, false);
-#endif
-	float sx = rc.width() / static_cast<float>(s.cx);
-	float sy = rc.height() / static_cast<float>(s.cy);
+	mymath::Recti& cameraRect = (phase_ == Phase::BOSS) ? stage_[1].cameraRect : stage_[0].cameraRect;
+	mymath::Recti& stageRect = (phase_ == Phase::BOSS) ? stage_[1].stageRect : stage_[0].stageRect;
+	mymath::Rectf screenRect = camera::GetScreenRect();
 	/*
+	float sx = cameraRect.width() / static_cast<float>(s.cx);
+	float sy = cameraRect.height() / static_cast<float>(s.cy);
+	
 	for (int y = 0; y <= s.cy / 1024; ++y)
 	{
 		for (int x = 0; x <= s.cx / 1024; ++x)
 		{
 			graph::Draw_GraphicsLeftTop(
-				rc.left + x * 1024,
-				rc.top + y * 1024,
+				cameraRect.left + x * 1024,
+				cameraRect.top + y * 1024,
 				1.f,
 				"img_stage01",
 				x * 1024*sx, y * 1024*sy,
@@ -84,9 +86,23 @@ void CStage1::draw()
 		}
 	}
 	//*/
-	//*
+	// ステージの幅に対するカメラ幅の比
+	float ratioCameraX = (s.cx - screenRect.width()) / static_cast<float>(cameraRect.right - screenRect.width());
+	float ratioCameraY = (s.cy - screenRect.height()) / static_cast<float>(cameraRect.bottom - screenRect.height());
+	// 画像に対するステージとカメラ比の座標
+	int src_x = static_cast<int>(screenRect.left * ratioCameraX);
+	int src_y = static_cast<int>(screenRect.top * ratioCameraY);
+	graph::Draw_GraphicsLeftTopNC(
+		0,
+		0,
+		1.f,
+		"img_stage01",
+		src_x, src_y,
+		system::WINW, system::WINH
+		);
+	/*
 	graph::Draw_GraphicsLeftTop(
-		rc.left, rc.top, 1.f,
+		cameraRect.left, cameraRect.top, 1.f,
 		"img_stage01", 0, 0, s.cx, s.cy, 0, 0,
 		sx,
 		sy);

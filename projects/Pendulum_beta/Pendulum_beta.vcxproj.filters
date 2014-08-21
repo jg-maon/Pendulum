@@ -218,6 +218,12 @@
     <Filter Include="ソース ファイル\InGame\Attack\ArmAttack">
       <UniqueIdentifier>{5f706e32-6172-4d90-a7aa-a24604941144}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\InGame\StageManager\Stage\DemoStage">
+      <UniqueIdentifier>{0f4a5ec5-f087-44fb-b147-adaf55ed37ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scence\Title\DemoPlay">
+      <UniqueIdentifier>{1079237e-1381-48cb-8395-2b5a728b37a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -323,9 +329,6 @@
       <Filter>ソース ファイル\InGame\Collision</Filter>
     </ClInclude>
     <ClInclude Include="src\common.h">
-      <Filter>ソース ファイル\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="src\easing.h">
       <Filter>ソース ファイル\Common</Filter>
     </ClInclude>
     <ClInclude Include="src\define.h">
@@ -460,6 +463,15 @@
     <ClInclude Include="src\armAttack.h">
       <Filter>ソース ファイル\InGame\Attack\ArmAttack</Filter>
     </ClInclude>
+    <ClInclude Include="src\sceneDemoPlay.h">
+      <Filter>ソース ファイル\Scence\Title\DemoPlay</Filter>
+    </ClInclude>
+    <ClInclude Include="src\demoStage.h">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\DemoStage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\easing.h">
+      <Filter>ソース ファイル\Easing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -520,9 +532,6 @@
       <Filter>ソース ファイル\InGame\Collision</Filter>
     </ClCompile>
     <ClCompile Include="src\common.cpp">
-      <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="src\easing.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
     <ClCompile Include="src\effectExplosion.cpp">
@@ -642,6 +651,15 @@
     <ClCompile Include="src\armAttack.cpp">
       <Filter>ソース ファイル\InGame\Attack\ArmAttack</Filter>
     </ClCompile>
+    <ClCompile Include="src\sceneDemoPlay.cpp">
+      <Filter>ソース ファイル\Scence\Title\DemoPlay</Filter>
+    </ClCompile>
+    <ClCompile Include="src\demoStage.cpp">
+      <Filter>ソース ファイル\InGame\StageManager\Stage\DemoStage</Filter>
+    </ClCompile>
+    <ClCompile Include="src\easing.cpp">
+      <Filter>ソース ファイル\Easing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\dat\main\enemy\enemies.dat">
@@ -724,8 +742,14 @@
     <None Include="res\dat\main\enemy\normal\raybit.dat">
       <Filter>リソース ファイル\Main\Enemy\normal</Filter>
     </None>
-    <None Include="res\dat\main\enemy\roboticArm\roboticArm.dat">
+    <None Include="res\dat\main\enemy\normal\roboticArm.dat">
       <Filter>リソース ファイル\Main\Enemy\normal</Filter>
+    </None>
+    <None Include="res\dat\main\stage\demoStage.dat">
+      <Filter>リソース ファイル\Main\Stage</Filter>
+    </None>
+    <None Include="res\dat\main\enemy\table\demoTable.dat">
+      <Filter>リソース ファイル\Main\E_Table</Filter>
     </None>
   </ItemGroup>
 </Project>

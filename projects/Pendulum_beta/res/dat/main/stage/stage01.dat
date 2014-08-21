@@ -34,8 +34,25 @@ res/dat/main/enemy/table/debugTable01.dat
 #BossStage
 res/dat/main/stage/bossStage01.dat
 
+
+float_x,ÅQÅQfloat_y,ÅQÅQfloat_z,ÅQÅQstd::string_resname,ÅQÅQint_srcX,ÅQÅQint_srcY,ÅQÅQint_sizeX,ÅQÅQint_sizeY,ÅQÅQfloat_degree,ÅQÅQLONG_centerX,ÅQÅQLONG_centerY,ÅQÅQfloat_scaleXÅQÅQ,float_scaleY,ÅQÅQu_char_a,ÅQÅQu_char_r,ÅQÅQu_char_g,ÅQÅQu_char_b
+íÜêSì_ÇéwíËÇµÇ»Ç¢èÍçáÇÕcenterXÇ…ÅunullÅvÇ∆ãLèqÇµÅAYÇÕî≤Ç©Ç∑
+#StageObject
+{
+800.0	200.0	0.8	img_wood	0	0	1024	3500	0.0	null	1.0	1.0	255	255	255	255
+1000.0	0.0		0.9	img_wood	0	0	1024	3500	0.0	null	1.0	1.0	255	255	255	255
+1500.0	400.0	0.9	img_wood	0	0	1024	3500	0.0	null	1.0	1.0	255	255	255	255
+1800.0	900.0	0.8	img_wood	0	0	1024	3500	0.0	null	1.0	1.0	255	255	255	255
+2100.0	120.0	0.9	img_wood	0	0	1024	3500	0.0	null	1.0	1.0	255	255	255	255
+2800.0	1400.0	0.9	img_wood	0	0	1024	3500	0.0	null	1.0	1.0	255	255	255	255
+3000.0	100.0	0.9	img_wood	0	0	1024	3500	0.0	null	1.0	1.0	255	255	255	255
+
+}
+
+
 #ActionCircle
 {
+}
 200	200	200
 1000	200	200
 1800	200	200
@@ -280,7 +297,7 @@ res/dat/main/stage/bossStage01.dat
 
 #ActionPolygon
 {
-
+}
 4
 -400	5200
 800	5200

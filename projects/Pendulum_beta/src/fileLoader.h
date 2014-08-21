@@ -20,7 +20,7 @@ class CPlayer;
 class CFileLoader
 {
 	/*
-		@brief		LoadInfo読み込み
+		@brief		LoadValue読み込み
 		@attension	fはオープン済み
 		@param	[in/out]	f			ファイル
 		@param	[in/out]	loadValues	読み込む対象
@@ -28,7 +28,7 @@ class CFileLoader
 		@retval	true	読み込み成功
 		@retval	false	読み込み失敗
 	*/
-#define LoadInfo(f, loadValues)		LoadInfoFunc(__FILE__##" "##__FUNCTION__, f, loadValues);
+#define LoadInfo(f, loadValues)		CFileLoader::LoadInfoFunc(__FILE__##" "##__FUNCTION__, f, loadValues);
 public:
 	typedef std::unordered_map<std::string, int> FontTable;
 	// リソースファイル用
@@ -37,17 +37,17 @@ public:
 		std::string resname;
 		std::string path;
 	};
-private:
-	const std::string iniFile_;		// 各種設定記述ファイルパス
-
 	//------------------------------------------
-	// LoadInfo用
+	// ファイル読込み用
 	struct LoadValue
 	{
 		char* tag;				// #タグ
 		void* value;			// 格納する値
 		std::string type;		// 型情報
 	};
+private:
+	const std::string iniFile_;		// 各種設定記述ファイルパス
+
 
 private:
 	//---------------------------------
@@ -87,18 +87,6 @@ private:
 #pragma endregion	// リソースファイル読み込み関連
 	//---------------------------------
 
-	//---------------------------------
-	/*
-		@brief		LoadInfo読み込み
-		@attension	fはオープン済み
-		@param	[in]		from		呼び出し元
-		@param	[in/out]	f			ファイル
-		@param	[in/out]	loadValues	読み込む対象
-		@return	読み込み成功したか
-		@retval	true	読み込み成功
-		@retval	false	読み込み失敗
-	*/
-	bool LoadInfoFunc(const std::string& from, std::ifstream& f, std::vector<LoadValue>& loadValues);
 	
 
 	//---------------------------------
@@ -187,6 +175,18 @@ public:
 	*/
 	static bool LoadCharBase(std::ifstream& f, charabase::CharBase& cb);
 
+	//---------------------------------
+	/*
+		@brief		LoadInfo読み込み
+		@attension	fはオープン済み
+		@param	[in]		from		呼び出し元
+		@param	[in/out]	f			ファイル
+		@param	[in/out]	loadValues	読み込む対象
+		@return	読み込み成功したか
+		@retval	true	読み込み成功
+		@retval	false	読み込み失敗
+	*/
+	static bool LoadInfoFunc(const std::string& from, std::ifstream& f, std::vector<LoadValue>& loadValues);
 	/*
 		@brief	各ファイル読み込み
 		@param	[in]	iniFile	設定ファイルパス

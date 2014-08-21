@@ -1,0 +1,53 @@
+#Bgm	bgm_stage01
+
+#ClearAnnounce
+img_clearAnnounce00	-1	-1
+
+
+#StageClear
+Annihilation
+
+
+#NormaTime
+180.0
+
+#Left	0
+#Top	0
+#Right	7000
+#Bottom	5000
+
+#CameraLeft		0
+#CameraTop		400
+#CameraRight	6600
+#CameraBottom	4400
+
+#Player
+2500	2140
+
+
+#Enemy
+res/dat/main/enemy/table/demoTable.dat
+
+
+#BossStage
+res/dat/main/stage/bossStage01.dat
+
+
+float_x,ÅQÅQfloat_y,ÅQÅQfloat_z,ÅQÅQstd::string_resname,ÅQÅQint_srcX,ÅQÅQint_srcY,ÅQÅQint_sizeX,ÅQÅQint_sizeY,ÅQÅQfloat_degree,ÅQÅQLONG_centerX,ÅQÅQLONG_centerY,ÅQÅQfloat_scaleXÅQÅQ,float_scaleY,ÅQÅQu_char_a,ÅQÅQu_char_r,ÅQÅQu_char_g,ÅQÅQu_char_b
+íÜêSì_ÇéwíËÇµÇ»Ç¢èÍçáÇÕcenterXÇ…ÅunullÅvÇ∆ãLèqÇµÅAYÇÕî≤Ç©Ç∑
+#StageObject
+{
+3000.0	200.0	0.8	img_woodTop		0	0	4098	4098	0.0	null	1.0	1.0	255	255	255	255
+3000.0	4298.0	0.8	img_woodBottom	0	0	4098	4098	0.0	null	1.0	1.0	255	255	255	255
+
+}
+
+
+#ActionCircle
+{
+}
+
+#ActionPolygon
+{
+
+}

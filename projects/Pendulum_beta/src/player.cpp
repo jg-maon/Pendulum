@@ -73,6 +73,7 @@ CPlayer::CPlayer():
 ICharacter("Player")
 {
 	status_ = Status::idle;
+	attackObjAngle_.resize(3);
 }
 
 CPlayer::CPlayer(float x, float y, float z) :
@@ -107,11 +108,14 @@ void CPlayer::init(float x, float y, float z)
 	attackObj_ = charabase::CharPtr(new charabase::CharBase(
 		obj_.pos,
 		mymath::Vec3f(),
-		"img_circle",
-		96, 96));
+		"img_attackCircle",
+		512, 512));
 	attackObj_->pos.z -= 0.1f;
-	attackObj_->g = 0.f;
-	attackObj_->b = 0.f;
+	attackObj_->alpha = 220.f;
+	attackObj_->g = 10.f;
+	attackObj_->b = 10.f;
+	for (auto& angle : attackObjAngle_)
+		angle = 0.f;
 	attackRadius_ = loadInfo_.maxAttackRadius;
 	isAttacking_ = false;
 
@@ -241,7 +245,8 @@ void CPlayer::step()
 		// 更新フレームでない場合はスキップ
 		if (!isUpdatable())
 		{
-			attackRadius_ = -50.f;
+			if (gm()->gameStatus()->isHitStopping())
+				attackRadius_ = -50.f;
 			return;
 		}
 		
@@ -275,6 +280,10 @@ void CPlayer::step()
 		}
 		sm()->MoveCamera(obj_.pos);
 	}
+
+	//----------------------------------------
+	// 攻撃範囲
+	UpdateAttackObject();
 
 	//----------------------------------------
 	// アニメーション処理
@@ -465,14 +474,17 @@ void CPlayer::draw()
 
 	//-----------------------------------------------------------
 	// AttackRange
-	//attackRange_->draw();
+	if (attackObj_ && attackRadius_ >= 0.f)
+		DrawAttackObject();
+
+	/*
 	mymath::Circlef circle_(obj_.pos, attackRadius_);
-	
 	circle_.draw(ARGB(
 		static_cast<int>(attackObj_->alpha),
 		static_cast<int>(attackObj_->r),
 		static_cast<int>(attackObj_->g),
 		static_cast<int>(attackObj_->b)));
+	//*/
 	//-----------------------------------------------------------
 	// Chain
 	if (chainState_ != common::DispState::HIDE)
@@ -671,28 +683,16 @@ void CPlayer::key()
 	// 移動
 	if (CheckPush(MOVE_BTN))
 	{
-		gm()->gameStatus()->EndHitStop();
 #ifndef D_MOVE_TEST
 #ifdef D_ACT_TEST
-		hangPoint_ = mouse;
-		gravityF_ = true;
-		tensionAcc_ = loadInfo_.TENSION;
-		isHanging_ = true;
-		motionAnim_.set(0, 0.f);
-		obj_.src.y = static_cast<int>(MotionType::HANG);
+		SetHangPoint(mouse);
 #else
 		const auto& aps = sm()->getActionPoints();
 		for(const auto& act : aps)
 		{
 			if (act->Contains(mouse) && act->Contains(obj_.pos, mouse))
 			{
-				hangPoint_ = act->IntersectionPoint2Nearest(obj_.pos, mouse);
-				gravityF_ = true;
-				tensionAcc_ = loadInfo_.TENSION;
-				isHanging_ = true;
-				motionAnim_.set(0, 0.f);
-				obj_.src.y = static_cast<int>(MotionType::HANG);
-
+				SetHangPoint(act->IntersectionPoint2Nearest(obj_.pos, mouse));
 				break;
 			}
 		}
@@ -954,7 +954,7 @@ void CPlayer::move()
 	else
 	{
 #ifndef D_MOVE_TEST
-		obj_.Move();
+		MoveObject();
 #endif
 		velocity *= loadInfo_.DOWN_SPEED;
 	}
@@ -969,21 +969,47 @@ void CPlayer::move()
 		pos.x = clamp(pos.x, stageRect.left + size.x, stageRect.right - size.x);
 		pos.y = clamp(pos.y, stageRect.top + size.y, stageRect.bottom - size.y);
 	}
-	attackObj_->pos = attackObj_->pos.TmpReplace(mymath::Vec3f::X | mymath::Vec3f::Y, pos);
 
 }
 
-void CPlayer::UnHang()
+
+void CPlayer::UpdateAttackObject()
 {
-	isHanging_ = false;
-	if (!isCameraZoom_)
-		zoomTime_ = ZOOM_TIME / 10.f;
-	isCameraZoom_ = true;
-	gravity_ = 0.f;
-	gravityF_ = true;
-	motionAnim_.set(2, 0.2f);
-	obj_.src.y = static_cast<int>(MotionType::FALL);
+	// 座標
+	attackObj_->pos.x = obj_.pos.x;
+	attackObj_->pos.y = obj_.pos.y;
+
+	// 大きさ
+	attackObj_->scale = attackRadius_ * 2.f / 400.f;
+	
+	// 角度
+	float dt = system::FrameTime;
+	if((attackObjAngle_[0] += dt * 30.f) >= 360.f)
+		attackObjAngle_[0] -= 360.f;
+	if ((attackObjAngle_[1] += dt * -90.f) < 0.f)
+		attackObjAngle_[1] += 360.f;
+	if ((attackObjAngle_[2] += dt * 90.f) >= 360.f)
+		attackObjAngle_[2] -= 360.f;
 }
+
+void CPlayer::DrawAttackObject() const
+{
+	graph::Draw_SetRenderMode(RENDER_MODE::HALFADD);
+	// 角度分
+	for (size_t i = 0; i < attackObjAngle_.size(); ++i)
+	{
+		// 編集用オブジェクト
+		auto work = *attackObj_;
+		// 画像番号
+		work.src.x = static_cast<int>(i);
+		// 角度
+		work.angle = attackObjAngle_[i];
+		//work.draw(work.Center, turnFlag_);
+		work.draw();
+	}
+	graph::Draw_EndRenderMode();
+}
+
 
 
 void CPlayer::hit(const ObjPtr& rival)
@@ -1039,7 +1065,7 @@ void CPlayer::hit(const ObjPtr& rival)
 
 Base::Collisions CPlayer::GetDamageAreas() const
 {
-	if (isInvincible())
+	if (isInvincible() || gm()->gameStatus()->isHitStopping())
 	{
 		// 無敵処理中は当たり判定を消す
 		return Base::Collisions();
@@ -1083,7 +1109,25 @@ void CPlayer::SetInfo(const LoadInfo& info)
 
 void CPlayer::SetHangPoint(const mymath::Vec3f& pos)
 {
+	gm()->gameStatus()->EndHitStop();
 	hangPoint_ = pos;
+	gravityF_ = true;
+	tensionAcc_ = loadInfo_.TENSION;
+	isHanging_ = true;
+	motionAnim_.set(0, 0.f);
+	obj_.src.y = static_cast<int>(MotionType::HANG);
+}
+
+void CPlayer::UnHang()
+{
+	isHanging_ = false;
+	if (!isCameraZoom_)
+		zoomTime_ = ZOOM_TIME / 10.f;
+	isCameraZoom_ = true;
+	gravity_ = 0.f;
+	gravityF_ = true;
+	motionAnim_.set(2, 0.2f);
+	obj_.src.y = static_cast<int>(MotionType::FALL);
 }
 
 /*

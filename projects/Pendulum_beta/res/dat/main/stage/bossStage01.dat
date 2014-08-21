@@ -13,6 +13,13 @@
 #Enemy
 res/dat/main/enemy/table/enemyTable01_b.dat
 
+
+float_x,QQfloat_y,QQfloat_z,QQstd::string_resname,QQint_srcX,QQint_srcY,QQint_sizeX,QQint_sizeY,QQfloat_degree,QQLONG_centerX,QQLONG_centerY,QQfloat_scaleXQQ,float_scaleY,QQu_char_a,QQu_char_r,QQu_char_g,QQu_char_b
+’†S“_‚ğw’è‚µ‚È‚¢ê‡‚ÍcenterX‚Éunullv‚Æ‹Lq‚µAY‚Í”²‚©‚·
+#StageObject
+{
+}
+
 #ActionCircle
 {
 200	600	140

@@ -35,6 +35,13 @@ void CEnemyMng::draw()
 {
 	for (auto& enemy : enemies_)
 		enemy->draw();
+
+#ifdef _DEBUG
+	std::stringstream ss;
+	ss << enemies_.size() << " / " << enemyNum_;
+	font::Draw_FontTextNC(system::WINW - 200, system::WINH - 40, 0.f,
+		ss.str(), -1, 3);
+#endif
 }
 
 void CEnemyMng::kill()
@@ -189,6 +196,29 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 			}
 		}
 	}
+	//---------------------------------------
+	// ロボットアーム
+	if (common::FindChunk(common::SeekSet(f), "#RoboticArm"))
+	{
+		std::string label;
+		f >> label;
+		if (label == "{")
+		{
+			while (!f.eof())
+			{
+				float pos[2];	// [0]:x [1]:y
+				for (auto& p : pos)
+				{
+					f >> label;
+					// エラーチェック
+					if (label == "}" || f.eof()) break;
+					p = static_cast<float>(std::atof(label.c_str()));
+				}
+				if (label == "}") break;
+				enemies_.push_back(EnemyPtr(new CRoboticArm(pos[0], pos[1])));
+			}
+		}
+	}
 
 	enemyNum_ = enemies_.size();
 }
@@ -203,3 +233,10 @@ std::vector<EnemyPtr>& CEnemyMng::getEnemies()
 	return enemies_;
 }
 
+void CEnemyMng::ClearEnemies()
+{
+	for (auto& enemy : enemies_)
+		enemy->kill();
+	for (auto& t : temp_)
+		t->kill();
+}

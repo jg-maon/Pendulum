@@ -37,6 +37,12 @@ void ICharacter::sm(const std::shared_ptr<CStageMng>& sm)
 {
 	sm_ = sm;
 }
+
+void ICharacter::MoveObject()
+{
+	obj_.Move();
+}
+
 /*
 bool ICharacter::isUpdatable() const
 {

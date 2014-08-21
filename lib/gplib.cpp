@@ -3209,7 +3209,6 @@ void se::DSound_AllStop()
 void se::DSound_EndCheck()
 {
 	DWORD Status;
-	int a = 0;
 	for (auto& seObj : SeTable){
 		for(int j = 0 ; j < DSPLAYMAX ; j++){
 			if(seObj.second.se.PlayBuffer[j].State == DSPLAY){		//現在再生中の複製バッファ

@@ -54,6 +54,11 @@ public:
 		@return	なし
 	*/
 	void start() override;
+	/*
+		@brief	終了処理
+		@return	なし
+	*/
+	void stop() override;
 
 	/*
 		@brief	ステージマネージャーオブジェクトを取得

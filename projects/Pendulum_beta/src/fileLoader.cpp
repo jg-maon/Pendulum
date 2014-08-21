@@ -68,6 +68,33 @@ bool CFileLoader::LoadCharBase(std::ifstream& f, charabase::CharBase& cb)
 	return success;
 }
 
+bool CFileLoader::LoadInfoFunc(const std::string& from, std::ifstream& f, std::vector<CFileLoader::LoadValue>& loadValues)
+{
+	for (auto& lv : loadValues)
+	{
+		if (common::FindChunk(common::SeekSet(f), lv.tag))
+		{
+			if (lv.type == "int")
+				f >> *((int*)(lv).value);
+			else if (lv.type == "float")
+				f >> *((float*)(lv).value);
+			else if (lv.type == "string")
+				f >> *((std::string*)(lv).value);
+			else
+			{
+				debug::BToM("%s\n%s type error %s", from, lv.tag, lv.type);
+				return false;
+			}
+		}
+		else
+		{
+			debug::BToM("%s\n%s load error", from, lv.tag);
+			return false;
+		}
+	}
+	return true;
+}
+
 //=====================================================================================
 #pragma region リソースファイル読み込み
 void CFileLoader::LoadRes(const std::string& resFile, FontTable& fontTable)
@@ -183,33 +210,6 @@ void CFileLoader::LoadFont(ifstream& resF, FontTable& fontTable)
 
 #pragma endregion // リソースファイル読み込み
 //=====================================================================================
-
-bool CFileLoader::LoadInfoFunc(const std::string& from, std::ifstream& f, std::vector<CFileLoader::LoadValue>& loadValues)
-{
-	for (auto& lv : loadValues)
-	{
-		if (common::FindChunk(common::SeekSet(f), lv.tag))
-		{
-			if (lv.type == "int")
-				f >> *((int*)(lv).value);
-			else if (lv.type == "float")
-				f >> *((float*)(lv).value);
-			else if (lv.type == "string")
-				f >> *((std::string*)(lv).value);
-			else
-			{
-				debug::BToM("%s\n%s type error %s", from, lv.tag, lv.type);
-				return false;
-			}
-		}
-		else
-		{
-			debug::BToM("%s\n%s load error", from, lv.tag);
-			return false;
-		}
-	}
-	return true;
-}
 
 //=====================================================================================
 //=====================================================================================
@@ -652,7 +652,7 @@ bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyP
 	std::vector<LoadValue> loadValues = {
 		{ "#AttackRange", &(lf.attackRange), "float" },
 		{ "#AttackInterval", &(lf.attackInterval), "float" },
-		{ "#ParentImg", &(lf.parentResname), "float" },
+		{ "#ParentImg", &(lf.parentResname), "string" },
 		{ "#RotateSpeed", &(lf.rotateSpeed), "float" },
 		{ "#MaxAngle", &(lf.maxAngle), "float" },
 		{ "#MinAngle", &(lf.minAngle), "float" },
@@ -928,6 +928,15 @@ bool CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 		std::string buf;
 		f >> buf;
 		if (!LoadRaybit(buf, enemies))
+		{
+			return false;
+		}
+	}
+	if (FindChunk(SeekSet(f), "#RoboticArm"))
+	{
+		std::string buf;
+		f >> buf;
+		if (!LoadRoboticArm(buf, enemies))
 		{
 			return false;
 		}

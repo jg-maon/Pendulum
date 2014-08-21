@@ -90,6 +90,8 @@ private:
 
 	bool showCursor_;					// true:マウスカーソルの表示
 
+	bool isCursorSyncMouse_;			// マウスカーソル座標にカーソルを合わせるか
+
 	enum CursorSize
 	{
 		width = 64,
@@ -222,20 +224,35 @@ public:
 	void winRect(mymath::Recti* newRect);
 
 	/*
-		@brief	マウスカーソルの座標を取得
-		@return	マウスカーソル座標
+		@brief	カーソル同期フラグ設定
+		@param	[uin]	sync	同期フラグ
+		@return	なし
 	*/
-	const mymath::Vec3f& GetCursorPos() const;
+	void SetCursorSynchronicity(bool sync);
 
 	/*
-		@brief	マウスカーソルのスクリーン座標を取得
-		@return	マウスカーソルスクリーン内座標
+		@brief	カーソルの座標を取得
+		@return	カーソル座標
+	*/
+	const mymath::Vec3f& GetCursorPos() const;
+	
+	/*
+		@brief		カーソルの座標の設定
+		@attension	同期フラグも自動的に折られる
+		@param	[in]	pos	カーソル座標
+		@return	なし
+	*/
+	void SetCursorPos(const mymath::Vec3f& pos);
+
+	/*
+		@brief	カーソルのスクリーン座標を取得
+		@return	カーソルスクリーン内座標
 	*/
 	mymath::Vec3f GetCursorPosNC() const;
 
 	/*
-		@brief	マウスカーソルオブジェクトの取得
-		@return	マウスカーソルオブジェクト
+		@brief	カーソルオブジェクトの取得
+		@return	カーソルオブジェクト
 	*/
 	const Cursor& cursor() const;
 

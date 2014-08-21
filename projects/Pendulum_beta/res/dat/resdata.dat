@@ -24,6 +24,18 @@
 	img_logo			res/gra/title/logo.png			0xffffffff
 	img_titleSlash		res/gra/title/slash.png			0xffffffff
 
+	img_clearAnnounce00	res/gra/main/stages/demoStage/clearAnnounce.png		0xff000000
+
+	img_creditPG00		res/gra/title/credit/PG00.png	0x00000000
+	img_creditPG01		res/gra/title/credit/PG01.png	0x00000000
+	img_creditGFX00		res/gra/title/credit/GFX00.png	0x00000000
+	img_creditGFX01		res/gra/title/credit/GFX01.png	0x00000000
+	img_creditGFX02		res/gra/title/credit/GFX02.png	0x00000000
+	img_creditGFX03		res/gra/title/credit/GFX03.png	0x00000000
+	img_creditSND00		res/gra/title/credit/SND00.png	0x00000000
+	img_creditSND01		res/gra/title/credit/SND01.png	0x00000000
+
+
 	img_stageSelect		res/gra/stageSelect/bg.png		0xff00ff00
 	img_ss01			res/gra/stageSelect/stage01.png			0xff000000
 	img_stageDescription01	res/gra/stageSelect/stageDesc01.png	0xff00ff00
@@ -35,11 +47,15 @@
 	img_stageDescription04	res/gra/stageSelect/stageDesc04.png	0xff00ff00
 
 	img_stage01			res/gra/main/stages/stage01/bg.png					0xff000000
+	img_wood			res/gra/main/stages/stage01/wood.png				0x00000000
+	img_woodTop			res/gra/main/stages/stage01/wood_top.png			0x00000000
+	img_woodBottom		res/gra/main/stages/stage01/wood_bottom.png			0x00000000
 	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xff000000
 	img_actionCircle200	res/gra/main/stages/stage01/actionCircle_r200.png	0x00000000
 
 	img_player			res/gra/main/character/player/base.png				0xff00ff00
 	img_playerArm		res/gra/main/character/player/arm.png				0xffffffff
+	img_attackCircle	res/gra/main/character/player/attackCircle.png		0x00000000
 	img_chain			res/gra/main/character/player/chain.png				0x00000000
 	img_bird			res/gra/main/character/enemy/bird/bird.png			0xff000000
 	img_birdShot		res/gra/main/character/enemy/bird/birdShot.png		0xff000000

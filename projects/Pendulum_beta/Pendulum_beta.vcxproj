@@ -48,6 +48,7 @@
     <ClInclude Include="src\collision.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\define.h" />
+    <ClInclude Include="src\demoStage.h" />
     <ClInclude Include="src\easing.h" />
     <ClInclude Include="src\effectAfterImage.h" />
     <ClInclude Include="src\effectBase.hpp" />
@@ -74,6 +75,7 @@
     <ClInclude Include="src\raybit.h" />
     <ClInclude Include="src\roboticArm.h" />
     <ClInclude Include="src\sceneBase.hpp" />
+    <ClInclude Include="src\sceneDemoPlay.h" />
     <ClInclude Include="src\sceneDescription.h" />
     <ClInclude Include="src\sceneEnd.h" />
     <ClInclude Include="src\sceneJecLogo.h" />
@@ -114,6 +116,7 @@
     <ClCompile Include="src\charBase.cpp" />
     <ClCompile Include="src\collision.cpp" />
     <ClCompile Include="src\common.cpp" />
+    <ClCompile Include="src\demoStage.cpp" />
     <ClCompile Include="src\easing.cpp" />
     <ClCompile Include="src\effectAfterImage.cpp" />
     <ClCompile Include="src\effectExplosion.cpp" />
@@ -136,6 +139,7 @@
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\raybit.cpp" />
     <ClCompile Include="src\roboticArm.cpp" />
+    <ClCompile Include="src\sceneDemoPlay.cpp" />
     <ClCompile Include="src\sceneDescription.cpp" />
     <ClCompile Include="src\sceneEnd.cpp" />
     <ClCompile Include="src\sceneJecLogo.cpp" />
@@ -176,10 +180,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\dat\main\enemy\normal\raybit.dat" />
-    <None Include="res\dat\main\enemy\roboticArm\roboticArm.dat" />
+    <None Include="res\dat\main\enemy\normal\roboticArm.dat" />
+    <None Include="res\dat\main\enemy\table\demoTable.dat" />
     <None Include="res\dat\main\gameStatus.dat" />
     <None Include="res\dat\main\pickup\jewely.dat" />
     <None Include="res\dat\main\pickup\pickups.dat" />
+    <None Include="res\dat\main\stage\demoStage.dat" />
     <None Include="res\dat\path.ini" />
     <None Include="res\dat\resdata.dat" />
     <None Include="res\dat\result\rank.dat" />

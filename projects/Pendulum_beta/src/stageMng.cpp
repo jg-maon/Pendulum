@@ -2,6 +2,7 @@
 
 #include "define.h"
 
+#include "demoStage.h"
 #include "stage1.h"
 #include "stage2.h"
 #include "stage3.h"
@@ -35,6 +36,11 @@ void CStageMng::start()
 {
 	__super::start();
 	time_ = 0.f;
+}
+void CStageMng::stop()
+{
+	__super::stop();
+	stages_[nowStage_]->stop();
 }
 
 void CStageMng::step()
@@ -76,6 +82,24 @@ bool CStageMng::load()
 	}
 	stageF >> path;
 
+
+	if (FindChunk(SeekSet(stageF), "#DemoStage"))
+	{
+		std::string stage;
+		stageF >> stage;
+		stage = path + stage;		// ステージファイル名にパスを結合
+		ifstream f(stage);			// ステージファイル
+		if (f)
+			stages_.insert(StageMap::value_type("DemoStage", StagePtr(new CDemoStage(f))));
+		else
+			debug::BToMF("%s open error", stage.c_str());
+	}
+	else
+	{
+		debug::BToMF("#DemoStage not found");
+	}
+
+
 	for (int i = 1; i <= 4; ++i)
 	{
 		std::stringstream tag;
@@ -90,7 +114,7 @@ bool CStageMng::load()
 			ifstream f(stage);			// ステージファイル
 			if (f.fail())
 			{
-				debug::BToMF("CStageMng::CStageMng [%s] path:%s", tag.str().c_str(), stage.c_str());
+				debug::BToMF("[%s] path:%s", tag.str().c_str(), stage.c_str());
 				return false;
 			}
 			switch (i)
@@ -133,7 +157,7 @@ void CStageMng::LoadStage(const std::string& stageName)
 	ifstream stageF(stages);
 	if (stageF.fail())
 	{
-		debug::BToMF("CStageMng::Loadstage [stageF] path:%s", stages.c_str());
+		debug::BToMF("[stageF] path:%s", stages.c_str());
 		return;
 	}
 
@@ -141,7 +165,7 @@ void CStageMng::LoadStage(const std::string& stageName)
 	std::string path;		// ステージファイルパス
 	if (!FindChunk(stageF, "#StagePath"))
 	{
-		debug::BToMF("CStageMng::Loadstage #StagePath not found");
+		debug::BToMF("#StagePath not found");
 		return;
 	}
 	stageF >> path;
@@ -158,7 +182,7 @@ void CStageMng::LoadStage(const std::string& stageName)
 		ifstream f(stage);			// ステージファイル
 		if (f.fail())
 		{
-			debug::BToMF("CStageMng::LoadStage [%s] path:%s", tag.str().c_str(), stage.c_str());
+			debug::BToMF("file open error [%s] path:%s", tag.str().c_str(), stage.c_str());
 			return;
 		}
 		// ステージ初期化
@@ -166,7 +190,7 @@ void CStageMng::LoadStage(const std::string& stageName)
 	}
 	else
 	{
-		debug::BToMF("CStageMng::Loadstage %s not found", tag.str().c_str());
+		debug::BToMF("%s not found", tag.str().c_str());
 		return;
 	}
 

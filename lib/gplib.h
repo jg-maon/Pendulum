@@ -153,7 +153,7 @@
 #define	TToM Dbg_TilteToMessage
 #define	FToM Dbg_FileOut
 #define	BToM Dbg_BoxToMessage
-#define	BToMF(str, ...) Dbg_BoxToMessage("%s\n%s\n" ##str, __FILE__, __FUNCTION__, __VA_ARGS__)
+//#define	BToMF(str, ...) Dbg_BoxToMessage("%s\n%s\n" ##str, __FILE__, __FUNCTION__, __VA_ARGS__)
 #define	SToM Dbg_DisplayToMessage
 #define	SToMNC Dbg_DisplayToMessageNC
 #define	DFPS Draw_ShowFps
@@ -161,11 +161,13 @@
 #define	TToM Dbg_ReleaseDammy
 #define	FToM Dbg_ReleaseDammy
 #define	BToM Dbg_ReleaseDammy
-#define	BToMF Dbg_ReleaseDammy
+//#define	BToMF Dbg_ReleaseDammy
 #define	SToM Dbg_ReleaseDammy
 #define	SToMNC Dbg_ReleaseDammy
 #define	DFPS Dbg_ReleaseDammy
 #endif
+
+#define	BToMF(str, ...) Dbg_BoxToMessage("%s\n%s\n" ##str, __FILE__, __FUNCTION__, __VA_ARGS__)
 
 #define	TToMR	Dbg_TilteToMessage
 #define	FToMR	Dbg_FileOut
