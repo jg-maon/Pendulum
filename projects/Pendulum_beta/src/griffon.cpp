@@ -14,9 +14,9 @@
 
 void (CGriffon::*CGriffon::StateStep_[])() =
 {
+	&CGriffon::EntryStep,
 	&CGriffon::WaitStep,
 	&CGriffon::ChaseStep,
-	//&CGriffon::ReturnStep,
 	&CGriffon::DamageStep,
 	&CGriffon::AttackStep,
 	&CGriffon::DestroyStep,
@@ -27,6 +27,12 @@ IEnemy("E_Boss_Griffon")
 {
 	std::vector<int> move = { 0, 1, 2, 3, 2, 1 };
 	motionTable_.push_back(move);
+	std::vector<int> entry = { 0, 1, 2, 3, 2, 1, 0 };
+	motionTable_.push_back(entry);
+	std::vector<int> attack = { 0, 1, 2, 3 };
+	motionTable_.push_back(attack);
+	std::vector<int> fall = { 0, 1, 2, 3};
+	motionTable_.push_back(fall);
 	attack_ = AttackPtr(new CTackle());
 }
 
@@ -55,21 +61,29 @@ void CGriffon::init(const mymath::Vec3f& pos)
 	obj_.pos = pos;
 
 	startPos_ = obj_.pos;
-	endPos_ = obj_.pos;
-	backPos_ = obj_.pos;
+	endPos_   = obj_.pos;
+	backPos_  = obj_.pos;
+	actPos_   = obj_.pos;
+
+	obj_.pos.x += loadInfo_.entryWidth;
+	obj_.pos.y += loadInfo_.entryHeight;
 
 	elapsedTime_ = 0.f;
 	nextActTime_ = 0.f;
-	battleState_ = BattleState::WAIT;
+
+
+	roarFlag_ = false;
+
+	battleState_ = BattleState::ENTRY;
 	motionType_ = MotionType::MOVE;
-	motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, 0.3f);
+	motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.moveAnimSpeed);
 	obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
 
-	gravity_ = 0.f;
-	gravityF_ = false;
 
 	invincibleTime_ = 0.f;
 	invincibleAnim_ = 0.f;
+
+	fallTurnCount_ = 0.f;
 
 	health_ = loadInfo_.health;
 	power_ = loadInfo_.power;
@@ -80,10 +94,6 @@ void CGriffon::init(const mymath::Vec3f& pos)
 void CGriffon::step()
 {
 	ICharacter::step();
-
-	// ヒットストップ中はスキップ
-	if (!isUpdatable()) return;
-
 	elapsedTime_ += system::FrameTime;
 
 	// 無敵
@@ -91,7 +101,7 @@ void CGriffon::step()
 	{
 		// 点滅アニメ
 		invincibleAnim_ += system::ONEFRAME_TIME;
-		if (invincibleAnim_ >= loadInfo_.invincibleTime / 20.f)
+		if (invincibleAnim_ >= loadInfo_.INV_TIME / 20.f)
 		{
 			invincibleAnim_ = 0.f;
 			if (obj_.alpha > 200.f)
@@ -129,24 +139,32 @@ void CGriffon::step()
 			obj_.src.x = 0;
 			obj_.src.y = 0;
 			motionType_ = MotionType::MOVE;
-			motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, 0.3f);
+			motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.moveAnimSpeed);
 		}
 	}
 	else
 	{
 		obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
+		obj_.src.y = static_cast<int>(motionType_);
 	}
 
-	if (attack_ != nullptr)
-		attack_->step();
+	if (isAttack())
+	{
+		if (attack_ != nullptr)
+			attack_->step();
+	}
 
 	// プレイヤーを向く
-	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
+	if (!isBack() && !isAttack() &&
+		battleState_ != BattleState::DESTROY)
+	{
+		const mymath::Vec3f& plPos = gm()->GetPlayerPos();
 
-	if (obj_.pos.x < plPos.x && turnFlag_)
-		turnFlag_ ^= 1;
-	else if (obj_.pos.x > plPos.x && !turnFlag_)
-		turnFlag_ ^= 1;
+		if (obj_.pos.x < plPos.x && turnFlag_)
+			turnFlag_ ^= 1;
+		else if (obj_.pos.x > plPos.x && !turnFlag_)
+			turnFlag_ ^= 1;
+	}
 
 	(this->*StateStep_[static_cast<int>(battleState_)])();
 
@@ -161,8 +179,106 @@ void CGriffon::draw()
 	{
 		obj_.draw(charabase::CharBase::MODE::Center, turnFlag_);
 	}
+	
+#ifdef _DEBUG
+	static const std::string emply_string;
+	mymath::Recti rc = obj_.GetRect();
+
+	//rc.offset((int)obj_.pos.x, (int)obj_.pos.y);
+	std::stringstream ss;
+	ss << "pos("
+		<< std::setw(4) << (int)obj_.pos.x
+		<< ","
+		<< std::setw(4) << (int)obj_.pos.y
+		<< ")";
+	font::Draw_FontText(
+		rc.right, rc.top, 0.f,
+		ss.str(), 0xffff0000,
+		setting::GetFontID("font_MSG15"));
+
+	ss.str(emply_string);
+	const mymath::Vec3f& velocity = obj_.add;
+	ss << "add("
+		<< std::setw(4) << (int)velocity.x
+		<< ","
+		<< std::setw(4) << (int)velocity.y
+		<< ")";
+	font::Draw_FontText(
+		rc.right, rc.top + font::Draw_GetCharHeight(setting::GetFontID("font_MSG15")) * 1, 0.f,
+		ss.str(), 0xffff0000,
+		setting::GetFontID("font_MSG15"));
+
+	ss.str(emply_string);
+	ss << "backPos("
+		<< std::setw(4) << (int)backPos_.x
+		<< ","
+		<< std::setw(4) << (int)backPos_.y
+		<< ")";
+	font::Draw_FontText(
+		rc.right, rc.top + font::Draw_GetCharHeight(setting::GetFontID("font_MSG15")) * 2, 0.f,
+		ss.str(), 0xffff0000,
+		setting::GetFontID("font_MSG15"));
+
+	ss.str(emply_string);
+	ss << "endPos("
+		<< std::setw(4) << (int)endPos_.x
+		<< ","
+		<< std::setw(4) << (int)endPos_.y
+		<< ")";
+	font::Draw_FontText(
+		rc.right, rc.top + font::Draw_GetCharHeight(setting::GetFontID("font_MSG15")) * 3, 0.f,
+		ss.str(), 0xffff0000,
+		setting::GetFontID("font_MSG15"));
+
+
+#endif
 }
 
+void CGriffon::EntryStep()
+{
+	const mymath::Vec3f dist = actPos_ - obj_.pos;
+	const float allow = 3.f;	// 座標ずれの許容範囲
+	// 移動中
+	if (!roarFlag_)
+	{
+		if (abs(dist.x) <= allow)
+		{
+			obj_.pos.x = actPos_.x;
+			obj_.add = 0.f;
+			obj_.add.y = loadInfo_.MOVE_SPEED;
+		}
+		else
+		{
+			obj_.add.x = loadInfo_.MOVE_SPEED;
+			if (obj_.pos.x > actPos_.x)
+			{
+				obj_.add.x = -loadInfo_.MOVE_SPEED;
+			}
+		}
+		if (abs(dist.y) <= allow)
+		{
+			//咆哮始動
+			obj_.pos = actPos_;
+			obj_.add = 0.f;
+			roarFlag_ = true;
+			motionType_ = MotionType::ROAR;
+			motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.roarAnimSpeed);
+
+		}
+
+		obj_.Move();
+	}
+	// 咆哮中は何もしない
+	else
+	{
+		int max = motionTable_[static_cast<int>(motionType_)].size() - 1;
+		// 咆哮終了
+		if (motionAnim_.no > max -1)
+		{
+			battleState_ = BattleState::WAIT;
+		}
+	}
+}
 
 void CGriffon::WaitStep()
 {
@@ -172,89 +288,134 @@ void CGriffon::WaitStep()
 void CGriffon::ChaseStep()
 {
 	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
-	const mymath::Vec3f dist = plPos - obj_.pos;
-	float angle = std::atan2f(dist.y, dist.x);
-	obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.moveSpeed;
+	const float radian = mymath::Vec3f::Angle(obj_.pos, plPos);
+	obj_.add = mymath::Vec3f::Rotate(radian) * loadInfo_.MOVE_SPEED;
 	obj_.Move();
 }
 
-//void CGriffon::ReturnStep()
-//{
-//	mymath::Vec3f dist = startPos_ - obj_.pos;
-//
-//	if (mymath::PYTHA(dist.x, dist.y) > mymath::POW2(loadInfo_.returnRange))
-//	{
-//		float angle = std::atan2f(dist.y, dist.x);
-//		obj_.add = mymath::Vec3f::Rotate(angle) * loadInfo_.moveSpeed;
-//	}
-//	else
-//	{
-//		obj_.pos = startPos_;
-//		battleState_ = BattleState::WAIT;
-//	}
-//	obj_.Move();
-//}
-
 void CGriffon::DamageStep()
 {
-	if (nextActTime_ > elapsedTime_ + loadInfo_.damageTime)
+	if (elapsedTime_ > nextActTime_ + loadInfo_.damageTime)
 	{
-		battleState_ = BattleState::WAIT;
+		backFlag_ = false;
 		sway_ = 0;
+
+		battleState_ = BattleState::WAIT;
+		motionType_ = MotionType::MOVE;
+		motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.moveAnimSpeed);
 	}
+
 	sway_ = static_cast<float>((static_cast<int>(sway_ + 45) % 360));
 	// 横揺れ
-	obj_.add.x = std::cosf(math::Calc_DegreeToRad(sway_));
+	obj_.add.x = std::cosf(math::Calc_DegreeToRad(sway_)) * loadInfo_.swayRange;
+	obj_.add.y = 0.f;
 	obj_.Move();
 }
 
 void CGriffon::AttackStep()
 {
+	// 行動を起こす時間になったら後退開始
 	if (elapsedTime_ > nextActTime_)
 	{
-		// 攻撃
-		CreateAttack();
-		//battleState_ = BattleState::WAIT;
+		actPos_ = obj_.pos;
+		const mymath::Vec3f& plpos = gm()->GetPlayerPos();
+		// グリフォンとプレーヤーとの角度
+		float radian = mymath::Vec3f::Angle(obj_.pos, plpos);
+		//obj_.angle = angle;
+
+		// バック距離
+		obj_.add = mymath::Vec3f::Rotate(radian) * -loadInfo_.MOVE_SPEED;
+
 		nextActTime_ = elapsedTime_ + loadInfo_.attackInterval;		// 連続間隔
-	}
+		backFlag_ = true;
 
-	if (isBack_)
+		motionType_ = MotionType::ATTACK;
+		motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.backAnimSpeed);
+	}
+	// 後退中なら
+	if (isBack())
 	{
-		if (obj_.pos.x < backPos_.x && obj_.pos.y < backPos_.y)
+		mymath::Vec3f dist = obj_.pos - actPos_;
+		float length = dist.Length2();
+
+		if (motionTable_[static_cast<int>(motionType_)][motionAnim_.no] == 2)
 		{
-			obj_.add = backPos_.Normalize2() * loadInfo_.moveSpeed;
-			obj_.Move();
+			motionAnim_.stop();
+		}
+
+		// 後退したら突進開始
+		if (length > loadInfo_.backDist)
+		{
+			// アニメーションの修正
+			if (motionAnim_.isStoped())
+			{
+				motionAnim_.no++;
+			}
+			else
+			{
+				motionAnim_.no = motionTable_[static_cast<int>(motionType_)].size() - 1;
+				motionAnim_.stop();
+			}
+
+			backFlag_ = false;
+			attackFlag_ = true;
+			const mymath::Vec3f& plpos = gm()->GetPlayerPos();
+			endPos_ = plpos;
+			dist = obj_.pos - endPos_;
+			float radian = mymath::Vec3f::Angle(obj_.pos, endPos_);
+			obj_.add = mymath::Vec3f::Rotate(radian) * loadInfo_.ATTACK_SPEED;
 		}
 		else
 		{
-			isBack_ = false;
-			isAttacking_ = true;
+			obj_.Move();
+
+			if (length > loadInfo_.attackDist)
+			{
+				obj_.add.x = 0.f;
+				obj_.add.y = 0.f;
+				battleState_ = BattleState::WAIT;
+			}
 		}
 	}
-
-	if (isAttacking_)
+	// 突進中なら
+	if (isAttack())
 	{
-		if (obj_.pos.x < endPos_.x && obj_.pos.y < endPos_.y)
+		mymath::Vec3f dist = obj_.pos - actPos_;
+		float length = dist.Length2();
+		
+		if (length > loadInfo_.attackDist)
 		{
-			obj_.add = endPos_.Normalize2() * loadInfo_.attackSpeed;
-			obj_.Move();
-		}
-		else
-		{
-			isAttacking_ = false;
+			attackFlag_ = false;
 			battleState_ = BattleState::WAIT;
+			motionAnim_.start();
+			nextActTime_ = elapsedTime_ + loadInfo_.attackInterval;
+		}
+		else
+		{
+			obj_.Move();
 		}
 	}
 }
 
 void CGriffon::DestroyStep()
 {
-	// 0.5秒
-	obj_.alpha -= 255.f / 0.5f * system::FrameTime;
-	if (obj_.alpha < 0.f)
+	if (elapsedTime_ > nextActTime_)
 	{
-		obj_.alpha = 0.f;
-		battleState_ = BattleState::WAIT;
+		fallTurnCount_++;
+		if (fallTurnCount_ > loadInfo_.fallTurnSpeed)
+		{
+			fallTurnCount_ = 0.f;
+			turnFlag_ ^= 1;
+		}
+		obj_.add.x = 0.f;
+		obj_.add.y = loadInfo_.fallSpeed;
+		obj_.Move();
+		motionAnim_.stop();
+		
+	}
+	// カメラの外に出たら
+	if (obj_.pos.y + obj_.HalfHeight() > sm()->getCameraRect().bottom)
+	{
 		kill();
 	}
 }
@@ -267,37 +428,43 @@ void CGriffon::DecideState()
 		return;
 	}
 
+	if (battleState_ == BattleState::DAMAGE)
+	{
+		return;
+	}
+
+	if (battleState_ == BattleState::ENTRY)
+	{
+		return;
+	}
+
 	const mymath::Vec3f& plPos = gm()->GetPlayerPos();
 	// プレイヤーとの距離ベクトル e -> p
 	mymath::Vec3f Vdist = plPos - obj_.pos;
-	const float plyDist = mymath::PYTHA(Vdist.x, Vdist.y);
-	// 初期位置からのベクトル start -> now
-	Vdist = obj_.pos - startPos_;
-	const float staDist = mymath::PYTHA(Vdist.x, Vdist.y);
-	if (plyDist < mymath::POW2(loadInfo_.attackRange)
+	// プレイヤーとの直線距離
+	const float plyDist = Vdist.Length2();
+
+	// 攻撃範囲内か？
+	if (plyDist < loadInfo_.ATTACK_RANGE
 		|| battleState_ == BattleState::ATTACK)
 	{
 		// 攻撃中
 		battleState_ = BattleState::ATTACK;
 	}
-	else if (plyDist < mymath::POW2(loadInfo_.searchRange))
+	else if (plyDist < loadInfo_.SEARCH_RANGE)
 	{
 		// 攻撃範囲外 索敵範囲内
-		if (plyDist < mymath::POW2(loadInfo_.chaseRange))
+		if (plyDist < loadInfo_.CHASE_RANGE)
 		{
 			// 追跡可能範囲内
 			battleState_ = BattleState::CHASE;
 		}
 		else
 		{
-			battleState_ = BattleState::ATTACK;
+			//battleState_ = BattleState::ATTACK;
+			battleState_ = BattleState::CHASE;
 		}
 	}
-	//else if (staDist > mymath::POW2(loadInfo_.returnRange))
-	//{
-	//	// 索敵範囲外
-	//	battleState_ = BattleState::RETURN;
-	//}
 	else
 	{
 		// 保険(各行動の最後にはWAITに戻してるはず)
@@ -307,30 +474,9 @@ void CGriffon::DecideState()
 
 void CGriffon::CreateAttack()
 {
-	const mymath::Vec3f& mypos = obj_.pos;
-	const mymath::Vec3f& plpos = gm()->GetPlayerPos();
-	const mymath::Vec3f vec = plpos - mypos;
-	const float angle = std::atan2f(-vec.y, vec.x);
-	const float c = std::cosf(angle);
-	const float s = std::sinf(angle);
-
-	//obj_.add.y = loadInfo_.attackSpeed * -s;
-	//obj_.add.z = 0.f;
-	//obj_.add.x = loadInfo_.attackSpeed *  c;
-
-	// バック距離
-	backPos_.x = -(loadInfo_.backDist * c) + obj_.pos.x;
-	backPos_.y = -(loadInfo_.backDist *-s) + obj_.pos.y;
-	backPos_.z = 0.f;
-	// 移動終点距離
-	endPos_.x = (loadInfo_.tackleDist * c) + obj_.pos.x;
-	endPos_.y = (loadInfo_.tackleDist *-s) + obj_.pos.y;
-	endPos_.z = 0.f;
-
-	isBack_ = true;
-
+	//std::dynamic_pointer_cast<CTackle>(attack_)->CreateAttack(backPos_, endPos_,
+	//	loadInfo_.ATTACK_SPEED, loadInfo_.power);
 }
-
 
 bool CGriffon::isInvincible() const
 {
@@ -340,10 +486,8 @@ bool CGriffon::isInvincible() const
 void CGriffon::hit(const ObjPtr& rival)
 {
 	// Polygon
-	__super::hit(rival);
+	//__super::hit(rival);
 }
-
-
 
 bool CGriffon::ApplyDamage(int dam)
 {
@@ -354,30 +498,45 @@ bool CGriffon::ApplyDamage(int dam)
 	if (isInvincible()) return false;
 
 	health_ -= dam;
+
 	// ひるみ処理
-	battleState_ = BattleState::DAMAGE;
+	// 攻撃中は揺れない
+	if (!isAttack())
+	{
+		battleState_ = BattleState::DAMAGE;
+		nextActTime_ = elapsedTime_ + loadInfo_.damageTime;
+		motionType_ = MotionType::FALL;
+		motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, 0.f);
+		motionAnim_.stop();
 
-	invincibleTime_ = loadInfo_.invincibleTime;
+	}
 
-	nextActTime_ = elapsedTime_ + loadInfo_.damageTime;
+	invincibleTime_ = loadInfo_.INV_TIME;
 
 	if (health_ <= 0)
 	{
 		battleState_ = BattleState::DESTROY;
+		motionType_ = MotionType::FALL;
+		motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.fallTime);
+		nextActTime_ = elapsedTime_ + loadInfo_.fallTime;
 		return true;
 	}
-	//
-	//// 爆散エフェクト
-	//InsertObject(ObjPtr(new CEffectExplosion(obj_.pos)));
-	//// SE
-	//DSound_Play(SE::EXPLODE);
 
 	return false;
 }
 
+
 bool CGriffon::isAttacking() const
 {
-	return isAttacking_;
+	return attackFlag_;
+}
+bool CGriffon::isAttack() const
+{
+	return attackFlag_;
+}
+bool CGriffon::isBack() const
+{
+	return backFlag_;
 }
 
 Base::Collisions CGriffon::GetDamageAreas() const

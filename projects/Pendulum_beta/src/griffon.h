@@ -10,42 +10,43 @@ class CGriffon : public IEnemy
 public:
 	struct LoadInfo
 	{
-		float MAX_G;			// 最大重力速度
-		float GRAVITY_ACC;		// 重力加速度
-		float searchRange;		// 索敵範囲(現在座標からどれだけ策敵するか)
-		float chaseRange;		// 追跡範囲(初期座標からどれだけ追跡するか)
-		float attackRange;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
-		//float returnRange;		// 帰還時最小範囲(この範囲内なら初期位置に戻ったとみなす)
-	
-		float moveSpeed;		// 移動速度
-		float attackSpeed;		// 攻撃時移動速度
+		float SEARCH_RANGE;		// 索敵範囲(現在座標からどれだけ策敵するか)
+		float CHASE_RANGE;		// 追跡範囲(初期座標からどれだけ追跡するか)
+		float ATTACK_RANGE;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
 
-		float invincibleTime;			// 無敵時間
+		float MOVE_SPEED;		// 移動速度
+		float ATTACK_SPEED;		// 攻撃時移動速度
+
+		float INV_TIME;			// 無敵時間
 
 		float backDist;				// バック距離
+		float backTime;				// バック距離に到達するまでの時間
 		float damageTime;			// 怯み時間
-		float tackleDist;			// 攻撃距離
+		float attackDist;			// 攻撃距離
 		float attackInterval;		// 攻撃間隔
+		float swayRange;			// 揺れる範囲
+		float fallTime;				// 落ちだす時間
+		float fallSpeed;			// 落ちる速度
+		float fallTurnSpeed;		// 落下中に回転させるためのスピード
 
+		float entryWidth;			// init の pos を終着点として
+		float entryHeight;			// そこから離れる 幅　高さ
 
-		int health;				// 初期HP
-		int power;				// 初期攻撃力
+		int health;					// 初期HP
+		int power;					// 初期攻撃力
 
-
+		float roarAnimSpeed;		// 咆哮アニメーションのスピード
+		float moveAnimSpeed;		// 飛行アニメーションのスピード
+		float backAnimSpeed;		// 後退アニメーションのスピード
 	};
 private:
 
-	enum class AnimState
-	{
-		FALL,				// 下降
-		ROAR,				// 咆哮
-	};
 
 	enum class BattleState
 	{
+		ENTRY,				// 登場
 		WAIT,				// 待機
 		CHASE,				// 追跡
-		//RETURN,				// 帰還
 		DAMAGE,				// ダメージ(怯み)
 		ATTACK,				// 攻撃
 		DESTROY,			// 死亡アニメ
@@ -55,6 +56,8 @@ private:
 	{
 		MOVE,				// 待機・移動
 		ATTACK,				// 攻撃
+		ROAR,				// 咆哮
+		FALL,				// 落下
 	};
 private:
 
@@ -62,7 +65,7 @@ private:
 
 	LoadInfo loadInfo_;
 
-	AnimState animState_;						// アニメーションの状態
+	//AnimState animState_;						// アニメーションの状態
 	BattleState battleState_;					// 行動状態
 
 	charabase::Anim motionAnim_;					// アニメーション
@@ -73,22 +76,23 @@ private:
 	float elapsedTime_;					// 経過時間
 	float nextActTime_;					// 次に行動を起こす時間
 
-	float gravity_;						// 重力
-	bool gravityF_;						// 重力処理をするか(死んで落ちていくときの処理用)
-
-	bool isBack_;						// 後退中か
-	bool isAttacking_;					// 攻撃中か
+	bool backFlag_;						// 後退中か
+	bool attackFlag_;					// 攻撃中か
 
 	float invincibleTime_;				// 無敵時間
 	float invincibleAnim_;				// 無敵点滅アニメーション時間
 
 	float sway_;						// 揺れ
 
+	bool roarFlag_;						// 咆哮中 (true)
+
+	float fallTurnCount_;				// 落下中に回転させるためのカウンタ
 	
 	mymath::Vec3f startPos_;			// 初期座標(追跡後元に戻る場所)
 	
 	mymath::Vec3f endPos_;				// 攻撃時の移動終点座標
 	mymath::Vec3f backPos_;				// 攻撃時のバック終点座標
+	mymath::Vec3f actPos_;				// 攻撃始動位置
 public:
 
 private:
@@ -101,6 +105,11 @@ private:
 	void init(const mymath::Vec3f& pos);
 
 	/*
+	@brief	登場
+	@return	なし
+	*/
+	void EntryStep();
+	/*
 		@brief	待機
 		@return	なし
 	*/
@@ -110,11 +119,6 @@ private:
 		@return	なし
 	*/
 	void ChaseStep();
-	/*
-		@brief	帰還
-		@return	なし
-	*/
-	//void ReturnStep();
 	/*
 		@brief	怯み
 		@return	なし
@@ -170,9 +174,9 @@ public:
 		@brief	座標指定したオブジェクト生成
 		@param	[in]	x	X座標
 		@param	[in]	y	Y座標
-		@param	[in]	z	奥行き(デフォルト:0.7f)
+		@param	[in]	z	奥行き(デフォルト:0.6f)
 	*/
-	CGriffon(float x, float y, float z = 0.7f);
+	CGriffon(float x, float y, float z = 0.6f);
 	~CGriffon();
 	/*
 		@brief	更新処理
@@ -203,13 +207,28 @@ public:
 	virtual bool ApplyDamage(int dam) override;
 
 	/*
-		@brief	攻撃待機中フラグの取得
-		@return	攻撃待機中フラグ
-		@retval	true	攻撃待機中
-		@retval	false	攻撃待機中でない
+	@brief	攻撃待機中フラグの取得
+	@return	攻撃待機中フラグ
+	@retval	true	攻撃待機中
+	@retval	false	攻撃待機中でない
 	*/
 	bool isAttacking() const;
 
+	/*
+		@brief	攻撃中フラグの取得
+		@return	攻撃中フラグ
+		@retval	true	攻撃中
+		@retval	false	攻撃中でない
+	*/
+	bool isAttack() const;
+
+	/*
+	@brief	攻撃準備中フラグの取得
+	@return	攻撃準備中フラグ
+	@retval	true	攻撃準備中
+	@retval	false	攻撃準備中でない
+	*/
+	bool isBack() const;
 
 	/*
 		@brief	当たり判定領域の取得
