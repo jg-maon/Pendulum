@@ -17,10 +17,9 @@ class CTackle : public IAttack
 public:
 	/*
 		@brief	初期化
-		@param	[in]	tackle			タックルの情報
-		@param	[in]	acceleration	加速度
+		@param	[in]	force	攻撃力
 	*/
-	CTackle();
+	CTackle(int force);
 
 	/*
 		@brief	更新処理

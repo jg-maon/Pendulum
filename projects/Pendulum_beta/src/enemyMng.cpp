@@ -235,8 +235,6 @@ std::vector<EnemyPtr>& CEnemyMng::getEnemies()
 
 void CEnemyMng::ClearEnemies()
 {
-	for (auto& enemy : enemies_)
-		enemy->kill();
-	for (auto& t : temp_)
-		t->kill();
+	enemies_.clear();
+	temp_.clear();
 }

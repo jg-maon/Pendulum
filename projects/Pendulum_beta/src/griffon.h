@@ -10,14 +10,14 @@ class CGriffon : public IEnemy
 public:
 	struct LoadInfo
 	{
-		float SEARCH_RANGE;		// 索敵範囲(現在座標からどれだけ策敵するか)
-		float CHASE_RANGE;		// 追跡範囲(初期座標からどれだけ追跡するか)
-		float ATTACK_RANGE;		// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
+		float searchRange;			// 索敵範囲(現在座標からどれだけ策敵するか)
+		float chaseRange;			// 追跡範囲(初期座標からどれだけ追跡するか)
+		float attackRange;			// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
+		
+		float moveSpeed;			// 移動速度
+		float attackSpeed;			// 攻撃時移動速度
 
-		float MOVE_SPEED;		// 移動速度
-		float ATTACK_SPEED;		// 攻撃時移動速度
-
-		float INV_TIME;			// 無敵時間
+		float invincibleTime;		// 無敵時間
 
 		float backDist;				// バック距離
 		float backTime;				// バック距離に到達するまでの時間
@@ -27,10 +27,10 @@ public:
 		float swayRange;			// 揺れる範囲
 		float fallTime;				// 落ちだす時間
 		float fallSpeed;			// 落ちる速度
-		float fallTurnSpeed;		// 落下中に回転させるためのスピード
+		int fallTurnSpeed;			// 落下中に回転させるためのスピード
 
-		float entryWidth;			// init の pos を終着点として
-		float entryHeight;			// そこから離れる 幅　高さ
+		float entryWidth;			// init の pos を終着点としてそこから離れる 幅
+		float entryHeight;			// init の pos を終着点としてそこから離れる 高さ
 
 		int health;					// 初期HP
 		int power;					// 初期攻撃力
@@ -65,7 +65,6 @@ private:
 
 	LoadInfo loadInfo_;
 
-	//AnimState animState_;						// アニメーションの状態
 	BattleState battleState_;					// 行動状態
 
 	charabase::Anim motionAnim_;					// アニメーション
@@ -76,17 +75,17 @@ private:
 	float elapsedTime_;					// 経過時間
 	float nextActTime_;					// 次に行動を起こす時間
 
-	bool backFlag_;						// 後退中か
-	bool attackFlag_;					// 攻撃中か
+	bool isBacking_;						// 後退中か
+	bool isAttacking_;					// 攻撃中か
 
 	float invincibleTime_;				// 無敵時間
 	float invincibleAnim_;				// 無敵点滅アニメーション時間
 
 	float sway_;						// 揺れ
 
-	bool roarFlag_;						// 咆哮中 (true)
+	bool isRoaring_;						// 咆哮中 (true)
 
-	float fallTurnCount_;				// 落下中に回転させるためのカウンタ
+	int fallTurnCount_;				// 落下中に回転させるためのカウンタ
 	
 	mymath::Vec3f startPos_;			// 初期座標(追跡後元に戻る場所)
 	
@@ -105,8 +104,8 @@ private:
 	void init(const mymath::Vec3f& pos);
 
 	/*
-	@brief	登場
-	@return	なし
+		@brief	登場
+		@return	なし
 	*/
 	void EntryStep();
 	/*
@@ -144,12 +143,6 @@ private:
 	*/
 	void DecideState();
 
-	/*
-		@brief	攻撃の発生処理
-		@return	なし
-	*/
-	void CreateAttack();
-
 
 	/*
 		@brief	無敵中か取得
@@ -174,9 +167,9 @@ public:
 		@brief	座標指定したオブジェクト生成
 		@param	[in]	x	X座標
 		@param	[in]	y	Y座標
-		@param	[in]	z	奥行き(デフォルト:0.6f)
+		@param	[in]	z	奥行き(デフォルト:0.7f)
 	*/
-	CGriffon(float x, float y, float z = 0.6f);
+	CGriffon(float x, float y, float z = 0.7f);
 	~CGriffon();
 	/*
 		@brief	更新処理
@@ -207,28 +200,20 @@ public:
 	virtual bool ApplyDamage(int dam) override;
 
 	/*
-	@brief	攻撃待機中フラグの取得
-	@return	攻撃待機中フラグ
-	@retval	true	攻撃待機中
-	@retval	false	攻撃待機中でない
-	*/
-	bool isAttacking() const;
-
-	/*
 		@brief	攻撃中フラグの取得
 		@return	攻撃中フラグ
 		@retval	true	攻撃中
 		@retval	false	攻撃中でない
 	*/
-	bool isAttack() const;
+	bool isAttacking() const;
 
 	/*
-	@brief	攻撃準備中フラグの取得
-	@return	攻撃準備中フラグ
-	@retval	true	攻撃準備中
-	@retval	false	攻撃準備中でない
+		@brief	攻撃準備中フラグの取得
+		@return	攻撃準備中フラグ
+		@retval	true	攻撃準備中
+		@retval	false	攻撃準備中でない
 	*/
-	bool isBack() const;
+	bool isBacking() const;
 
 	/*
 		@brief	当たり判定領域の取得

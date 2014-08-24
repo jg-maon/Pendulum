@@ -10,7 +10,7 @@ class CPickupJewely : public IPickup
 private:
 	enum
 	{
-		UNIT_SCORE = 300,
+		UNIT_SCORE = 500,
 	};
 	int score_;					// ˆêŒÂ‚ ‚½‚è‚ÌƒXƒRƒA
 

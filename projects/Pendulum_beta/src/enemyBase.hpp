@@ -160,7 +160,9 @@ public:
 			if (buf != "{") return false;
 			else
 			{
-				attack_ = AttackPtr(new CTackle());
+				int force;
+				f >> force;
+				attack_ = AttackPtr(new CTackle(force));
 			}
 		}
 		else if (buf == "ArmAttack")

@@ -17,6 +17,12 @@ using namespace gplib;
 
 #include "fileLoader.h"
 
+std::ifstream& operator>>(std::ifstream& f, mymath::Vec3f& v)
+{
+	f >> v.x >> v.y >> v.z;
+	return f;
+}
+
 
 CFileLoader::CFileLoader(const std::string& iniFile) :
 iniFile_(iniFile)
@@ -441,8 +447,19 @@ bool CFileLoader::LoadGriffon(const std::string& fileName, std::vector<EnemyPtr>
 		{ "#AttackSpeed", &(lf.attackSpeed), "float" },
 		{ "#InvincibleTime", &(lf.invincibleTime), "float" },
 		{ "#DamageTime", &(lf.damageTime), "float" },
-		{ "#AttackDist", &(lf.tackleDist), "float" },
+		{ "#AttackDist", &(lf.attackDist), "float" },
+		{ "#AttackSpeed", &(lf.attackSpeed), "float" },
+		{ "#BackDist", &(lf.backDist), "float" },
 		{ "#AttackInterval", &(lf.attackInterval), "float" },
+		{ "#SwayRange", &(lf.swayRange), "float" },
+		{ "#FallTime", &(lf.fallTime), "float" },
+		{ "#FallSpeed", &(lf.fallSpeed), "float" },
+		{ "#FallTurnSpeed", &(lf.fallTurnSpeed), "int" },
+		{ "#EntryWidth", &(lf.entryWidth), "float" },
+		{ "#EntryHeight", &(lf.entryHeight), "float" },
+		{ "#RoarAnimSpeed", &(lf.roarAnimSpeed), "float" },
+		{ "#moveAnimSpeed", &(lf.moveAnimSpeed), "float" },
+		{ "#backAnimSpeed", &(lf.backAnimSpeed), "float" },
 		{ "#Health", &(lf.health), "int" },
 		{ "#Power", &(lf.power), "int" },
 	};

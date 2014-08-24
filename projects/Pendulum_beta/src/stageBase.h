@@ -226,6 +226,14 @@ public:
 	*/
 	bool isEndStage() const;
 
+	/*
+		@brief	ボスステージか
+		@return	ボスステージか
+		@retval	true	ボスステージ
+		@retval	false	ボスステージでない
+	*/
+	bool isBossStage() const;
+
 	//=====================================================================
 
 	

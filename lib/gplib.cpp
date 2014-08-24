@@ -2662,7 +2662,7 @@ int system::DoWindow(HINSTANCE hInstance,HINSTANCE hPreInst,LPSTR lpszCmdLine,in
 		// 画面中央にウィンドウ生成
 		HWND hDesktopWnd = GetDesktopWindow();
 		RECT deskrc;
-		GetWindowRect(hDesktopWnd, (LPRECT)&deskrc);
+		GetWindowRect(hDesktopWnd, &deskrc);
 		x = (deskrc.right - (rc.right - rc.left)) / 2;
 		y = (deskrc.bottom - (rc.bottom - rc.top)) / 2;
 	}
@@ -3465,6 +3465,7 @@ void se::DSound_SetVolume(const std::string& resname, int Vol)
 //--------------------------------------------------------------------------------------------
 void se::DSound_SetVolume(const std::string& resname, int index, long Vol)
 {
+	if (index < 0 || DSPLAYMAX <= index) return;
 	auto& se = SeTable.at(resname).se;
 
 	// 0から-10000で設定 0が最大　-10000は無音
@@ -3485,6 +3486,7 @@ void se::DSound_SetVolume(const std::string& resname, int index, long Vol)
 //--------------------------------------------------------------------------------------------
 void se::DSound_SetPan(const std::string& resname, int index, long lPan)
 {
+	if (index < 0 || DSPLAYMAX <= index) return;
 	auto& se = SeTable.at(resname).se;
 	
 	long pan = lPan;

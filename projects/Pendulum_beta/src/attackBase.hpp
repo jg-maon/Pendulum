@@ -34,6 +34,13 @@ public:
 	*/
 	virtual int GetForce() const{return force_;}
 
+	/*
+		@brief	ˆĞ—Í‚Ìİ’è(“G‘¤‚©‚çİ’è‚·‚éê‡)
+		@param	[in]	force	ˆĞ—Í(UŒ‚—ÍA‰ñ•œ—Í‚È‚Ç)
+		@return	‚È‚µ
+	*/
+	void setForce(int force){ force_ = force; }
+
 };
 typedef std::shared_ptr<IAttack> AttackPtr;
 

@@ -150,7 +150,7 @@ bool CStageMng::load()
 
 void CStageMng::LoadStage(const std::string& stageName)
 {
-	stageState_ = StageState::ENTER;
+	stageState_ = StageState::PLAYER_ENTER;
 	nowStage_ = stageName;
 
 	std::string stages = gm()->fm()->GetPath("#StageFile");
@@ -227,20 +227,40 @@ bool CStageMng::isEndStage() const
 	return stages_.at(nowStage_)->isEndStage();
 }
 
+bool CStageMng::isBossStage() const
+{
+	return stages_.at(nowStage_)->isBossStage();
+}
 
 void CStageMng::setStageState(CStageMng::StageState state)
 {
 	stageState_ = state;
 }
 
-bool CStageMng::isEnterAnimating() const
+
+bool CStageMng::isClearAnnounceAnimating() const
 {
-	return stageState_ == StageState::ENTER;
+	return stageState_ == StageState::CLEAR_ANNOUNCE;
 }
 
-bool CStageMng::isExitAnimating() const
+bool CStageMng::isPlayerEnterAnimating() const
 {
-	return stageState_ == StageState::EXIT;
+	return stageState_ == StageState::PLAYER_ENTER;
+}
+
+bool CStageMng::isPlayerExitAnimating() const
+{
+	return stageState_ == StageState::PLAYER_EXIT;
+}
+
+bool CStageMng::isBossEnterAnimating() const
+{
+	return stageState_ == StageState::BOSS_ENTER;
+}
+
+bool CStageMng::isBossExitAnimating() const
+{
+	return stageState_ == StageState::BOSS_EXIT;
 }
 
 bool CStageMng::isNormaTimeClear() const

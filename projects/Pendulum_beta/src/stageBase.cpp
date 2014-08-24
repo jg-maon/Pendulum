@@ -25,21 +25,13 @@ void IStage::step()
 	switch (phase_)
 	{
 	case IStage::Phase::CLEAR_ANNOUNCE:
+		if (!gm()->stageMng()->isClearAnnounceAnimating())
+			break;
 		if (UpdateClearAnnounce())
 		{
 			phase_ = IStage::Phase::NORMAL;
+			gm()->stageMng()->setStageState(CStageMng::StageState::BATTLE);
 		}
-		/*
-		switch (clearType_)
-		{
-		case IStage::ClearType::GOAL:
-		break;
-		case IStage::ClearType::ANNIHILATION:
-		break;
-		default:
-		break;
-		}
-		//*/
 		break;
 	case IStage::Phase::NORMAL:
 		for (auto& ap : stage_[0].actionPoints)
@@ -48,6 +40,7 @@ void IStage::step()
 		{
 			nextPhase_ = IStage::Phase::BOSS;
 			phase_ = IStage::Phase::FADE_OUT;
+			gm()->stageMng()->setStageState(CStageMng::StageState::PLAYER_ENTER);
 			CFade::ChangeColor(0xff000000);
 			CFade::StartFadeOut();
 		}
@@ -130,7 +123,13 @@ bool IStage::isEndStage() const
 	return phase_ == Phase::RESULT && isBossKilled_;
 }
 
-bool IStage::isNormaTimeClear(float elapsedTime) const
+bool IStage::isBossStage() const
+{
+	return phase_ == Phase::BOSS || phase_ == Phase::RESULT;
+}
+
+
+inline bool IStage::isNormaTimeClear(float elapsedTime) const
 {
 	return elapsedTime < normaTime_;
 }

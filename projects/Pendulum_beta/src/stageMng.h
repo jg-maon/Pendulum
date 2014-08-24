@@ -19,9 +19,12 @@ class CStageMng : public Base
 public:
 	enum class StageState		// ステージのアニメーション状態
 	{
-		ENTER,			// 登場アニメーション中
-		BATTLE,			// 戦闘中
-		EXIT,			// 退場アニメーション中
+		PLAYER_ENTER,			// プレイヤー登場アニメーション中
+		CLEAR_ANNOUNCE,			// クリア条件表示中
+		BATTLE,					// 戦闘中
+		PLAYER_EXIT,			// プレイヤー退場アニメーション中
+		BOSS_ENTER,				// ボス登場アニメーション中
+		BOSS_EXIT,				// ボス退場アニメーション中
 	};
 private:
 	
@@ -100,6 +103,14 @@ public:
 		@retval	false	ステージプレイ継続
 	*/
 	bool isEndStage() const;
+	
+	/*
+		@brief	ボスステージか
+		@return	ボスステージか
+		@retval	true	ボスステージ
+		@retval	false	ボスステージでない
+	*/
+	bool isBossStage() const;
 
 	
 
@@ -111,20 +122,44 @@ public:
 	void setStageState(StageState state);
 
 	/*
-		@brief	登場アニメーション中か
+		@brief	クリア条件表示アニメーション中か
 		@return	アニメーション中フラグ
 		@retval	true	アニメーション中
 		@retval	false	アニメーション中ではない
 	*/
-	bool isEnterAnimating() const;
+	bool isClearAnnounceAnimating() const;
 	
 	/*
-		@brief	退場アニメーション中か
+		@brief	プレイヤー登場アニメーション中か
 		@return	アニメーション中フラグ
 		@retval	true	アニメーション中
 		@retval	false	アニメーション中ではない
 	*/
-	bool isExitAnimating() const;
+	bool isPlayerEnterAnimating() const;
+		
+	/*
+		@brief	プレイヤー退場アニメーション中か
+		@return	アニメーション中フラグ
+		@retval	true	アニメーション中
+		@retval	false	アニメーション中ではない
+	*/
+	bool isPlayerExitAnimating() const;
+	
+	/*
+		@brief	ボス登場アニメーション中か
+		@return	アニメーション中フラグ
+		@retval	true	アニメーション中
+		@retval	false	アニメーション中ではない
+	*/
+	bool isBossEnterAnimating() const;
+	/*
+		@brief	ボス退場アニメーション中か
+		@return	アニメーション中フラグ
+		@retval	true	アニメーション中
+		@retval	false	アニメーション中ではない
+	*/
+	bool isBossExitAnimating() const;
+
 
 	//=====================================================================
 

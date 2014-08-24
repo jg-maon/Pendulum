@@ -35,15 +35,29 @@ void CStage1::step()
 	// フェードインからフェードアウトに変わった瞬間
 	if (f && phase_ == Phase::FADE_IN)
 	{
+		//---------------------------------
 		// ボスステージをロードする前に雑魚ステージでのボーナススコア計算
 		auto& sm = gm()->scoreMng();
 		auto& em = gm()->enemyMng();
 		sm->CalcBonusScore(em);
-		std::ifstream bossF(bossFile_);
-		__super::init(bossF);
-		auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
-		for (auto& obj : objs)
-			obj->start();
+
+		//---------------------------------
+		// ステージに残存している邪魔オブジェクト削除
+		{
+			em->ClearEnemies();
+			auto& objs = gm()->GetObjects("Atk_ Effect Pickup", ' ');
+			for (auto& obj : objs)
+				obj->kill();
+		}
+		//---------------------------------
+		// ボスステージロード
+		{
+			std::ifstream bossF(bossFile_);
+			__super::init(bossF);
+			auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
+			for (auto& obj : objs)
+				obj->start();
+		}
 	}
 
 }
@@ -119,7 +133,7 @@ void CStage1::init(std::ifstream& f)
 	caPhase_ = ClearAnnouncePhase::WAIT;
 	announceTime_ = 0.f;
 
-	// タイトルアニメーション中はプレイヤープレイヤー登場アニメーション
+	// プレイヤー登場アニメーション
 	auto& objs = gm()->GetObjects("Player");
 	for (auto& obj : objs)
 		obj->start();
@@ -202,16 +216,15 @@ bool CStage1::UpdateClearAnnounce()
 	switch (caPhase_)
 	{
 	case CStage1::ClearAnnouncePhase::WAIT:
-		if (!(sm_.lock()->isEnterAnimating() || sm_.lock()->isExitAnimating()))
-		{
-			// タイトルアニメーション中はプレイヤーと敵の動きを止めておく必要がある
-			auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
-			for (auto& obj : objs)
-				obj->SetStatusDisp();
+	{
+		// タイトルアニメーション中はプレイヤーと敵の動きを止めておく必要がある
+		auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
+		for (auto& obj : objs)
+			obj->SetStatusDisp();
 
-			announceTime_ = 0.f;
-			caPhase_ = ClearAnnouncePhase::TO_GOAL;
-		}
+		announceTime_ = 0.f;
+		caPhase_ = ClearAnnouncePhase::TO_GOAL;
+	}
 		break;
 	case CStage1::ClearAnnouncePhase::TO_GOAL:
 		{
@@ -318,8 +331,7 @@ bool CStage1::UpdateNormal()
 	{
 		if (goalArea_->Contains(col))
 		{
-			sm_.lock()->setStageState(CStageMng::StageState::EXIT);
-			//sm_.lock()
+			sm_.lock()->setStageState(CStageMng::StageState::PLAYER_EXIT);
 			return true;
 		}
 	}

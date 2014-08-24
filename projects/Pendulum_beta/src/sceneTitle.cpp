@@ -434,11 +434,6 @@ void CSceneTitle::draw()
 		if (titleLogo_.CheckUse())
 			titleLogo_.draw(charabase::CharBase::Center);
 
-		// Pleas Click
-		if (clickPhase_ != ClickPhase::HIDDEN)
-			font::Draw_FontTextNC(system::WINW / 2 - 80, system::WINH / 3 * 2, 0.5f,
-			"Please Click!", ARGB(clickAlpha_, 255, 255, 255), setting::GetFontID("font_MSGOSICK30"));
-
 		// 玉アニメーション
 		if (titleAnim_.CheckUse())
 			titleAnim_.draw(charabase::CharBase::Center);
@@ -459,6 +454,28 @@ void CSceneTitle::draw()
 	else if (phase_ == Phase::DEMO)
 	{
 		demo_.draw();
+	}
+
+
+
+
+	// Pleas Click
+	if (clickPhase_ != ClickPhase::HIDDEN)
+	{
+		//int w = font::Draw_GetStringWidth("- Please Click! -", setting::GetFontID("font_MSGOSICK30"));
+		//font::Draw_FontTextNC((system::WINW - w) / 2 , system::WINH / 3 * 2, 0.2f,
+		//"- Please Click! -", ARGB(clickAlpha_, 255, 255, 255), setting::GetFontID("font_MSGOSICK30"));
+		std::string resname("img_start");
+		graph::Draw_SetRenderMode(RENDER_MODE::ADD);
+		graph::Draw_GraphicsNC(system::WINW / 2, system::WINH / 4 * 3, 0.2f,
+			resname,
+			0, 0,
+			graph::Draw_GetImageWidth(resname),
+			graph::Draw_GetImageHeight(resname),
+			0.f, nullptr,
+			1.f, 1.f,
+			clickAlpha_);
+		graph::Draw_EndRenderMode();
 	}
 
 }
@@ -605,6 +622,8 @@ void CSceneTitle::DemoInit()
 //デモ処理
 void CSceneTitle::DemoStep()
 {
+	PleaseClick();
+
 	// デモプレイ終了
 	if (input::CheckPush(input::KEY_MOUSE_LBTN) ||
 		input::CheckPush(input::KEY_MOUSE_RBTN) ||

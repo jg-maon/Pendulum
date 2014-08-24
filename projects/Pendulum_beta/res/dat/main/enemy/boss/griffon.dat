@@ -18,32 +18,38 @@
 
 
 
-UŒ‚QQUŒ‚•û–@{UŒ‚•û–@•Ê’l}QQNWaySing‚Ì‘®‚ÍŒÅ’è‚ÅˆÈ‰º‚Ì’Ê‚è
 #Attack Tackle
 {
-
 }
 
 
 //==================================================
 
+#EntryWidth		800.0
+#EntryHeight	-800.0
 
-#MaxGravity		100.0
-#GravityAcc		25.0
-#SearchRange	900.0
-#ChaseRange		600.0		
-#AttackRange	300.0
-#MoveSpeed		100.0
+#SearchRange	1500.0
+#ChaseRange		1000.0		
+#AttackRange	500.0
+#MoveSpeed		200.0
 
-#AttackSpeed	200.0
+#InvincibleTime	2.0
+#Health			100
+#Power			10
 
-#InvincibleTime	1.0
-#Health			50
-300
-#Power			5
-10
+#DamageTime	2.0
 
-#DamageTime		1.0
-#BackDist		100.0
-#AttackDist		250.0
-#AttackInterval	10.0
+#AttackDist		900.0
+#AttackSpeed	400.0
+#AttackInterval	8.0
+
+#BackDist	350.0
+#SwayRange	250.0
+
+#FallTime		3.0
+#FallSpeed		300.0
+#FallTurnSpeed	4
+
+#RoarAnimSpeed	0.03
+#moveAnimSpeed	0.4
+#backAnimSpeed	0.4

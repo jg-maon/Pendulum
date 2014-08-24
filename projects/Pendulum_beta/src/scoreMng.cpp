@@ -114,7 +114,15 @@ void CScoreMng::step()
 
 	if (dispScore_ < score_)
 	{
-		const int frameAdd = 10;	// 1ƒtƒŒ[ƒ€‚ ‚½‚è‚Ì‰ÁŽZ—Ê
+		int frameAdd = 0;	// 1ƒtƒŒ[ƒ€‚ ‚½‚è‚Ì‰ÁŽZ—Ê
+		
+		// Œ…”‚É‰ž‚¶‚Ä‰ÁŽZ—Ê’²®
+		int work = score_;
+		while (work /= 10)
+			frameAdd++;
+		// 10‚Í•ÛØ
+		frameAdd = frameAdd ? frameAdd * 10 : 10;
+
 
 		dispScore_ += min(frameAdd, score_ - dispScore_);
 	}
@@ -175,7 +183,7 @@ void CScoreMng::CalcBonusScore(const std::weak_ptr<CEnemyMng>& em)
 	if (em.lock()->isDestroyerBonus())
 	{
 		tmp.label = "Destroyer Bonus";
-		tmp.score = 100000;
+		tmp.score = 150000;
 		bonusScores_.push_back(tmp);
 	}
 	if (em.lock()->isNoKillBonus())
@@ -200,7 +208,7 @@ void CScoreMng::CalcBonusScore()
 	if (sm->isNormaTimeClear())
 	{
 		tmp.label = "FastClear Bonus";
-		tmp.score = 100000;
+		tmp.score = 150000;
 		bonusScores_.push_back(tmp);
 	}
 

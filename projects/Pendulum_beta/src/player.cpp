@@ -160,12 +160,12 @@ void CPlayer::step()
 	mymath::Vec3f& pos = obj_.pos;
 	mymath::Vec3f& velocity = obj_.add;
 
-	if (sm()->isEnterAnimating())
+	if (sm()->isPlayerEnterAnimating())
 	{
 		// 登場アニメーション
 		EnterAnimation();
 	}
-	else if (sm()->isExitAnimating())
+	else if (sm()->isPlayerExitAnimating())
 	{
 		// 退場アニメーション
 		ExitAnimation();
@@ -174,9 +174,7 @@ void CPlayer::step()
 	{
 		// 通常時
 
-		// キー入力のみ随時受け付け
-		key();
-
+		
 		// Chain文字
 #pragma region Chain文字
 		{
@@ -240,6 +238,14 @@ void CPlayer::step()
 			}
 		}
 #pragma endregion // Chain文字
+
+		// 他アニメーション待ち
+		if (sm()->isBossEnterAnimating() || sm()->isBossExitAnimating() || sm()->isClearAnnounceAnimating())
+			return;
+
+
+		// キー入力のみ随時受け付け
+		key();
 
 
 		// 更新フレームでない場合はスキップ
@@ -659,7 +665,10 @@ void CPlayer::EnterAnimation()
 		obj_.pos = startPos_;
 		obj_.add = 0.f;
 		obj_.src.y = static_cast<int>(MotionType::FALL);
-		sm()->setStageState(CStageMng::StageState::BATTLE);
+		if(sm()->isBossStage())
+			sm()->setStageState(CStageMng::StageState::BOSS_ENTER);
+		else
+			sm()->setStageState(CStageMng::StageState::CLEAR_ANNOUNCE);
 	}
 	else
 	{
@@ -669,7 +678,7 @@ void CPlayer::EnterAnimation()
 
 void CPlayer::ExitAnimation()
 {
-	sm()->setStageState(CStageMng::StageState::ENTER);
+	sm()->setStageState(CStageMng::StageState::PLAYER_ENTER);
 }
 
 void CPlayer::key()

@@ -114,21 +114,21 @@ void CPickupJewely::draw()
 float CPickupJewely::CalcMagnification(int chain)
 {
 	float mag = 1.0f;	// ”{—¦
-	// 2~5
-	if (chain < 2)
-		mag = 1.0f;
-	else if (chain <= 5)
+
+	if (chain < 2)			// 1
+		mag = 1.0;
+	else if (chain <= 5)	// 2~5
 		mag += chain * 0.1f;
-	else if (chain <= 10)
-		mag += (chain - 5) * 0.3f;
-	else if (chain <= 20)
-		mag += 1.f;
-	else if (chain <= 30)
-		mag += 4.f;
-	else if (chain <= 50)
-		mag += chain * 0.1f;
-	else
-		mag = 10.f;
+	else if (chain <= 10)	// 6~10
+		mag += (chain - 5) * 0.7f;
+	else if (chain <= 20)	// 11~20
+		mag += 5.0f;	
+	else if (chain <= 35)	// 21~35
+		mag += 8.0f;
+	else if (chain <= 50)	// 36~50
+		mag += chain * 0.25f;
+	else					// 51~
+		mag = 15.0f;
 
 	return mag;
 }

@@ -3,27 +3,26 @@
 #ClearAnnounce
 img_clearAnnounce01	-1	-1
 
-
 #StageClear
-Goal	13300	-49	700	7049
+Goal	8300	-49	700	1549
 img_goalObj01	1	1
 
 
 #NormaTime
 180.0
 
-#Left	0
-#Top	0
-#Right	14000
-#Bottom	7000
+#Left 0
+#Top 0
+#Right 9000
+#Bottom 5000
 
-#CameraLeft		0
-#CameraTop		400
-#CameraRight	13600
-#CameraBottom	7000
+#CameraLeft  0
+#CameraTop  400
+#CameraRight 9000
+#CameraBottom 5000
 
 #Player
-300	5140
+300	3140
 
 
 #Enemy

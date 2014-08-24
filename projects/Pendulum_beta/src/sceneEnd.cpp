@@ -390,7 +390,15 @@ bool CSceneEnd::update()
 			}
 			if (dispScore_ < totalScore_)
 			{
-				const int frameAdd = 1000;	// 1ƒtƒŒ[ƒ€‚ ‚½‚è‚Ì‰ÁŽZ—Ê
+				int frameAdd = 0;	// 1ƒtƒŒ[ƒ€‚ ‚½‚è‚Ì‰ÁŽZ—Ê
+
+				// Œ…”‚É‰ž‚¶‚Ä‰ÁŽZ—Ê’²®
+				int work = totalScore_;
+				while (work /= 10)
+					frameAdd++;
+
+				// 1000‚Í•ÛØ
+				frameAdd = frameAdd > 3 ? frameAdd * 10 : 1000;
 
 				dispScore_ += min(frameAdd, totalScore_ - dispScore_);
 			}

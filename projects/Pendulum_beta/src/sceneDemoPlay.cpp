@@ -26,6 +26,7 @@ void CSceneDemoPlay::start()
 		charabase::BaseData("img_creditGFX01", -1, -1),
 		charabase::BaseData("img_creditGFX02", -1, -1),
 		charabase::BaseData("img_creditGFX03", -1, -1),
+		charabase::BaseData("img_creditGFX04", -1, -1),
 		charabase::BaseData("img_creditSND00", -1, -1),
 		charabase::BaseData("img_creditSND01", -1, -1),
 	};
@@ -36,9 +37,10 @@ void CSceneDemoPlay::start()
 		{ -19.f, mymath::Linef(system::WINW / 2.f, system::WINH - 100.f, 0.1f, system::WINW - graph::Draw_GetImageWidth("img_creditGFX00") / 2.f - 30.f, system::WINH - 100.f, 0.1f), charabase::CharBase(), common::DispState::APPEARING },
 		{ -21.f, mymath::Linef(system::WINW / 2.f, 100.f, 0.1f, graph::Draw_GetImageWidth("img_creditGFX01") / 2.f + 30.f, 100.f, 0.1f), charabase::CharBase(), common::DispState::APPEARING },
 		{ -23.f, mymath::Linef(system::WINW / 2.f, system::WINH - 100.f, 0.1f, graph::Draw_GetImageWidth("img_creditGFX02") / 2.f + 30.f, system::WINH - 100.f, 0.1f), charabase::CharBase(), common::DispState::APPEARING },
-		{ -25.f, mymath::Linef(system::WINW / 2.f, system::WINH - 100.f, 0.1f, system::WINW - graph::Draw_GetImageWidth("img_creditGFX03") / 2.f - 30.f, system::WINH - 100.f, 0.1f), charabase::CharBase(), common::DispState::APPEARING },
-		{ -27.f, mymath::Linef(system::WINW / 2.f, 100.f, 0.1f, graph::Draw_GetImageWidth("img_creditSND00") / 2.f + 30.f, 100.f, 0.1f), charabase::CharBase(), common::DispState::APPEARING },
-		{ -29.f, mymath::Linef(system::WINW / 2.f, 100.f, 0.1f, system::WINW - graph::Draw_GetImageWidth("img_creditSND01") / 2.f - 30.f, 100.f, 0.1f), charabase::CharBase(), common::DispState::APPEARING },
+		{ -25.f, mymath::Linef(system::WINW / 2.f, 100.f, 0.1f, graph::Draw_GetImageWidth("img_creditGFX03") / 2.f + 30.f, 100.f, 0.1f), charabase::CharBase(), common::DispState::APPEARING },
+		{ -25.f, mymath::Linef(system::WINW / 2.f, 100.f, 0.1f, system::WINW - graph::Draw_GetImageWidth("img_creditGFX04") / 2.f - 30.f, 100.f, 0.1f), charabase::CharBase(), common::DispState::APPEARING },
+		{ -27.f, mymath::Linef(system::WINW / 2.f, system::WINH - 100.f, 0.1f, graph::Draw_GetImageWidth("img_creditSND00") / 2.f + 30.f, system::WINH - 100.f, 0.1f), charabase::CharBase(), common::DispState::APPEARING },
+		{ -27.f, mymath::Linef(system::WINW / 2.f, system::WINH - 100.f, 0.1f, system::WINW - graph::Draw_GetImageWidth("img_creditSND01") / 2.f - 30.f, system::WINH - 100.f, 0.1f), charabase::CharBase(), common::DispState::APPEARING },
 	};
 	creditObjs_ = creObjs;
 	{
@@ -62,7 +64,7 @@ void CSceneDemoPlay::stop()
 	//-----------------------------------
 	// 使用デモプレイヤーオブジェクト, 敵オブジェクトを消す
 	{
-		auto& objs = gm()->GetObjects("Player Pickup Atk_", ' ');
+		auto& objs = gm()->GetObjects("Player Pickup Atk_ Effect", ' ');
 		for (auto& obj : objs)
 			obj->kill();
 	}
@@ -161,6 +163,9 @@ CPlayer(x, y, z)
 	cursor.obj.pos = camera::GetLookAt();
 	cursor.obj.pos.z = 0.1f;
 	cursor.obj.SetUse(true);
+	cursor.obj.r = 255.f;
+	cursor.obj.g = 255.f;
+	cursor.obj.b = 0.f;
 	gm()->cursor(cursor);
 	gm()->SetCursorSynchronicity(false);
 
@@ -168,7 +173,7 @@ CPlayer(x, y, z)
 	std::vector<TableContent> tc = {
 		{ 0.5f, mymath::Vec3f(2000.f, 1900.f), CDemoPlayer::TimeActType::HANG },
 		{ 0.7f, mymath::Vec3f(2000.f, 1900.f), CDemoPlayer::TimeActType::HANG },
-		{ 1.0f, mymath::Vec3f(1800.f, 1500.f), CDemoPlayer::TimeActType::HANG },
+		{ 1.0f, mymath::Vec3f(2000.f, 1500.f), CDemoPlayer::TimeActType::HANG },
 		{ 2.7f, mymath::Vec3f(1600.f, 1200.f), CDemoPlayer::TimeActType::HANG },
 		{ 3.0f, mymath::Vec3f(1600.f, 900.f), CDemoPlayer::TimeActType::HANG },
 		{ 3.2f, mymath::Vec3f(1300.f, 800.f), CDemoPlayer::TimeActType::HANG },
@@ -247,7 +252,7 @@ void CSceneDemoPlay::CDemoPlayer::MoveObject()
 
 bool CSceneDemoPlay::CDemoPlayer::isEndDemoPlay() const
 {
-	return elapsedTime_ > 10.f;
+	return elapsedTime_ > 35.f;
 }
 #pragma endregion	// CSceneDemoPlay::CDemoPlayer methods
 //========================================================

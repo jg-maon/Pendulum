@@ -36,9 +36,12 @@ void CDemoStage::step()
 	switch (phase_)
 	{
 	case IStage::Phase::CLEAR_ANNOUNCE:
+		if (!gm()->stageMng()->isClearAnnounceAnimating())
+			break;
 		if (UpdateClearAnnounce())
 		{
 			phase_ = IStage::Phase::NORMAL;
+			gm()->stageMng()->setStageState(CStageMng::StageState::BATTLE);
 		}
 		break;
 	case IStage::Phase::NORMAL:
@@ -48,6 +51,7 @@ void CDemoStage::step()
 		{
 			nextPhase_ = IStage::Phase::BOSS;
 			phase_ = IStage::Phase::FADE_OUT;
+			gm()->stageMng()->setStageState(CStageMng::StageState::PLAYER_ENTER);
 			CFade::ChangeColor(0xff000000);
 			CFade::StartFadeOut();
 		}
@@ -247,16 +251,15 @@ bool CDemoStage::UpdateClearAnnounce()
 	switch (caPhase_)
 	{
 	case CDemoStage::ClearAnnouncePhase::WAIT:
-		if (!(sm_.lock()->isEnterAnimating() || sm_.lock()->isExitAnimating()))
-		{
-			// タイトルアニメーション中はプレイヤーと敵の動きを止めておく必要がある
-			auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
-			for (auto& obj : objs)
-				obj->SetStatusDisp();
+	{
+		// タイトルアニメーション中はプレイヤーと敵の動きを止めておく必要がある
+		auto& objs = gm()->GetObjects("Player EnemyMng", ' ');
+		for (auto& obj : objs)
+			obj->SetStatusDisp();
 
-			announceTime_ = 0.f;
-			caPhase_ = ClearAnnouncePhase::LEFTTOP;
-		}
+		announceTime_ = 0.f;
+		caPhase_ = ClearAnnouncePhase::LEFTTOP;
+	}
 		break;
 	case CDemoStage::ClearAnnouncePhase::LEFTTOP:
 	{
@@ -277,7 +280,7 @@ bool CDemoStage::UpdateClearAnnounce()
 	{
 		const float moveTime = 1.5f;		// カメラ移動時間
 		const float vecx = cameraRect.width();
-		cameraPos.x = Easing::ExpoIn(announceTime_, playerPos_.x, vecx, moveTime);
+		cameraPos.x = Easing::ExpoInOut(announceTime_, playerPos_.x, vecx, moveTime);
 		if (announceTime_ >= moveTime + 0.5f)
 		{
 			caPhase_ = ClearAnnouncePhase::RIGHTBOTTOM;
@@ -290,7 +293,7 @@ bool CDemoStage::UpdateClearAnnounce()
 	{
 		const float moveTime = 1.5f;		// カメラ移動時間
 		const float vecy = cameraRect.height();
-		cameraPos.y = Easing::ExpoIn(announceTime_, cameraRect.top, vecy, moveTime);
+		cameraPos.y = Easing::ExpoInOut(announceTime_, cameraRect.top, vecy, moveTime);
 		if (announceTime_ >= moveTime + 0.5f)
 		{
 			caPhase_ = ClearAnnouncePhase::LEFTBOTTOM;
@@ -303,7 +306,7 @@ bool CDemoStage::UpdateClearAnnounce()
 	{
 		const float moveTime = 1.5f;		// カメラ移動時間
 		const float vecx = -cameraRect.width();
-		cameraPos.x = Easing::ExpoIn(announceTime_, cameraRect.right, vecx, moveTime);
+		cameraPos.x = Easing::ExpoInOut(announceTime_, cameraRect.right, vecx, moveTime);
 		if (announceTime_ >= moveTime + 0.5f)
 		{
 			caPhase_ = ClearAnnouncePhase::TO_PLAYER;

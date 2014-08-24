@@ -42,13 +42,23 @@ void CSceneStageSelect::start()
 {
 	__super::start();
 
-
+	{
+		// ƒJ[ƒ\ƒ‹‚ğ‰æ–Ê’†‰›‚É
+		HWND hDesktopWnd = GetDesktopWindow();
+		RECT deskrc;
+		GetWindowRect(hDesktopWnd, &deskrc);
+		int x = static_cast<int>(deskrc.right - deskrc.left) / 2;
+		int y = static_cast<int>(deskrc.bottom - deskrc.top) / 2;
+		SetCursorPos(x, y);
+	}
+	
 	auto cursor = gm()->cursor();
 	cursor.obj.SetUse(true);
 	cursor.obj.r = 0.f;
 	cursor.obj.g = 0.f;
 	cursor.obj.b = 0.f;
 	gm()->cursor(cursor);
+	gm()->SetCursorSynchronicity(true);
 
 
 	descHeight_ = 0.f;

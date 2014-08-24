@@ -22,6 +22,7 @@
 
 	img_title			res/gra/title/bg.jpg			0x00000000
 	img_logo			res/gra/title/logo.png			0xffffffff
+	img_start			res/gra/title/start.png			0x00000000
 	img_titleSlash		res/gra/title/slash.png			0xffffffff
 
 	img_clearAnnounce00	res/gra/main/stages/demoStage/clearAnnounce.png		0xff000000
@@ -32,6 +33,7 @@
 	img_creditGFX01		res/gra/title/credit/GFX01.png	0x00000000
 	img_creditGFX02		res/gra/title/credit/GFX02.png	0x00000000
 	img_creditGFX03		res/gra/title/credit/GFX03.png	0x00000000
+	img_creditGFX04		res/gra/title/credit/GFX04.png	0x00000000
 	img_creditSND00		res/gra/title/credit/SND00.png	0x00000000
 	img_creditSND01		res/gra/title/credit/SND01.png	0x00000000
 
