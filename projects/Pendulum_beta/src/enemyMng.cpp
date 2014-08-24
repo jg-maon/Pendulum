@@ -35,13 +35,6 @@ void CEnemyMng::draw()
 {
 	for (auto& enemy : enemies_)
 		enemy->draw();
-
-#ifdef _DEBUG
-	std::stringstream ss;
-	ss << enemies_.size() << " / " << enemyNum_;
-	font::Draw_FontTextNC(system::WINW - 200, system::WINH - 40, 0.f,
-		ss.str(), -1, 3);
-#endif
 }
 
 void CEnemyMng::kill()
@@ -96,7 +89,7 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 	std::ifstream f(fileName);
 	if (f.fail())
 	{
-		debug::BToMF("CEnemyMng::LoadEnemyTable path:%s", fileName.c_str());
+		debug::BToM("CEnemyMng::LoadEnemyTable path:%s", fileName.c_str());
 		return;
 	}
 	enemies_.clear();
@@ -151,7 +144,35 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 	}
 
 	//---------------------------------------
+	// ロボットアーム
+	//*
+	if (common::FindChunk(common::SeekSet(f), "#RoboticArm"))
+	{
+		std::string label;
+		f >> label;
+		if (label == "{")
+		{
+			while (!f.eof())
+			{
+				float pos[3];	// [0]:x [1]:y [2]:dir
+				for (auto& p : pos)
+				{
+					f >> label;
+					// エラーチェック
+					if (label == "}" || f.eof()) break;
+					p = static_cast<float>(std::atof(label.c_str()));
+				}
+				if (label == "}") break;
+				enemies_.push_back(EnemyPtr(new CRoboticArm(pos[0], pos[1], static_cast<int>(pos[2]))));
+			}
+		}
+	}
+	//*/
+
+
+	//---------------------------------------
 	// グリフォン
+	//*
 	if (common::FindChunk(common::SeekSet(f), "#Griffon"))
 	{
 		std::string label;
@@ -173,52 +194,32 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 			}
 		}
 	}
+	//*/
 	//---------------------------------------
-	// レイビット
-	if (common::FindChunk(common::SeekSet(f), "#Raybit"))
+	// 別敵
+	/*
+	if (common::FindChunk(common::SeekSet(f), "#EnemyName"))
 	{
-		std::string label;
-		f >> label;
-		if (label == "{")
-		{
-			while (!f.eof())
-			{
-				float pos[2];	// [0]:x [1]:y
-				for (auto& p : pos)
-				{
-					f >> label;
-					// エラーチェック
-					if (label == "}" || f.eof()) break;
-					p = static_cast<float>(std::atof(label.c_str()));
-				}
-				if (label == "}") break;
-				enemies_.push_back(EnemyPtr(new CRaybit(pos[0], pos[1])));
-			}
-		}
-	}
-	//---------------------------------------
-	// ロボットアーム
-	if (common::FindChunk(common::SeekSet(f), "#RoboticArm"))
+	std::string label;
+	f >> label;
+	if (label == "{")
 	{
-		std::string label;
-		f >> label;
-		if (label == "{")
-		{
-			while (!f.eof())
-			{
-				float pos[2];	// [0]:x [1]:y
-				for (auto& p : pos)
-				{
-					f >> label;
-					// エラーチェック
-					if (label == "}" || f.eof()) break;
-					p = static_cast<float>(std::atof(label.c_str()));
-				}
-				if (label == "}") break;
-				enemies_.push_back(EnemyPtr(new CRoboticArm(pos[0], pos[1])));
-			}
-		}
+	while (!f.eof())
+	{
+	float pos[2];	// [0]:x [1]:y
+	for (auto& p : pos)
+	{
+	f >> label;
+	// エラーチェック
+	if (label == "}" || f.eof()) break;
+	p = static_cast<float>(std::atof(label.c_str()));
 	}
+	if (label == "}") break;
+	enemies_.push_back(EnemyPtr(new CEnemyName(pos[0], pos[1])));
+	}
+	}
+	}
+	//*/
 
 	enemyNum_ = enemies_.size();
 }
@@ -233,8 +234,3 @@ std::vector<EnemyPtr>& CEnemyMng::getEnemies()
 	return enemies_;
 }
 
-void CEnemyMng::ClearEnemies()
-{
-	enemies_.clear();
-	temp_.clear();
-}

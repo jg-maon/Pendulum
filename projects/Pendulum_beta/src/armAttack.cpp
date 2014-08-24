@@ -1,9 +1,15 @@
 #include "armAttack.h"
 
+void CArmAttack::init()
+{
+
+}
+
 CArmAttack::CArmAttack(const charabase::CharBase& cb) :
 	IAttack("Atk_ArmAttack")
 {
 	obj_ = cb;
+	motionType_ = MotionType::WAIT;
 }
 
 CArmAttack::CArmAttack(const int force) :
@@ -12,44 +18,56 @@ CArmAttack::CArmAttack(const int force) :
 	force_ = force;
 }
 
-CArmAttack::CArmAttack(const CArmAttack& arm, const float nowAngle,
-	const mymath::Vec3f& length, const mymath::Vec3f& center, float rotateSpeed, float maxAngle) :
-	IAttack("Atk_ArmAttack")
-	, angle_(nowAngle)
-	, length_(length)
-	, center_(center)
-	, rotateSpeed_(rotateSpeed)
-	, maxAngle_(maxAngle)
+void CArmAttack::SetArmInfo(const float angle, const float length, const mymath::Vec3f& center)
 {
-	obj_ = arm.obj_;
-	SetCollisionAreas(arm);
-	force_ = arm.force_;
-	start();
+	angle_  = angle;
+	length_ = length;
+	center_ = center;
+	
+	obj_.angle = angle_;
+
+	//À•W‚ÌC³
+	obj_.pos.x = math::ROUND_X(angle_, length_, center_.x);
+	obj_.pos.y = math::ROUND_Y(angle_, length_, center_.y);
 }
 
-void CArmAttack::init()
+void CArmAttack::step(float angle)
 {
+	if (angle_ != angle)
+	{
+		angle_ = angle;
+		obj_.angle = angle_;
+		motionType_ = MotionType::ATTACK;
+		for (auto col : collisions_)
+		{
+			col->Rotate(obj_.angle);
+		}
+	}
+	else
+	{
+		motionType_ = MotionType::WAIT;
+	}
 
+
+	obj_.src.x = static_cast<int>(motionType_);
+
+	//À•W‚ÌC³
+	obj_.pos.x = math::ROUND_X(angle_, length_, center_.x);
+	obj_.pos.y = math::ROUND_Y(angle_, length_, center_.y);
 }
+
 void CArmAttack::step()
 {
-	angle_ += rotateSpeed_;
-	if ((rotateSpeed_ > 0 && maxAngle_ < angle_) ||
-		(rotateSpeed_ < 0 && maxAngle_ > angle_)){
-		kill();
-	}
-	obj_.angle = angle_;
-	for (auto col : collisions_)
-	{
-		col->Rotate(obj_.angle);
-	}
-	obj_.pos.x = math::ROUND_X(angle_, length_.x, center_.x);
-	obj_.pos.y = math::ROUND_Y(angle_, length_.x, center_.y);
+
 }
 
 void CArmAttack::draw()
 {
-
+	mymath::Rectf rect = camera::GetScreenRect();
+	if (rect.Contains(obj_.GetRect()))
+	{
+		obj_.draw();
+	}
 }
 
 void CArmAttack::hit(const ObjPtr& rival)
@@ -64,7 +82,3 @@ void CArmAttack::hit(const ObjPtr& rival)
 	}
 }
 
-void CArmAttack::setForce(int force)
-{
-	force_ = force;
-}
