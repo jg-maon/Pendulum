@@ -48,7 +48,28 @@ class IEnemy : public ICharacter
 protected:
 	AttackPtr attack_;							// 攻撃手段
 protected:
-	
+
+	IEnemy& operator = (const IEnemy& copy) 
+	{
+		*((ICharacter*)this) = copy;
+		auto& attack = copy.attack_;
+		std::string name = attack->getName();
+		if (name == "Atk_NWayShot")
+			attack_.reset(new CNWayShot(*std::dynamic_pointer_cast<CNWayShot>(attack)));
+		else if (name == "Atk_NWaySing")
+			attack_.reset(new CNWaySing(*std::dynamic_pointer_cast<CNWaySing>(attack)));
+		else if (name == "Atk_Tackle")
+			attack_.reset(new CTackle(*std::dynamic_pointer_cast<CTackle>(attack)));
+		else if (name == "Atk_ArmAttack")
+			attack_.reset(new CArmAttack(*std::dynamic_pointer_cast<CArmAttack>(attack)));
+		else if (name == "Atk_FireShot")
+			attack_.reset(new CFireShot(*std::dynamic_pointer_cast<CFireShot>(attack)));
+		else
+			debug::BToMF("attack %d proccess no defined", name.c_str());
+		return *this;
+	}
+
+
 public:
 	/*	
 		@brief	オブジェクト生成
@@ -160,9 +181,8 @@ public:
 			if (buf != "{") return false;
 			else
 			{
-				int force;
-				f >> force;
-				attack_ = AttackPtr(new CTackle(force));
+				attack_ = AttackPtr(new CTackle());
+				attack_->LoadCollisions(f);
 			}
 		}
 		else if (buf == "ArmAttack")

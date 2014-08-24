@@ -17,9 +17,8 @@ class CTackle : public IAttack
 public:
 	/*
 		@brief	‰Šú‰»
-		@param	[in]	force	UŒ‚—Í
 	*/
-	CTackle(int force);
+	CTackle();
 
 	/*
 		@brief	XVˆ—

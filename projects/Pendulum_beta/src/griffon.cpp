@@ -189,7 +189,7 @@ void CGriffon::step()
 		obj_.pos.x = clamp(obj_.pos.x, stageRect.left + size.x, stageRect.right - size.x);
 		obj_.pos.y = clamp(obj_.pos.y, stageRect.top + size.y, stageRect.bottom - size.y);
 	}
-
+	attack_->setPos(obj_.pos);
 }
 
 void CGriffon::draw()

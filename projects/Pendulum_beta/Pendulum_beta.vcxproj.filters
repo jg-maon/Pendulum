@@ -224,6 +224,12 @@
     <Filter Include="ソース ファイル\Scence\Title\DemoPlay">
       <UniqueIdentifier>{1079237e-1381-48cb-8395-2b5a728b37a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\InGame\Character\Enemy\Dragon">
+      <UniqueIdentifier>{a263835f-a9e7-4974-8433-34a997868f14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\InGame\Attack\FireShot">
+      <UniqueIdentifier>{c2028c40-4616-4e80-a653-3d173b9bf718}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lib\ci_ext\ci_ext.hpp">
@@ -472,6 +478,12 @@
     <ClInclude Include="src\easing.h">
       <Filter>ソース ファイル\Easing</Filter>
     </ClInclude>
+    <ClInclude Include="src\dragon.h">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Dragon</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fireShot.h">
+      <Filter>ソース ファイル\InGame\Attack\FireShot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lib\dx_media\dx_anime_cont_auxiliary.cpp">
@@ -659,6 +671,12 @@
     </ClCompile>
     <ClCompile Include="src\easing.cpp">
       <Filter>ソース ファイル\Easing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dragon.cpp">
+      <Filter>ソース ファイル\InGame\Character\Enemy\Dragon</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fireShot.cpp">
+      <Filter>ソース ファイル\InGame\Attack\FireShot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

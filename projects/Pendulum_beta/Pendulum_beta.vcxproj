@@ -49,6 +49,7 @@
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\define.h" />
     <ClInclude Include="src\demoStage.h" />
+    <ClInclude Include="src\dragon.h" />
     <ClInclude Include="src\easing.h" />
     <ClInclude Include="src\effectAfterImage.h" />
     <ClInclude Include="src\effectBase.hpp" />
@@ -62,6 +63,7 @@
     <ClInclude Include="src\fairy.h" />
     <ClInclude Include="src\fileLoader.h" />
     <ClInclude Include="src\fileMng.h" />
+    <ClInclude Include="src\fireShot.h" />
     <ClInclude Include="src\gameManager.h" />
     <ClInclude Include="src\gameStatus.h" />
     <ClInclude Include="src\griffon.h" />
@@ -117,6 +119,7 @@
     <ClCompile Include="src\collision.cpp" />
     <ClCompile Include="src\common.cpp" />
     <ClCompile Include="src\demoStage.cpp" />
+    <ClCompile Include="src\dragon.cpp" />
     <ClCompile Include="src\easing.cpp" />
     <ClCompile Include="src\effectAfterImage.cpp" />
     <ClCompile Include="src\effectExplosion.cpp" />
@@ -128,6 +131,7 @@
     <ClCompile Include="src\fairy.cpp" />
     <ClCompile Include="src\fileLoader.cpp" />
     <ClCompile Include="src\fileMng.cpp" />
+    <ClCompile Include="src\fireShot.cpp" />
     <ClCompile Include="src\gameManager.cpp" />
     <ClCompile Include="src\gameStatus.cpp" />
     <ClCompile Include="src\griffon.cpp" />

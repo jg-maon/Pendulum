@@ -41,6 +41,15 @@ public:
 	*/
 	void setForce(int force){ force_ = force; }
 
+	/*
+		@brief	ç¿ïWÇÃê›íË
+		@param	[in]	pos	ç¿ïW
+		@return	Ç»Çµ
+	*/
+	void setPos(const mymath::Vec3f& pos){ obj_.pos = pos; }
+
+
+
 };
 typedef std::shared_ptr<IAttack> AttackPtr;
 

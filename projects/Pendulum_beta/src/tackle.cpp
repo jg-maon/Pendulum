@@ -5,10 +5,9 @@
 #include "MyMath.hpp"
 
 
-CTackle::CTackle(int force) :
+CTackle::CTackle() :
 IAttack("Atk_Tackle")
 {
-	force_ = force;
 }
 
 
