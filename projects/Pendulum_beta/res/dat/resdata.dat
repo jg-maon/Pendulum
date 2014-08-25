@@ -53,8 +53,15 @@
 	img_woodBottom		res/gra/main/stages/stage01/wood_bottom.png			0x00000000
 	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xff000000
 	img_actionCircle200	res/gra/main/stages/stage01/actionCircle_r200.png	0x00000000
-
-	img_stage02			res/gra/main/stages/stage02/bg.png					0x00000000
+	
+	img_stage02_00		res/gra/main/stages/stage02/bg00.png				0x00000000
+	img_stage02_01		res/gra/main/stages/stage02/bg01.png				0x00000000
+	img_stage02_02		res/gra/main/stages/stage02/bg02.png				0x00000000
+	img_stage02_03		res/gra/main/stages/stage02/bg03.png				0x00000000
+	img_stage02_04		res/gra/main/stages/stage02/bg04.png				0x00000000
+	img_stage02_05		res/gra/main/stages/stage02/bg05.png				0x00000000
+	img_stage02_06		res/gra/main/stages/stage02/bg06.png				0x00000000
+	img_stage02_07		res/gra/main/stages/stage02/bg07.png				0x00000000
 
 
 	img_player			res/gra/main/character/player/base.png				0xff00ff00
