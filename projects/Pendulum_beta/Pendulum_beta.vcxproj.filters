@@ -167,9 +167,6 @@
     <Filter Include="リソース ファイル\Main\E_Table">
       <UniqueIdentifier>{9f3ed95a-d595-4a1b-8fc6-656eb12432c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル\Main\pickup">
-      <UniqueIdentifier>{35627051-ccbc-411d-bf8c-117139230e51}</UniqueIdentifier>
-    </Filter>
     <Filter Include="リソース ファイル\Result">
       <UniqueIdentifier>{01f129d5-bfb2-4f51-8ab5-9cfe850928c5}</UniqueIdentifier>
     </Filter>
@@ -229,6 +226,9 @@
     </Filter>
     <Filter Include="ソース ファイル\InGame\Attack\FireShot">
       <UniqueIdentifier>{c2028c40-4616-4e80-a653-3d173b9bf718}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Main\Enemy\pickup">
+      <UniqueIdentifier>{35627051-ccbc-411d-bf8c-117139230e51}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -743,10 +743,10 @@
       <Filter>リソース ファイル</Filter>
     </None>
     <None Include="res\dat\main\pickup\pickups.dat">
-      <Filter>リソース ファイル\Main\pickup</Filter>
+      <Filter>リソース ファイル\Main\Enemy\pickup</Filter>
     </None>
     <None Include="res\dat\main\pickup\jewely.dat">
-      <Filter>リソース ファイル\Main\pickup</Filter>
+      <Filter>リソース ファイル\Main\Enemy\pickup</Filter>
     </None>
     <None Include="res\dat\result\rank.dat">
       <Filter>リソース ファイル\Result</Filter>
@@ -768,6 +768,9 @@
     </None>
     <None Include="res\dat\main\enemy\table\demoTable.dat">
       <Filter>リソース ファイル\Main\E_Table</Filter>
+    </None>
+    <None Include="res\dat\main\stage\bossStage02.dat">
+      <Filter>リソース ファイル\Main\Stage\boss</Filter>
     </None>
   </ItemGroup>
 </Project>

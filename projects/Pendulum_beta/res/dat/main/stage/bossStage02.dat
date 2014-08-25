@@ -1,6 +1,5 @@
 #Left	0
 #Top	0
-
 #Right	5200
 #Bottom	3800
 #CameraLeft	0
@@ -23,7 +22,6 @@ float_x,ÅQÅQfloat_y,ÅQÅQfloat_z,ÅQÅQstd::string_resname,ÅQÅQint_srcX,ÅQÅQint_src
 
 #ActionCircle
 {
-}
 200	600	140
 600	600	140
 1000	600	140
@@ -164,7 +162,6 @@ float_x,ÅQÅQfloat_y,ÅQÅQfloat_z,ÅQÅQstd::string_resname,ÅQÅQint_srcX,ÅQÅQint_src
 
 #ActionPolygon
 {
-}
 4
 -200	3200
 5400	3200

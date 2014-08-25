@@ -36,6 +36,8 @@ protected:
 
 	bool gravityF_;							// 重力処理フラグ
 
+private:
+
 protected:
 	/*
 		@brief	ステージマネージャのポインタ取得
@@ -59,6 +61,21 @@ protected:
 
 public:
 
+	ICharacter& operator=(const ICharacter& copy)
+	{
+		*((IColObject*)this) = copy;
+		health_ = copy.health_;
+		power_ = copy.power_;
+#ifdef DEF_PREPOS
+		prePos_ = copy.prePos_;
+#endif
+		gravityF_ = copy.gravityF_;
+
+		// 当たり判定
+		SetCollisionAreas(copy);
+		SetStageCollisions(copy);
+		return *this;
+	}
 	/*
 		@brief	オブジェクトの生成
 		@param	[in]	name	識別名

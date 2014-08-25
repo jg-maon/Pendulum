@@ -49,12 +49,16 @@ void CEnemyMng::kill()
 	__super::kill();
 	for (auto& enemy : enemies_)
 		enemy->kill();
+	for (auto& enemy : temp_)
+		enemy->kill();
 }
 
 void CEnemyMng::start()
 {
 	__super::start();
 	for (auto& enemy : enemies_)
+		enemy->start();
+	for (auto& enemy : temp_)
 		enemy->start();
 }
 
@@ -69,6 +73,8 @@ void CEnemyMng::SetStatusDisp()
 {
 	__super::SetStatusDisp();
 	for (auto& enemy : enemies_)
+		enemy->SetStatusDisp();
+	for (auto& enemy : temp_)
 		enemy->SetStatusDisp();
 
 }
@@ -96,7 +102,7 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 	std::ifstream f(fileName);
 	if (f.fail())
 	{
-		debug::BToMF("CEnemyMng::LoadEnemyTable path:%s", fileName.c_str());
+		debug::BToMF("file load error path:%s", fileName.c_str());
 		return;
 	}
 	enemies_.clear();
@@ -149,7 +155,6 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 			}
 		}
 	}
-
 	//---------------------------------------
 	// グリフォン
 	if (common::FindChunk(common::SeekSet(f), "#Griffon"))
@@ -173,6 +178,7 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 			}
 		}
 	}
+
 	//---------------------------------------
 	// レイビット
 	if (common::FindChunk(common::SeekSet(f), "#Raybit"))
@@ -196,6 +202,7 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 			}
 		}
 	}
+	
 	//---------------------------------------
 	// ロボットアーム
 	if (common::FindChunk(common::SeekSet(f), "#RoboticArm"))
@@ -215,11 +222,14 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 					p = static_cast<float>(std::atof(label.c_str()));
 				}
 				if (label == "}") break;
-				enemies_.push_back(EnemyPtr(new CRoboticArm(pos[0], pos[1])));
+				f >> label;
+				int dir = std::atoi(label.c_str());
+				enemies_.push_back(EnemyPtr(new CRoboticArm(pos[0], pos[1], dir)));
 			}
 		}
 	}
 
+	// 配置後敵数初期化
 	enemyNum_ = enemies_.size();
 }
 
@@ -232,6 +242,13 @@ std::vector<EnemyPtr>& CEnemyMng::getEnemies()
 {
 	return enemies_;
 }
+
+size_t CEnemyMng::GetStartEnemyNum() const
+{
+	return enemyNum_;
+}
+
+
 
 void CEnemyMng::ClearEnemies()
 {

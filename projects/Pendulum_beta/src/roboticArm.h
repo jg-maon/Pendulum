@@ -16,26 +16,7 @@
 class CRoboticArm : public IEnemy
 {
 public:
-	struct LoadInfo
-	{
-		float attackRange;				// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
-
-		std::string parentResname;		//固定アームの画像管理名
-
-		mymath::Vec3f supportParent;	// 固定アームの支点(親側)(回転中心座標)
-		mymath::Vec3f supportChild;		// 可動アームの支点(子側)(回転中心座標)
-
-		mymath::Vec3i parentSrcPos;		// 可動アームの画像抽出位置
-		mymath::Vec3i parentSrcSize;	// 可動アームの画像抽出サイズ
-
-		float rotateSpeed;				// アームの回転速度
-		float maxAngle;					// アームの回転の最大角度
-		float minAngle;					// アームの回転の最小角度
-
-		float attackInterval;		// 攻撃間隔
-	};
-	
-	enum class ArmDirectin
+	enum class ArmDirection
 	{
 		RIGHT_UP,		// 右向き
 		RIGHT_DOWN,		// 右向き、上下反転
@@ -43,12 +24,30 @@ public:
 		LEFT_DOWN,		// 左向き、上下反転
 	};
 
+	struct LoadInfo
+	{
+		float attackRange;				// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
+
+		std::string childResname;		//固定アームの画像管理名
+
+		mymath::Vec3f supportParent;	// 固定アームの支点(親側)(回転中心座標)
+		mymath::Vec3f supportChild;		// 可動アームの支点(子側)(回転中心座標)
+
+		mymath::Vec3i childSrcPos;		// 可動アームの画像抽出位置
+		mymath::Vec3i childSrcSize;		// 可動アームの画像抽出サイズ
+
+		float rotateSpeed;				// アームの回転速度
+		float maxAngle;					// アームの回転の最大角度
+		float minAngle;					// アームの回転の最小角度
+
+		float attackInterval;			// 攻撃間隔
+	};
+	
+
 private:
 	enum class State
 	{
 		WAIT,				// 待機
-		CHASE,				// 追跡
-		RETURN,				// 帰還
 		ATTACK,				// 攻撃
 		DESTROY,			// 死亡アニメ
 
@@ -63,9 +62,9 @@ private:
 
 	struct InvincibleInfo
 	{
-		float time;		// 点滅アニメーション用
-		bool isOn;		// on / off
-		int cnt;		// 点滅オンオフカウント
+		float time;			// 点滅アニメーション用
+		bool isOn;			// on / off
+		int cnt;			// 点滅オンオフカウント
 	};
 
 
@@ -78,34 +77,22 @@ private:
 	MotionType motionType_;							// モーション
 	std::vector<std::vector<int> > motionTable_;	// アニメーションテーブル
 
-	State state_;					// 行動状態
+	State state_;							// 行動状態
 
-	InvincibleInfo invincible_;		// 点滅
+	InvincibleInfo invincible_;				// 点滅
 
-	float elapsedTime_;				// 経過時間
-	float nextActTime_;				// 次に行動を起こす時間
+	float elapsedTime_;						// 経過時間
+	float nextActTime_;						// 次に行動を起こす時間
 
-	charabase::CharBase parentObj_;	// 固定アーム
-	bool  turnParentFlag_;			// 稼動アームの反転
-	float childAngle_;				// 稼動アームの角度
-	float rotateDir_;				// 回転する方向
-	ArmDirectin armDir_;			// アームの向き
+	bool  turnParentFlag_;					// 可動アームの反転
+	float childAngle_;						// 可動アームの角度
+	float rotateDir_;						// 回転する方向
+	ArmDirection armDir_;					// アームの向き
 
-	charabase::CharBase armAtkObj_;	// アーム攻撃の情報
+	charabase::CharBase armAtkObj_;			// アーム攻撃の情報
 
-	mymath::Vec3f startPos_;			// 初期座標(追跡後元に戻る場所)
+	mymath::Vec3f startPos_;				// 初期座標(追跡後元に戻る場所)
 
-
-public:
-	/*CRoboticArm& operator=(const CRoboticArm& obj)
-	{
-	if (this != &obj) return *this;
-	loadInfo_ = obj.loadInfo_;
-	state_ = obj.state_;
-	elapsedTime_ = obj.elapsedTime_;
-	nextActTime_ = obj.nextActTime_;
-	}
-	//*/
 private:
 
 	/*
@@ -114,7 +101,7 @@ private:
 		@param	[in]	dir		アームの向き
 		@return	なし
 	*/
-	void init(const mymath::Vec3f& pos);
+	void init(const mymath::Vec3f& pos, int dir);
 
 	/*
 		@brief	アームの向きの切り替え
@@ -126,16 +113,6 @@ private:
 		@return	なし
 	*/
 	void WaitStep();
-	/*
-		@brief	追跡
-		@return	なし
-	*/
-	void ChaseStep();
-	/*
-		@brief	帰還
-		@return	なし
-	*/
-	void ReturnStep();
 	/*
 		@brief	攻撃
 		@return	なし
@@ -165,21 +142,25 @@ private:
 public:
 	/*
 		@brief	空オブジェクト生成
-				DB初期化時に呼ばれる
+		DB初期化時に呼ばれる
 	*/
 	CRoboticArm();
+
 	/*
 		@brief	座標指定したオブジェクト生成
 		@param	[in]	pos	座標
+		@param	[in]	dir	アームの向き(デフォルト:RIGHT_UP)
 	*/
-	CRoboticArm(const mymath::Vec3f& pos);
+	CRoboticArm(const mymath::Vec3f& pos, int dir = static_cast<int>(ArmDirection::RIGHT_UP));
+	
 	/*
 		@brief	座標指定したオブジェクト生成
 		@param	[in]	x	X座標
 		@param	[in]	y	Y座標
+		@param	[in]	dir	アームの向き(デフォルト:RIGHT_UP)
 		@param	[in]	z	奥行き(デフォルト:0.5f)
 	*/
-	CRoboticArm(float x, float y, float z = 0.5f);
+	CRoboticArm(float x, float y, int dir = static_cast<int>(ArmDirection::RIGHT_UP), float z = 0.5f);
 	~CRoboticArm();
 	/*
 		@brief	更新処理
@@ -229,14 +210,21 @@ public:
 		@param	[in]	force	アームの攻撃力
 		@return	なし
 	*/
-	void SetArmAtkInfo(const charabase::CharBase atk, const int force);
+	void SetArmAtkInfo(const charabase::CharBase& atk, const int force);
 
 	/*
 		@brief	アームの向きの変更
 		@param	[in]	dir		アームの向き
 		@return	なし
 	*/
-	void SetArmDirection(ArmDirectin dir);
+	void SetArmDirection(ArmDirection dir);
+
+	/*
+		@brief	アームの向きの変更
+		@param	[in]	dir		アームの向き
+		@return	なし
+	*/
+	void SetArmDirection(const int dir);
 };
 
 #endif

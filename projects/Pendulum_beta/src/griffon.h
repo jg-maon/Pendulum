@@ -58,6 +58,8 @@ private:
 		ATTACK,				// 攻撃
 		ROAR,				// 咆哮
 		FALL,				// 落下
+		
+		MOTION_NUM,
 	};
 private:
 
@@ -67,6 +69,7 @@ private:
 
 	BattleState battleState_;					// 行動状態
 
+	
 	charabase::Anim motionAnim_;					// アニメーション
 	MotionType motionType_;							// モーション
 	std::vector<std::vector<int> > motionTable_;	// アニメーションテーブル

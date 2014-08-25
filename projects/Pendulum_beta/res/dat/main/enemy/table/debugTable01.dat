@@ -2,10 +2,21 @@
 #Player
 300	4140
 
+
+
+x座標＿y座標＿アームの向き
+//＿アームの向き
+//＿0_=_RIGHT_UP
+//＿1_=_RIGHT_DOWN
+//＿2_=_LEFT_UP
+//＿3_=_LEFT_DOWN
 #RoboticArm
 {
-500 2000
+1000	5140	0
+600		5140	2
 }
+
+
 
 #Raybit
 {

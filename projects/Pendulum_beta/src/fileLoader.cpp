@@ -4,6 +4,10 @@
 using namespace gplib;
 #include "common.h"
 
+#include "bird.h"
+#include "fairy.h"
+#include "griffon.h"
+#include "roboticArm.h"
 #include "player.h"
 #include "pickupJewely.h"
 
@@ -27,13 +31,14 @@ std::ifstream& operator>>(std::ifstream& f, mymath::Vec3f& v)
 CFileLoader::CFileLoader(const std::string& iniFile) :
 iniFile_(iniFile)
 {
+	
 }
 void CFileLoader::Load(FontTable& fontTable)
 {
 	std::ifstream iniF(iniFile_);
 	if (iniF.fail())
 	{
-		gplib::debug::BToMF("iniFpath:%s", iniFile_.c_str());
+		gplib::debug::BToMF("[iniF] open error path:%s", iniFile_.c_str());
 	}
 	else
 	{
@@ -45,6 +50,7 @@ void CFileLoader::Load(FontTable& fontTable)
 		}
 	}
 }
+
 
 bool CFileLoader::LoadCharBase(std::ifstream& f, charabase::CharBase& cb)
 {
@@ -110,7 +116,7 @@ void CFileLoader::LoadRes(const std::string& resFile, FontTable& fontTable)
 	ifstream resF(resFile);
 	if (resF.fail())
 	{
-		gplib::debug::BToMF("CFileLoader::LoadRes path:%s", resFile.c_str());
+		gplib::debug::BToMF("[resF] open error path:%s", resFile.c_str());
 		return;
 	}
 
@@ -232,7 +238,7 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	std::ifstream eneF(fileName);
 	if (eneF.fail())
 	{
-		debug::BToMF("CFileLoader::LoadBird path:%s", fileName.c_str());
+		debug::BToMF("path:%s", fileName.c_str());
 		return false;
 	}
 	// 情報ロード用
@@ -288,7 +294,7 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 		{ "#AttackInterval", &(lf.attackInterval), "float" },
 	};
 	success = LoadInfo(eneF, loadValues);
-	
+
 	//-------------------------------------
 
 	if (success)
@@ -303,7 +309,7 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	}
 	else
 	{
-		debug::BToMF("CFileLoader::LoadBird load failed");
+		debug::BToMF("load failed");
 	}
 
 	return success;
@@ -321,7 +327,7 @@ bool CFileLoader::LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& 
 	std::ifstream eneF(fileName);
 	if (eneF.fail())
 	{
-		debug::BToMF("CFileLoader::LoadFairy path:%s", fileName.c_str());
+		debug::BToM("CFileLoader::LoadFairy path:%s", fileName.c_str());
 		return false;
 	}
 	// 情報ロード用
@@ -383,15 +389,15 @@ bool CFileLoader::LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& 
 	}
 	else
 	{
-		debug::BToMF("CFileLoader::LoadFairy load failed");
+		debug::BToMF("load failed");
 	}
 
 	return success;
 }
+
 //=====================================================================================
 //=====================================================================================
-//=====================================================================================
-//=====================================================================================
+
 bool CFileLoader::LoadGriffon(const std::string& fileName, std::vector<EnemyPtr>& enemies)
 {
 	using common::FindChunk;
@@ -409,7 +415,7 @@ bool CFileLoader::LoadGriffon(const std::string& fileName, std::vector<EnemyPtr>
 	// ファイルから情報を抜き取る際のタグ検索用
 	bool success;
 
-	
+
 	//-----------------------------------------------
 	// 画像情報
 	//-----------------------------------------------
@@ -479,6 +485,7 @@ bool CFileLoader::LoadGriffon(const std::string& fileName, std::vector<EnemyPtr>
 
 	return success;
 }
+
 //=====================================================================================
 //=====================================================================================
 //=====================================================================================
@@ -598,6 +605,10 @@ bool CFileLoader::LoadRaybit(const std::string& fileName, std::vector<EnemyPtr>&
 //=====================================================================================
 //=====================================================================================
 //=====================================================================================
+
+
+
+//=====================================================================================
 bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyPtr>& enemies)
 {
 	using common::FindChunk;
@@ -605,7 +616,7 @@ bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyP
 	std::ifstream eneF(fileName);
 	if (eneF.fail())
 	{
-		debug::BToMF("eneF open error path:%s", fileName.c_str());
+		debug::BToMF("[eneF] open error path:%s", fileName.c_str());
 		return false;
 	}
 	// 情報ロード用
@@ -653,9 +664,10 @@ bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyP
 		tmp.LoadAttack(eneF);
 	}
 	//-------------------------------------
-	if (success && (success = FindChunk(SeekSet(eneF), "#ParentSrc")))
+	// アーム情報
+	if (success && (success = FindChunk(SeekSet(eneF), "#ChildSrc")))
 	{
-		eneF >> lf.parentSrcPos.x >> lf.parentSrcPos.y >> lf.parentSrcSize.x >> lf.parentSrcSize.y;
+		eneF >> lf.childSrcPos.x >> lf.childSrcPos.y >> lf.childSrcSize.x >> lf.childSrcSize.y;
 	}
 	if (success && (success = FindChunk(SeekSet(eneF), "#SupportParent")))
 	{
@@ -669,13 +681,12 @@ bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyP
 	std::vector<LoadValue> loadValues = {
 		{ "#AttackRange", &(lf.attackRange), "float" },
 		{ "#AttackInterval", &(lf.attackInterval), "float" },
-		{ "#ParentImg", &(lf.parentResname), "string" },
+		{ "#ChildImg", &(lf.childResname), "string" },
 		{ "#RotateSpeed", &(lf.rotateSpeed), "float" },
 		{ "#MaxAngle", &(lf.maxAngle), "float" },
 		{ "#MinAngle", &(lf.minAngle), "float" },
 	};
 	success = LoadInfo(eneF, loadValues);
-	
 
 	//-------------------------------------
 
@@ -685,7 +696,7 @@ bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyP
 		// 全ての情報が正しく読み込めた際のみここに入る
 		// パラメータ
 		tmp.SetInfo(lf);
-		tmp.SetArmDirection(CRoboticArm::ArmDirectin::RIGHT_UP);
+		tmp.SetArmDirection(CRoboticArm::ArmDirection::RIGHT_UP);
 
 		// コピーコンストラクタを用いオリジナル作成
 		enemies.push_back(EnemyPtr(new CRoboticArm(tmp)));
@@ -697,8 +708,7 @@ bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyP
 
 	return success;
 }
-
-
+//=====================================================================================
 
 #pragma endregion	// 敵テーブル読み込み
 //=====================================================================================
@@ -717,7 +727,7 @@ bool CFileLoader::LoadJewely(const std::string& fileName, std::vector<PickupPtr>
 	std::ifstream f(fileName);
 	if (f.fail())
 	{
-		debug::BToMF("CFileLoader::LoadJewely path:%s", fileName.c_str());
+		debug::BToMF("file open error path:%s", fileName.c_str());
 		return false;
 	}
 	// 情報ロード用
@@ -753,7 +763,7 @@ bool CFileLoader::LoadJewely(const std::string& fileName, std::vector<PickupPtr>
 	}
 	else
 	{
-		debug::BToMF("CFileLoader::LoadJewelyload failed");
+		debug::BToMF("load failed");
 	}
 
 	return success;
@@ -777,7 +787,7 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	std::ifstream iniF(iniFile_);
 	if (iniF.fail())
 	{
-		debug::BToMF("CFileLoader::LoadPlayerData [iniF]Error path:%s", iniFile_.c_str());
+		debug::BToMF(" [iniF] open error path:%s", iniFile_.c_str());
 		return false;
 	}
 	if (!FindChunk(iniF, "#PlayerFile"))
@@ -792,7 +802,7 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	std::ifstream f(playerFile);
 	if (f.fail())
 	{
-		debug::BToMF("CFileLoader::LoadPlayerData [f]Error path:%s", playerFile.c_str());
+		debug::BToMF("[f] open error path:%s", playerFile.c_str());
 		return false;
 	}
 
@@ -835,8 +845,6 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 
 	//------------------------------------------
 	// LoadInfo
-
-
 	//*
 	std::vector<LoadValue> loadValues = {
 		{ "#ArmImg", &(lf.armImg), "string" },
@@ -861,7 +869,6 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	};
 	success = LoadInfo(f, loadValues);
 	//*/
-
 	if (success)
 	{
 		//-----------------------------------------------
@@ -873,7 +880,7 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	}
 	else
 	{
-		debug::BToMF("CFileLoader::LoadPlayer load failed");
+		debug::BToMF("load failed");
 	}
 	return success;
 }
@@ -889,7 +896,7 @@ bool CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 	std::ifstream iniF(iniFile_);
 	if (iniF.fail())
 	{
-		debug::BToMF("CFileLoader::LoadEnemiesData [iniF]Error path:%s", iniFile_.c_str());
+		debug::BToMF("[iniF] open error path:%s", iniFile_.c_str());
 		return false;
 	}
 	if (!FindChunk(iniF, "#EnemyFile"))
@@ -904,7 +911,7 @@ bool CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 	std::ifstream f(enemyFile);
 	if (f.fail())
 	{
-		debug::BToMF("CFileLoader::LoadEnemiesData [f]Error path:%s", enemyFile.c_str());
+		debug::BToMF("[f] open error path:%s", enemyFile.c_str());
 		return false;
 	}
 
@@ -974,7 +981,7 @@ bool CFileLoader::LoadPickupData(std::vector<PickupPtr>& pickups)
 	std::ifstream iniF(iniFile_);
 	if (iniF.fail())
 	{
-		debug::BToMF("CFileLoader::LoadPickupData [iniF]Error path:%s", iniFile_.c_str());
+		debug::BToMF("[iniF] open error path:%s", iniFile_.c_str());
 		return false;
 	}
 	if (!FindChunk(iniF, "#PickupFile"))
@@ -989,7 +996,7 @@ bool CFileLoader::LoadPickupData(std::vector<PickupPtr>& pickups)
 	std::ifstream f(pickupFile);
 	if (f.fail())
 	{
-		debug::BToMF("CFileLoader::LoadPickupData [f]Error path:%s", pickupFile.c_str());
+		debug::BToMF("[f] open error path:%s", pickupFile.c_str());
 		return false;
 	}
 
@@ -1025,12 +1032,13 @@ bool CFileLoader::LoadPickupData(std::vector<PickupPtr>& pickups)
 //=====================================================================================
 
 
+
 std::string CFileLoader::GetPath(const std::string& tag) const
 {
 	std::ifstream iniF(iniFile_);
 	if (iniF.fail())
 	{
-		gplib::debug::BToMF("CFileLoader::GetFile iniFpath:%s", iniFile_.c_str());
+		gplib::debug::BToMF("[iniF] open error path:%s", iniFile_.c_str());
 	}
 	else
 	{

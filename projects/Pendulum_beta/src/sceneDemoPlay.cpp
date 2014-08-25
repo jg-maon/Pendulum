@@ -17,6 +17,20 @@ void CSceneDemoPlay::start()
 	camera::SetLookAt(system::WINW / 2.f, system::WINH / 2.f);
 	camera::SetScale(1.f);
 
+
+	//-------------------------------------
+	// カーソル
+	auto cursor = gm()->cursor();
+	cursor.obj.pos = camera::GetLookAt();
+	cursor.obj.pos.z = 0.1f;
+	cursor.obj.SetUse(true);
+	cursor.obj.r = 255.f;
+	cursor.obj.g = 255.f;
+	cursor.obj.b = 0.f;
+	gm()->cursor(cursor);
+	gm()->SetCursorSynchronicity(false);
+
+
 	// スタッフクレジット初期化
 	creditObjs_.clear();
 	std::vector<charabase::BaseData> bds = {
@@ -60,7 +74,14 @@ void CSceneDemoPlay::start()
 
 void CSceneDemoPlay::stop()
 {
+	//-------------------------------------
+	// カーソル
+	auto cursor = gm()->cursor();
+	cursor.obj.SetUse(false);
+	gm()->cursor(cursor);
+
 	gm()->stageMng()->stop();
+
 	//-----------------------------------
 	// 使用デモプレイヤーオブジェクト, 敵オブジェクトを消す
 	{
@@ -157,17 +178,6 @@ CPlayer(x, y, z)
 	preActTime_ = 0.f;
 	elapsedTime_ = 0.f;
 
-	//-------------------------------------
-	// カーソル
-	auto cursor = gm()->cursor();
-	cursor.obj.pos = camera::GetLookAt();
-	cursor.obj.pos.z = 0.1f;
-	cursor.obj.SetUse(true);
-	cursor.obj.r = 255.f;
-	cursor.obj.g = 255.f;
-	cursor.obj.b = 0.f;
-	gm()->cursor(cursor);
-	gm()->SetCursorSynchronicity(false);
 
 
 	std::vector<TableContent> tc = {

@@ -17,8 +17,6 @@
 void (CRoboticArm::*CRoboticArm::StateStep_[])() =
 {
 	&CRoboticArm::WaitStep,
-	&CRoboticArm::ChaseStep,
-	&CRoboticArm::ReturnStep,
 	&CRoboticArm::AttackStep,
 	&CRoboticArm::DestroyStep,
 };
@@ -26,8 +24,7 @@ void (CRoboticArm::*CRoboticArm::StateStep_[])() =
 CRoboticArm::CRoboticArm() :
 IEnemy("E_RoboticArm")
 {
-	//std::vector<int> move = { 1, 2, 4, 3, 2 };
-	std::vector<int> move = { 0 };
+	std::vector<int> move = { 0, 0 };
 	motionTable_.push_back(move);
 	//std::vector<int> attack = { 1, 0, 1, 3, 4 };
 	std::vector<int> attack = { 0 };
@@ -36,15 +33,15 @@ IEnemy("E_RoboticArm")
 	motionTable_.push_back(destroy);
 }
 
-CRoboticArm::CRoboticArm(const mymath::Vec3f& pos) :
-IEnemy("Atk_E_RoboticArm")
-{
-	init(pos);
-}
-CRoboticArm::CRoboticArm(float x, float y, float z) :
+CRoboticArm::CRoboticArm(const mymath::Vec3f& pos, int dir) :
 IEnemy("E_RoboticArm")
 {
-	init(mymath::Vec3f(x, y, z));
+	init(pos, dir);
+}
+CRoboticArm::CRoboticArm(float x, float y, int dir, float z) :
+IEnemy("E_RoboticArm")
+{
+	init(mymath::Vec3f(x, y, z), dir);
 }
 
 CRoboticArm::~CRoboticArm()
@@ -53,34 +50,39 @@ CRoboticArm::~CRoboticArm()
 }
 
 
-void CRoboticArm::init(const mymath::Vec3f& pos)
+void CRoboticArm::init(const mymath::Vec3f& pos, int dir)
 {
 	using common::FindChunk;
 
 	gm()->GetData(*this);
-	parentObj_ = obj_;
-	parentObj_.resname = loadInfo_.parentResname;
-	parentObj_.src  = loadInfo_.parentSrcPos;
-	parentObj_.size = loadInfo_.parentSrcSize;
+
+	charabase::CharBase childObj;
+	childObj.resname = loadInfo_.childResname;
+	childObj.src = loadInfo_.childSrcPos;
+	childObj.size = loadInfo_.childSrcSize;
 
 	childAngle_ = 0.f;
 	rotateDir_ = 1.f;
 
-	// 可動アームの修正
 	mymath::Vec3f center;  // 支点の格納(回転の中心座標)
 	mymath::Vec3f length;  // 支点から中心座標までの長さ
-	//向きの修正
+	
+	// 向きの修正
+	SetArmDirection(dir);
 	SwichArmDir();
-	// 固定アーム
-	parentObj_.pos = pos;
-	length = loadInfo_.supportParent - parentObj_.HalfSize();
-	center = parentObj_.pos + length;
+	// 固定アームの修正
+	obj_.pos = pos;
+	length = loadInfo_.supportParent - obj_.HalfSize();
+	center = obj_.pos + length;
 	float len = length.Length2();
 	// 可動アーム
-	//length = loadInfo_.supportChild - obj_.HalfSize();
-	length = obj_.HalfSize() - loadInfo_.supportChild;
-	obj_.pos.x = math::ROUND_X(childAngle_, len, center.x);
-	obj_.pos.y = math::ROUND_Y(childAngle_, len, center.y);
+	length = childObj.HalfSize() - loadInfo_.supportChild;
+
+	if (attack_ != nullptr)
+	{
+		attack_->obj(childObj);
+		dynamic_pointer_cast<CArmAttack>(attack_)->SetArmInfo(childAngle_, len, center);
+	}
 	// 修正ここまで
 
 	elapsedTime_ = 0.f;
@@ -98,20 +100,20 @@ void CRoboticArm::SwichArmDir()
 	mymath::Vec3f support = loadInfo_.supportParent;
 	switch (armDir_)
 	{
-	case ArmDirectin::RIGHT_UP:
+	case ArmDirection::RIGHT_UP:
 		break;
-	case ArmDirectin::RIGHT_DOWN:
-		support.y = parentObj_.size.y - loadInfo_.supportParent.y;
+	case ArmDirection::RIGHT_DOWN:
+		support.y = obj_.size.y - loadInfo_.supportParent.y;
 		break;
-	case ArmDirectin::LEFT_UP:
-		angle = 180.f;
-		support.x = parentObj_.size.x - loadInfo_.supportParent.x;
+	case ArmDirection::LEFT_UP:
+		angle += 180.f;
+		support.x = obj_.size.x - loadInfo_.supportParent.x;
 		turnParentFlag_ = true;
 		break;
-	case ArmDirectin::LEFT_DOWN:
+	case ArmDirection::LEFT_DOWN:
 		angle += 180.f;
-		support.x = parentObj_.size.x - loadInfo_.supportParent.x;
-		support.y = parentObj_.size.y - loadInfo_.supportParent.y;
+		support.x = obj_.size.x - loadInfo_.supportParent.x;
+		support.y = obj_.size.y - loadInfo_.supportParent.y;
 		turnParentFlag_ = true;
 		break;
 	default:
@@ -119,7 +121,7 @@ void CRoboticArm::SwichArmDir()
 	}
 	loadInfo_.supportParent = support;
 	loadInfo_.maxAngle += angle;
-	loadInfo_.minAngle += -angle;
+	loadInfo_.minAngle += angle;
 	childAngle_ = angle;
 }
 
@@ -129,90 +131,77 @@ void CRoboticArm::step()
 
 	DecideState();
 
-	// アニメーション処理
-	if (motionAnim_.step())
-	{
-		if (motionType_ != MotionType::MOVE)
-		{
-			obj_.src.x = 0;
-			obj_.src.y = 0;
-			motionType_ = MotionType::MOVE;
-			motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, 0.3f);
-		}
-	}
-	else
-	{
-		obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
-	}
+	// ヒットストップ時はスキップ
+	if (!isUpdatable())
+		return;
 
 	(this->*StateStep_[static_cast<int>(state_)])();
 
-	// 可動アームの回転
-	childAngle_ += loadInfo_.rotateSpeed * rotateDir_;
-
-	if (childAngle_ > loadInfo_.maxAngle)
+	if (attack_ != nullptr)
 	{
-		childAngle_ = loadInfo_.maxAngle;
-		elapsedTime_ += system::FrameTime;
-	}
-	else if (childAngle_ < loadInfo_.minAngle)
-	{
-		childAngle_ = loadInfo_.minAngle;
-		elapsedTime_ += system::FrameTime;
-	}
+		// 可動アームの回転
+		childAngle_ += loadInfo_.rotateSpeed * rotateDir_;
 
-	// 可動アームの修正
-	mymath::Vec3f center;  // 支点の格納(回転の中心座標)
-	mymath::Vec3f length;  // 支点から中心座標までの長さ
-	// 固定アーム
-	length = loadInfo_.supportParent - parentObj_.HalfSize();
-	center = parentObj_.pos + length;
-	// 可動アーム
-	//length = loadInfo_.supportChild - obj_.HalfSize();
-	length = obj_.HalfSize() - loadInfo_.supportChild;
-	obj_.pos.x = math::ROUND_X(childAngle_, length.x, center.x);
-	obj_.pos.y = math::ROUND_Y(childAngle_, length.x, center.y);
-	//画像の角度
-	obj_.angle = childAngle_;
-	// 修正ここまで
+		if (childAngle_ > loadInfo_.maxAngle)
+		{
+			childAngle_ = loadInfo_.maxAngle;
+			elapsedTime_ += system::FrameTime;
+		}
+		else if (childAngle_ < loadInfo_.minAngle)
+		{
+			childAngle_ = loadInfo_.minAngle;
+			elapsedTime_ += system::FrameTime;
+		}
+
+		dynamic_pointer_cast<CArmAttack>(attack_)->Rotate(childAngle_);
+
+
+		// 可動アームの修正
+		mymath::Vec3f center;  // 支点の格納(回転の中心座標)
+		mymath::Vec3f length;  // 支点から中心座標までの長さ
+		// 固定アーム
+		length = loadInfo_.supportParent - obj_.HalfSize();
+		center = obj_.pos + length;
+		// 可動アーム
+		//length = loadInfo_.supportChild - obj_.HalfSize();
+		length = obj_.HalfSize() - loadInfo_.supportChild;
+		//obj_.pos.x = math::ROUND_X(childAngle_, length.x, center.x);
+		//obj_.pos.y = math::ROUND_Y(childAngle_, length.x, center.y);
+		//画像の角度
+		//obj_.angle = childAngle_;
+		// 修正ここまで
+	}
 }
 
 void CRoboticArm::draw()
 {
-	if (attack_)
-		attack_->draw();
+
 	mymath::Rectf rect = camera::GetScreenRect();
 	if (rect.Contains(obj_.GetRect()))
 	{
-		if (armDir_ == ArmDirectin::LEFT_DOWN || armDir_ == ArmDirectin::RIGHT_DOWN)
+		// 固定アームの上下反転
+		if (armDir_ == ArmDirection::LEFT_DOWN || armDir_ == ArmDirection::RIGHT_DOWN)
 		{
-			parentObj_.scale.y = -parentObj_.scale.y;
+			obj_.scale.y = -obj_.scale.y;
 		}
 		//固定アーム
-		parentObj_.draw(charabase::CharBase::MODE::Center, turnParentFlag_);
+		obj_.draw(charabase::CharBase::MODE::Center, turnParentFlag_);
 
-		if (armDir_ == ArmDirectin::LEFT_DOWN || armDir_ == ArmDirectin::RIGHT_DOWN)
+		// 固定アームの上下反転の修正
+		if (armDir_ == ArmDirection::LEFT_DOWN || armDir_ == ArmDirection::RIGHT_DOWN)
 		{
-			parentObj_.scale.y = -parentObj_.scale.y;
+			obj_.scale.y = -obj_.scale.y;
 		}
 
-		//可動アーム
-		obj_.draw();
 	}
+	if (attack_)
+		if (rect.Contains(attack_->obj().GetRect()))
+			attack_->draw();
 }
 
 
 void CRoboticArm::WaitStep()
 {
-}
-
-void CRoboticArm::ChaseStep()
-{
-}
-
-void CRoboticArm::ReturnStep()
-{
-
 }
 
 void CRoboticArm::AttackStep()
@@ -222,7 +211,7 @@ void CRoboticArm::AttackStep()
 	{
 		state_ = State::WAIT;
 		elapsedTime_ = 0;
-		rotateDir_ *= -1;
+		rotateDir_ = -rotateDir_;
 		CreateAttack();
 	}
 }
@@ -270,13 +259,13 @@ void CRoboticArm::CreateAttack()
 {
 	mymath::Vec3f center;
 	mymath::Vec3f length;
-	length = loadInfo_.supportParent - parentObj_.HalfSize();
-	center = parentObj_.pos + length;
+	length = loadInfo_.supportParent - obj_.HalfSize();
+	center = obj_.pos + length;
 	length = obj_.HalfSize() - loadInfo_.supportChild;
 
+	/*
 	CArmAttack armAtk(attack_->obj());// アーム攻撃の情報
 	armAtk.obj(obj_);
-	armAtk.setForce(attack_->GetForce());
 	armAtk.SetCollisionAreas(collisions_);
 	// 回転できる最大値
 	float max = 0;
@@ -290,8 +279,7 @@ void CRoboticArm::CreateAttack()
 	{
 		max = loadInfo_.minAngle;
 	}
-	gm()->AddObject(ObjPtr(new CArmAttack(armAtk,
-		childAngle_, length, center, speed, max)));
+	//*/
 }
 
 
@@ -330,13 +318,17 @@ Base::Collisions CRoboticArm::GetDamageAreas() const
 	return Base::Collisions();
 }
 
-void CRoboticArm::SetInfo(const LoadInfo& info)
+void CRoboticArm::SetInfo(const CRoboticArm::LoadInfo& info)
 {
-
 	loadInfo_ = info;
 }
 
-void CRoboticArm::SetArmDirection(ArmDirectin dir)
+void CRoboticArm::SetArmDirection(CRoboticArm::ArmDirection dir)
 {
 	armDir_ = dir;
+}
+
+void CRoboticArm::SetArmDirection(const int dir)
+{
+	armDir_ = static_cast<ArmDirection>(dir);
 }

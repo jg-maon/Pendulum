@@ -83,7 +83,7 @@ public:
 	*/
 	CStage1(std::ifstream& f);
 	/*
-		@brief	ActionPoint、多重スクロール更新処理
+		@brief	更新処理
 		@return	なし
 	*/
 	virtual void step() override;

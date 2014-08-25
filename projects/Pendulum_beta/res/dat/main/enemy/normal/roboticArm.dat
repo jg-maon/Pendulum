@@ -2,7 +2,7 @@
 #Img img_roboticArm_Child
 
 画像サイズ＿幅＿高さ＿可動アーム側＿※整数のみ
-#Size		384	192
+#Size		192	192
 
 当たり判定＿＿＿{}内に収めること＿＿＿※値は実数可
 #Collision
@@ -17,8 +17,6 @@
 	 96  96
 	-96  96
 
-四角(そのうちPolygonに吸収)	左	上	右	下座標
-//#Rect	-halfWidth	-halfHeight		halfWidth	halfHeight
 }
 
 ステージ当たり判定＿#Collisionと同じ書式
@@ -31,30 +29,26 @@
 
 
 
-攻撃＿＿攻撃方法{攻撃方法別値}＿＿NWayShotの書式は固定で以下の通り
+攻撃＿＿攻撃方法{攻撃方法別値}＿＿ArmAttackの書式は固定で以下の通り
 #Attack ArmAttack
 {
 	攻撃力
 	10
-
-	ショット当たり判定
+	
+	可動アームの当たり判定
 	{
-		#Polygon	4
-		-96 -96
-		 96 -96
-		 96  96
-		-96  96
+		#Rect	-192 -96 192 96
 	}
 }
 
 
 //==================================================
 
-//＿固定アームの読み込み画像＿画像管理名
-#ParentImg	img_roboticArm_Parent
+//＿可動アームの読み込み画像＿画像管理名
+#ChildImg	img_roboticArm_Child
 
 //＿固定アーム画像抽出位置＿X＿Y＿W＿H
-#ParentSrc       0 0   192 192
+#ChildSrc       0 0   384	192
 
 //＿固定アームの支点(親側)(回転中心座標)
 #SupportParent	150.0  48.0

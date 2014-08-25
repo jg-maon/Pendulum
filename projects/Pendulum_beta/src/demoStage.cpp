@@ -11,7 +11,7 @@ CDemoStage::CDemoStage(std::ifstream& f) :
 IStage("DemoStage")
 {
 	goalObj_ = charabase::CharPtr(new charabase::CharBase());
-	sm_ = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
+	sm_ = gm()->stageMng();
 	LoadEnv(f);		// ステージシステム読み込み
 	load(f, 0);		// 雑魚ステージ読み込み
 	LoadClear(f, goalArea_);	// クリア条件読み込み
@@ -141,6 +141,8 @@ void CDemoStage::init(std::ifstream& f)
 
 	sm_.lock()->MoveCamera(playerPos_);
 
+	gm()->enemyMng()->SetStatusDisp();
+
 	// 条件は左中央から来る
 	caObj_->pos.x = -caObj_->HalfWidth();
 	caObj_->pos.y = static_cast<float>(system::WINH) / 4.f;
@@ -247,7 +249,7 @@ bool CDemoStage::UpdateClearAnnounce()
 
 	announceTime_ += system::ONEFRAME_TIME;
 
-	// 自分→ゴール→自分
+	// 自分→左上から時計回り→自分
 	switch (caPhase_)
 	{
 	case CDemoStage::ClearAnnouncePhase::WAIT:
@@ -280,7 +282,7 @@ bool CDemoStage::UpdateClearAnnounce()
 	{
 		const float moveTime = 1.5f;		// カメラ移動時間
 		const float vecx = cameraRect.width();
-		cameraPos.x = Easing::ExpoInOut(announceTime_, playerPos_.x, vecx, moveTime);
+		cameraPos.x = Easing::ExpoInOut(announceTime_, cameraRect.left, vecx, moveTime);
 		if (announceTime_ >= moveTime + 0.5f)
 		{
 			caPhase_ = ClearAnnouncePhase::RIGHTBOTTOM;

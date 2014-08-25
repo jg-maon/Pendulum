@@ -26,8 +26,8 @@ img_goalObj01	1	1
 
 
 #Enemy
-res/dat/main/enemy/table/enemyTable01.dat
 res/dat/main/enemy/table/debugTable01.dat
+res/dat/main/enemy/table/enemyTable01.dat
 
 
 #BossStage

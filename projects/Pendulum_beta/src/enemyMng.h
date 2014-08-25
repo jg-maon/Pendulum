@@ -111,6 +111,12 @@ public:
 	std::vector<EnemyPtr>& getEnemies();
 
 	/*
+		@brief	‰Šú”z’u‚Ì“G”æ“¾
+		@return	“G”
+	*/
+	size_t GetStartEnemyNum() const;
+
+	/*
 		@brief	“G‘SÁ‹
 		@return	‚È‚µ
 	*/

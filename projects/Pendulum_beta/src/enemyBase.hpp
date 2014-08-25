@@ -29,6 +29,11 @@
 #include "armAttack.h"
 #endif
 
+#ifndef DEF_FIRESHOT_H
+#include "fireShot.h"
+#endif
+
+
 #ifndef DEF_EFFECTEXPLOSION_H
 #include "effectExplosion.h"
 #endif
