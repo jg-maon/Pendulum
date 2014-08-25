@@ -439,7 +439,7 @@ void CDragon::DestroyStep()
 
 	}
 	// ƒJƒƒ‰‚ÌŠO‚Éo‚½‚ç
-	if (obj_.pos.y + obj_.HalfHeight() > sm()->getCameraRect().bottom)
+	if (obj_.pos.y - obj_.HalfHeight() > camera::GetScreenRect().bottom)
 	{
 		kill();
 	}

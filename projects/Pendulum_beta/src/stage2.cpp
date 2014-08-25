@@ -81,7 +81,8 @@ void CStage2::draw()
 		size_t killNum = sta - now;
 		std::string fontName("font_GYOSHO_01_40");
 		std::stringstream msg;
-		msg << "残り " << clearNorma_ - killNum;
+		int num = clearNorma_ - killNum;
+		msg << "残り " << (num <= 0 ? 0 : num);
 		font::Draw_FontTextNC(
 			(system::WINW - font::Draw_GetStringWidth(msg.str(), setting::GetFontID(fontName))) / 2,
 			40,
@@ -92,26 +93,21 @@ void CStage2::draw()
 			);
 	}
 
-	auto s = graph::Draw_GetImageSize2("img_stage02");
-	mymath::Recti& cameraRect = isBossStage() ? stage_[1].cameraRect : stage_[0].cameraRect;
-	mymath::Recti& stageRect = isBossStage() ? stage_[1].stageRect : stage_[0].stageRect;
-	mymath::Rectf screenRect = camera::GetScreenRect();
+	// 背景
+	for (int i = 0; i < 8; ++i)
+	{
+		std::stringstream resname;
+		resname << "img_stage02_" << std::setw(2) << std::setfill('0') << i;
+		
+		SIZE s = graph::Draw_GetImageSize2(resname.str());
+		int x = s.cx * (i % 4);
+		int y = s.cy * (i / 4);
 
-	// ステージの幅に対するカメラ幅の比
-	float ratioCameraX = (s.cx - screenRect.width()) / static_cast<float>(cameraRect.right - screenRect.width());
-	float ratioCameraY = (s.cy - screenRect.height()) / static_cast<float>(cameraRect.bottom - screenRect.height());
-	// 画像に対するステージとカメラ比の座標
-	int src_x = static_cast<int>(screenRect.left * ratioCameraX);
-	int src_y = static_cast<int>(screenRect.top * ratioCameraY);
-	graph::Draw_GraphicsLeftTopNC(
-		0,
-		0,
-		1.f,
-		"img_stage01",
-		src_x, src_y,
-		system::WINW, system::WINH
-		);
-
+		graph::Draw_GraphicsLeftTop(
+			x, y, 1.f,
+			resname.str(),
+			0, 0, s.cx, s.cy);
+	}
 }
 
 void CStage2::init(std::ifstream& f)
@@ -130,6 +126,8 @@ void CStage2::init(std::ifstream& f)
 	auto playerPos_ = gm()->GetPlayerPos();
 
 	sm_.lock()->MoveCamera(playerPos_);
+
+	gm()->enemyMng()->SetStatusDisp();
 
 	// 条件は左中央から来る
 	caObj_->pos.x = -caObj_->HalfWidth();
@@ -238,7 +236,7 @@ bool CStage2::UpdateClearAnnounce()
 	{
 		const float moveTime = 1.5f;		// カメラ移動時間
 		const float vecx = cameraRect.width();
-		cameraPos.x = Easing::ExpoInOut(announceTime_, playerPos_.x, vecx, moveTime);
+		cameraPos.x = Easing::ExpoInOut(announceTime_, cameraRect.left, vecx, moveTime);
 		if (announceTime_ >= moveTime + 0.5f)
 		{
 			caPhase_ = ClearAnnouncePhase::RIGHTBOTTOM;
@@ -309,7 +307,7 @@ bool CStage2::UpdateClearAnnounce()
 			// アニメーション開始してからの経過時間
 			float t = announceTime_ - moveTime;
 			// 終了値rgb( r, g, b)へ向かう
-			float r = 100.f, g = 190.f, b = 250.f;
+			float r = 240.f, g = 10.f, b = 10.f;
 			caObj_->r = Easing::ElasticOut(t, 255.f, -255.f + r, animTime / 2.f);
 			caObj_->g = Easing::ExpoInOut(t, 255.f, -255.f + g, animTime / 2.f);
 			caObj_->b = Easing::SineIn(t, 255.f, -255.f + b, animTime / 2.f);
@@ -361,7 +359,12 @@ bool CStage2::UpdateNormal()
 	size_t sta = em->GetStartEnemyNum();
 	size_t now = em->getEnemies().size();
 	size_t killNum = sta - now;
-	return (clearNorma_ - killNum) <= 0;
+	if (killNum >= clearNorma_)
+	{
+		sm_.lock()->setStageState(CStageMng::StageState::PLAYER_EXIT);
+		return true;
+	}
+	return false;
 }
 
 bool CStage2::UpdateBoss()

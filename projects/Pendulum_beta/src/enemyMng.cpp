@@ -49,12 +49,16 @@ void CEnemyMng::kill()
 	__super::kill();
 	for (auto& enemy : enemies_)
 		enemy->kill();
+	for (auto& enemy : temp_)
+		enemy->kill();
 }
 
 void CEnemyMng::start()
 {
 	__super::start();
 	for (auto& enemy : enemies_)
+		enemy->start();
+	for (auto& enemy : temp_)
 		enemy->start();
 }
 
@@ -69,6 +73,8 @@ void CEnemyMng::SetStatusDisp()
 {
 	__super::SetStatusDisp();
 	for (auto& enemy : enemies_)
+		enemy->SetStatusDisp();
+	for (auto& enemy : temp_)
 		enemy->SetStatusDisp();
 
 }
@@ -215,8 +221,8 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 					if (label == "}" || f.eof()) break;
 					p = static_cast<float>(std::atof(label.c_str()));
 				}
-				f >> label;
 				if (label == "}") break;
+				f >> label;
 				int dir = std::atoi(label.c_str());
 				enemies_.push_back(EnemyPtr(new CRoboticArm(pos[0], pos[1], dir)));
 			}

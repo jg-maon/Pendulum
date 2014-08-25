@@ -141,6 +141,8 @@ void CDemoStage::init(std::ifstream& f)
 
 	sm_.lock()->MoveCamera(playerPos_);
 
+	gm()->enemyMng()->SetStatusDisp();
+
 	// ðŒ‚Í¶’†‰›‚©‚ç—ˆ‚é
 	caObj_->pos.x = -caObj_->HalfWidth();
 	caObj_->pos.y = static_cast<float>(system::WINH) / 4.f;
@@ -280,7 +282,7 @@ bool CDemoStage::UpdateClearAnnounce()
 	{
 		const float moveTime = 1.5f;		// ƒJƒƒ‰ˆÚ“®ŽžŠÔ
 		const float vecx = cameraRect.width();
-		cameraPos.x = Easing::ExpoInOut(announceTime_, playerPos_.x, vecx, moveTime);
+		cameraPos.x = Easing::ExpoInOut(announceTime_, cameraRect.left, vecx, moveTime);
 		if (announceTime_ >= moveTime + 0.5f)
 		{
 			caPhase_ = ClearAnnouncePhase::RIGHTBOTTOM;

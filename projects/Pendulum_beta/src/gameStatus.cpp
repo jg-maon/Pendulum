@@ -125,7 +125,7 @@ void CGameStatus::HitStop::step()
 		break;
 	case common::DispState::APPEARING:
 		// ”Z‚³’²®
-		backAlpha_ = Easing::QuartOut(backAnimTime_, 0.f, 200.f, 0.5f);
+		backAlpha_ = Easing::QuartOut(backAnimTime_, 0.f, 220.f, 0.5f);
 		backAnimTime_ += system::FrameTime;
 		if (backAlpha_ >= 0.5f)
 			state_ = common::DispState::SHOW;
@@ -135,7 +135,7 @@ void CGameStatus::HitStop::step()
 		break;
 	case common::DispState::DISAPPEARING:
 		// ”Z‚³’²®
-		backAlpha_ = Easing::QuartOut(backAnimTime_, 200.f, -200.f, 0.5f);
+		backAlpha_ = Easing::QuartOut(backAnimTime_, 220.f, -220.f, 0.5f);
 		backAnimTime_ += system::FrameTime;
 		if (backAlpha_ >= 0.5f)
 			state_ = common::DispState::HIDE;

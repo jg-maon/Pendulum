@@ -34,7 +34,7 @@ private:
 	}caPhase_;
 	mymath::Vec3f caStartPos_;			// クリア条件表示オブジェクト初期座標
 
-	int clearNorma_;					// クリアノルマ敵数
+	size_t clearNorma_;					// クリアノルマ敵数
 
 	mymath::ShapefPtr goalArea_;		// ゴールエリア
 	charabase::CharPtr goalObj_;		// ゴールオブジェクト

@@ -138,8 +138,10 @@ void CStage1::init(std::ifstream& f)
 	for (auto& obj : objs)
 		obj->start();
 	auto playerPos_ = gm()->GetPlayerPos();
-	
+
 	sm_.lock()->MoveCamera(playerPos_);
+	
+	gm()->enemyMng()->SetStatusDisp();
 
 	// ðŒ‚Í¶’†‰›‚©‚ç—ˆ‚é
 	caObj_->pos.x = -caObj_->HalfWidth();

@@ -25,14 +25,15 @@ void (CGriffon::*CGriffon::StateStep_[])() =
 CGriffon::CGriffon() :
 IEnemy("E_Boss_Griffon")
 {
+	motionTable_.resize(static_cast<int>(MotionType::MOTION_NUM));
 	std::vector<int> move = { 0, 1, 2, 3, 2, 1 };
-	motionTable_.push_back(move);
-	std::vector<int> entry = { 0, 1, 2, 3, 2, 1, 0 };
-	motionTable_.push_back(entry);
+	motionTable_[static_cast<int>(MotionType::MOVE)] = move;
 	std::vector<int> attack = { 0, 1, 2, 3 };
-	motionTable_.push_back(attack);
+	motionTable_[static_cast<int>(MotionType::ATTACK)] = (attack);
+	std::vector<int> entry = { 0, 1, 2, 3, 2, 1, 0 };
+	motionTable_[static_cast<int>(MotionType::ROAR)] = (entry);
 	std::vector<int> fall = { 0, 1, 2, 3};
-	motionTable_.push_back(fall);
+	motionTable_[static_cast<int>(MotionType::FALL)] = (fall);
 }
 
 CGriffon::CGriffon(const mymath::Vec3f& pos) :
@@ -135,61 +136,72 @@ void CGriffon::step()
 
 	// 登場アニメーション
 	if (sm()->isBossEnterAnimating())
-		sm()->setStageState(CStageMng::StageState::BATTLE);
-
-
-	DecideState();
-
-	// アニメーション処理
-	if (motionAnim_.step())
 	{
-		if (motionType_ != MotionType::MOVE)
-		{
-			obj_.src.x = 0;
-			obj_.src.y = 0;
-			motionType_ = MotionType::MOVE;
-			motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.moveAnimSpeed);
-		}
+		// 
+		sm()->setStageState(CStageMng::StageState::BATTLE);
 	}
+	//else if (sm()->isBossExitAnimating())
+	//{
+		// 退場
+
+	//}
 	else
 	{
-		obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
-		obj_.src.y = static_cast<int>(motionType_);
+		// 通常時
+
+		DecideState();
+
+		// アニメーション処理
+		if (motionAnim_.step())
+		{
+			if (motionType_ != MotionType::MOVE)
+			{
+				obj_.src.x = 0;
+				obj_.src.y = 0;
+				motionType_ = MotionType::MOVE;
+				motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.moveAnimSpeed);
+			}
+		}
+		else
+		{
+			obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
+			obj_.src.y = static_cast<int>(motionType_);
+		}
+
+		if (isAttacking_)
+		{
+			if (attack_ != nullptr)
+				attack_->step();
+		}
+
+		// プレイヤーを向く
+		if (!isBacking_ && !isAttacking_ &&
+			battleState_ != BattleState::DESTROY)
+		{
+			const mymath::Vec3f& plPos = gm()->GetPlayerPos();
+
+			if (obj_.pos.x < plPos.x && turnFlag_)
+				turnFlag_ ^= 1;
+			else if (obj_.pos.x > plPos.x && !turnFlag_)
+				turnFlag_ ^= 1;
+		}
+
+		(this->*StateStep_[static_cast<int>(battleState_)])();
+
+
+		// ステージ座標制限
+		{
+			auto& col = std::dynamic_pointer_cast<mymath::Rectf>(stageCollisions_[0]);
+			mymath::Vec3f size;
+			size.x = col->right - col->left;
+			size.y = col->bottom - col->top;
+			//const mymath::Vec3f size = obj_.size / 2;
+			const auto& stageRect = sm()->getStageRect();
+			obj_.pos.x = clamp(obj_.pos.x, stageRect.left + size.x, stageRect.right - size.x);
+			obj_.pos.y = clamp(obj_.pos.y, stageRect.top + size.y, stageRect.bottom - size.y);
+		}
+		attack_->setPos(obj_.pos);
 	}
-
-	if (isAttacking_)
-	{
-		if (attack_ != nullptr)
-			attack_->step();
-	}
-
-	// プレイヤーを向く
-	if (!isBacking_ && !isAttacking_ &&
-		battleState_ != BattleState::DESTROY)
-	{
-		const mymath::Vec3f& plPos = gm()->GetPlayerPos();
-
-		if (obj_.pos.x < plPos.x && turnFlag_)
-			turnFlag_ ^= 1;
-		else if (obj_.pos.x > plPos.x && !turnFlag_)
-			turnFlag_ ^= 1;
-	}
-
-	(this->*StateStep_[static_cast<int>(battleState_)])();
-
-
-	// ステージ座標制限
-	{
-		auto& col = std::dynamic_pointer_cast<mymath::Rectf>(stageCollisions_[0]);
-		mymath::Vec3f size;
-		size.x = col->right - col->left;
-		size.y = col->bottom - col->top;
-		//const mymath::Vec3f size = obj_.size / 2;
-		const auto& stageRect = sm()->getStageRect();
-		obj_.pos.x = clamp(obj_.pos.x, stageRect.left + size.x, stageRect.right - size.x);
-		obj_.pos.y = clamp(obj_.pos.y, stageRect.top + size.y, stageRect.bottom - size.y);
-	}
-	attack_->setPos(obj_.pos);
 }
 
 void CGriffon::draw()
@@ -435,7 +447,7 @@ void CGriffon::DestroyStep()
 		
 	}
 	// カメラの外に出たら
-	if (obj_.pos.y + obj_.HalfHeight() > sm()->getCameraRect().bottom)
+	if (obj_.pos.y - obj_.HalfHeight() > camera::GetScreenRect().bottom)
 	{
 		kill();
 	}
@@ -544,6 +556,7 @@ bool CGriffon::ApplyDamage(int dam)
 		motionType_ = MotionType::FALL;
 		motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.fallTime);
 		nextActTime_ = elapsedTime_ + loadInfo_.fallTime;
+		sm()->setStageState(CStageMng::StageState::BOSS_EXIT);
 		return true;
 	}
 
@@ -563,7 +576,7 @@ bool CGriffon::isBacking() const
 Base::Collisions CGriffon::GetDamageAreas() const
 {
 	// 被ダメ後無敵中、死亡アニメーション中はスキップ
-	if (isInvincible() || battleState_ == BattleState::DESTROY)
+	if (!isAttacking_ && (isInvincible() || battleState_ == BattleState::DESTROY))
 	{
 		return Base::Collisions();
 	}
