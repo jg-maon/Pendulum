@@ -52,5 +52,5 @@ motion02
 #Health				150
 #Power				5
 
-#AttackRadius		200.0	//QÅ‘åUŒ‚”ÍˆÍ
+#AttackRadius		1 200.0	//QÅ‘åUŒ‚”ÍˆÍ
 #AddAttackRadius	100.0	//Q‰ÁZ—Ê(unit:[/sec])

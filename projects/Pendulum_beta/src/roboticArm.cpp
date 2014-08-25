@@ -34,7 +34,7 @@ IEnemy("E_RoboticArm")
 }
 
 CRoboticArm::CRoboticArm(const mymath::Vec3f& pos, int dir) :
-IEnemy("Atk_E_RoboticArm")
+IEnemy("E_RoboticArm")
 {
 	init(pos, dir);
 }
@@ -67,7 +67,7 @@ void CRoboticArm::init(const mymath::Vec3f& pos, int dir)
 	mymath::Vec3f center;  // 支点の格納(回転の中心座標)
 	mymath::Vec3f length;  // 支点から中心座標までの長さ
 	
-	//向きの修正
+	// 向きの修正
 	SetArmDirection(dir);
 	SwichArmDir();
 	// 固定アームの修正
@@ -77,7 +77,7 @@ void CRoboticArm::init(const mymath::Vec3f& pos, int dir)
 	float len = length.Length2();
 	// 可動アーム
 	length = childObj.HalfSize() - loadInfo_.supportChild;
-	attack_.reset(new CArmAttack(*(std::dynamic_pointer_cast<CArmAttack>(attack_))));
+
 	if (attack_ != nullptr)
 	{
 		attack_->obj(childObj);
@@ -97,22 +97,20 @@ void CRoboticArm::init(const mymath::Vec3f& pos, int dir)
 void CRoboticArm::SwichArmDir()
 {
 	float angle = 0.f;
-	float maxAngle = loadInfo_.maxAngle;
-	float minAngle = loadInfo_.minAngle;
 	mymath::Vec3f support = loadInfo_.supportParent;
 	switch (armDir_)
 	{
-	case ArmDirectin::RIGHT_UP:
+	case ArmDirection::RIGHT_UP:
 		break;
-	case ArmDirectin::RIGHT_DOWN:
+	case ArmDirection::RIGHT_DOWN:
 		support.y = obj_.size.y - loadInfo_.supportParent.y;
 		break;
-	case ArmDirectin::LEFT_UP:
+	case ArmDirection::LEFT_UP:
 		angle += 180.f;
 		support.x = obj_.size.x - loadInfo_.supportParent.x;
 		turnParentFlag_ = true;
 		break;
-	case ArmDirectin::LEFT_DOWN:
+	case ArmDirection::LEFT_DOWN:
 		angle += 180.f;
 		support.x = obj_.size.x - loadInfo_.supportParent.x;
 		support.y = obj_.size.y - loadInfo_.supportParent.y;
@@ -123,7 +121,7 @@ void CRoboticArm::SwichArmDir()
 	}
 	loadInfo_.supportParent = support;
 	loadInfo_.maxAngle += angle;
-	loadInfo_.minAngle += angle;;
+	loadInfo_.minAngle += angle;
 	childAngle_ = angle;
 }
 
@@ -133,40 +131,46 @@ void CRoboticArm::step()
 
 	DecideState();
 
+	// ヒットストップ時はスキップ
+	if (!isUpdatable())
+		return;
 
 	(this->*StateStep_[static_cast<int>(state_)])();
 
-	//可動アームの回転
-	childAngle_ += loadInfo_.rotateSpeed * rotateDir_;
-
-	if (childAngle_ > loadInfo_.maxAngle)
-	{
-		childAngle_ = loadInfo_.maxAngle;
-		elapsedTime_ += system::FrameTime;
-	}
-	else if (childAngle_ < loadInfo_.minAngle)
-	{
-		childAngle_ = loadInfo_.minAngle;
-		elapsedTime_ += system::FrameTime;
-	}
-
 	if (attack_ != nullptr)
-		dynamic_pointer_cast<CArmAttack>(attack_)->step(childAngle_);
+	{
+		// 可動アームの回転
+		childAngle_ += loadInfo_.rotateSpeed * rotateDir_;
 
-	// 可動アームの修正
-	mymath::Vec3f center;  // 支点の格納(回転の中心座標)
-	mymath::Vec3f length;  // 支点から中心座標までの長さ
-	// 固定アーム
-	length = loadInfo_.supportParent - obj_.HalfSize();
-	center = obj_.pos + length;
-	// 可動アーム
-	//length = loadInfo_.supportChild - obj_.HalfSize();
-	length = obj_.HalfSize() - loadInfo_.supportChild;
-	//obj_.pos.x = math::ROUND_X(childAngle_, length.x, center.x);
-	//obj_.pos.y = math::ROUND_Y(childAngle_, length.x, center.y);
-	//画像の角度
-	//obj_.angle = childAngle_;
-	// 修正ここまで
+		if (childAngle_ > loadInfo_.maxAngle)
+		{
+			childAngle_ = loadInfo_.maxAngle;
+			elapsedTime_ += system::FrameTime;
+		}
+		else if (childAngle_ < loadInfo_.minAngle)
+		{
+			childAngle_ = loadInfo_.minAngle;
+			elapsedTime_ += system::FrameTime;
+		}
+
+		dynamic_pointer_cast<CArmAttack>(attack_)->Rotate(childAngle_);
+
+
+		// 可動アームの修正
+		mymath::Vec3f center;  // 支点の格納(回転の中心座標)
+		mymath::Vec3f length;  // 支点から中心座標までの長さ
+		// 固定アーム
+		length = loadInfo_.supportParent - obj_.HalfSize();
+		center = obj_.pos + length;
+		// 可動アーム
+		//length = loadInfo_.supportChild - obj_.HalfSize();
+		length = obj_.HalfSize() - loadInfo_.supportChild;
+		//obj_.pos.x = math::ROUND_X(childAngle_, length.x, center.x);
+		//obj_.pos.y = math::ROUND_Y(childAngle_, length.x, center.y);
+		//画像の角度
+		//obj_.angle = childAngle_;
+		// 修正ここまで
+	}
 }
 
 void CRoboticArm::draw()
@@ -176,7 +180,7 @@ void CRoboticArm::draw()
 	if (rect.Contains(obj_.GetRect()))
 	{
 		// 固定アームの上下反転
-		if (armDir_ == ArmDirectin::LEFT_DOWN || armDir_ == ArmDirectin::RIGHT_DOWN)
+		if (armDir_ == ArmDirection::LEFT_DOWN || armDir_ == ArmDirection::RIGHT_DOWN)
 		{
 			obj_.scale.y = -obj_.scale.y;
 		}
@@ -184,14 +188,15 @@ void CRoboticArm::draw()
 		obj_.draw(charabase::CharBase::MODE::Center, turnParentFlag_);
 
 		// 固定アームの上下反転の修正
-		if (armDir_ == ArmDirectin::LEFT_DOWN || armDir_ == ArmDirectin::RIGHT_DOWN)
+		if (armDir_ == ArmDirection::LEFT_DOWN || armDir_ == ArmDirection::RIGHT_DOWN)
 		{
 			obj_.scale.y = -obj_.scale.y;
 		}
 
-		if (attack_.get())
-			attack_->draw();
 	}
+	if (attack_)
+		if (rect.Contains(attack_->obj().GetRect()))
+			attack_->draw();
 }
 
 
@@ -206,7 +211,7 @@ void CRoboticArm::AttackStep()
 	{
 		state_ = State::WAIT;
 		elapsedTime_ = 0;
-		rotateDir_ *= -1;
+		rotateDir_ = -rotateDir_;
 		CreateAttack();
 	}
 }
@@ -234,9 +239,6 @@ void CRoboticArm::DecideState()
 	// プレイヤーとの距離ベクトル e -> p
 	mymath::Vec3f Vdist = plPos - obj_.pos;
 	const float plyDist = mymath::PYTHA(Vdist.x, Vdist.y);
-	// 初期位置からのベクトル start -> now
-	Vdist = obj_.pos - startPos_;
-	const float staDist = mymath::PYTHA(Vdist.x, Vdist.y);
 	if (plyDist < mymath::POW2(loadInfo_.attackRange) || state_ == State::ATTACK)
 	{
 		// 攻撃範囲内 or 攻撃中
@@ -261,6 +263,7 @@ void CRoboticArm::CreateAttack()
 	center = obj_.pos + length;
 	length = obj_.HalfSize() - loadInfo_.supportChild;
 
+	/*
 	CArmAttack armAtk(attack_->obj());// アーム攻撃の情報
 	armAtk.obj(obj_);
 	armAtk.SetCollisionAreas(collisions_);
@@ -276,6 +279,7 @@ void CRoboticArm::CreateAttack()
 	{
 		max = loadInfo_.minAngle;
 	}
+	//*/
 }
 
 
@@ -314,17 +318,17 @@ Base::Collisions CRoboticArm::GetDamageAreas() const
 	return Base::Collisions();
 }
 
-void CRoboticArm::SetInfo(const LoadInfo& info)
+void CRoboticArm::SetInfo(const CRoboticArm::LoadInfo& info)
 {
 	loadInfo_ = info;
 }
 
-void CRoboticArm::SetArmDirection(ArmDirectin dir)
+void CRoboticArm::SetArmDirection(CRoboticArm::ArmDirection dir)
 {
 	armDir_ = dir;
 }
 
 void CRoboticArm::SetArmDirection(const int dir)
 {
-	armDir_ = static_cast<ArmDirectin>(dir);
+	armDir_ = static_cast<ArmDirection>(dir);
 }

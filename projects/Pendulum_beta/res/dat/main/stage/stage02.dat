@@ -5,22 +5,21 @@ img_clearAnnounce01	-1	-1
 
 
 #StageClear
-Goal	3000	2000	200
-img_goalObj01	1	1
+Annihilation 100
 
 #NormaTime
-120.0
+240.0
 
 
 #Left	0
 #Top	0
-#Right	5000
-#Bottom	5000
+#Right	8000
+#Bottom	8000
 
 #CameraLeft		0
 #CameraTop		200
-#CameraRight	5000
-#CameraBottom	4600
+#CameraRight	8000
+#CameraBottom	8000
 
 
 #Player
@@ -32,7 +31,7 @@ res/dat/main/enemy/table/debugTable01.dat
 
 
 #BossStage
-res/dat/main/stage/bossStage01.dat
+res/dat/main/stage/bossStage02.dat
 
 
 float_x,ÅQÅQfloat_y,ÅQÅQfloat_z,ÅQÅQstd::string_resname,ÅQÅQint_srcX,ÅQÅQint_srcY,ÅQÅQint_sizeX,ÅQÅQint_sizeY,ÅQÅQfloat_degree,ÅQÅQLONG_centerX,ÅQÅQLONG_centerY,ÅQÅQfloat_scaleXÅQÅQ,float_scaleY,ÅQÅQu_char_a,ÅQÅQu_char_r,ÅQÅQu_char_g,ÅQÅQu_char_b

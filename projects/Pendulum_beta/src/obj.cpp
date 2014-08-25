@@ -359,7 +359,25 @@ void IColObject::SetCollisionAreas(const Base::Collisions& collisions)
 
 void IColObject::SetCollisionAreas(const IColObject& obj)
 {
-	collisions_ = obj.collisions_;
+	using namespace mymath;
+	Base::Collisions cols;
+	for (const auto& col : obj.collisions_)
+	{
+		const auto& id = typeid(*(col.get()));
+		if (id == typeid(Circlef))
+		{
+			cols.push_back(ShapefPtr(new Circlef(*std::dynamic_pointer_cast<Circlef>(col))));
+		}
+		else if (id == typeid(Rectf))
+		{
+			cols.push_back(ShapefPtr(new Rectf(*std::dynamic_pointer_cast<Rectf>(col))));
+		}
+		else if (id == typeid(Polyf))
+		{
+			cols.push_back(ShapefPtr(new Polyf(*std::dynamic_pointer_cast<Polyf>(col))));
+		}
+	}
+	collisions_ = cols;
 }
 
 void IColObject::SetStageCollisions(const Base::Collisions& collisions)
@@ -369,7 +387,25 @@ void IColObject::SetStageCollisions(const Base::Collisions& collisions)
 
 void IColObject::SetStageCollisions(const IColObject& obj)
 {
-	stageCollisions_ = obj.stageCollisions_;
+	using namespace mymath;
+	Base::Collisions cols;
+	for (const auto& col : obj.stageCollisions_)
+	{
+		const auto& id = typeid(*(col.get()));
+		if (id == typeid(Circlef))
+		{
+			cols.push_back(ShapefPtr(new Circlef(*std::dynamic_pointer_cast<Circlef>(col))));
+		}
+		else if (id == typeid(Rectf))
+		{
+			cols.push_back(ShapefPtr(new Rectf(*std::dynamic_pointer_cast<Rectf>(col))));
+		}
+		else if (id == typeid(Polyf))
+		{
+			cols.push_back(ShapefPtr(new Polyf(*std::dynamic_pointer_cast<Polyf>(col))));
+		}
+	}
+	stageCollisions_ = cols;
 }
 #pragma endregion // IColObject methods
 

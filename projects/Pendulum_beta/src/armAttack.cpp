@@ -1,9 +1,5 @@
 #include "armAttack.h"
 
-void CArmAttack::init()
-{
-
-}
 
 CArmAttack::CArmAttack(const charabase::CharBase& cb) :
 	IAttack("Atk_ArmAttack")
@@ -16,6 +12,10 @@ CArmAttack::CArmAttack(const int force) :
 	IAttack("Atk_ArmAttack")
 {
 	force_ = force;
+}
+void CArmAttack::init()
+{
+
 }
 
 void CArmAttack::SetArmInfo(const float angle, const float length, const mymath::Vec3f& center)
@@ -31,17 +31,13 @@ void CArmAttack::SetArmInfo(const float angle, const float length, const mymath:
 	obj_.pos.y = math::ROUND_Y(angle_, length_, center_.y);
 }
 
-void CArmAttack::step(float angle)
+void CArmAttack::Rotate(float angle)
 {
 	if (angle_ != angle)
 	{
 		angle_ = angle;
 		obj_.angle = angle_;
 		motionType_ = MotionType::ATTACK;
-		for (auto col : collisions_)
-		{
-			col->Rotate(obj_.angle);
-		}
 	}
 	else
 	{

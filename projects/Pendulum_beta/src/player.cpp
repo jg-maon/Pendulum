@@ -1,6 +1,6 @@
 
 #ifdef _DEBUG
-//#define D_MOVE_TEST		// キーで移動
+#define D_MOVE_TEST		// キーで移動
 //#define D_HANG_TEST			// 減速なし
 //#define D_GRAVITY_TEST		// 重力なし
 //#define D_COLOR_TEST	// HSV変換テスト

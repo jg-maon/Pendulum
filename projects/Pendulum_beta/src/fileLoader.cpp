@@ -21,6 +21,12 @@ using namespace gplib;
 
 #include "fileLoader.h"
 
+std::ifstream& operator>>(std::ifstream& f, mymath::Vec3f& v)
+{
+	f >> v.x >> v.y >> v.z;
+	return f;
+}
+
 
 CFileLoader::CFileLoader(const std::string& iniFile) :
 iniFile_(iniFile)
@@ -32,7 +38,7 @@ void CFileLoader::Load(FontTable& fontTable)
 	std::ifstream iniF(iniFile_);
 	if (iniF.fail())
 	{
-		gplib::debug::BToM("CFileLoader::CFileLoader iniFpath:%s", iniFile_.c_str());
+		gplib::debug::BToMF("[iniF] open error path:%s", iniFile_.c_str());
 	}
 	else
 	{
@@ -45,6 +51,62 @@ void CFileLoader::Load(FontTable& fontTable)
 	}
 }
 
+
+bool CFileLoader::LoadCharBase(std::ifstream& f, charabase::CharBase& cb)
+{
+	// ファイルから情報を抜き取る際のタグ検索用
+	bool success;
+
+	//-----------------------------------------------
+	// 画像情報
+	//-----------------------------------------------
+	// 画像管理名
+	if (success = common::FindChunk(common::SeekSet(f), "#Img"))
+	{
+		f >> cb.resname;
+	}
+	// 画像サイズ
+	if (success && (success = common::FindChunk(common::SeekSet(f), "#Size")))
+	{
+		f >> cb.size.x;
+		if (cb.size.x == -1)
+			cb.size.x = graph::Draw_GetImageWidth(cb.resname);
+		f >> cb.size.y;
+		if (cb.size.y == -1)
+			cb.size.y = graph::Draw_GetImageHeight(cb.resname);
+	}
+	//-----------------------------------------------
+
+	return success;
+}
+
+bool CFileLoader::LoadInfoFunc(const std::string& from, std::ifstream& f, std::vector<CFileLoader::LoadValue>& loadValues)
+{
+	for (auto& lv : loadValues)
+	{
+		if (common::FindChunk(common::SeekSet(f), lv.tag))
+		{
+			if (lv.type == "int")
+				f >> *((int*)(lv).value);
+			else if (lv.type == "float")
+				f >> *((float*)(lv).value);
+			else if (lv.type == "string")
+				f >> *((std::string*)(lv).value);
+			else
+			{
+				debug::BToM("%s\n%s type error %s", from, lv.tag, lv.type);
+				return false;
+			}
+		}
+		else
+		{
+			debug::BToM("%s\n%s load error", from, lv.tag);
+			return false;
+		}
+	}
+	return true;
+}
+
 //=====================================================================================
 #pragma region リソースファイル読み込み
 void CFileLoader::LoadRes(const std::string& resFile, FontTable& fontTable)
@@ -54,7 +116,7 @@ void CFileLoader::LoadRes(const std::string& resFile, FontTable& fontTable)
 	ifstream resF(resFile);
 	if (resF.fail())
 	{
-		gplib::debug::BToM("CFileLoader::LoadRes path:%s", resFile.c_str());
+		gplib::debug::BToMF("[resF] open error path:%s", resFile.c_str());
 		return;
 	}
 
@@ -164,34 +226,6 @@ void CFileLoader::LoadFont(ifstream& resF, FontTable& fontTable)
 //=====================================================================================
 //=====================================================================================
 
-bool CFileLoader::LoadCharBase(std::ifstream& f, charabase::CharBase& cb)
-{
-	// ファイルから情報を抜き取る際のタグ検索用
-	bool success;
-
-	//-----------------------------------------------
-	// 画像情報
-	//-----------------------------------------------
-	// 画像管理名
-	if (success = common::FindChunk(common::SeekSet(f), "#Img"))
-	{
-		f >> cb.resname;
-	}
-	// 画像サイズ
-	if (success && (success = common::FindChunk(common::SeekSet(f), "#Size")))
-	{
-		f >> cb.size.x;
-		if (cb.size.x == -1)
-			cb.size.x = graph::Draw_GetImageWidth(cb.resname);
-		f >> cb.size.y;
-		if (cb.size.y == -1)
-			cb.size.y = graph::Draw_GetImageHeight(cb.resname);
-	}
-	//-----------------------------------------------
-
-	return success;
-}
-
 //=====================================================================================
 #pragma region 敵テーブル読み込み
 //=====================================================================================
@@ -204,7 +238,7 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	std::ifstream eneF(fileName);
 	if (eneF.fail())
 	{
-		debug::BToM("CFileLoader::LoadBird path:%s", fileName.c_str());
+		debug::BToMF("path:%s", fileName.c_str());
 		return false;
 	}
 	// 情報ロード用
@@ -251,30 +285,16 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	}
 	//-------------------------------------
 	// 範囲系
-	if (success && (success = FindChunk(SeekSet(eneF), "#SearchRange")))
-	{
-		eneF >> lf.SEARCH_RANGE;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#ChaseRange")))
-	{
-		eneF >> lf.CHASE_RANGE;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackRange")))
-	{
-		eneF >> lf.ATTACK_RANGE;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#ReturnRange")))
-	{
-		eneF >> lf.RETURN_RANGE;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#MoveSpeed")))
-	{
-		eneF >> lf.MOVE_SPEED;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackInterval")))
-	{
-		eneF >> lf.attackInterval;
-	}
+	std::vector<LoadValue> loadValues = {
+		{ "#SearchRange", &(lf.searchRange), "float" },
+		{ "#ChaseRange", &(lf.chaseRange), "float" },
+		{ "#AttackRange", &(lf.attackRange), "float" },
+		{ "#ReturnRange", &(lf.returnRange), "float" },
+		{ "#MoveSpeed", &(lf.moveSpeed), "float" },
+		{ "#AttackInterval", &(lf.attackInterval), "float" },
+	};
+	success = LoadInfo(eneF, loadValues);
+
 	//-------------------------------------
 
 	if (success)
@@ -289,7 +309,7 @@ bool CFileLoader::LoadBird(const std::string& fileName, std::vector<EnemyPtr>& e
 	}
 	else
 	{
-		debug::BToM("CFileLoader::LoadBird load failed");
+		debug::BToMF("load failed");
 	}
 
 	return success;
@@ -345,34 +365,16 @@ bool CFileLoader::LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& 
 	}
 	//-------------------------------------
 	// 範囲系
-	if (success && (success = FindChunk(SeekSet(eneF), "#SearchRange")))
-	{
-		eneF >> lf.SEARCH_RANGE;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#ChaseRange")))
-	{
-		eneF >> lf.CHASE_RANGE;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackRange")))
-	{
-		eneF >> lf.ATTACK_RANGE;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#ReturnRange")))
-	{
-		eneF >> lf.RETURN_RANGE;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#MoveSpeed")))
-	{
-		eneF >> lf.MOVE_SPEED;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackInterval")))
-	{
-		eneF >> lf.attackInterval;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackRatio")))
-	{
-		eneF >> lf.attackRatio;
-	}
+	std::vector<LoadValue> loadValues = {
+		{ "#SearchRange", &(lf.searchRange), "float" },
+		{ "#ChaseRange", &(lf.chaseRange), "float" },
+		{ "#AttackRange", &(lf.attackRange), "float" },
+		{ "#ReturnRange", &(lf.returnRange), "float" },
+		{ "#MoveSpeed", &(lf.moveSpeed), "float" },
+		{ "#AttackInterval", &(lf.attackInterval), "float" },
+		{ "#AttackRatio", &(lf.attackRatio), "float" },
+	};
+	success = LoadInfo(eneF, loadValues);
 	//-------------------------------------
 
 	if (success)
@@ -387,11 +389,225 @@ bool CFileLoader::LoadFairy(const std::string& fileName, std::vector<EnemyPtr>& 
 	}
 	else
 	{
-		debug::BToM("CFileLoader::LoadFairy load failed");
+		debug::BToMF("load failed");
 	}
 
 	return success;
 }
+
+//=====================================================================================
+//=====================================================================================
+
+bool CFileLoader::LoadGriffon(const std::string& fileName, std::vector<EnemyPtr>& enemies)
+{
+	using common::FindChunk;
+	using common::SeekSet;
+	std::ifstream eneF(fileName);
+	if (eneF.fail())
+	{
+		debug::BToMF("CFileLoader::LoadGriffon path:%s", fileName.c_str());
+		return false;
+	}
+	// 情報ロード用
+	CGriffon tmp;
+	CGriffon::LoadInfo lf;
+	charabase::CharBase cb;
+	// ファイルから情報を抜き取る際のタグ検索用
+	bool success;
+
+
+	//-----------------------------------------------
+	// 画像情報
+	//-----------------------------------------------
+	if (success = LoadCharBase(eneF, cb))
+	{
+		// 画像情報設定
+		tmp.obj(cb);
+	}
+	//-----------------------------------------------
+	// クラス情報
+	//-----------------------------------------------
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#Collision")))
+	{
+		tmp.LoadCollisions(eneF);
+	}
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#StageCollision")))
+	{
+		tmp.LoadStageCollisions(eneF);
+	}
+	// 攻撃
+	if (success && (success = FindChunk(SeekSet(eneF), "#Attack")))
+	{
+		tmp.LoadAttack(eneF);
+	}
+	//-------------------------------------
+	// 範囲系
+	std::vector<LoadValue> loadValues = {
+		{ "#SearchRange", &(lf.searchRange), "float" },
+		{ "#ChaseRange", &(lf.chaseRange), "float" },
+		{ "#AttackRange", &(lf.attackRange), "float" },
+		{ "#MoveSpeed", &(lf.moveSpeed), "float" },
+		{ "#AttackInterval", &(lf.attackInterval), "float" },
+		{ "#AttackSpeed", &(lf.attackSpeed), "float" },
+		{ "#InvincibleTime", &(lf.invincibleTime), "float" },
+		{ "#DamageTime", &(lf.damageTime), "float" },
+		{ "#AttackDist", &(lf.attackDist), "float" },
+		{ "#AttackSpeed", &(lf.attackSpeed), "float" },
+		{ "#BackDist", &(lf.backDist), "float" },
+		{ "#AttackInterval", &(lf.attackInterval), "float" },
+		{ "#SwayRange", &(lf.swayRange), "float" },
+		{ "#FallTime", &(lf.fallTime), "float" },
+		{ "#FallSpeed", &(lf.fallSpeed), "float" },
+		{ "#FallTurnSpeed", &(lf.fallTurnSpeed), "int" },
+		{ "#EntryWidth", &(lf.entryWidth), "float" },
+		{ "#EntryHeight", &(lf.entryHeight), "float" },
+		{ "#RoarAnimSpeed", &(lf.roarAnimSpeed), "float" },
+		{ "#moveAnimSpeed", &(lf.moveAnimSpeed), "float" },
+		{ "#backAnimSpeed", &(lf.backAnimSpeed), "float" },
+		{ "#Health", &(lf.health), "int" },
+		{ "#Power", &(lf.power), "int" },
+	};
+	success = LoadInfo(eneF, loadValues);
+	//-------------------------------------
+
+	if (success)
+	{
+		//-----------------------------------------------
+		// 全ての情報が正しく読み込めた際のみここに入る
+		// パラメータ
+		tmp.SetInfo(lf);
+
+		// コピーコンストラクタを用いオリジナル作成
+		enemies.push_back(EnemyPtr(new CGriffon(tmp)));
+	}
+
+	return success;
+}
+
+//=====================================================================================
+//=====================================================================================
+//=====================================================================================
+//=====================================================================================
+bool CFileLoader::LoadRaybit(const std::string& fileName, std::vector<EnemyPtr>& enemies)
+{
+	using common::FindChunk;
+	using common::SeekSet;
+	std::ifstream eneF(fileName);
+	if (eneF.fail())
+	{
+		debug::BToMF("eneF open error path:%s", fileName.c_str());
+		return false;
+	}
+	// 情報ロード用
+	CRaybit tmp;
+	CRaybit::LoadInfo lf;
+	charabase::CharBase cb;
+	// ファイルから情報を抜き取る際のタグ検索用
+	bool success;
+	// success が一度でもfalseになったら他処理スキップ
+	// if (success){
+	// 	ロード
+	// }
+	// else {
+	// 	return;
+	// }みたいな感じ
+
+	//-----------------------------------------------
+	// 画像情報
+	//-----------------------------------------------
+
+	//-----------------------------------------------
+	if (success = LoadCharBase(eneF, cb))
+	{
+		// 画像情報設定
+		tmp.obj(cb);
+	}
+	//-----------------------------------------------
+	// クラス情報
+	//-----------------------------------------------
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#Collision")))
+	{
+		tmp.LoadCollisions(eneF);
+	}
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#StageCollision")))
+	{
+		tmp.LoadStageCollisions(eneF);
+	}
+	// 攻撃
+	if (success && (success = FindChunk(SeekSet(eneF), "#Attack")))
+	{
+		tmp.LoadAttack(eneF);
+	}
+	//-------------------------------------
+	// 範囲系
+	if (success && (success = FindChunk(SeekSet(eneF), "#SearchRect")))
+	{
+		auto& rc = lf.searchRect;
+		eneF >> rc.left >> rc.top >> rc.right >> rc.bottom;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#ChaseRect")))
+	{
+		auto& rc = lf.chaseRect;
+		eneF >> rc.left >> rc.top >> rc.right >> rc.bottom;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#AttackRect")))
+	{
+		auto& rc = lf.attackRect;
+		eneF >> rc.left >> rc.top >> rc.right >> rc.bottom;
+	}
+	//-------------------------------------
+	// その他
+	std::vector<LoadValue> loadValues = {
+		{ "#MoveSpeed", &(lf.moveSpeed), "float" },
+		{ "#MoveInterval", &(lf.moveInterval), "float" },
+		{ "#MoveTime", &(lf.moveTime), "float" },
+		{ "#AttackInterval", &(lf.attackInterval), "float" },
+		{ "#AttackNum", &(lf.attackNum), "int" },
+		{ "#OneAttackInterval", &(lf.oneAttackInterval), "float" },
+	};
+	success = LoadInfo(eneF, loadValues);
+
+	if (success && (success = FindChunk(SeekSet(eneF), "#AttackPos1")))
+	{
+		auto& pos = lf.attackPos[0];
+		eneF >> pos.x >> pos.y;
+	}
+	if (success && (success = FindChunk(SeekSet(eneF), "#AttackPos2")))
+	{
+		auto& pos = lf.attackPos[1];
+		eneF >> pos.x >> pos.y;
+	}
+
+	//-------------------------------------
+
+	if (success)
+	{
+		//-----------------------------------------------
+		// 全ての情報が正しく読み込めた際のみここに入る
+		// パラメータ
+		tmp.SetInfo(lf);
+
+		// コピーコンストラクタを用いオリジナル作成
+		enemies.push_back(EnemyPtr(new CRaybit(tmp)));
+	}
+	else
+	{
+		debug::BToMF("load failed");
+	}
+
+	return success;
+}
+//=====================================================================================
+//=====================================================================================
+//=====================================================================================
+//=====================================================================================
+
+
+
 //=====================================================================================
 bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyPtr>& enemies)
 {
@@ -400,7 +616,7 @@ bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyP
 	std::ifstream eneF(fileName);
 	if (eneF.fail())
 	{
-		debug::BToM("CFileLoader::LoadRoboticArm path:%s", fileName.c_str());
+		debug::BToMF("[eneF] open error path:%s", fileName.c_str());
 		return false;
 	}
 	// 情報ロード用
@@ -448,21 +664,7 @@ bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyP
 		tmp.LoadAttack(eneF);
 	}
 	//-------------------------------------
-	// 範囲系
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackRange")))
-	{
-		eneF >> lf.attackRange;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackInterval")))
-	{
-		eneF >> lf.attackInterval;
-	}
-	//-------------------------------------
 	// アーム情報
-	if (success && (success = FindChunk(SeekSet(eneF), "#ChildImg")))
-	{
-		eneF >> lf.childResname;
-	}
 	if (success && (success = FindChunk(SeekSet(eneF), "#ChildSrc")))
 	{
 		eneF >> lf.childSrcPos.x >> lf.childSrcPos.y >> lf.childSrcSize.x >> lf.childSrcSize.y;
@@ -475,18 +677,16 @@ bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyP
 	{
 		eneF >> lf.supportChild.x >> lf.supportChild.y;
 	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#RotateSpeed")))
-	{
-		eneF >> lf.rotateSpeed;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#MaxAngle")))
-	{
-		eneF >> lf.maxAngle;
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#MinAngle")))
-	{
-		eneF >> lf.minAngle;
-	}
+	//-------------------------------------
+	std::vector<LoadValue> loadValues = {
+		{ "#AttackRange", &(lf.attackRange), "float" },
+		{ "#AttackInterval", &(lf.attackInterval), "float" },
+		{ "#ChildImg", &(lf.childResname), "string" },
+		{ "#RotateSpeed", &(lf.rotateSpeed), "float" },
+		{ "#MaxAngle", &(lf.maxAngle), "float" },
+		{ "#MinAngle", &(lf.minAngle), "float" },
+	};
+	success = LoadInfo(eneF, loadValues);
 
 	//-------------------------------------
 
@@ -496,201 +696,19 @@ bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyP
 		// 全ての情報が正しく読み込めた際のみここに入る
 		// パラメータ
 		tmp.SetInfo(lf);
-		tmp.SetArmDirection(CRoboticArm::ArmDirectin::RIGHT_UP);
+		tmp.SetArmDirection(CRoboticArm::ArmDirection::RIGHT_UP);
 
 		// コピーコンストラクタを用いオリジナル作成
 		enemies.push_back(EnemyPtr(new CRoboticArm(tmp)));
 	}
 	else
 	{
-		debug::BToM("CFileLoader::LoadRoboticArm load failed");
+		debug::BToMF("load failed");
 	}
 
 	return success;
 }
 //=====================================================================================
-//=====================================================================================
-//=====================================================================================
-bool CFileLoader::LoadGriffon(const std::string& fileName, std::vector<EnemyPtr>& enemies)
-{
-	using common::FindChunk;
-	using common::SeekSet;
-	std::ifstream eneF(fileName);
-	if (eneF.fail())
-	{
-		debug::BToM("CFileLoader::LoadGriffon path:%s", fileName.c_str());
-		return false;
-	}
-	// 情報ロード用
-	CGriffon tmp;
-	CGriffon::LoadInfo lf;
-	charabase::CharBase cb;
-	// ファイルから情報を抜き取る際のタグ検索用
-	bool success;
-
-	std::string successProc = "none";
-
-	//-----------------------------------------------
-	// 画像情報
-	//-----------------------------------------------
-	if (success = LoadCharBase(eneF, cb))
-	{
-		// 画像情報設定
-		tmp.obj(cb);
-		successProc = "CharBase";
-	}
-	//-----------------------------------------------
-	// クラス情報
-	//-----------------------------------------------
-	// 当たり判定
-	if (success && (success = FindChunk(SeekSet(eneF), "#Collision")))
-	{
-		tmp.LoadCollisions(eneF);
-		successProc = "Collision";
-	}
-	// 当たり判定
-	if (success && (success = FindChunk(SeekSet(eneF), "#StageCollision")))
-	{
-		tmp.LoadStageCollisions(eneF);
-		successProc = "StageCollision";
-	}
-	// 攻撃
-	if (success && (success = FindChunk(SeekSet(eneF), "#Attack")))
-	{
-		tmp.LoadAttack(eneF);
-		successProc = "Attack";
-	}
-	//-------------------------------------
-	// 範囲系
-	if (success && (success = FindChunk(SeekSet(eneF), "#SearchRange")))
-	{
-		eneF >> lf.searchRange;
-		successProc = "SearchRange";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#ChaseRange")))
-	{
-		eneF >> lf.chaseRange;
-		successProc = "ChaseRange";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackRange")))
-	{
-		eneF >> lf.attackRange;
-		successProc = "AttackRange";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#MoveSpeed")))
-	{
-		eneF >> lf.moveSpeed;
-		successProc = "MoveSpeed";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackSpeed")))
-	{
-		eneF >> lf.attackSpeed;
-		successProc = "AttackSpeed";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#InvincibleTime")))
-	{
-		eneF >> lf.invTime;
-		successProc = "InvincibleTime";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#DamageTime")))
-	{
-		eneF >> lf.damageTime;
-		successProc = "DamageTime";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackDist")))
-	{
-		eneF >> lf.attackDist;
-		successProc = "AttackDist";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackSpeed")))
-	{
-		eneF >> lf.attackSpeed;
-		successProc = "AttackSpeed";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#BackDist")))
-	{
-		eneF >> lf.backDist;
-		successProc = "BackDist";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#AttackInterval")))
-	{
-		eneF >> lf.attackInterval;
-		successProc = "AttackInterval";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#SwayRange")))
-	{
-		eneF >> lf.swayRange;
-		successProc = "SwayRange";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#Health")))
-	{
-		eneF >> lf.health;
-		successProc = "Health";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#Power")))
-	{
-		eneF >> lf.power;
-		successProc = "Power";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#FallTime")))
-	{
-		eneF >> lf.fallTime;
-		successProc = "FallTime";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#FallSpeed")))
-	{
-		eneF >> lf.fallSpeed;
-		successProc = "FallSpeed";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#FallTurnInterval")))
-	{
-		eneF >> lf.fallTurnInterval;
-		successProc = "FallTurnInterval";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#EntryWidth")))
-	{
-		eneF >> lf.entryWidth;
-		successProc = "EntryWidth";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#EntryHeight")))
-	{
-		eneF >> lf.entryHeight;
-		successProc = "EntryHeight";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#RoarAnimSpeed")))
-	{
-		eneF >> lf.roarAnimSpeed;
-		successProc = "RoarAnimSpeed";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#moveAnimSpeed")))
-	{
-		eneF >> lf.moveAnimSpeed;
-		successProc = "moveAnimSpeed";
-	}
-	if (success && (success = FindChunk(SeekSet(eneF), "#backAnimSpeed")))
-	{
-		eneF >> lf.backAnimSpeed;
-		successProc = "backAnimSpeed";
-	}
-	//-------------------------------------
-
-	if (success)
-	{
-		//-----------------------------------------------
-		// 全ての情報が正しく読み込めた際のみここに入る
-		// パラメータ
-		tmp.SetInfo(lf);
-
-		// コピーコンストラクタを用いオリジナル作成
-		enemies.push_back(EnemyPtr(new CGriffon(tmp)));
-	}
-	else
-	{
-		debug::BToM("CFileLoader::LoadGriffon load failed\n last successProc = %s", successProc.c_str());
-	}
-
-	return success;
-}
 
 #pragma endregion	// 敵テーブル読み込み
 //=====================================================================================
@@ -709,7 +727,7 @@ bool CFileLoader::LoadJewely(const std::string& fileName, std::vector<PickupPtr>
 	std::ifstream f(fileName);
 	if (f.fail())
 	{
-		debug::BToM("CFileLoader::LoadJewely path:%s", fileName.c_str());
+		debug::BToMF("file open error path:%s", fileName.c_str());
 		return false;
 	}
 	// 情報ロード用
@@ -745,7 +763,7 @@ bool CFileLoader::LoadJewely(const std::string& fileName, std::vector<PickupPtr>
 	}
 	else
 	{
-		debug::BToM("CFileLoader::LoadJewelyload failed");
+		debug::BToMF("load failed");
 	}
 
 	return success;
@@ -767,9 +785,14 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	//======================================================================================
 	// パスファイルからプレイヤー情報ファイルパスの読み込み
 	std::ifstream iniF(iniFile_);
-	if (iniF.fail() || (!FindChunk(iniF, "#PlayerFile")))
+	if (iniF.fail())
 	{
-		debug::BToM("CFileLoader::LoadPlayerData [iniF]Error path:%s", iniFile_.c_str());
+		debug::BToMF(" [iniF] open error path:%s", iniFile_.c_str());
+		return false;
+	}
+	if (!FindChunk(iniF, "#PlayerFile"))
+	{
+		debug::BToMF("#PlayerFile tag not found");
 		return false;
 	}
 	std::string playerFile;
@@ -779,7 +802,7 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	std::ifstream f(playerFile);
 	if (f.fail())
 	{
-		debug::BToM("CFileLoader::LoadPlayerData [f]Error path:%s", playerFile.c_str());
+		debug::BToMF("[f] open error path:%s", playerFile.c_str());
 		return false;
 	}
 
@@ -822,100 +845,30 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 
 	//------------------------------------------
 	// LoadInfo
-	struct LoadValue
-	{
-		char* tag;				// #タグ
-		void* value;			// 格納する値
-		const type_info& inf;	// 型情報
-	};
-
 	//*
-	LoadValue loadValues[] = {
-		{ "#ArmImg", &(lf.armImg), typeid(std::string) },
-		{ "#ArmRotateX", &(lf.armRotateX), typeid(float) },
-		{ "#ArmRotateY", &(lf.armRotateY), typeid(float) },
-		{ "#ArmOffsetX", &(lf.armX), typeid(float) },
-		{ "#ArmOffsetY", &(lf.armY), typeid(float) },
-		{ "#ChainImg", &(lf.chainImg), typeid(std::string) },
-		{ "#GravityAcc", &(lf.GRAVITY_ACC), typeid(float) },
-		{ "#MaxGravity", &(lf.MAX_G), typeid(float) },
-		{ "#Tension", &(lf.TENSION), typeid(float) },
-		{ "#DownTension", &(lf.DOWN_TENSION), typeid(float) },
-		{ "#DownSpeed", &(lf.DOWN_SPEED), typeid(float) },
-		{ "#MaxVelocityX", &(lf.MAX_VX), typeid(float) },
-		{ "#MaxVelocityY", &(lf.MAX_VY), typeid(float) },
-		{ "#ChainTime1", &(lf.CHAIN_TIME[0]), typeid(float) },
-		{ "#ChainTime2", &(lf.CHAIN_TIME[1]), typeid(float) },
-		{ "#InvincibleTime", &(lf.INV_TIME), typeid(float) },
-		{ "#Health", &(lf.health), typeid(int) },
-		{ "#Power", &(lf.power), typeid(int) },
-		{ "#AttackRadius", &(lf.attackRadius), typeid(float) },
-		//{ "#MaxVelocityX", &(lf.MAX_VX) , typeid(float)},
+	std::vector<LoadValue> loadValues = {
+		{ "#ArmImg", &(lf.armImg), "string" },
+		{ "#ArmRotateX", &(lf.armRotateX), "float" },
+		{ "#ArmRotateY", &(lf.armRotateY), "float" },
+		{ "#ArmOffsetX", &(lf.armX), "float" },
+		{ "#ArmOffsetY", &(lf.armY), "float" },
+		{ "#ChainImg", &(lf.chainImg), "string" },
+		{ "#MaxGravity", &(lf.MAX_G), "float" },
+		{ "#Tension", &(lf.TENSION), "float" },
+		{ "#DownTension", &(lf.DOWN_TENSION), "float" },
+		{ "#DownSpeed", &(lf.DOWN_SPEED), "float" },
+		{ "#MaxVelocityX", &(lf.MAX_VX), "float" },
+		{ "#MaxVelocityY", &(lf.MAX_VY), "float" },
+		{ "#ChainTime1", &(lf.CHAIN_TIME[0]), "float" },
+		{ "#ChainTime2", &(lf.CHAIN_TIME[1]), "float" },
+		{ "#InvincibleTime", &(lf.invincibleTime), "float" },
+		{ "#Health", &(lf.health), "int" },
+		{ "#Power", &(lf.power), "int" },
+		{ "#AttackRadius", &(lf.maxAttackRadius), "float" },
+		{ "#AddAttackRadius", &(lf.addRadius), "float" },
 	};
-	for (auto& lv : loadValues)
-	{
-		success = FindChunk(SeekSet(f), lv.tag);
-		if (success)
-		{
-			if (lv.inf == typeid(int))
-				f >> *((int*)(lv).value);
-			else if (lv.inf == typeid(float))
-				f >> *((float*)(lv).value);
-			else if (lv.inf == typeid(std::string))
-				f >> *((std::string*)(lv).value);
-			//else if (lv.inf == typeid(ttt))
-			//	f >> *((ttt*)(lv).value);
-		}
-		else break;
-	}
+	success = LoadInfo(f, loadValues);
 	//*/
-	/*
-	if (success && (success = FindChunk(SeekSet(f), "#GravityAcc")))
-	{
-		f >> lf.GRAVITY_ACC;
-	}
-	if (success && (success = FindChunk(SeekSet(f), "#MaxGravity")))
-	{
-		f >> lf.MAX_G;
-	}
-	if (success && (success = FindChunk(SeekSet(f), "#Tension")))
-	{
-		f >> lf.TENSION;
-	}
-	if (success && (success = FindChunk(SeekSet(f), "#DownTension")))
-	{
-		f >> lf.DOWN_TENSION;
-	}
-	if (success && (success = FindChunk(SeekSet(f), "#DownSpeed")))
-	{
-		f >> lf.DOWN_SPEED;
-	}
-	if (success && (success = FindChunk(SeekSet(f), "#MaxVelocityX")))
-	{
-		f >> lf.MAX_VX;
-	}
-	if (success && (success = FindChunk(SeekSet(f), "#MaxVelocityY")))
-	{
-		f >> lf.MAX_VY;
-	}
-	if (success && (success = FindChunk(SeekSet(f), "#ChainTime")))
-	{
-		f >> lf.CHAIN_TIME[0] >> lf.CHAIN_TIME[1];
-	}
-	if (success && (success = FindChunk(SeekSet(f), "#InvincibleTime")))
-	{
-		f >> lf.INV_TIME;
-	}
-	if (success && (success = FindChunk(SeekSet(f), "#Health")))
-	{
-		f >> lf.health;
-	}
-	if (success && (success = FindChunk(SeekSet(f), "#Power")))
-	{
-		f >> lf.power;
-	}
-	//*/
-
 	if (success)
 	{
 		//-----------------------------------------------
@@ -927,7 +880,7 @@ bool CFileLoader::LoadPlayerData(CPlayer& player)
 	}
 	else
 	{
-		debug::BToM("CFileLoader::LoadPlayer load failed");
+		debug::BToMF("load failed");
 	}
 	return success;
 }
@@ -941,9 +894,14 @@ bool CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 	//======================================================================================
 	// パスファイルから敵DBファイルパスの読み込み
 	std::ifstream iniF(iniFile_);
-	if (iniF.fail() || (!FindChunk(iniF, "#EnemyFile")))
+	if (iniF.fail())
 	{
-		debug::BToM("CFileLoader::LoadEnemiesData [iniF]Error path:%s", iniFile_.c_str());
+		debug::BToMF("[iniF] open error path:%s", iniFile_.c_str());
+		return false;
+	}
+	if (!FindChunk(iniF, "#EnemyFile"))
+	{
+		debug::BToMF("#EnemyFile tag not found");
 		return false;
 	}
 	std::string enemyFile;
@@ -953,7 +911,7 @@ bool CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 	std::ifstream f(enemyFile);
 	if (f.fail())
 	{
-		debug::BToM("CFileLoader::LoadEnemiesData [f]Error path:%s", enemyFile.c_str());
+		debug::BToMF("[f] open error path:%s", enemyFile.c_str());
 		return false;
 	}
 
@@ -980,20 +938,29 @@ bool CFileLoader::LoadEnemiesData(std::vector<EnemyPtr>& enemies)
 			return false;
 		}
 	}
-	if (FindChunk(SeekSet(f), "#RoboticArm"))
-	{
-		std::string buf;
-		f >> buf;
-		if (!LoadRoboticArm(buf, enemies))
-		{
-			return false;
-		}
-	}
 	if (FindChunk(SeekSet(f), "#Griffon"))
 	{
 		std::string buf;
 		f >> buf;
 		if (!LoadGriffon(buf, enemies))
+		{
+			return false;
+		}
+	}
+	if (FindChunk(SeekSet(f), "#Raybit"))
+	{
+		std::string buf;
+		f >> buf;
+		if (!LoadRaybit(buf, enemies))
+		{
+			return false;
+		}
+	}
+	if (FindChunk(SeekSet(f), "#RoboticArm"))
+	{
+		std::string buf;
+		f >> buf;
+		if (!LoadRoboticArm(buf, enemies))
 		{
 			return false;
 		}
@@ -1012,9 +979,14 @@ bool CFileLoader::LoadPickupData(std::vector<PickupPtr>& pickups)
 	//======================================================================================
 	// パスファイルからpickupDBファイルパスの読み込み
 	std::ifstream iniF(iniFile_);
-	if (iniF.fail() || (!FindChunk(iniF, "#PickupFile")))
+	if (iniF.fail())
 	{
-		debug::BToM("CFileLoader::LoadPickupData [iniF]Error path:%s", iniFile_.c_str());
+		debug::BToMF("[iniF] open error path:%s", iniFile_.c_str());
+		return false;
+	}
+	if (!FindChunk(iniF, "#PickupFile"))
+	{
+		debug::BToMF("#PickupFile tag not found");
 		return false;
 	}
 	std::string pickupFile;
@@ -1024,7 +996,7 @@ bool CFileLoader::LoadPickupData(std::vector<PickupPtr>& pickups)
 	std::ifstream f(pickupFile);
 	if (f.fail())
 	{
-		debug::BToM("CFileLoader::LoadPickupData [f]Error path:%s", pickupFile.c_str());
+		debug::BToMF("[f] open error path:%s", pickupFile.c_str());
 		return false;
 	}
 
@@ -1060,12 +1032,13 @@ bool CFileLoader::LoadPickupData(std::vector<PickupPtr>& pickups)
 //=====================================================================================
 
 
-std::string CFileLoader::GetFile(const std::string& tag) const
+
+std::string CFileLoader::GetPath(const std::string& tag) const
 {
 	std::ifstream iniF(iniFile_);
 	if (iniF.fail())
 	{
-		gplib::debug::BToM("CFileLoader::GetFile iniFpath:%s", iniFile_.c_str());
+		gplib::debug::BToMF("[iniF] open error path:%s", iniFile_.c_str());
 	}
 	else
 	{

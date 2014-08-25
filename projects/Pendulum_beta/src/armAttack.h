@@ -29,6 +29,10 @@ private:
 
 
 private:
+	/*
+		@brief	初期化
+		@return	なし
+	*/
 	void init();
 
 public:
@@ -39,24 +43,26 @@ public:
 	CArmAttack(const charabase::CharBase& cb);
 
 	/*
-	@brief	初期化
-	@param	[in]	force		アームの攻撃力
+		@brief	初期化
+		@param	[in]	force		アームの攻撃力
 	*/
 	CArmAttack(const int force);
 
 	/*
 		@btief	可動アームの角度などの設定
-		@param	[in]	angle			アームの角度
+		@param	[in]	angle			アームの角度[unit:degree]
 		@param	[in]	length			回転中心座標からアームの中心までの長さ
 		@param	[in]	center			回転中心座標
+		@return	なし
 	*/
 	void SetArmInfo(const float angle, const float length, const mymath::Vec3f& center);
 
 	/*
-		@brief	処理
-		@param	[in]	angle	現在の角度
+		@brief	指定した角度に回転させる
+		@param	[in]	angle	角度[unit:degree]
+		@return	なし
 	*/
-	void step(float angle);
+	void Rotate(float angle);
 
 	virtual void step() override;
 	virtual void draw() override;

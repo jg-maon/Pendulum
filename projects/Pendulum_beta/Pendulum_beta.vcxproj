@@ -189,6 +189,7 @@
     <None Include="res\dat\main\gameStatus.dat" />
     <None Include="res\dat\main\pickup\jewely.dat" />
     <None Include="res\dat\main\pickup\pickups.dat" />
+    <None Include="res\dat\main\stage\bossStage02.dat" />
     <None Include="res\dat\main\stage\demoStage.dat" />
     <None Include="res\dat\path.ini" />
     <None Include="res\dat\resdata.dat" />

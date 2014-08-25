@@ -9,7 +9,6 @@
 	img_cursor1			res/gra/ui/cursor1.png			0xff000000
 	img_UInumber		res/gra/ui/number.png			0xff000000
 	img_UIchain			res/gra/ui/chain.png			0xff000000
-	img_UIalphabet		res/gra/ui/abc.png				0xff000000
 	img_effectWind		res/gra/effect/032.png			0x00000000
 	img_effectStar		res/gra/effect/010.png			0x00000000
 	img_effectExplosion	res/gra/effect/explosion.png	0xff000000
@@ -54,6 +53,9 @@
 	img_woodBottom		res/gra/main/stages/stage01/wood_bottom.png			0x00000000
 	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xff000000
 	img_actionCircle200	res/gra/main/stages/stage01/actionCircle_r200.png	0x00000000
+
+	img_stage02			res/gra/main/stages/stage02/bg.png					0x00000000
+
 
 	img_player			res/gra/main/character/player/base.png				0xff00ff00
 	img_playerArm		res/gra/main/character/player/arm.png				0xffffffff
@@ -136,11 +138,12 @@
 //＿フォント＿管理名(font_でスタート)＿フォント名(スペースは'＿'、'_'を使う)＿サイズ
 #Font
 {
-	font_MSGOSICK30	MS_ゴシック		30
-	font_MSGOSICK20	MS_ゴシック		20
-	font_MSGOSICK10	MS_ゴシック		10
-	font_POP30		HG創英角ﾎﾟｯﾌﾟ体	30
-	font_POP25		HG創英角ﾎﾟｯﾌﾟ体	25
-	font_POP12		HG創英角ﾎﾟｯﾌﾟ体	12
-	font_MSG15		MS_ゴシック		15
+	font_MSGOSICK30		MS_ゴシック		30
+	font_MSGOSICK20		MS_ゴシック		20
+	font_MSGOSICK10		MS_ゴシック		10
+	font_POP30			HG創英角ﾎﾟｯﾌﾟ体	30
+	font_POP25			HG創英角ﾎﾟｯﾌﾟ体	25
+	font_POP12			HG創英角ﾎﾟｯﾌﾟ体	12
+	font_MSG15			MS_ゴシック		15
+	font_GYOSHO_01_40	正調祥南行書体	40
 }

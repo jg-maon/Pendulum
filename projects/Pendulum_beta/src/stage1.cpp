@@ -9,7 +9,7 @@ CStage1::CStage1(std::ifstream& f) :
 IStage("Stage1")
 {
 	goalObj_ = charabase::CharPtr(new charabase::CharBase());
-	sm_ = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
+	sm_ = gm()->stageMng();
 	LoadEnv(f);		// ステージシステム読み込み
 	load(f, 0);		// 雑魚ステージ読み込み
 	LoadClear(f, goalArea_);	// クリア条件読み込み

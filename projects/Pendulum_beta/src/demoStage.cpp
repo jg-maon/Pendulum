@@ -11,7 +11,7 @@ CDemoStage::CDemoStage(std::ifstream& f) :
 IStage("DemoStage")
 {
 	goalObj_ = charabase::CharPtr(new charabase::CharBase());
-	sm_ = std::dynamic_pointer_cast<CStageMng>(gm()->GetObj(typeid(CStageMng)));
+	sm_ = gm()->stageMng();
 	LoadEnv(f);		// ステージシステム読み込み
 	load(f, 0);		// 雑魚ステージ読み込み
 	LoadClear(f, goalArea_);	// クリア条件読み込み
@@ -247,7 +247,7 @@ bool CDemoStage::UpdateClearAnnounce()
 
 	announceTime_ += system::ONEFRAME_TIME;
 
-	// 自分→ゴール→自分
+	// 自分→左上から時計回り→自分
 	switch (caPhase_)
 	{
 	case CDemoStage::ClearAnnouncePhase::WAIT:
