@@ -181,23 +181,25 @@ CPlayer(x, y, z)
 
 
 	std::vector<TableContent> tc = {
-		{ 0.5f, mymath::Vec3f(2000.f, 1900.f), CDemoPlayer::TimeActType::HANG },
-		{ 0.7f, mymath::Vec3f(2000.f, 1900.f), CDemoPlayer::TimeActType::HANG },
-		{ 1.0f, mymath::Vec3f(2000.f, 1500.f), CDemoPlayer::TimeActType::HANG },
-		{ 2.7f, mymath::Vec3f(1600.f, 1200.f), CDemoPlayer::TimeActType::HANG },
-		{ 3.0f, mymath::Vec3f(1600.f, 900.f), CDemoPlayer::TimeActType::HANG },
-		{ 3.2f, mymath::Vec3f(1300.f, 800.f), CDemoPlayer::TimeActType::HANG },
-		{ 3.5f, mymath::Vec3f(1200.f, 700.f), CDemoPlayer::TimeActType::HANG },
-		{ 4.0f, mymath::Vec3f(1100.f, 600.f), CDemoPlayer::TimeActType::HANG },
-		{ 4.2f, mymath::Vec3f(1100.f, 500.f), CDemoPlayer::TimeActType::HANG },
-		{ 4.4f, mymath::Vec3f(1000.f, 400.f), CDemoPlayer::TimeActType::ATTACK },
-		{ 4.5f, mymath::Vec3f(1000.f, 500.f), CDemoPlayer::TimeActType::ATTACK },
-		{ 4.6f, mymath::Vec3f(1000.f, 600.f), CDemoPlayer::TimeActType::ATTACK },
-		{ 4.7f, mymath::Vec3f(1000.f, 700.f), CDemoPlayer::TimeActType::ATTACK },
-		{ 4.8f, mymath::Vec3f(1000.f, 800.f), CDemoPlayer::TimeActType::ATTACK },
-		{ 4.9f, mymath::Vec3f(1000.f, 900.f), CDemoPlayer::TimeActType::ATTACK },
-		{ 5.0f, mymath::Vec3f(1000.f, 1000.f), CDemoPlayer::TimeActType::ATTACK },
-		{ 5.1f, mymath::Vec3f(1000.f, 1100.f), CDemoPlayer::TimeActType::ATTACK },
+		{ 1.0f, mymath::Vec3f(1100.f, 2000.f), CDemoPlayer::TimeActType::HANG },
+		{ 2.0f, mymath::Vec3f(1000.f, 1800.f), CDemoPlayer::TimeActType::HANG },
+		{ 3.0f, mymath::Vec3f(1400.f, 1500.f), CDemoPlayer::TimeActType::HANG },
+		{ 4.0f, mymath::Vec3f(1400.f, 1500.f), CDemoPlayer::TimeActType::UNHANG },
+		{ 5.0f, mymath::Vec3f(2000.f, 1600.f), CDemoPlayer::TimeActType::HANG },
+		// É`ÉFÉCÉì
+		{ 6.4f, mymath::Vec3f(2500.f, 1600.f), CDemoPlayer::TimeActType::ATTACK },
+		{ 7.4f, mymath::Vec3f(2800.f, 2000.f), CDemoPlayer::TimeActType::ATTACK },
+		{ 8.3f, mymath::Vec3f(3100.f, 1600.f), CDemoPlayer::TimeActType::ATTACK },
+		{ 9.2f, mymath::Vec3f(3500.f, 1400.f), CDemoPlayer::TimeActType::ATTACK },
+		{ 10.3f, mymath::Vec3f(3100.f, 1000.f), CDemoPlayer::TimeActType::ATTACK },
+		{ 11.2f, mymath::Vec3f(2700.f, 900.f), CDemoPlayer::TimeActType::ATTACK },
+		{ 12.1f, mymath::Vec3f(2000.f, 1100.f), CDemoPlayer::TimeActType::ATTACK },
+		{ 13.0f, mymath::Vec3f(1500.f, 1000.f), CDemoPlayer::TimeActType::ATTACK },
+		{ 13.9f, mymath::Vec3f(1100.f, 800.f), CDemoPlayer::TimeActType::ATTACK },
+		// Ç±Ç±Ç‹Ç≈
+		{ 16.0f, mymath::Vec3f(1000.f, 1200.f), CDemoPlayer::TimeActType::HANG },
+		{ 21.0f, mymath::Vec3f(1000.f, 1200.f), CDemoPlayer::TimeActType::UNHANG },
+
 
 		{ 100.0f, mymath::Vec3f(1000.f, 400.f), CDemoPlayer::TimeActType::UNHANG },
 	};

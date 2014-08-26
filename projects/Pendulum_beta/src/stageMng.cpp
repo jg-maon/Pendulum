@@ -100,7 +100,7 @@ bool CStageMng::load()
 	}
 
 
-	for (int i = 1; i <= 4; ++i)
+	for (int i = 1; i <= 2; ++i)
 	{
 		std::stringstream tag;
 		std::stringstream name;

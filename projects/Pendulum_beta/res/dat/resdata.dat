@@ -9,6 +9,9 @@
 	img_cursor1			res/gra/ui/cursor1.png			0xff000000
 	img_UInumber		res/gra/ui/number.png			0xff000000
 	img_UIchain			res/gra/ui/chain.png			0xff000000
+	img_UIframeRed		res/gra/ui/frameRed.png			0x00000000
+	img_UIexclamation	res/gra/ui/exclamation.png		0x00000000
+
 	img_effectWind		res/gra/effect/032.png			0x00000000
 	img_effectStar		res/gra/effect/010.png			0x00000000
 	img_effectExplosion	res/gra/effect/explosion.png	0xff000000
@@ -42,27 +45,13 @@
 	img_stageDescription01	res/gra/stageSelect/stageDesc01.png	0xff00ff00
 	img_ss02			res/gra/stageSelect/stage02.png			0xff000000
 	img_stageDescription02	res/gra/stageSelect/stageDesc02.png	0xff00ff00
-	img_ss03			res/gra/stageSelect/stage03.png			0xff000000
-	img_stageDescription03	res/gra/stageSelect/stageDesc03.png	0xff00ff00
-	img_ss04			res/gra/stageSelect/stage04.png			0xff000000
-	img_stageDescription04	res/gra/stageSelect/stageDesc04.png	0xff00ff00
-
+	
 	img_stage01			res/gra/main/stages/stage01/bg.png					0xff000000
-	img_wood			res/gra/main/stages/stage01/wood.png				0x00000000
 	img_woodTop			res/gra/main/stages/stage01/wood_top.png			0x00000000
 	img_woodBottom		res/gra/main/stages/stage01/wood_bottom.png			0x00000000
 	img_clearAnnounce01	res/gra/main/stages/stage01/clearAnnounce.png		0xff000000
 	img_actionCircle200	res/gra/main/stages/stage01/actionCircle_r200.png	0x00000000
 	
-	img_stage02_00		res/gra/main/stages/stage02/bg00.png				0x00000000
-	img_stage02_01		res/gra/main/stages/stage02/bg01.png				0x00000000
-	img_stage02_02		res/gra/main/stages/stage02/bg02.png				0x00000000
-	img_stage02_03		res/gra/main/stages/stage02/bg03.png				0x00000000
-	img_stage02_04		res/gra/main/stages/stage02/bg04.png				0x00000000
-	img_stage02_05		res/gra/main/stages/stage02/bg05.png				0x00000000
-	img_stage02_06		res/gra/main/stages/stage02/bg06.png				0x00000000
-	img_stage02_07		res/gra/main/stages/stage02/bg07.png				0x00000000
-
 
 	img_player			res/gra/main/character/player/base.png				0xff00ff00
 	img_playerArm		res/gra/main/character/player/arm.png				0xffffffff
@@ -90,6 +79,18 @@
 	img_totalScore		res/gra/end/totalScore.png				0x00000000
 	img_rankin			res/gra/end/rankin.png					0x00000000
 
+
+}
+	img_stage02_00		res/gra/main/stages/stage02/bg00.png				0x00000000
+	img_stage02_01		res/gra/main/stages/stage02/bg01.png				0x00000000
+	img_stage02_02		res/gra/main/stages/stage02/bg02.png				0x00000000
+	img_stage02_03		res/gra/main/stages/stage02/bg03.png				0x00000000
+	img_stage02_04		res/gra/main/stages/stage02/bg04.png				0x00000000
+	img_stage02_05		res/gra/main/stages/stage02/bg05.png				0x00000000
+	img_stage02_06		res/gra/main/stages/stage02/bg06.png				0x00000000
+	img_stage02_07		res/gra/main/stages/stage02/bg07.png				0x00000000
+
+
 	img_nameInput		res/gra/nameInput/bg.png				0xff000000
 	img_kbbutton		res/gra/nameInput/kbButton.png			0xffffffff
 	img_kbletter		res/gra/nameInput/kbLetter.png			0xff00ff00
@@ -98,8 +99,6 @@
 	img_chgletter		res/gra/nameInput/chgLetter.png			0xff00ff00
 	img_chgselect		res/gra/nameInput/chgSelect.png			0xffffffff
 	img_display			res/gra/nameInput/display.png			00ffffffff
-
-}
 
 //ÅQBGMÅQä«óùñº(bgm_Ç≈ÉXÉ^Å[Ég)ÅQÉpÉX
 #Bgm
@@ -124,6 +123,12 @@
 	se_shot1		res/snd/se/shot1.wav
 	
 	se_wind			res/snd/se/wind.wav
+
+	se_buzzer		res/snd/se/buzzer.wav
+
+	se_dragonRoar	res/snd/se/dragonRoar.wav
+	se_swing		res/snd/se/swing.wav
+	se_fireBreath	res/snd/se/fireBreath.wav
 
 	se_slash01		res/snd/se/slash/slash01.wav
 	se_slash02		res/snd/se/slash/slash02.wav

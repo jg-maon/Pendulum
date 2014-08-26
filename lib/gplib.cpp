@@ -2369,8 +2369,9 @@ void graph::Draw_LoadObject(const std::string& resname, const std::string& filen
 		}
 	}
 	ImgObj img;
+	HRESULT hr;
 	//読み込み開始
-	if(FAILED(D3DXCreateTextureFromFileEx(
+	if(FAILED(hr = D3DXCreateTextureFromFileEx(
 		pD3DDevice,
 		filename.c_str(),	//パス
 		D3DX_DEFAULT,	    //幅
@@ -2857,10 +2858,12 @@ void	bgm::DShow_LoadFile(const std::string& resname, const std::string& filename
 {
 	//既に読み込まれているリソース名なら、エラー
 	if (BgmTable.count(filename) != 0){
+		debug::BToMR("%s", filename.c_str());
 		assert(!"同じ名前のリソースが登録済みです。名前の確認をしてください。");
 	}
 	for (const auto bgm : BgmTable){
 		if (bgm.second.filename == filename){
+			debug::BToMR("%s", filename.c_str());
 			assert(!"同じファイル名のリソースが登録済みです。名前の確認をしてください。");
 		}
 	}
@@ -2908,6 +2911,7 @@ void	bgm::DShow_LoadFile(const std::string& resname, const std::string& filename
 	return;
 
 error:
+	debug::BToMR("%s", filename.c_str());
 	DShow_ReleaseObj(bgmObj.bgm);
 
 }
@@ -3421,7 +3425,7 @@ void se::DSound_LoadFile(const std::string& resname, const std::string& filename
 	seObj.se.sBuffer->SetVolume(-50);
 
 	//複製開始
-	for(int t = 0 ; t < 10 ; t++){
+	for(int t = 0 ; t < DSPLAYMAX ; t++){
 		if (lpDS->DuplicateSoundBuffer(seObj.se.sBuffer,
 			&(seObj.se.PlayBuffer[t].pBuffer)) != DS_OK){
 			debug::BToMR("再生用バッファ作成失敗\n", "");

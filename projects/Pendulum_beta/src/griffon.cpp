@@ -332,7 +332,7 @@ void CGriffon::DamageStep()
 	if (elapsedTime_ > nextActTime_ + loadInfo_.damageTime)
 	{
 		isBacking_ = false;
-		sway_ = 0;
+		sway_ = 0.f;
 
 		battleState_ = BattleState::WAIT;
 		motionType_ = MotionType::MOVE;

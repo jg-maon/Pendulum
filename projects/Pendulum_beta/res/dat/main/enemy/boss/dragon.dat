@@ -1,0 +1,49 @@
+#Img		img_dragon
+
+#Size		512	512
+
+#Collision
+{
+#Rect	-halfWidth -halfHeight	halfWidth	halfHeight
+}
+
+ステージ当たり判定＿#Collisionと同じ書式
+#StageCollision
+{
+
+#Rect	-200	-200	200	200
+
+}
+
+
+
+#Attack FireShot
+{
+force	5
+}
+
+
+//==================================================
+
+#EntryWidth		800.0
+#EntryHeight	800.0
+
+#SearchRange	1500.0
+#ChaseRange		1000.0		
+#AttackRange	500.0
+#MoveSpeed		200.0
+
+#Health				100
+#Power				10
+
+#InvincibleTime		2.0
+#DamageTime			2.0
+
+#AttackOffsetX		200.0
+#AttackOffsetY		200.0
+#AttackSpeed		1000.0
+#AttackInterval		8.0
+
+#SwayRange	250.0
+
+#moveAnimSpeed	0.3

@@ -248,9 +248,11 @@ public:
 	std::vector<float> animTbl;		// アニメーションテーブル
 	/*
 		@brief	アニメーション更新
-		@return	なし
+		@return	アニメーションループしたか(Animの戻り値)
+		@retval	true	アニメーションループした
+		@retval	false	アニメーション中
 	*/
-	void step();
+	bool step();
 };
 
 #ifdef DEF_CHARBASE_EXT

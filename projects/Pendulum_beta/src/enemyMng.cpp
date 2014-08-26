@@ -228,6 +228,32 @@ void CEnemyMng::LoadEnemyTable(const std::string& fileName)
 			}
 		}
 	}
+	//---------------------------------------
+	// ドラゴン
+	if (common::FindChunk(common::SeekSet(f), "#Dragon"))
+	{
+		std::string label;
+		f >> label;
+		if (label == "{")
+		{
+			while (!f.eof())
+			{
+				float pos[2];	// [0]:x [1]:y
+				for (auto& p : pos)
+				{
+					f >> label;
+					// エラーチェック
+					if (label == "}" || f.eof()) break;
+					p = static_cast<float>(std::atof(label.c_str()));
+				}
+				if (label == "}") break;
+				enemies_.push_back(EnemyPtr(new CDragon(pos[0], pos[1])));
+			}
+		}
+	}
+
+
+
 
 	// 配置後敵数初期化
 	enemyNum_ = enemies_.size();

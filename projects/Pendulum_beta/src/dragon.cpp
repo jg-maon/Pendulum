@@ -4,7 +4,10 @@
 
 #include "define.h"
 #include "dragon.h"
-#include "tackle.h"
+#include "fireShot.h"
+
+#include "easing.h"
+
 #include "setting.h"
 
 //#include "player.h"
@@ -24,15 +27,20 @@ void (CDragon::*CDragon::StateStep_[])() =
 
 CDragon::CDragon() :
 IEnemy("E_Boss_Dragon")
+, exclamationObj_(mymath::Vec3f(), mymath::Vec3f(), "img_UIexclamation", 32,64)
 {
+	motionTable_.resize(static_cast<int>(MotionType::MOTION_NUM));
 	std::vector<int> move = { 0, 1, 2, 3, 2, 1 };
-	motionTable_.push_back(move);
-	std::vector<int> entry = { 0, 1, 2, 3, 2, 1, 0 };
-	motionTable_.push_back(entry);
+	motionTable_[static_cast<int>(MotionType::MOVE)] = move;
 	std::vector<int> attack = { 0, 1, 2, 3 };
-	motionTable_.push_back(attack);
+	motionTable_[static_cast<int>(MotionType::ATTACK)] = (attack);
+	std::vector<int> roar = { 0, 1, 2, 3, 2, 1, 0 };
+	motionTable_[static_cast<int>(MotionType::ROAR)] = (roar);
 	std::vector<int> fall = { 0, 1, 2, 3 };
-	motionTable_.push_back(fall);
+	motionTable_[static_cast<int>(MotionType::FALL)] = (fall);
+
+	exclamationObj_.g = 10.f;
+	exclamationObj_.b = 10.f;
 }
 
 CDragon::CDragon(const mymath::Vec3f& pos) :
@@ -57,12 +65,7 @@ void CDragon::init(const mymath::Vec3f& pos)
 
 	gm()->GetData(*this);
 
-	obj_.pos = pos;
-
-	startPos_ = obj_.pos;
-	endPos_ = obj_.pos;
-	backPos_ = obj_.pos;
-	actPos_ = obj_.pos;
+	startPos_ = obj_.pos = pos;
 
 	obj_.pos.x += loadInfo_.entryWidth;
 	obj_.pos.y += loadInfo_.entryHeight;
@@ -71,23 +74,22 @@ void CDragon::init(const mymath::Vec3f& pos)
 	nextActTime_ = 0.f;
 
 
-	isRoaring_ = false;
+	isSePlay_ = true;
 
-	battleState_ = BattleState::ENTRY;
+	battleState_ = BattleState::WAIT;
 	motionType_ = MotionType::MOVE;
 	motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.moveAnimSpeed);
 	obj_.src.x = motionTable_[static_cast<int>(motionType_)][motionAnim_.no];
 
+	obj_.SetUse(false);
 
 	invincibleTime_ = 0.f;
 	invincibleAnim_ = 0.f;
 
-	fallTurnCount_ = 0;
 
 	health_ = loadInfo_.health;
 	power_ = loadInfo_.power;
 
-	attack_->setForce(loadInfo_.power);
 
 	sway_ = 0.f;
 }
@@ -153,23 +155,32 @@ void CDragon::step()
 	// 登場アニメーション
 	if (sm()->isBossEnterAnimating())
 	{
-		sm()->setStageState(CStageMng::StageState::BATTLE);
+		if (battleState_ != BattleState::ENTRY)
+		{
+			battleState_ = BattleState::ENTRY;
+			nextActTime_ = elapsedTime_ + 4.f;		// ブザーの長さ
+			frameAnimTime_ = 0.f;
+		}
 	}
-	else{
+	else if (sm()->isBossExitAnimating())
+	{
+		if (battleState_ != BattleState::DESTROY)
+		{
+			battleState_ = BattleState::DESTROY;
+		}
+	}
+	else
+	{
 
 		DecideState();
 
 
-
-		if (isAttacking_)
-		{
-			if (attack_ != nullptr)
-				attack_->step();
-		}
+		if (attack_ != nullptr)
+			attack_->step();
+		
 
 		// プレイヤーを向く
-		if (!isBacking_ && !isAttacking_ &&
-			battleState_ != BattleState::DESTROY)
+		if (battleState_ != BattleState::DESTROY)
 		{
 			const mymath::Vec3f& plPos = gm()->GetPlayerPos();
 
@@ -179,9 +190,6 @@ void CDragon::step()
 				turnFlag_ ^= 1;
 		}
 
-		(this->*StateStep_[static_cast<int>(battleState_)])();
-
-		
 		// ステージ座標制限
 		{
 			auto& col = std::dynamic_pointer_cast<mymath::Rectf>(stageCollisions_[0]);
@@ -194,116 +202,174 @@ void CDragon::step()
 			obj_.pos.y = clamp(obj_.pos.y, stageRect.top + size.y, stageRect.bottom - size.y);
 		}
 	}
+
+	(this->*StateStep_[static_cast<int>(battleState_)])();
+
+
+
 }
 
 void CDragon::draw()
 {
+	// 赤フレーム
+	graph::Draw_GraphicsLeftTopNC(
+		0, 0, 0.0f, "img_UIframeRed",
+		0, 0, system::WINW, system::WINH,
+		0.f, nullptr,
+		1.f, 1.f,
+		frameAlpha_);
+
+	// !マーク
+	if (exclamationObj_.CheckUse())
+		exclamationObj_.draw();
+
+	// 攻撃
 	if (attack_ != nullptr)
 		attack_->draw();
-	mymath::Rectf rect = camera::GetScreenRect();
-	if (rect.Contains(obj_.GetRect()))
+
+	// 身体
+	if (obj_.CheckUse())
 	{
-		obj_.draw(charabase::CharBase::MODE::Center, turnFlag_);
+		mymath::Rectf rect = camera::GetScreenRect();
+		if (rect.Contains(obj_.GetRect()))
+		{
+			obj_.draw(charabase::CharBase::MODE::Center, turnFlag_);
+		}
 	}
-
-#ifdef _DEBUG
-	static const std::string emply_string;
-	mymath::Recti rc = obj_.GetRect();
-
-	//rc.offset((int)obj_.pos.x, (int)obj_.pos.y);
-	std::stringstream ss;
-	ss << "pos("
-		<< std::setw(4) << (int)obj_.pos.x
-		<< ","
-		<< std::setw(4) << (int)obj_.pos.y
-		<< ")";
-	font::Draw_FontText(
-		rc.right, rc.top, 0.f,
-		ss.str(), 0xffff0000,
-		setting::GetFontID("font_MSG15"));
-
-	ss.str(emply_string);
-	const mymath::Vec3f& velocity = obj_.add;
-	ss << "add("
-		<< std::setw(4) << (int)velocity.x
-		<< ","
-		<< std::setw(4) << (int)velocity.y
-		<< ")";
-	font::Draw_FontText(
-		rc.right, rc.top + font::Draw_GetCharHeight(setting::GetFontID("font_MSG15")) * 1, 0.f,
-		ss.str(), 0xffff0000,
-		setting::GetFontID("font_MSG15"));
-
-	ss.str(emply_string);
-	ss << "backPos("
-		<< std::setw(4) << (int)backPos_.x
-		<< ","
-		<< std::setw(4) << (int)backPos_.y
-		<< ")";
-	font::Draw_FontText(
-		rc.right, rc.top + font::Draw_GetCharHeight(setting::GetFontID("font_MSG15")) * 2, 0.f,
-		ss.str(), 0xffff0000,
-		setting::GetFontID("font_MSG15"));
-
-	ss.str(emply_string);
-	ss << "endPos("
-		<< std::setw(4) << (int)endPos_.x
-		<< ","
-		<< std::setw(4) << (int)endPos_.y
-		<< ")";
-	font::Draw_FontText(
-		rc.right, rc.top + font::Draw_GetCharHeight(setting::GetFontID("font_MSG15")) * 3, 0.f,
-		ss.str(), 0xffff0000,
-		setting::GetFontID("font_MSG15"));
-
-
-#endif
 }
 
 void CDragon::EntryStep()
 {
-	const mymath::Vec3f dist = actPos_ - obj_.pos;
-	const float allow = 3.f;	// 座標ずれの許容範囲
-	// 移動中
-	if (!isRoaring_)
+	switch (enterPhase_)
 	{
-		if (abs(dist.x) <= allow)
+	case CDragon::EnterAnimPhase::BUZZER:
+		if (isSePlay_)
 		{
-			obj_.pos.x = actPos_.x;
-			obj_.add = 0.f;
-			obj_.add.y = loadInfo_.moveSpeed;
+			se::DSound_Play("se_buzzer");	// 咆哮
+			isSePlay_ = false;
+		}
+		frameAlpha_ = 50.f + 200.f * (std::sinf(frameAnimTime_));
+		frameAnimTime_ += system::FrameTime;
+		if (frameAnimTime_ >= mymath::PI)
+			frameAnimTime_ -= mymath::PI;
+
+		if (elapsedTime_ >= nextActTime_)
+		{
+			// ブザー終了
+			frameAlpha_ = 0.f;
+			//---------------------------------
+			// 咆哮開始
+			enterPhase_ = EnterAnimPhase::ROAR;
+			isSePlay_ = true;
+			nextActTime_ = elapsedTime_ + 5.f;
+			//---------------------------------
+			// ！マーク
+			auto& player = gm()->GetPlayer();
+			exclamationObj_.pos = player->obj().pos;
+			exclamationObj_.pos += mymath::Vec3f(30.f, -50.f, 0.f);
+			exclamationObj_.SetUse(true);
+			exclamationAnim_.set(2, 0.3f);
+			cnt_ = 0;
+			//---------------------------------
+			// カメラ揺れ
+			sway_ = 0.f;
+		}
+		break;
+	case CDragon::EnterAnimPhase::ROAR:
+	{
+
+		if (isSePlay_)
+		{
+			se::DSound_Play("se_dragonRoar");	// 咆哮
+			isSePlay_ = false;
+		}
+		// !マークアニメーション
+		if (exclamationAnim_.step())
+		{
+			// ループ数増加
+			if (++cnt_ >= 2)
+			{
+				// 指定回数ループ後表示をやめる
+				exclamationObj_.SetUse(false);
+				exclamationAnim_.stop();
+			}
+		}
+		exclamationObj_.src.x = exclamationAnim_.no;
+
+		// カメラ揺れ
+		cameraPos_ = camera::GetLookAt();
+		sway_ = static_cast<float>((static_cast<int>(sway_ + 45) % 360));
+		cameraPos_.y += (std::cosf(math::Calc_DegreeToRad(sway_)) * 20.f);
+		camera::SetLookAt(cameraPos_.x, cameraPos_.y);
+
+		// 経過時間終了判定
+		if (elapsedTime_ >= nextActTime_)
+		{
+			// 入場開始
+			enterPhase_ = EnterAnimPhase::ENTER;
+			nextActTime_ = elapsedTime_;
+			cameraPos_ = camera::GetLookAt();
+			isSePlay_ = true;
+		}
+	}
+		break;
+	case CDragon::EnterAnimPhase::ENTER:
+		if (elapsedTime_ < nextActTime_ + 1.f)
+		{
+			// カメラ移動
+			mymath::Vec3f newCameraPos = cameraPos_;
+			newCameraPos.x = Easing::CircOut(elapsedTime_ - nextActTime_, cameraPos_.x, obj_.pos.x - cameraPos_.x, 1.f);
+			newCameraPos.y = Easing::CircInOut(elapsedTime_ - nextActTime_, cameraPos_.y, obj_.pos.y - cameraPos_.y, 1.f);
+			
+			sm()->MoveCamera(newCameraPos);
+		}
+		else if (elapsedTime_ < nextActTime_ + 2.f)
+		{
+			if (isSePlay_)
+			{
+				se::DSound_Play("se_swing");
+				isSePlay_ = false;
+			}
+			obj_.SetUse(true);
+			turnFlag_ = true;
+			// 左下へ
+			mymath::Vec3f sta = startPos_ + mymath::Vec3f(loadInfo_.entryWidth, -loadInfo_.entryHeight);
+			mymath::Vec3f end = startPos_ + mymath::Vec3f(-loadInfo_.entryWidth, loadInfo_.entryHeight);
+			obj_.pos.x = Easing::Linear(elapsedTime_ - nextActTime_ - 1.f, sta.x, end.x - sta.x, 1.f);
+			obj_.pos.y = Easing::Linear(elapsedTime_ - nextActTime_ - 1.f, sta.y, end.y - sta.y, 1.f);
+		}
+		else if (elapsedTime_ < nextActTime_ + 3.f)
+		{
+			turnFlag_ = false;
+			// 右下へ
+			mymath::Vec3f sta = startPos_ + mymath::Vec3f(-loadInfo_.entryWidth, -loadInfo_.entryHeight);
+			mymath::Vec3f end = startPos_ + mymath::Vec3f(loadInfo_.entryWidth, loadInfo_.entryHeight);
+			obj_.pos.x = Easing::Linear(elapsedTime_ - nextActTime_ - 2.f, sta.x, end.x - sta.x, 1.f);
+			obj_.pos.y = Easing::Linear(elapsedTime_ - nextActTime_ - 2.f, sta.y, end.y - sta.y, 1.f);
 		}
 		else
 		{
-			obj_.add.x = loadInfo_.moveSpeed;
-			if (obj_.pos.x > actPos_.x)
+			const float animTime = 1.5f;
+			turnFlag_ = true;
+			// 画面上から
+			mymath::Vec3f sta = startPos_ + mymath::Vec3f(0.f, (gm()->winRect()->height()-obj_.HalfHeight()) / 2.f);
+			obj_.pos.x = Easing::Linear(elapsedTime_ - nextActTime_ - 3.f, sta.x, startPos_.x - sta.x, animTime);
+			obj_.pos.y = Easing::Linear(elapsedTime_ - nextActTime_ - 3.f, sta.y, startPos_.y - sta.y, animTime);
+
+			if ((elapsedTime_ >= nextActTime_ + 3.f + animTime)
+				|| obj_.pos.y > startPos_.y)
 			{
-				obj_.add.x = -loadInfo_.moveSpeed;
+				// 登場終了
+				sm()->setStageState(CStageMng::StageState::BATTLE);
+				battleState_ = BattleState::WAIT;
 			}
 		}
-		if (abs(dist.y) <= allow)
-		{
-			//咆哮始動
-			obj_.pos = actPos_;
-			obj_.add = 0.f;
-			isRoaring_ = true;
-			motionType_ = MotionType::ROAR;
-			motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.roarAnimSpeed);
-
-		}
-
-		obj_.Move();
+		break;
+	default:
+		break;
 	}
-	// 咆哮中は何もしない
-	else
-	{
-		int max = motionTable_[static_cast<int>(motionType_)].size() - 1;
-		// 咆哮終了
-		if (motionAnim_.no > max - 1)
-		{
-			battleState_ = BattleState::WAIT;
-		}
-	}
+	
+	//sm()->setStageState(CStageMng::StageState::BATTLE);
 }
 
 void CDragon::WaitStep()
@@ -323,8 +389,7 @@ void CDragon::DamageStep()
 {
 	if (elapsedTime_ > nextActTime_ + loadInfo_.damageTime)
 	{
-		isBacking_ = false;
-		sway_ = 0;
+		sway_ = 0.f;
 
 		battleState_ = BattleState::WAIT;
 		motionType_ = MotionType::MOVE;
@@ -343,105 +408,47 @@ void CDragon::AttackStep()
 	// 行動を起こす時間になったら後退開始
 	if (elapsedTime_ > nextActTime_)
 	{
-		actPos_ = obj_.pos;
-		const mymath::Vec3f& plpos = gm()->GetPlayerPos();
-		// グリフォンとプレーヤーとの角度
-		float radian = mymath::Vec3f::Angle(obj_.pos, plpos);
-		//obj_.angle = angle;
+		// 攻撃
+		mymath::Vec3f pos = obj_.pos + mymath::Vec3f(loadInfo_.attackOffsetX * (turnFlag_ ? -1.f : 1.f), loadInfo_.attackOffsetY);
+		std::dynamic_pointer_cast<CFireShot>(attack_)->CreateAttack(
+			pos, gm()->GetPlayerPos(), loadInfo_.attackSpeed);
 
-		// バック距離
-		obj_.add = mymath::Vec3f::Rotate(radian) * -loadInfo_.moveSpeed;
+		se::DSound_Play("se_fireBreath");
 
 		nextActTime_ = elapsedTime_ + loadInfo_.attackInterval;		// 連続間隔
-		isBacking_ = true;
-
+		
 		motionType_ = MotionType::ATTACK;
-		motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.backAnimSpeed);
+		motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, 0.1f);
 	}
-	// 後退中なら
-	if (isBacking_)
-	{
-		mymath::Vec3f dist = obj_.pos - actPos_;
-		float length = mymath::PYTHA(dist.x, dist.y);
-
-		if (motionTable_[static_cast<int>(motionType_)][motionAnim_.no] == 2)
-		{
-			motionAnim_.stop();
-		}
-
-		// 後退したら突進開始
-		if (length > mymath::POW2(loadInfo_.backDist))
-		{
-			// アニメーションの修正
-			if (motionAnim_.isStoped())
-			{
-				motionAnim_.no++;
-			}
-			else
-			{
-				motionAnim_.no = motionTable_[static_cast<int>(motionType_)].size() - 1;
-				motionAnim_.stop();
-			}
-
-			isBacking_ = false;
-			isAttacking_ = true;
-			const mymath::Vec3f& plpos = gm()->GetPlayerPos();
-			endPos_ = plpos;
-			float radian = mymath::Vec3f::Angle(obj_.pos, endPos_);
-			obj_.add = mymath::Vec3f::Rotate(radian) * loadInfo_.attackSpeed;
-		}
-		else
-		{
-			obj_.Move();
-
-			if (length > mymath::POW2(loadInfo_.attackDist))
-			{
-				obj_.add.x = 0.f;
-				obj_.add.y = 0.f;
-				battleState_ = BattleState::WAIT;
-			}
-		}
-	}
-	// 突進中なら
-	if (isAttacking_)
-	{
-		mymath::Vec3f dist = obj_.pos - actPos_;
-		float length = mymath::PYTHA(dist.x, dist.y);
-
-		if (length > mymath::POW2(loadInfo_.attackDist))
-		{
-			isAttacking_ = false;
-			battleState_ = BattleState::WAIT;
-			motionAnim_.start();
-			nextActTime_ = elapsedTime_ + loadInfo_.attackInterval;
-		}
-		else
-		{
-			obj_.Move();
-		}
-	}
+	
 }
 
 void CDragon::DestroyStep()
 {
-	if (elapsedTime_ > nextActTime_)
+	if (elapsedTime_ > nextActTime_ + 1.f)
 	{
-		fallTurnCount_++;
-		if (fallTurnCount_ > loadInfo_.fallTurnSpeed)
-		{
-			fallTurnCount_ = 0;
-			turnFlag_ ^= 1;
-		}
-		obj_.add.x = 0.f;
-		obj_.add.y = loadInfo_.fallSpeed;
-		obj_.Move();
-		motionAnim_.stop();
-
+		// カメラ外へ抜ける準備(横移動)
+		turnFlag_ = false;
+		obj_.pos.x = Easing::QuintOut(elapsedTime_ - nextActTime_, startPos_.x, -400.f, 1.f);
 	}
-	// カメラの外に出たら
-	if (obj_.pos.y - obj_.HalfHeight() > camera::GetScreenRect().bottom)
+	else
 	{
-		kill();
+		// カメラ外へ飛んで逃げる
+		if (isSePlay_)
+		{
+			se::DSound_Play("se_swing");
+			isSePlay_ = false;
+			startPos_ = obj_.pos;
+		}
+		mymath::Vec3f end = startPos_ + mymath::Vec3f(-loadInfo_.entryWidth, -loadInfo_.entryHeight);
+		obj_.pos.x = Easing::Linear(elapsedTime_ - nextActTime_ - 1.f, startPos_.x, end.x - startPos_.x, 2.f);
+		obj_.pos.y = Easing::Linear(elapsedTime_ - nextActTime_ - 1.f, startPos_.y, end.y - startPos_.y, 2.f);
+
+		if (!InScreen(-obj_.HalfWidth()))
+		{
+			// 画面外
+			kill();
+		}
 	}
 }
 
@@ -528,10 +535,26 @@ bool CDragon::ApplyDamage(int dam)
 
 	health_ -= dam;
 
-	// ひるみ処理
-	// 攻撃中は揺れない
-	if (!isAttacking_)
+	
+
+	invincibleTime_ = loadInfo_.invincibleTime;
+	
+	if (health_ <= 0)
 	{
+		// 死亡
+
+		battleState_ = BattleState::DESTROY;
+		isSePlay_ = true;
+		motionType_ = MotionType::MOVE;
+		motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.moveAnimSpeed);
+		nextActTime_ = elapsedTime_;
+		startPos_ = obj_.pos;
+		return true;
+	}
+	else //	if (!isAttacking_)	// 攻撃中は揺れない
+	{
+		// ひるみ処理
+
 		battleState_ = BattleState::DAMAGE;
 		nextActTime_ = elapsedTime_ + loadInfo_.damageTime;
 		motionType_ = MotionType::FALL;
@@ -540,29 +563,10 @@ bool CDragon::ApplyDamage(int dam)
 
 	}
 
-	invincibleTime_ = loadInfo_.invincibleTime;
-
-	if (health_ <= 0)
-	{
-		battleState_ = BattleState::DESTROY;
-		motionType_ = MotionType::FALL;
-		motionAnim_.set(motionTable_[static_cast<int>(motionType_)].size() - 1, loadInfo_.fallTime);
-		nextActTime_ = elapsedTime_ + loadInfo_.fallTime;
-		return true;
-	}
-
 	return false;
 }
 
 
-bool CDragon::isAttacking() const
-{
-	return isAttacking_;
-}
-bool CDragon::isBacking() const
-{
-	return isBacking_;
-}
 
 Base::Collisions CDragon::GetDamageAreas() const
 {

@@ -15,29 +15,25 @@ public:
 		float attackRange;			// 攻撃範囲(現在座標からこの範囲にいると攻撃する)
 
 		float moveSpeed;			// 移動速度
-		float attackSpeed;			// 攻撃時移動速度
-
+		
 		float invincibleTime;		// 無敵時間
 
-		float backDist;				// バック距離
-		float backTime;				// バック距離に到達するまでの時間
 		float damageTime;			// 怯み時間
-		float attackDist;			// 攻撃距離
+		
+		float attackOffsetX;		// 画像中心からの攻撃発生箇所
+		float attackOffsetY;		// 画像中心からの攻撃発生箇所
+		float attackSpeed;			// 攻撃速度
 		float attackInterval;		// 攻撃間隔
+		
 		float swayRange;			// 揺れる範囲
-		float fallTime;				// 落ちだす時間
-		float fallSpeed;			// 落ちる速度
-		int fallTurnSpeed;			// 落下中に回転させるためのスピード
 
-		float entryWidth;			// init の pos を終着点としてそこから離れる 幅
-		float entryHeight;			// init の pos を終着点としてそこから離れる 高さ
+		float entryWidth;			// 入退場時の片側移動量
+		float entryHeight;			// 入退場時の片側移動量
 
 		int health;					// 初期HP
 		int power;					// 初期攻撃力
-
-		float roarAnimSpeed;		// 咆哮アニメーションのスピード
 		float moveAnimSpeed;		// 飛行アニメーションのスピード
-		float backAnimSpeed;		// 後退アニメーションのスピード
+
 	};
 private:
 
@@ -58,6 +54,8 @@ private:
 		ATTACK,				// 攻撃
 		ROAR,				// 咆哮
 		FALL,				// 落下
+
+		MOTION_NUM,
 	};
 private:
 
@@ -65,7 +63,7 @@ private:
 
 	LoadInfo loadInfo_;
 
-	BattleState battleState_;					// 行動状態
+	BattleState battleState_;						// 行動状態
 
 	charabase::Anim motionAnim_;					// アニメーション
 	MotionType motionType_;							// モーション
@@ -75,23 +73,29 @@ private:
 	float elapsedTime_;					// 経過時間
 	float nextActTime_;					// 次に行動を起こす時間
 
-	bool isBacking_;						// 後退中か
-	bool isAttacking_;					// 攻撃中か
-
 	float invincibleTime_;				// 無敵時間
 	float invincibleAnim_;				// 無敵点滅アニメーション時間
 
+	mymath::Vec3f startPos_;			// 初期座標
+
 	float sway_;						// 揺れ
 
-	bool isRoaring_;						// 咆哮中 (true)
+	float frameAnimTime_;				// フレームアニメーション用
+	float frameAlpha_;					// ブザー時の赤フレーム
 
-	int fallTurnCount_;				// 落下中に回転させるためのカウンタ
+	enum class EnterAnimPhase			// 入場アニメーション
+	{
+		BUZZER,					// ブザー音
+		ROAR,					// 咆哮音
+		ENTER,					// 入場
+	}enterPhase_;
+	bool isSePlay_;						// 効果音を再生する
 
-	mymath::Vec3f startPos_;			// 初期座標(追跡後元に戻る場所)
-
-	mymath::Vec3f endPos_;				// 攻撃時の移動終点座標
-	mymath::Vec3f backPos_;				// 攻撃時のバック終点座標
-	mymath::Vec3f actPos_;				// 攻撃始動位置
+	charabase::CharBase exclamationObj_;	// !マーク画像
+	charabase::Anim exclamationAnim_;		// !マークアニメーション用
+	int cnt_;								// !マークループ回数
+	mymath::Vec3f cameraPos_;				// カメラ初期座標
+	
 public:
 
 private:
@@ -198,22 +202,6 @@ public:
 		@retval	false	残存
 	*/
 	virtual bool ApplyDamage(int dam) override;
-
-	/*
-		@brief	攻撃中フラグの取得
-		@return	攻撃中フラグ
-		@retval	true	攻撃中
-		@retval	false	攻撃中でない
-	*/
-	bool isAttacking() const;
-
-	/*
-		@brief	攻撃準備中フラグの取得
-		@return	攻撃準備中フラグ
-		@retval	true	攻撃準備中
-		@retval	false	攻撃準備中でない
-	*/
-	bool isBacking() const;
 
 	/*
 		@brief	当たり判定領域の取得

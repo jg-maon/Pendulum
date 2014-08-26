@@ -1,11 +1,11 @@
 #Bgm	bgm_stage01
 
 #ClearAnnounce
-img_clearAnnounce01	-1	-1
+img_clearAnnounce00	-1	-1
 
 
 #StageClear
-Annihilation 100
+Annihilation 10
 
 #NormaTime
 240.0
@@ -31,7 +31,7 @@ res/dat/main/enemy/table/debugTable01.dat
 
 
 #BossStage
-res/dat/main/stage/bossStage02.dat
+res/dat/main/stage/bossStage01.dat
 
 
 float_x,ÅQÅQfloat_y,ÅQÅQfloat_z,ÅQÅQstd::string_resname,ÅQÅQint_srcX,ÅQÅQint_srcY,ÅQÅQint_sizeX,ÅQÅQint_sizeY,ÅQÅQfloat_degree,ÅQÅQLONG_centerX,ÅQÅQLONG_centerY,ÅQÅQfloat_scaleXÅQÅQ,float_scaleY,ÅQÅQu_char_a,ÅQÅQu_char_r,ÅQÅQu_char_g,ÅQÅQu_char_b

@@ -373,7 +373,7 @@ void CSceneStageSelect::LoadStageInfo(std::ifstream& f)
 
 void CSceneStageSelect::LoadStages(std::ifstream& f)
 {
-	for (int i = 1; i <= 4; ++i)
+	for (int i = 1; i <= 2; ++i)
 	{
 		std::stringstream ss;
 		ss << "#Stage" << std::setw(2) << std::setfill('0') << i;

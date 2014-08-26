@@ -1,10 +1,10 @@
 #ifdef _DEBUG
 //#define D_SCALE_TEST	// 拡大、カメラ移動テスト
-#define D_EFFECT_TEST	// エフェクト生成テスト
+//#define D_EFFECT_TEST	// エフェクト生成テスト
 //#define D_PICKUP_TEST	//  ピックアップアイテムテスト
 //#define D_SHAPE_TEST	// 図形テスト
-#define D_TURN_TEST	// 反転描画テスト
-#define D_SOUND_TEST	// 音テスト パン振り
+//#define D_TURN_TEST	// 反転描画テスト
+//#define D_SOUND_TEST	// 音テスト パン振り
 #endif
 
 #ifdef D_SHAPE_TEST
@@ -182,8 +182,8 @@ const float CSceneTitle::CLICK_ON = 1.f;
 //const int CSceneTitle::CLICK_MIN_ALPHA = 50;
 
 //表示時間
-//const float CSceneTitle::TITLETIME = 30.f;
-const float CSceneTitle::TITLETIME = 1.f;
+const float CSceneTitle::TITLETIME = 30.f;
+//const float CSceneTitle::TITLETIME = 1.f;
 
 #pragma endregion // 変数定数定義
 //=================================================================================
@@ -560,7 +560,12 @@ void CSceneTitle::TitleStep()
 
 		break;
 	}
-
+#ifdef _DEBUG
+	if (input::CheckPress(input::KEY_LSHIFT) && input::CheckPress(input::KEY_UP))
+	{
+		ChangePhase();
+	}
+#endif
 
 	//const float demoTime = 20.f;
 	if (phaseTime_ >= TITLETIME)

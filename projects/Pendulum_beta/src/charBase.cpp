@@ -364,9 +364,9 @@ void CharBase::SetUse(bool useFlag)
 
 //==========================================================
 #pragma region AnimObject methods
-void AnimObject::step()
+bool AnimObject::step()
 {
-	anim.step();
+	bool ret = anim.step();
 	switch (animType)
 	{
 	case AnimType::MOVE_X:
@@ -389,6 +389,8 @@ void AnimObject::step()
 	default:
 		break;
 	}
+
+	return ret;
 }
 #pragma endregion	// AnimObject
 //------------------------------------------------------

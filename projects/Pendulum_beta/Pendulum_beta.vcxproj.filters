@@ -772,5 +772,8 @@
     <None Include="res\dat\main\stage\bossStage02.dat">
       <Filter>リソース ファイル\Main\Stage\boss</Filter>
     </None>
+    <None Include="res\dat\main\enemy\boss\dragon.dat">
+      <Filter>リソース ファイル\Main\Enemy\boss</Filter>
+    </None>
   </ItemGroup>
 </Project>

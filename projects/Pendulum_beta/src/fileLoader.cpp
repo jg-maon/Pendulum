@@ -449,12 +449,10 @@ bool CFileLoader::LoadGriffon(const std::string& fileName, std::vector<EnemyPtr>
 		{ "#ChaseRange", &(lf.chaseRange), "float" },
 		{ "#AttackRange", &(lf.attackRange), "float" },
 		{ "#MoveSpeed", &(lf.moveSpeed), "float" },
-		{ "#AttackInterval", &(lf.attackInterval), "float" },
 		{ "#AttackSpeed", &(lf.attackSpeed), "float" },
 		{ "#InvincibleTime", &(lf.invincibleTime), "float" },
 		{ "#DamageTime", &(lf.damageTime), "float" },
 		{ "#AttackDist", &(lf.attackDist), "float" },
-		{ "#AttackSpeed", &(lf.attackSpeed), "float" },
 		{ "#BackDist", &(lf.backDist), "float" },
 		{ "#AttackInterval", &(lf.attackInterval), "float" },
 		{ "#SwayRange", &(lf.swayRange), "float" },
@@ -709,6 +707,89 @@ bool CFileLoader::LoadRoboticArm(const std::string& fileName, std::vector<EnemyP
 	return success;
 }
 //=====================================================================================
+
+
+bool CFileLoader::LoadDragon(const std::string& fileName, std::vector<EnemyPtr>& enemies)
+{
+	using common::FindChunk;
+	using common::SeekSet;
+	std::ifstream eneF(fileName);
+	if (eneF.fail())
+	{
+		debug::BToMF("CFileLoader::LoadDragon path:%s", fileName.c_str());
+		return false;
+	}
+	// 情報ロード用
+	CDragon tmp;
+	CDragon::LoadInfo lf;
+	charabase::CharBase cb;
+	// ファイルから情報を抜き取る際のタグ検索用
+	bool success;
+
+
+	//-----------------------------------------------
+	// 画像情報
+	//-----------------------------------------------
+	if (success = LoadCharBase(eneF, cb))
+	{
+		// 画像情報設定
+		tmp.obj(cb);
+	}
+	//-----------------------------------------------
+	// クラス情報
+	//-----------------------------------------------
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#Collision")))
+	{
+		tmp.LoadCollisions(eneF);
+	}
+	// 当たり判定
+	if (success && (success = FindChunk(SeekSet(eneF), "#StageCollision")))
+	{
+		tmp.LoadStageCollisions(eneF);
+	}
+	// 攻撃
+	if (success && (success = FindChunk(SeekSet(eneF), "#Attack")))
+	{
+		tmp.LoadAttack(eneF);
+	}
+	//-------------------------------------
+	// 範囲系
+	std::vector<LoadValue> loadValues = {
+		{ "#EntryWidth", &(lf.entryWidth), "float" },
+		{ "#EntryHeight", &(lf.entryHeight), "float" },
+		{ "#SearchRange", &(lf.searchRange), "float" },
+		{ "#ChaseRange", &(lf.chaseRange), "float" },
+		{ "#AttackRange", &(lf.attackRange), "float" },
+		{ "#MoveSpeed", &(lf.moveSpeed), "float" },
+		{ "#Health", &(lf.health), "int" },
+		{ "#Power", &(lf.power), "int" },
+		{ "#InvincibleTime", &(lf.invincibleTime), "float" },
+		{ "#DamageTime", &(lf.damageTime), "float" },
+		{ "#AttackOffsetX", &(lf.attackOffsetX), "float" },
+		{ "#AttackOffsetY", &(lf.attackOffsetY), "float" },
+		{ "#AttackInterval", &(lf.attackInterval), "float" },
+		{ "#AttackSpeed", &(lf.attackSpeed), "float" },
+		{ "#SwayRange", &(lf.swayRange), "float" },
+		{ "#moveAnimSpeed", &(lf.moveAnimSpeed), "float" },
+	};
+	success = LoadInfo(eneF, loadValues);
+	//-------------------------------------
+
+	if (success)
+	{
+		//-----------------------------------------------
+		// 全ての情報が正しく読み込めた際のみここに入る
+		// パラメータ
+		tmp.SetInfo(lf);
+
+		// コピーコンストラクタを用いオリジナル作成
+		enemies.push_back(EnemyPtr(new CDragon(tmp)));
+	}
+
+	return success;
+}
+
 
 #pragma endregion	// 敵テーブル読み込み
 //=====================================================================================

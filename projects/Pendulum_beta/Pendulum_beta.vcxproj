@@ -183,6 +183,7 @@
     <Text Include="res\dat\main\stage\stages.dat" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\dat\main\enemy\boss\dragon.dat" />
     <None Include="res\dat\main\enemy\normal\raybit.dat" />
     <None Include="res\dat\main\enemy\normal\roboticArm.dat" />
     <None Include="res\dat\main\enemy\table\demoTable.dat" />

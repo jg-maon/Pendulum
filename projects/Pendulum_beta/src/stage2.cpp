@@ -94,7 +94,8 @@ void CStage2::draw()
 	}
 
 	// îwåi
-	for (int i = 0; i < 8; ++i)
+	//for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < 0; ++i)
 	{
 		std::stringstream resname;
 		resname << "img_stage02_" << std::setw(2) << std::setfill('0') << i;
